@@ -1,0 +1,134 @@
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.globsframework</groupId>
+  <packaging>jar</packaging>
+  <artifactId>globs</artifactId>
+  <name>Generic Lightweight ObjectS</name>
+  <version>2.0</version>
+
+  <url>http://www.design-up.com</url>
+
+  <repositories>
+    <repository>
+      <id>Maven2</id>
+      <url>http://download.java.net/maven/2/</url>
+    </repository>
+  </repositories>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>2.0.2</version>
+        <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>2.6</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>test-jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>2.3</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.10</version>
+        <configuration>
+          <systemProperties>
+            <property>
+              <name>uispec4j.test.library</name>
+              <value>junit</value>
+            </property>
+          </systemProperties>
+          <includes>
+            <include>**/*Test.java</include>
+            <include>**/*Tests.java</include>
+          </includes>
+          <excludes>
+            <exclude>**/*TestCase.java</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>1.3</version>
+        <executions>
+          <execution>
+            <id>install_core</id>
+            <phase>install</phase>
+            <configuration>
+              <tasks>
+                <jar destfile="target/globs-core-1.0.jar">
+                  <fileset dir="target/classes">
+                    <include name="**/*.class"/>
+                    <exclude name="**/gui/**"/>
+                    <exclude name="**/sqlstreams/**"/>
+                    <exclude name="**/serialization/**"/>
+                    <exclude name="**/remote/**"/>
+                  </fileset>
+                </jar>
+              </tasks>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+    </plugins>
+  </build>
+
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.8.2</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.globsframework</groupId>
+      <artifactId>saxstack</artifactId>
+      <version>2.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>xerces</groupId>
+      <artifactId>xercesImpl</artifactId>
+      <version>2.11.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-log4j12</artifactId>
+      <version>1.7.22</version>
+    </dependency>
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>1.2.14</version>
+    </dependency>
+
+  </dependencies>
+
+  <scm>
+    <connection>scm:svn:https://name:password@globs.dev.java.net/svn/globs/trunk</connection>
+  </scm>
+
+</project>
