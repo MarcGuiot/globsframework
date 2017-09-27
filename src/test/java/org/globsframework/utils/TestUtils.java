@@ -13,7 +13,7 @@ import java.util.*;
 public class TestUtils {
 
    public final static byte[] SAMPLE_BYTE_ARRAY;
-   public static final String TMP_DIR = "tmp";
+   public static final File TMP_DIR = new File("tmp");
 
    private TestUtils() {
    }
@@ -23,6 +23,7 @@ public class TestUtils {
       for (int i = 0; i < SAMPLE_BYTE_ARRAY.length; i++) {
          SAMPLE_BYTE_ARRAY[i] = 1;
       }
+      clearTmpDir();
    }
 
    public static void assertFails(Runnable functor, Class<? extends Exception> expectedException) {
@@ -179,16 +180,15 @@ public class TestUtils {
    }
 
    public static void clearTmpDir() {
-      File tmpDir = new File(TMP_DIR);
-      tmpDir.mkdirs();
-      for (File file : tmpDir.listFiles()) {
+      TMP_DIR.mkdirs();
+      for (File file : TMP_DIR.listFiles()) {
          file.delete();
       }
    }
 
    public static File getFileName(Object test, String extension) {
       try {
-         return File.createTempFile(test.getClass().getSimpleName(), extension, new File(TMP_DIR));
+         return File.createTempFile(test.getClass().getSimpleName(), extension, TMP_DIR);
       }
       catch (IOException e) {
          throw new RuntimeException("Unable to create file", e);
