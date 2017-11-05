@@ -9,6 +9,7 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.RUNTIME)
 @java.lang.annotation.Target({ElementType.FIELD})
 public @interface DefaultString {
-  String value();
-  GlobType TYPE = DefaultStringAnnotationType.DESC;
+    String value();
+
+    GlobType TYPE = DefaultStringAnnotationType.DESC;
 }

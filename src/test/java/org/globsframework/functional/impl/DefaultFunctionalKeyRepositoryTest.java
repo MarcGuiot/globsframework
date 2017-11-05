@@ -19,16 +19,16 @@ public class DefaultFunctionalKeyRepositoryTest {
     @Test
     public void testQuery() {
         DefaultFunctionalKeyRepository linkManager =
-              new DefaultFunctionalKeyRepository((type) -> Stream.<Glob>of(
-                    DummyObject.TYPE.instantiate().set(DummyObject.ID, 1).set(DummyObject.NAME, "a1")
-                          .set(DummyObject.COUNT, 1),
-                    DummyObject.TYPE.instantiate().set(DummyObject.ID, 2).set(DummyObject.NAME, "a1")
-                          .set(DummyObject.COUNT, 2),
-                    DummyObject.TYPE.instantiate().set(DummyObject.ID, 3).set(DummyObject.NAME, "a3")
-                          .set(DummyObject.COUNT, 1),
-                    DummyObject2.TYPE.instantiate().set(DummyObject2.ID, 1).set(DummyObject2.LABEL, "l1"),
-                    DummyObject2.TYPE.instantiate().set(DummyObject2.ID, 2).set(DummyObject2.LABEL, "l2")
-              ).filter(g -> g.getType() == type));
+            new DefaultFunctionalKeyRepository((type) -> Stream.<Glob>of(
+                DummyObject.TYPE.instantiate().set(DummyObject.ID, 1).set(DummyObject.NAME, "a1")
+                    .set(DummyObject.COUNT, 1),
+                DummyObject.TYPE.instantiate().set(DummyObject.ID, 2).set(DummyObject.NAME, "a1")
+                    .set(DummyObject.COUNT, 2),
+                DummyObject.TYPE.instantiate().set(DummyObject.ID, 3).set(DummyObject.NAME, "a3")
+                    .set(DummyObject.COUNT, 1),
+                DummyObject2.TYPE.instantiate().set(DummyObject2.ID, 1).set(DummyObject2.LABEL, "l1"),
+                DummyObject2.TYPE.instantiate().set(DummyObject2.ID, 2).set(DummyObject2.LABEL, "l2")
+            ).filter(g -> g.getType() == type));
 
         checkUnique(linkManager);
 
@@ -43,16 +43,16 @@ public class DefaultFunctionalKeyRepositoryTest {
     @Test
     public void testUniqueQuery() {
         DefaultUniqueFunctionalKeyRepository linkManager =
-              new DefaultUniqueFunctionalKeyRepository((type) -> Stream.<Glob>of(
-                    DummyObject.TYPE.instantiate().set(DummyObject.ID, 1).set(DummyObject.NAME, "a1")
-                          .set(DummyObject.COUNT, 1),
-                    DummyObject.TYPE.instantiate().set(DummyObject.ID, 2).set(DummyObject.NAME, "a1")
-                          .set(DummyObject.COUNT, 2),
-                    DummyObject.TYPE.instantiate().set(DummyObject.ID, 3).set(DummyObject.NAME, "a3")
-                          .set(DummyObject.COUNT, 1),
-                    DummyObject2.TYPE.instantiate().set(DummyObject2.ID, 1).set(DummyObject2.LABEL, "l1"),
-                    DummyObject2.TYPE.instantiate().set(DummyObject2.ID, 2).set(DummyObject2.LABEL, "l2")
-              ).filter(g -> g.getType() == type));
+            new DefaultUniqueFunctionalKeyRepository((type) -> Stream.<Glob>of(
+                DummyObject.TYPE.instantiate().set(DummyObject.ID, 1).set(DummyObject.NAME, "a1")
+                    .set(DummyObject.COUNT, 1),
+                DummyObject.TYPE.instantiate().set(DummyObject.ID, 2).set(DummyObject.NAME, "a1")
+                    .set(DummyObject.COUNT, 2),
+                DummyObject.TYPE.instantiate().set(DummyObject.ID, 3).set(DummyObject.NAME, "a3")
+                    .set(DummyObject.COUNT, 1),
+                DummyObject2.TYPE.instantiate().set(DummyObject2.ID, 1).set(DummyObject2.LABEL, "l1"),
+                DummyObject2.TYPE.instantiate().set(DummyObject2.ID, 2).set(DummyObject2.LABEL, "l2")
+            ).filter(g -> g.getType() == type));
 
         checkUnique(linkManager);
 
@@ -60,18 +60,18 @@ public class DefaultFunctionalKeyRepositoryTest {
 
     private void checkUnique(FunctionalKeyRepository linkManager) {
         FunctionalKeyBuilder functionalKeyBuilder = FunctionalKeyBuilderFactory.create(DummyObject.TYPE)
-              .add(DummyObject.NAME)
-              .add(DummyObject.COUNT).create();
+            .add(DummyObject.NAME)
+            .add(DummyObject.COUNT).create();
 
         Glob a1 = linkManager.get(functionalKeyBuilder.create().set(DummyObject.NAME, "a1")
-              .set(DummyObject.COUNT, 2).getShared()).iterator().next();
+                                      .set(DummyObject.COUNT, 2).getShared()).iterator().next();
         Assert.assertEquals(2, a1.get(DummyObject.ID).intValue());
 
         Assert.assertEquals(a1, linkManager.getUnique(functionalKeyBuilder.create().set(DummyObject.NAME, "a1")
-              .set(DummyObject.COUNT, 2).getShared()));
+                                                          .set(DummyObject.COUNT, 2).getShared()));
 
         FunctionalKeyBuilder functionalKeyBuilder2 = FunctionalKeyBuilderFactory.create(DummyObject2.TYPE)
-              .add(DummyObject2.LABEL).create();
+            .add(DummyObject2.LABEL).create();
 
         Glob l2 = linkManager.get(functionalKeyBuilder2.create().set(DummyObject2.LABEL, "l2").getShared()).iterator().next();
         Assert.assertEquals(2, l2.get(DummyObject2.ID).intValue());
@@ -83,8 +83,8 @@ public class DefaultFunctionalKeyRepositoryTest {
         FunctionalKeyBuilder functionalKeyBuilderAll = functionalKeyBuilderFactory.create();
 
         Glob l3 = linkManager.get(functionalKeyBuilderAll.create().set(DummyObject.NAME, "a1")
-              .set(DummyObject.ID, 2)
-              .set(DummyObject.COUNT, 2).getShared()).iterator().next();
+                                      .set(DummyObject.ID, 2)
+                                      .set(DummyObject.COUNT, 2).getShared()).iterator().next();
         Assert.assertEquals(2, l3.get(DummyObject.ID).intValue());
 
         FunctionalKeyBuilderFactory multiFunctionalKeyBuilderFactory = FunctionalKeyBuilderFactory.create(DummyObject.TYPE);

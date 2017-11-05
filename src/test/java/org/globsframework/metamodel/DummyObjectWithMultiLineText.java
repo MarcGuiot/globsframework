@@ -6,15 +6,15 @@ import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.StringField;
 
 public class DummyObjectWithMultiLineText {
-  public static GlobType TYPE;
+    public static GlobType TYPE;
 
-  @KeyField
-  public static IntegerField ID;
+    @KeyField
+    public static IntegerField ID;
 
-  @MultiLineText
-  public static StringField COMMENT;
+    @MultiLineText
+    public static StringField COMMENT;
 
-  static {
-     GlobTypeLoaderFactory.create(DummyObjectWithMultiLineText.class).load();
-  }
+    static {
+        GlobTypeLoaderFactory.create(DummyObjectWithMultiLineText.class).load();
+    }
 }

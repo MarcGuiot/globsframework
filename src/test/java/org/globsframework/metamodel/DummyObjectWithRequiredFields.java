@@ -6,18 +6,18 @@ import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.StringField;
 
 public class DummyObjectWithRequiredFields {
-  public static GlobType TYPE;
+    public static GlobType TYPE;
 
-  @KeyField
-  public static IntegerField ID;
+    @KeyField
+    public static IntegerField ID;
 
-  @Required
-  public static IntegerField VALUE;
+    @Required
+    public static IntegerField VALUE;
 
-  @Required
-  public static StringField NAME;
+    @Required
+    public static StringField NAME;
 
-  static {
-     GlobTypeLoaderFactory.create(DummyObjectWithRequiredFields.class).load();
-  }
+    static {
+        GlobTypeLoaderFactory.create(DummyObjectWithRequiredFields.class).load();
+    }
 }

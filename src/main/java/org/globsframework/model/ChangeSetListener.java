@@ -5,7 +5,7 @@ import org.globsframework.metamodel.GlobType;
 import java.util.Set;
 
 public interface ChangeSetListener {
-  void globsChanged(ChangeSet changeSet, GlobRepository repository);
+    void globsChanged(ChangeSet changeSet, GlobRepository repository);
 
-  void globsReset(GlobRepository repository, Set<GlobType> changedTypes);
+    void globsReset(GlobRepository repository, Set<GlobType> changedTypes);
 }

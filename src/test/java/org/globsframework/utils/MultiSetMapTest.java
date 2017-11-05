@@ -26,7 +26,8 @@ public class MultiSetMapTest {
         try {
             map.get("a").add(2);
             fail();
-        } catch (UnsupportedOperationException e) {
+        }
+        catch (UnsupportedOperationException e) {
         }
     }
 }

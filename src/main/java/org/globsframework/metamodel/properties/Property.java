@@ -2,9 +2,9 @@ package org.globsframework.metamodel.properties;
 
 public interface Property<T, D> {
 
-  String getName();
+    String getName();
 
-  int getId();
+    int getId();
 
-  D createValue(T value);
+    D createValue(T value);
 }

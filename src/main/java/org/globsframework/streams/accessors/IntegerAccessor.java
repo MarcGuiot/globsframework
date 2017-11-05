@@ -2,9 +2,9 @@ package org.globsframework.streams.accessors;
 
 public interface IntegerAccessor extends Accessor {
 
-  Integer getInteger();
+    Integer getInteger();
 
-  int getValue(int valueIfNull);
+    int getValue(int valueIfNull);
 
-  boolean wasNull();
+    boolean wasNull();
 }

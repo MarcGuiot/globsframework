@@ -11,15 +11,15 @@ import org.globsframework.utils.exceptions.InvalidState;
 import java.util.Collection;
 
 public interface MutableChangeSet extends ChangeSet {
-  void processCreation(Key globKey, FieldValues values);
+    void processCreation(Key globKey, FieldValues values);
 
-  void processUpdate(Key key, Field field, Object newValue, Object previousValue);
+    void processUpdate(Key key, Field field, Object newValue, Object previousValue);
 
-  void processUpdate(Key key, FieldValuesWithPrevious values);
+    void processUpdate(Key key, FieldValuesWithPrevious values);
 
-  void processDeletion(Key key, FieldValues values);
+    void processDeletion(Key key, FieldValues values);
 
-  void merge(ChangeSet other) throws InvalidState;
+    void merge(ChangeSet other) throws InvalidState;
 
-  void clear(Collection<GlobType> globTypes);
+    void clear(Collection<GlobType> globTypes);
 }

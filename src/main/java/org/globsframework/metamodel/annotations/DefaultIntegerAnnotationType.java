@@ -1,8 +1,8 @@
 package org.globsframework.metamodel.annotations;
 
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.GlobTypeLoaderFactory;
+import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.model.Glob;
 import org.globsframework.model.Key;
 
@@ -18,10 +18,10 @@ public class DefaultIntegerAnnotationType {
         return DESC.instantiate().set(DEFAULT_VALUE, defaultDouble.value());
     }
 
-   static {
-      GlobTypeLoaderFactory.create(DefaultIntegerAnnotationType.class)
-         .register(GlobCreateFromAnnotation.class, annotation -> create((DefaultInteger)annotation))
-         .load();
-   }
+    static {
+        GlobTypeLoaderFactory.create(DefaultIntegerAnnotationType.class)
+            .register(GlobCreateFromAnnotation.class, annotation -> create((DefaultInteger)annotation))
+            .load();
+    }
 
 }

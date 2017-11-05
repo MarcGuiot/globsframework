@@ -7,21 +7,21 @@ import org.globsframework.utils.TestUtils;
 import org.junit.Assert;
 
 public class DummyGlobListFunctor implements GlobListFunctor {
-   private GlobList lastList;
+    private GlobList lastList;
 
-   public void run(GlobList list, GlobRepository repository) {
-      this.lastList = list;
-   }
+    public void run(GlobList list, GlobRepository repository) {
+        this.lastList = list;
+    }
 
-   public void checkNothingReceived() {
-      Assert.assertNull(lastList);
-   }
+    public void checkNothingReceived() {
+        Assert.assertNull(lastList);
+    }
 
-   public void checkEmpty() {
-      Assert.assertTrue(lastList.isEmpty());
-   }
+    public void checkEmpty() {
+        Assert.assertTrue(lastList.isEmpty());
+    }
 
-   public void checkReceived(Glob... globs) {
-      TestUtils.assertEquals(lastList, globs);
-   }
+    public void checkReceived(Glob... globs) {
+        TestUtils.assertEquals(lastList, globs);
+    }
 }

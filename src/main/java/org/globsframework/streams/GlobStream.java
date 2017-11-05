@@ -7,11 +7,11 @@ import java.util.Collection;
 
 public interface GlobStream {
 
-  boolean next();
+    boolean next();
 
-  Collection<Field> getFields();
+    Collection<Field> getFields();
 
-  Accessor getAccessor(Field field);
+    Accessor getAccessor(Field field);
 
-  void close();
+    void close();
 }

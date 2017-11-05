@@ -8,19 +8,19 @@ import org.globsframework.model.Key;
 // introduce typeded link => containmentLink, 1->1, 1->N, M->N, ... hierarchical.
 public interface Link extends MutableAnnotations<Link> {
 
-   GlobType getSourceType();
+    GlobType getSourceType();
 
-   GlobType getTargetType();
+    GlobType getTargetType();
 
-   String getLinkModelName();
+    String getLinkModelName();
 
-   String getName();
+    String getName();
 
-   boolean isRequired();
+    boolean isRequired();
 
-   <T extends FieldMappingFunction> T apply(T functor);
+    <T extends FieldMappingFunction> T apply(T functor);
 
-   boolean isContainment();
+    boolean isContainment();
 
-   Key getTargetKey(Glob source);
+    Key getTargetKey(Glob source);
 }

@@ -10,5 +10,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD})
 public @interface AutoIncrement {
-   GlobType TYPE = AutoIncrementAnnotationType.TYPE;
+    GlobType TYPE = AutoIncrementAnnotationType.TYPE;
 }

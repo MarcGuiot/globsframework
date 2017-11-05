@@ -1,9 +1,9 @@
 package org.globsframework.streams.accessors;
 
 public interface DoubleAccessor extends Accessor {
-   Double getDouble();
+    Double getDouble();
 
-   double getValue(double valueIfNull);
+    double getValue(double valueIfNull);
 
-   boolean wasNull();
+    boolean wasNull();
 }

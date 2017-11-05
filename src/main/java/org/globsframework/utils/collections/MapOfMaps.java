@@ -47,7 +47,8 @@ public class MapOfMaps<KEY1, KEY2, VALUE> {
         Map<KEY2, VALUE> map = maps.get(key1);
         if (map != null) {
             return map;
-        } else {
+        }
+        else {
             Map<KEY2, VALUE> valueHashMap = createInnerMap();
             maps.put(key1, valueHashMap);
             return valueHashMap;
@@ -130,7 +131,8 @@ public class MapOfMaps<KEY1, KEY2, VALUE> {
     public void putAll(KEY1 key, Map<KEY2, VALUE> values) {
         if (maps.containsKey(key)) {
             maps.get(key).putAll(values);
-        } else {
+        }
+        else {
             maps.put(key, createInnerMap(values));
         }
     }

@@ -2,9 +2,9 @@ package org.globsframework.streams.accessors;
 
 public interface LongAccessor extends Accessor {
 
-  Long getLong();
+    Long getLong();
 
-  long getValue(long valueIfNull);
+    long getValue(long valueIfNull);
 
-  boolean wasNull();
+    boolean wasNull();
 }

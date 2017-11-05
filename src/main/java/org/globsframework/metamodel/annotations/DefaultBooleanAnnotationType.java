@@ -1,9 +1,9 @@
 package org.globsframework.metamodel.annotations;
 
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.metamodel.GlobTypeLoader;
 import org.globsframework.metamodel.GlobTypeLoaderFactory;
+import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.model.Glob;
 import org.globsframework.model.Key;
 
@@ -21,8 +21,8 @@ public class DefaultBooleanAnnotationType {
     }
 
     static {
-       GlobTypeLoader loader = GlobTypeLoaderFactory.create(DefaultBooleanAnnotationType.class);
-       loader.register(GlobCreateFromAnnotation.class, annotation -> create((DefaultBoolean)annotation))
-       .load();
+        GlobTypeLoader loader = GlobTypeLoaderFactory.create(DefaultBooleanAnnotationType.class);
+        loader.register(GlobCreateFromAnnotation.class, annotation -> create((DefaultBoolean)annotation))
+            .load();
     }
 }

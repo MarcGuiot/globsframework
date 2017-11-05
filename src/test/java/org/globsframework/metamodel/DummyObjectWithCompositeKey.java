@@ -7,17 +7,17 @@ import org.globsframework.metamodel.fields.StringField;
 
 public class DummyObjectWithCompositeKey {
 
-  public static GlobType TYPE;
+    public static GlobType TYPE;
 
-  @KeyField
-  public static IntegerField ID1;
-  @KeyField
-  public static IntegerField ID2;
+    @KeyField
+    public static IntegerField ID1;
+    @KeyField
+    public static IntegerField ID2;
 
-  @NamingField
-  public static StringField NAME;
+    @NamingField
+    public static StringField NAME;
 
-  static {
-     GlobTypeLoaderFactory.create(DummyObjectWithCompositeKey.class).load();
-  }
+    static {
+        GlobTypeLoaderFactory.create(DummyObjectWithCompositeKey.class).load();
+    }
 }

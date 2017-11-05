@@ -5,9 +5,10 @@ import org.globsframework.functional.FunctionalKeyBuilder;
 import org.globsframework.functional.MutableFunctionalKeyRepository;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.Glob;
-import org.globsframework.utils.collections.MultiMap;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -29,7 +30,8 @@ public class DefaultFunctionalKeyRepository implements MutableFunctionalKeyRepos
         Collection<Glob> glob = index.get(functionalKey);
         if (glob == null) {
             return updateIndex(functionalKey);
-        } else {
+        }
+        else {
             return glob;
         }
     }
@@ -48,10 +50,10 @@ public class DefaultFunctionalKeyRepository implements MutableFunctionalKeyRepos
                 indexed.put(type, functionalKeyBuilders);
             }
             dataAccess.all(type)
-                  .forEach(g -> {
-                      FunctionalKey key = builder.create(g);
-                      update(g, key);
-                  });
+                .forEach(g -> {
+                    FunctionalKey key = builder.create(g);
+                    update(g, key);
+                });
             functionalKeyBuilders.put(builder, Boolean.TRUE);
             Collection<Glob> globs = index.get(functionalKey);
             return globs == null ? Collections.emptyList() : globs;

@@ -7,7 +7,7 @@ import org.globsframework.metamodel.Field;
 import org.globsframework.model.FieldValue;
 
 public class TwoFieldsMutableKey extends AbstractFieldValue<MutableFunctionalKey>
-      implements MutableFunctionalKey, FunctionalKey {
+    implements MutableFunctionalKey, FunctionalKey {
     private final TwoFunctionalKeyBuilder functionalKeyBuilder;
     private Object value1;
     private Object value2;
@@ -23,7 +23,7 @@ public class TwoFieldsMutableKey extends AbstractFieldValue<MutableFunctionalKey
     }
 
     protected MutableFunctionalKey doSet(Field field, Object o) {
-        if (functionalKeyBuilder.field1 == field){
+        if (functionalKeyBuilder.field1 == field) {
             value1 = o;
         }
         else {
@@ -42,12 +42,12 @@ public class TwoFieldsMutableKey extends AbstractFieldValue<MutableFunctionalKey
 
     public FunctionalKey create() {
         return new TwoFieldsMutableKey(functionalKeyBuilder,
-              value1, value2);
+                                       value1, value2);
     }
 
     public boolean contains(Field field) {
         return field == functionalKeyBuilder.field1 ||
-              field == functionalKeyBuilder.field2;
+               field == functionalKeyBuilder.field2;
     }
 
     public int size() {
@@ -61,7 +61,7 @@ public class TwoFieldsMutableKey extends AbstractFieldValue<MutableFunctionalKey
 
     public FieldValue[] toArray() {
         return new FieldValue[]{FieldValue.value(functionalKeyBuilder.field1, value1),
-              FieldValue.value(functionalKeyBuilder.field2, value2)};
+                                FieldValue.value(functionalKeyBuilder.field2, value2)};
     }
 
     public FunctionalKeyBuilder getBuilder() {
@@ -69,13 +69,21 @@ public class TwoFieldsMutableKey extends AbstractFieldValue<MutableFunctionalKey
     }
 
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-        TwoFieldsMutableKey that = (TwoFieldsMutableKey) o;
+        TwoFieldsMutableKey that = (TwoFieldsMutableKey)o;
 
-        if (!functionalKeyBuilder.equals(that.functionalKeyBuilder)) return false;
-        if (value1 != null ? !value1.equals(that.value1) : that.value1 != null) return false;
+        if (!functionalKeyBuilder.equals(that.functionalKeyBuilder)) {
+            return false;
+        }
+        if (value1 != null ? !value1.equals(that.value1) : that.value1 != null) {
+            return false;
+        }
         return value2 != null ? value2.equals(that.value2) : that.value2 == null;
     }
 

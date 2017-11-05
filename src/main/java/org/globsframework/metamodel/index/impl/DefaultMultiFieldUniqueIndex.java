@@ -5,12 +5,12 @@ import org.globsframework.metamodel.index.MultiFieldUniqueIndex;
 
 public class DefaultMultiFieldUniqueIndex extends AbstractMultiFieldIndex implements MultiFieldUniqueIndex {
 
-  public DefaultMultiFieldUniqueIndex(String name) {
-    super(name);
-  }
+    public DefaultMultiFieldUniqueIndex(String name) {
+        super(name);
+    }
 
-  public void visit(MultiFieldIndexVisitor multiFieldIndexVisitor) {
-    multiFieldIndexVisitor.visitUnique(this);
-  }
+    public void visit(MultiFieldIndexVisitor multiFieldIndexVisitor) {
+        multiFieldIndexVisitor.visitUnique(this);
+    }
 
 }

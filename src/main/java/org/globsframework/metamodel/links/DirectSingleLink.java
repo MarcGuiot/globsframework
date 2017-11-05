@@ -4,8 +4,8 @@ import org.globsframework.metamodel.Field;
 
 public interface DirectSingleLink extends DirectLink {
 
-   Field getSourceField();
+    Field getSourceField();
 
-   Field getTargetField();
+    Field getTargetField();
 
 }

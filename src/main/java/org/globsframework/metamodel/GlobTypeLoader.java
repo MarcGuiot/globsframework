@@ -6,17 +6,17 @@ import org.globsframework.metamodel.index.NotUniqueIndex;
 import org.globsframework.metamodel.index.UniqueIndex;
 
 public interface GlobTypeLoader {
-   GlobTypeLoader load();
+    GlobTypeLoader load();
 
-   GlobType getType();
+    GlobType getType();
 
-   void defineUniqueIndex(UniqueIndex index, Field field);
+    void defineUniqueIndex(UniqueIndex index, Field field);
 
-   void defineNonUniqueIndex(NotUniqueIndex index, Field field);
+    void defineNonUniqueIndex(NotUniqueIndex index, Field field);
 
-   void defineMultiFieldUniqueIndex(MultiFieldUniqueIndex index, Field... fields);
+    void defineMultiFieldUniqueIndex(MultiFieldUniqueIndex index, Field... fields);
 
-   void defineMultiFieldNotUniqueIndex(MultiFieldNotUniqueIndex index, Field... fields);
+    void defineMultiFieldNotUniqueIndex(MultiFieldNotUniqueIndex index, Field... fields);
 
-   <T> GlobTypeLoader register(Class<T> klass, T t);
+    <T> GlobTypeLoader register(Class<T> klass, T t);
 }

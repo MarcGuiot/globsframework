@@ -4,22 +4,22 @@ import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.index.MultiFieldIndex;
 
 public abstract class AbstractMultiFieldIndex implements MultiFieldIndex {
-  private String name;
-  private Field[] fields;
+    private String name;
+    private Field[] fields;
 
-  public AbstractMultiFieldIndex(String name) {
-    this.name = name;
-  }
+    public AbstractMultiFieldIndex(String name) {
+        this.name = name;
+    }
 
-  public String getName() {
-    return name;
-  }
+    public String getName() {
+        return name;
+    }
 
-  public Field[] getFields() {
-    return fields;
-  }
+    public Field[] getFields() {
+        return fields;
+    }
 
-  public void setField(Field[] fields) {
-    this.fields = fields;
-  }
+    public void setField(Field[] fields) {
+        this.fields = fields;
+    }
 }

@@ -6,11 +6,11 @@ import org.junit.Test;
 
 public class GlobTypeTest {
 
-   @Test
-   public void testRetrieveFieldFromAnnotation() {
-      TestUtils.assertContains(DummyObjectWithMaxSizeString.TYPE
-                                  .getFieldsWithAnnotation(NamingFieldAnnotationType.UNIQUE_KEY), DummyObjectWithMaxSizeString.TEXT);
+    @Test
+    public void testRetrieveFieldFromAnnotation() {
+        TestUtils.assertContains(DummyObjectWithMaxSizeString.TYPE
+                                     .getFieldsWithAnnotation(NamingFieldAnnotationType.UNIQUE_KEY), DummyObjectWithMaxSizeString.TEXT);
 
-   }
+    }
 
 }

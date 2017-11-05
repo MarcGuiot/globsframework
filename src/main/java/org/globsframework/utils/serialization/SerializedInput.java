@@ -8,37 +8,37 @@ import java.time.ZonedDateTime;
 
 public interface SerializedInput {
 
-   ZonedDateTime readDate();
+    ZonedDateTime readDate();
 
-   Integer readInteger();
+    Integer readInteger();
 
-   int readNotNullInt();
+    int readNotNullInt();
 
-   Double readDouble();
+    Double readDouble();
 
-   double readNotNullDouble();
+    double readNotNullDouble();
 
-   String readUtf8String();
+    String readUtf8String();
 
-   Boolean readBoolean();
+    Boolean readBoolean();
 
-   Long readLong();
+    Long readLong();
 
-   long readNotNullLong();
+    long readNotNullLong();
 
-   byte readByte();
+    byte readByte();
 
-   byte[] readBytes();
+    byte[] readBytes();
 
-   Glob readGlob(GlobModel model);
+    Glob readGlob(GlobModel model);
 
-   ChangeSet readChangeSet(GlobModel model);
+    ChangeSet readChangeSet(GlobModel model);
 
-   int[] readIntArray();
+    int[] readIntArray();
 
-   long[] readLongArray();
+    long[] readLongArray();
 
-   void close();
+    void close();
 
 //  interface FieldExtension {
 //    <T> T read(SerializedInput input);

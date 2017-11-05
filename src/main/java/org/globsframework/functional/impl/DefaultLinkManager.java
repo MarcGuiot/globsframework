@@ -13,7 +13,7 @@ public class DefaultLinkManager implements LinkManager {
     private final Map<FunctionalKey, Glob> index = new HashMap<>();
     private final Set<FunctionalKeyBuilder> indexed = new HashSet<>();
 
-    DefaultLinkManager(Collection<Glob> globs){
+    DefaultLinkManager(Collection<Glob> globs) {
         this.globs = globs;
     }
 
@@ -29,14 +29,14 @@ public class DefaultLinkManager implements LinkManager {
 
     private Glob updateIndex(FunctionalKey functionalKey) {
         FunctionalKeyBuilder builder = functionalKey.getBuilder();
-        if (indexed.contains(builder)){
+        if (indexed.contains(builder)) {
             return null;
         }
         indexed.add(builder);
         GlobType type = functionalKey.getBuilder().getType();
         globs.stream()
-              .filter(g -> g.getType() == type)
-              .forEach( g -> index.put(builder.create(g), g));
+            .filter(g -> g.getType() == type)
+            .forEach(g -> index.put(builder.create(g), g));
         return index.get(functionalKey);
     }
 }

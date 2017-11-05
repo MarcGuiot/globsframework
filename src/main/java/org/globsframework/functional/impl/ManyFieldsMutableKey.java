@@ -10,7 +10,7 @@ import org.globsframework.model.FieldValues;
 import java.util.Arrays;
 
 public class ManyFieldsMutableKey extends AbstractFieldValue<MutableFunctionalKey>
-      implements MutableFunctionalKey, FunctionalKey {
+    implements MutableFunctionalKey, FunctionalKey {
     private final ManyFunctionalKeyBuilder functionalKeyBuilder;
     private Object values[];
 
@@ -81,12 +81,18 @@ public class ManyFieldsMutableKey extends AbstractFieldValue<MutableFunctionalKe
     }
 
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-        ManyFieldsMutableKey that = (ManyFieldsMutableKey) o;
+        ManyFieldsMutableKey that = (ManyFieldsMutableKey)o;
 
-        if (!functionalKeyBuilder.equals(that.functionalKeyBuilder)) return false;
+        if (!functionalKeyBuilder.equals(that.functionalKeyBuilder)) {
+            return false;
+        }
         return Arrays.equals(values, that.values);
     }
 

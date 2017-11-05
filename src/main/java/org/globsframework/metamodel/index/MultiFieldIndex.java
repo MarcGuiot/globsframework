@@ -3,9 +3,9 @@ package org.globsframework.metamodel.index;
 import org.globsframework.metamodel.Field;
 
 public interface MultiFieldIndex {
-  String getName();
+    String getName();
 
-  Field[] getFields();
+    Field[] getFields();
 
-  void visit(MultiFieldIndexVisitor multiFieldIndexVisitor);
+    void visit(MultiFieldIndexVisitor multiFieldIndexVisitor);
 }

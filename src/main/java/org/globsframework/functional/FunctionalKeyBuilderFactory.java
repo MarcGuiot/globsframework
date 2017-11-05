@@ -6,7 +6,7 @@ import org.globsframework.metamodel.GlobType;
 
 public interface FunctionalKeyBuilderFactory {
 
-    static FunctionalKeyBuilderFactory create(GlobType globType){
+    static FunctionalKeyBuilderFactory create(GlobType globType) {
         return new DefaultFunctionalKeyBuilderFactory(globType);
     }
 

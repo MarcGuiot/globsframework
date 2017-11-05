@@ -9,6 +9,7 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.RUNTIME)
 @java.lang.annotation.Target({ElementType.FIELD})
 public @interface DefaultBoolean {
-  boolean value();
-   GlobType TYPE = DefaultBooleanAnnotationType.TYPE;
+    boolean value();
+
+    GlobType TYPE = DefaultBooleanAnnotationType.TYPE;
 }

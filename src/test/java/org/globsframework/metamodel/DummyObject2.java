@@ -8,17 +8,17 @@ import org.globsframework.metamodel.fields.StringField;
 
 public class DummyObject2 {
 
-   public static GlobType TYPE;
+    public static GlobType TYPE;
 
-   @KeyField
-   public static IntegerField ID;
+    @KeyField
+    public static IntegerField ID;
 
-   public static StringField LABEL;
+    public static StringField LABEL;
 
-   @DoublePrecision(4)
-   public static DoubleField VALUE;
+    @DoublePrecision(4)
+    public static DoubleField VALUE;
 
-   static {
-      GlobTypeLoaderFactory.create(DummyObject2.class).load();
-   }
+    static {
+        GlobTypeLoaderFactory.create(DummyObject2.class).load();
+    }
 }

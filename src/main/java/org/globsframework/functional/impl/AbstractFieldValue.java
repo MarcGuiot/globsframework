@@ -53,10 +53,11 @@ public abstract class AbstractFieldValue<T extends FieldSetter> implements Field
     public void safeApply(Functor functor) {
         try {
             apply(functor);
-        } catch (RuntimeException e){
+        }
+        catch (RuntimeException e) {
             throw e;
         }
-        catch (Exception e){
+        catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -72,7 +73,7 @@ public abstract class AbstractFieldValue<T extends FieldSetter> implements Field
     }
 
     public Double get(DoubleField doubleField) throws ItemNotFound {
-        return (Double) getValue(doubleField);
+        return (Double)getValue(doubleField);
     }
 
     public double get(DoubleField doubleField, double v) throws ItemNotFound {
@@ -81,7 +82,7 @@ public abstract class AbstractFieldValue<T extends FieldSetter> implements Field
     }
 
     public Integer get(IntegerField field) throws ItemNotFound {
-        return (Integer) doGet(field);
+        return (Integer)doGet(field);
     }
 
     public int get(IntegerField field, int valueIfNull) throws ItemNotFound {
@@ -90,11 +91,11 @@ public abstract class AbstractFieldValue<T extends FieldSetter> implements Field
     }
 
     public String get(StringField field) throws ItemNotFound {
-        return (String) doGet(field);
+        return (String)doGet(field);
     }
 
     public Boolean get(BooleanField field) throws ItemNotFound {
-        return (Boolean) doGet(field);
+        return (Boolean)doGet(field);
     }
 
     public Boolean get(BooleanField booleanField, boolean valueIfNull) {
@@ -107,7 +108,7 @@ public abstract class AbstractFieldValue<T extends FieldSetter> implements Field
     }
 
     public Long get(LongField field) throws ItemNotFound {
-        return (Long) doGet(field);
+        return (Long)doGet(field);
     }
 
     public long get(LongField longField, long valueIfNull) throws ItemNotFound {
@@ -116,6 +117,6 @@ public abstract class AbstractFieldValue<T extends FieldSetter> implements Field
     }
 
     public byte[] get(BlobField blobField) throws ItemNotFound {
-        return (byte[]) doGet(blobField);
+        return (byte[])doGet(blobField);
     }
 }

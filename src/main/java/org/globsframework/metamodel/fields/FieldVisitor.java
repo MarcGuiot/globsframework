@@ -13,7 +13,7 @@ public interface FieldVisitor {
 
     void visitLong(LongField field) throws Exception;
 
-   void visitBlob(BlobField field) throws Exception;
+    void visitBlob(BlobField field) throws Exception;
 
 
     class AbstractFieldVisitor implements FieldVisitor {
@@ -38,18 +38,18 @@ public interface FieldVisitor {
             notManaged(field);
         }
 
-       public void visitBlob(BlobField field) throws Exception {
-           notManaged(field);
+        public void visitBlob(BlobField field) throws Exception {
+            notManaged(field);
         }
 
-        public void notManaged(Field field) throws Exception{
+        public void notManaged(Field field) throws Exception {
         }
     }
 
     class AbstractWithErrorVisitor extends AbstractFieldVisitor {
-      public void notManaged(Field field) throws Exception {
-        throw new RuntimeException(field.getFullName() + " of type " + field.getDataType() + " not managed.");
-      }
+        public void notManaged(Field field) throws Exception {
+            throw new RuntimeException(field.getFullName() + " of type " + field.getDataType() + " not managed.");
+        }
     }
 
 }

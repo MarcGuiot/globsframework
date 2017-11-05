@@ -1,17 +1,17 @@
 package org.globsframework.xml;
 
-import org.globsframework.metamodel.utils.EmptyGlobLinkModel;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobLinkModel;
 import org.globsframework.metamodel.links.Link;
 import org.globsframework.metamodel.links.impl.DefaultDirectSingleLink;
+import org.globsframework.metamodel.utils.EmptyGlobLinkModel;
 import org.globsframework.metamodel.utils.GlobTypeUtils;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
+import org.globsframework.saxstack.utils.XmlUtils;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.exceptions.ResourceAccessFailed;
-import org.globsframework.saxstack.utils.XmlUtils;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -42,7 +42,8 @@ public class XmlGlobWriter {
         write(globs, repository, outputStreamWriter);
         try {
             outputStreamWriter.flush();
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             throw new ResourceAccessFailed(e);
         }
     }
@@ -61,7 +62,8 @@ public class XmlGlobWriter {
                 writeGlob(glob);
             }
             writer.write("</globs>");
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             throw new ResourceAccessFailed(e);
         }
     }
@@ -78,7 +80,8 @@ public class XmlGlobWriter {
         List<Glob> children = getChildren(glob, repository, globLinkModel);
         if (children.isEmpty()) {
             writer.write("/>");
-        } else {
+        }
+        else {
             writer.write(">");
             for (Glob child : children) {
                 writeGlob(child);
@@ -143,7 +146,8 @@ public class XmlGlobWriter {
                 }
                 try {
                     writeAttribute(writer, getLinkName(link, namingField), value);
-                } catch (IOException e) {
+                }
+                catch (IOException e) {
                     throw new ResourceAccessFailed(e);
                 }
             }

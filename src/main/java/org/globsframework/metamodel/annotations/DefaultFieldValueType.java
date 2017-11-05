@@ -10,6 +10,8 @@ public class DefaultFieldValueType {
     public static Key key;
 
     static {
-       GlobTypeLoaderFactory.create(DefaultFieldValueType.class).load();
-    };
+        GlobTypeLoaderFactory.create(DefaultFieldValueType.class).load();
+    }
+
+    ;
 }

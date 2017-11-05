@@ -2,9 +2,9 @@ package org.globsframework.model;
 
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.metamodel.links.Link;
 import org.globsframework.metamodel.index.Index;
 import org.globsframework.metamodel.index.MultiFieldIndex;
+import org.globsframework.metamodel.links.Link;
 import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.utils.exceptions.ItemAmbiguity;
@@ -12,7 +12,6 @@ import org.globsframework.utils.exceptions.ItemNotFound;
 
 import java.util.Comparator;
 import java.util.Set;
-import java.util.stream.Stream;
 
 public interface ReadOnlyGlobRepository {
 
@@ -37,10 +36,10 @@ public interface ReadOnlyGlobRepository {
     void safeApply(GlobType type, GlobMatcher matcher, GlobFunctor callback);
 
     Glob findUnique(GlobType type, FieldValue... values)
-            throws ItemAmbiguity;
+        throws ItemAmbiguity;
 
     Glob findUnique(GlobType type, GlobMatcher matcher)
-            throws ItemAmbiguity;
+        throws ItemAmbiguity;
 
     Glob[] getSorted(GlobType type, Comparator<Glob> comparator, GlobMatcher matcher);
 

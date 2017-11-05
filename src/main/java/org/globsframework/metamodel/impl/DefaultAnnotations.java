@@ -11,7 +11,7 @@ import org.globsframework.utils.exceptions.ItemNotFound;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.Spliterators;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -21,33 +21,33 @@ public class DefaultAnnotations<T extends MutableAnnotations> implements Mutable
     static private final Logger LOGGER = LoggerFactory.getLogger(DefaultAnnotations.class);
     volatile private MapOfMaps<GlobType, Key, Glob> annotations = new MapOfMaps<>();
 
-   public DefaultAnnotations() {
-   }
+    public DefaultAnnotations() {
+    }
 
-   public DefaultAnnotations(Glob[] annotations) {
-      for (Glob annotation : annotations) {
-          this.annotations.put(annotation.getType(), annotation.getKey(), annotation);
-      }
-   }
+    public DefaultAnnotations(Glob[] annotations) {
+        for (Glob annotation : annotations) {
+            this.annotations.put(annotation.getType(), annotation.getKey(), annotation);
+        }
+    }
 
-   public DefaultAnnotations(Annotations annotations) {
-       annotations.streamAnnotations()
-             .forEach(annotation -> this.annotations.put(annotation.getType(), annotation.getKey(), annotation)
-);
-   }
+    public DefaultAnnotations(Annotations annotations) {
+        annotations.streamAnnotations()
+            .forEach(annotation -> this.annotations.put(annotation.getType(), annotation.getKey(), annotation)
+            );
+    }
 
-   public T addAnnotation(Glob glob) {
-       if (glob != null) {
-          synchronized (this) {
-             MapOfMaps<GlobType, Key, Glob> tmp = new MapOfMaps<>(annotations);
-             Glob old = tmp.put(glob.getType(), glob.getKey(), glob);
-              if (old != null) {
-                  LOGGER.warn(GlobPrinter.toString(glob) + " has replaced " + GlobPrinter.toString(old));
-              }
-             annotations = tmp;
-          }
-       }
-      return (T)this;
+    public T addAnnotation(Glob glob) {
+        if (glob != null) {
+            synchronized (this) {
+                MapOfMaps<GlobType, Key, Glob> tmp = new MapOfMaps<>(annotations);
+                Glob old = tmp.put(glob.getType(), glob.getKey(), glob);
+                if (old != null) {
+                    LOGGER.warn(GlobPrinter.toString(glob) + " has replaced " + GlobPrinter.toString(old));
+                }
+                annotations = tmp;
+            }
+        }
+        return (T)this;
     }
 
     public T addAnnotations(Stream<Glob> globs) {
@@ -62,11 +62,11 @@ public class DefaultAnnotations<T extends MutableAnnotations> implements Mutable
 
             annotations = tmp;
         }
-        return (T) this;
+        return (T)this;
     }
 
-    public Stream<Glob> streamAnnotations(){
-       return StreamSupport.stream(Spliterators.spliterator(annotations.iterator(), annotations.size(), SIZED), false);
+    public Stream<Glob> streamAnnotations() {
+        return StreamSupport.stream(Spliterators.spliterator(annotations.iterator(), annotations.size(), SIZED), false);
     }
 
     public Stream<Glob> streamAnnotations(GlobType type) {
@@ -78,11 +78,11 @@ public class DefaultAnnotations<T extends MutableAnnotations> implements Mutable
     }
 
     public Glob getAnnotation(Key key) {
-      Glob annotation = annotations.get(key.getGlobType(), key);
-      if (annotation == null) {
-        throw new ItemNotFound(key.toString());
-      }
-      return annotation;
+        Glob annotation = annotations.get(key.getGlobType(), key);
+        if (annotation == null) {
+            throw new ItemNotFound(key.toString());
+        }
+        return annotation;
     }
 
     public Glob findAnnotation(Key key) {

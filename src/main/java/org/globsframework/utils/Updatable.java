@@ -1,5 +1,5 @@
 package org.globsframework.utils;
 
 public interface Updatable {
-  void update();
+    void update();
 }

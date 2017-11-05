@@ -4,5 +4,5 @@ import org.globsframework.model.ChangeSet;
 import org.globsframework.model.GlobRepository;
 
 public interface ChangeSetMatcher {
-  boolean matches(ChangeSet changeSet, GlobRepository repository);
+    boolean matches(ChangeSet changeSet, GlobRepository repository);
 }

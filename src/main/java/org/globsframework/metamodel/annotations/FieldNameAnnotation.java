@@ -9,7 +9,7 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.RUNTIME)
 @java.lang.annotation.Target({ElementType.FIELD})
 public @interface FieldNameAnnotation {
-   String value();
+    String value();
 
-   GlobType TYPE = FieldNameAnnotationType.TYPE;
+    GlobType TYPE = FieldNameAnnotationType.TYPE;
 }

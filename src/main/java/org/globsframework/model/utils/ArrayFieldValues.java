@@ -6,41 +6,41 @@ import org.globsframework.model.impl.AbstractFieldValues;
 
 public class ArrayFieldValues extends AbstractFieldValues {
 
-  private FieldValue[] values;
+    private FieldValue[] values;
 
-  public ArrayFieldValues(FieldValue[] values) {
-    this.values = values;
-  }
-
-  protected Object doGet(Field field) {
-    for (FieldValue value : values) {
-      if (value.getField().equals(field)) {
-        return value.getValue();
-      }
+    public ArrayFieldValues(FieldValue[] values) {
+        this.values = values;
     }
-    return null;
-  }
 
-  public boolean contains(Field field) {
-    for (FieldValue value : values) {
-      if (value.getField().equals(field)) {
-        return true;
-      }
+    protected Object doGet(Field field) {
+        for (FieldValue value : values) {
+            if (value.getField().equals(field)) {
+                return value.getValue();
+            }
+        }
+        return null;
     }
-    return false;
-  }
 
-  public int size() {
-    return values.length;
-  }
-
-  public void apply(Functor functor) throws Exception {
-    for (FieldValue value : values) {
-      functor.process(value.getField(), value.getValue());
+    public boolean contains(Field field) {
+        for (FieldValue value : values) {
+            if (value.getField().equals(field)) {
+                return true;
+            }
+        }
+        return false;
     }
-  }
 
-  public FieldValue[] toArray() {
-    return values;
-  }
+    public int size() {
+        return values.length;
+    }
+
+    public void apply(Functor functor) throws Exception {
+        for (FieldValue value : values) {
+            functor.process(value.getField(), value.getValue());
+        }
+    }
+
+    public FieldValue[] toArray() {
+        return values;
+    }
 }

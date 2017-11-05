@@ -8,24 +8,24 @@ import org.globsframework.utils.Utils;
 import java.util.Comparator;
 
 public abstract class AbstractGlobStringifier implements GlobStringifier {
-  private Comparator<Glob> comparator;
+    private Comparator<Glob> comparator;
 
-  protected AbstractGlobStringifier() {
-  }
-
-  protected AbstractGlobStringifier(Comparator<Glob> comparator) {
-    this.comparator = comparator;
-  }
-
-  public Comparator<Glob> getComparator(final GlobRepository globRepository) {
-    if (comparator != null) {
-      return comparator;
+    protected AbstractGlobStringifier() {
     }
-    return new Comparator<Glob>() {
-      public int compare(Glob glob1, Glob glob2) {
-        return Utils.compare(AbstractGlobStringifier.this.toString(glob1, globRepository),
-                             AbstractGlobStringifier.this.toString(glob2, globRepository));
-      }
-    };
-  }
+
+    protected AbstractGlobStringifier(Comparator<Glob> comparator) {
+        this.comparator = comparator;
+    }
+
+    public Comparator<Glob> getComparator(final GlobRepository globRepository) {
+        if (comparator != null) {
+            return comparator;
+        }
+        return new Comparator<Glob>() {
+            public int compare(Glob glob1, Glob glob2) {
+                return Utils.compare(AbstractGlobStringifier.this.toString(glob1, globRepository),
+                                     AbstractGlobStringifier.this.toString(glob2, globRepository));
+            }
+        };
+    }
 }

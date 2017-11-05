@@ -2,7 +2,7 @@ package org.globsframework.streams.accessors;
 
 public interface BooleanAccessor extends Accessor {
 
-  Boolean getBoolean();
+    Boolean getBoolean();
 
-  boolean getValue(boolean valueIfNull);
+    boolean getValue(boolean valueIfNull);
 }

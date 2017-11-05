@@ -4,5 +4,5 @@ import org.globsframework.model.Glob;
 
 public interface GlobAccessor extends Accessor {
 
-  Glob getGlob();
+    Glob getGlob();
 }

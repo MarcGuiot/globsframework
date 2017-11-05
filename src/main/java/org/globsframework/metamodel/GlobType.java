@@ -6,8 +6,6 @@ import org.globsframework.metamodel.properties.PropertyHolder;
 import org.globsframework.model.GlobFactory;
 import org.globsframework.model.Key;
 import org.globsframework.model.MutableGlob;
-import org.globsframework.model.globaccessor.GlobGetAccessor;
-import org.globsframework.model.globaccessor.GlobSetAccessor;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
 import java.util.Collection;
@@ -15,41 +13,41 @@ import java.util.stream.Stream;
 
 public interface GlobType extends PropertyHolder<GlobType>, Annotations {
 
-   String getName();
+    String getName();
 
-   Field getField(String name) throws ItemNotFound;
+    Field getField(String name) throws ItemNotFound;
 
-   Field findField(String name);
+    Field findField(String name);
 
-   boolean hasField(String name);
+    boolean hasField(String name);
 
-   Field[] getFields();
+    Field[] getFields();
 
-   Stream<Field> streamFields();
+    Stream<Field> streamFields();
 
-   Field getField(int index);
+    Field getField(int index);
 
-   int getFieldCount();
+    int getFieldCount();
 
-   Field[] getKeyFields();
+    Field[] getKeyFields();
 
-   Field findFieldWithAnnotation(Key key);
+    Field findFieldWithAnnotation(Key key);
 
-   Field getFieldWithAnnotation(Key key) throws ItemNotFound;
+    Field getFieldWithAnnotation(Key key) throws ItemNotFound;
 
-   Collection<Field> getFieldsWithAnnotation(Key key);
+    Collection<Field> getFieldsWithAnnotation(Key key);
 
-   Collection<Index> getIndices();
+    Collection<Index> getIndices();
 
-   Collection<MultiFieldIndex> getMultiFieldIndices();
+    Collection<MultiFieldIndex> getMultiFieldIndices();
 
-   GlobFactory getGlobFactory();
+    GlobFactory getGlobFactory();
 
-   <T> T getRegistered(Class<T> klass);
+    <T> T getRegistered(Class<T> klass);
 
-   String describe();
+    String describe();
 
-   default MutableGlob instantiate() {
-      return getGlobFactory().create();
-   }
+    default MutableGlob instantiate() {
+        return getGlobFactory().create();
+    }
 }

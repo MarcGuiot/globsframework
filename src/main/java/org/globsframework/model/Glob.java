@@ -4,19 +4,19 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.links.Link;
 
 public interface Glob extends FieldValues {
-  GlobType getType();
+    GlobType getType();
 
-  Key getKey();
+    Key getKey();
 
-  Key getTargetKey(Link link);
+    Key getTargetKey(Link link);
 
-  boolean matches(FieldValues values);
+    boolean matches(FieldValues values);
 
-  boolean matches(FieldValue... values);
+    boolean matches(FieldValue... values);
 
-  FieldValues getValues();
+    FieldValues getValues();
 
-  boolean exists();
+    boolean exists();
 
-  Glob duplicate();
+    Glob duplicate();
 }

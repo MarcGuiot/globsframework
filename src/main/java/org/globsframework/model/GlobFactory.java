@@ -1,15 +1,8 @@
 package org.globsframework.model;
 
-import org.globsframework.metamodel.Field;
-import org.globsframework.metamodel.fields.DoubleField;
-import org.globsframework.metamodel.fields.IntegerField;
-import org.globsframework.model.globaccessor.GlobSetAccessor;
-import org.globsframework.model.globaccessor.GlobSetDoubleAccessor;
-import org.globsframework.model.globaccessor.GlobSetIntAccessor;
-
 public interface GlobFactory {
 
-   MutableGlob create();
+    MutableGlob create();
 
 //   GlobSetAccessor get(Field field);
 //

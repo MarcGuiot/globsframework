@@ -1,7 +1,5 @@
 package org.globsframework.metamodel.fields;
 
-import java.util.Date;
-
 public interface FieldValueVisitor {
     void visitInteger(IntegerField field, Integer value) throws Exception;
 
@@ -11,11 +9,11 @@ public interface FieldValueVisitor {
 
     void visitBoolean(BooleanField field, Boolean value) throws Exception;
 
-   void visitLong(LongField field, Long value) throws Exception;
+    void visitLong(LongField field, Long value) throws Exception;
 
     void visitBlob(BlobField field, byte[] value) throws Exception;
 
-   class AbstractFieldValueVisitor implements FieldValueVisitor {
+    class AbstractFieldValueVisitor implements FieldValueVisitor {
 
         public void visitInteger(IntegerField field, Integer value) throws Exception {
 
@@ -42,6 +40,6 @@ public interface FieldValueVisitor {
 
         }
 
-   }
+    }
 
 }

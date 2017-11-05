@@ -7,7 +7,7 @@ import java.util.stream.Stream;
 
 public interface MutableAnnotations<T extends MutableAnnotations> extends Annotations {
 
-   T addAnnotation(Glob glob);
+    T addAnnotation(Glob glob);
 
-   T addAnnotations(Stream<Glob> globs);
+    T addAnnotations(Stream<Glob> globs);
 }

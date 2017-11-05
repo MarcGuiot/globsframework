@@ -7,7 +7,7 @@ import org.globsframework.metamodel.Field;
 import org.globsframework.model.FieldValue;
 
 public class OneFieldMutableKey extends AbstractFieldValue<MutableFunctionalKey>
-      implements MutableFunctionalKey, FunctionalKey {
+    implements MutableFunctionalKey, FunctionalKey {
     private final OneFunctionalKeyBuilder functionalKeyBuilder;
     private Object value;
 
@@ -58,12 +58,18 @@ public class OneFieldMutableKey extends AbstractFieldValue<MutableFunctionalKey>
     }
 
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-        OneFieldMutableKey that = (OneFieldMutableKey) o;
+        OneFieldMutableKey that = (OneFieldMutableKey)o;
 
-        if (!functionalKeyBuilder.equals(that.functionalKeyBuilder)) return false;
+        if (!functionalKeyBuilder.equals(that.functionalKeyBuilder)) {
+            return false;
+        }
         return value != null ? value.equals(that.value) : that.value == null;
     }
 

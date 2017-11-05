@@ -2,8 +2,11 @@ package org.globsframework.model;
 
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
+import org.globsframework.metamodel.fields.BooleanField;
+import org.globsframework.metamodel.fields.DoubleField;
+import org.globsframework.metamodel.fields.IntegerField;
+import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.metamodel.links.Link;
-import org.globsframework.metamodel.fields.*;
 import org.globsframework.model.utils.*;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
@@ -52,7 +55,8 @@ public class GlobList extends ArrayList<Glob> {
         for (Glob glob : this) {
             if (glob == null) {
                 strings.add("null");
-            } else {
+            }
+            else {
                 strings.add(glob.toString());
             }
         }
@@ -116,7 +120,7 @@ public class GlobList extends ArrayList<Glob> {
     public boolean removeAll(Set<Key> keys) {
         boolean asRemoved = false;
         for (Iterator it = this.iterator(); it.hasNext(); ) {
-            Glob glob = (Glob) it.next();
+            Glob glob = (Glob)it.next();
             if (keys.contains(glob.getKey())) {
                 it.remove();
                 asRemoved = true;
@@ -323,7 +327,8 @@ public class GlobList extends ArrayList<Glob> {
     public GlobList safeApply(GlobFunctor functor, GlobRepository repository) {
         try {
             apply(functor, repository);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new UnexpectedApplicationState(e);
         }
         return this;
@@ -389,7 +394,8 @@ public class GlobList extends ArrayList<Glob> {
             Integer value = glob.get(field);
             if (result == null) {
                 result = value;
-            } else if ((value != null) && (value > result)) {
+            }
+            else if ((value != null) && (value > result)) {
                 result = value;
             }
         }
@@ -402,7 +408,8 @@ public class GlobList extends ArrayList<Glob> {
             Integer value = glob.get(field);
             if (result == null) {
                 result = value;
-            } else if ((value != null) && (value < result)) {
+            }
+            else if ((value != null) && (value < result)) {
                 result = value;
             }
         }
@@ -423,7 +430,8 @@ public class GlobList extends ArrayList<Glob> {
             Double value = glob.get(field);
             if (result == null) {
                 result = value;
-            } else if (value != null) {
+            }
+            else if (value != null) {
                 result += value;
             }
         }

@@ -8,15 +8,15 @@ import org.globsframework.model.Key;
 public class AutoIncrementAnnotationType {
     public static GlobType TYPE;
 
-   @InitUniqueKey
-   public static Key KEY;
+    @InitUniqueKey
+    public static Key KEY;
 
-   @InitUniqueGlob
-   public static Glob INSTANCE;
+    @InitUniqueGlob
+    public static Glob INSTANCE;
 
     static {
-       GlobTypeLoaderFactory.create(AutoIncrementAnnotationType.class)
-          .register(GlobCreateFromAnnotation.class, annotation -> INSTANCE)
-          .load();
+        GlobTypeLoaderFactory.create(AutoIncrementAnnotationType.class)
+            .register(GlobCreateFromAnnotation.class, annotation -> INSTANCE)
+            .load();
     }
 }

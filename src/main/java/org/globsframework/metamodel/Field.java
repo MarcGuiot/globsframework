@@ -10,41 +10,41 @@ import org.globsframework.utils.exceptions.InvalidParameter;
 
 public interface Field extends PropertyHolder<Field>, MutableAnnotations<Field> {
 
-   String getName();
+    String getName();
 
-   String getFullName();
+    String getFullName();
 
-   GlobType getGlobType();
+    GlobType getGlobType();
 
-   void checkValue(Object object) throws InvalidParameter;
+    void checkValue(Object object) throws InvalidParameter;
 
-   Class getValueClass();
+    Class getValueClass();
 
-   boolean isKeyField();
+    boolean isKeyField();
 
-   Object getDefaultValue();
+    Object getDefaultValue();
 
-   boolean isRequired();
+    boolean isRequired();
 
-   <T extends FieldVisitor> T visit(T visitor) throws Exception;
+    <T extends FieldVisitor> T visit(T visitor) throws Exception;
 
-   <T extends FieldVisitor> T safeVisit(T visitor);
+    <T extends FieldVisitor> T safeVisit(T visitor);
 
-   <T extends FieldVisitorWithContext<C>, C> T safeVisit(T visitor, C context);
+    <T extends FieldVisitorWithContext<C>, C> T safeVisit(T visitor, C context);
 
-   void safeVisit(FieldValueVisitor visitor, Object value);
+    void safeVisit(FieldValueVisitor visitor, Object value);
 
-   DataType getDataType();
+    DataType getDataType();
 
-   /**
-    * Returns the index of the field within the containing GlobType. The order of fields
-    * within a GlobType is that of the declaration. This method is mainly used for optimization purposes.
-    */
-   int getIndex();
+    /**
+     * Returns the index of the field within the containing GlobType. The order of fields
+     * within a GlobType is that of the declaration. This method is mainly used for optimization purposes.
+     */
+    int getIndex();
 
-   int getKeyIndex();
+    int getKeyIndex();
 
-   boolean valueEqual(Object o1, Object o2);
+    boolean valueEqual(Object o1, Object o2);
 
-   Object normalize(Object value);
+    Object normalize(Object value);
 }

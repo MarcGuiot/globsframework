@@ -3,38 +3,38 @@ package org.globsframework.model.delta;
 import org.globsframework.metamodel.Field;
 import org.globsframework.model.ChangeSetVisitor;
 import org.globsframework.model.FieldValues;
-import org.globsframework.model.Key;
 import org.globsframework.model.FieldValuesWithPrevious;
+import org.globsframework.model.Key;
 
 interface DeltaGlob extends FieldValuesWithPrevious {
 
-  Key getKey();
+    Key getKey();
 
-  void setState(DeltaState state);
+    void setState(DeltaState state);
 
-  boolean isSet(Field field);
+    boolean isSet(Field field);
 
-  void setValue(Field field, Object value);
+    void setValue(Field field, Object value);
 
-  void setValue(Field field, Object value, Object previousValue);
+    void setValue(Field field, Object value, Object previousValue);
 
-  void setValueForUpdate(Field field, Object value);
+    void setValueForUpdate(Field field, Object value);
 
-  void setValues(FieldValues values);
+    void setValues(FieldValues values);
 
-  void setPreviousValues(FieldValues values);
+    void setPreviousValues(FieldValues values);
 
-  void mergePreviousValues(FieldValues values);
+    void mergePreviousValues(FieldValues values);
 
-  FieldValues getValues();
+    FieldValues getValues();
 
-  FieldValues getPreviousValues();
+    FieldValues getPreviousValues();
 
-  void resetValues();
+    void resetValues();
 
-  void visit(ChangeSetVisitor visitor) throws Exception;
+    void visit(ChangeSetVisitor visitor) throws Exception;
 
-  void safeVisit(ChangeSetVisitor visitor);
+    void safeVisit(ChangeSetVisitor visitor);
 
-  void cleanupChanges();
+    void cleanupChanges();
 }

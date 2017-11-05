@@ -1,7 +1,8 @@
 package org.globsframework.metamodel.impl;
 
+import org.globsframework.metamodel.Annotations;
 import org.globsframework.metamodel.Field;
-import org.globsframework.metamodel.annotations.*;
+import org.globsframework.metamodel.annotations.DefaultFieldValueType;
 import org.globsframework.metamodel.fields.impl.*;
 import org.globsframework.metamodel.index.MultiFieldNotUniqueIndex;
 import org.globsframework.metamodel.index.MultiFieldUniqueIndex;
@@ -11,82 +12,81 @@ import org.globsframework.metamodel.index.impl.DefaultMultiFieldNotUniqueIndex;
 import org.globsframework.metamodel.index.impl.DefaultMultiFieldUniqueIndex;
 import org.globsframework.metamodel.index.impl.DefaultNotUniqueIndex;
 import org.globsframework.metamodel.index.impl.DefaultUniqueIndex;
-import org.globsframework.metamodel.Annotations;
 import org.globsframework.metamodel.utils.MutableGlobType;
 import org.globsframework.model.Glob;
 import org.globsframework.model.Key;
 
 public class DefaultFieldFactory {
-   private MutableGlobType type;
+    private MutableGlobType type;
 
-   public DefaultFieldFactory(MutableGlobType type) {
-      this.type = type;
-   }
+    public DefaultFieldFactory(MutableGlobType type) {
+        this.type = type;
+    }
 
-   public DefaultIntegerField addInteger(String name,
-                                         boolean isKeyField,
-                                         int keyIndex, int index,
-                                         Integer defaultValue) {
-      return add(new DefaultIntegerField(name, type, index, isKeyField, keyIndex, defaultValue), isKeyField);
-   }
+    public DefaultIntegerField addInteger(String name,
+                                          boolean isKeyField,
+                                          int keyIndex, int index,
+                                          Integer defaultValue) {
+        return add(new DefaultIntegerField(name, type, index, isKeyField, keyIndex, defaultValue), isKeyField);
+    }
 
-   public DefaultLongField addLong(String name,
-                                   boolean isKeyField,
-                                   int keyIndex, int index,
-                                   Long defaultValue) {
-      return add(new DefaultLongField(name, type, index, isKeyField, keyIndex, defaultValue), isKeyField);
-   }
+    public DefaultLongField addLong(String name,
+                                    boolean isKeyField,
+                                    int keyIndex, int index,
+                                    Long defaultValue) {
+        return add(new DefaultLongField(name, type, index, isKeyField, keyIndex, defaultValue), isKeyField);
+    }
 
-   public DefaultDoubleField addDouble(String name,
-                                       boolean isKeyField,
-                                       final int keyIndex, int index,
-                                       Double defaultValue) {
-      return add(new DefaultDoubleField(name, type, index, isKeyField, keyIndex, defaultValue), isKeyField);
-   }
+    public DefaultDoubleField addDouble(String name,
+                                        boolean isKeyField,
+                                        final int keyIndex, int index,
+                                        Double defaultValue) {
+        return add(new DefaultDoubleField(name, type, index, isKeyField, keyIndex, defaultValue), isKeyField);
+    }
 
-   public DefaultStringField addString(String name,
-                                       boolean isKeyField,
-                                       int keyIndex, int index,
-                                       String defaultValue) {
-      return add(new DefaultStringField(name, type, index, isKeyField, keyIndex, defaultValue), isKeyField);
-   }
+    public DefaultStringField addString(String name,
+                                        boolean isKeyField,
+                                        int keyIndex, int index,
+                                        String defaultValue) {
+        return add(new DefaultStringField(name, type, index, isKeyField, keyIndex, defaultValue), isKeyField);
+    }
 
-   public DefaultBooleanField addBoolean(String name,
-                                         boolean isKeyField,
-                                         final int keyIndex, int index,
-                                         Boolean defaultValue) {
-      return add(new DefaultBooleanField(name, type, index, isKeyField, keyIndex, defaultValue), isKeyField);
-   }
+    public DefaultBooleanField addBoolean(String name,
+                                          boolean isKeyField,
+                                          final int keyIndex, int index,
+                                          Boolean defaultValue) {
+        return add(new DefaultBooleanField(name, type, index, isKeyField, keyIndex, defaultValue), isKeyField);
+    }
 
-   public DefaultBlobField addBlob(String name, int index) {
-      return add(new DefaultBlobField(name, type, index), false);
-   }
+    public DefaultBlobField addBlob(String name, int index) {
+        return add(new DefaultBlobField(name, type, index), false);
+    }
 
-   private <T extends AbstractField> T add(T field, boolean isKeyField) {
-      type.addField(field);
-      if (isKeyField) {
-         type.addKey(field);
-      }
-      return field;
-   }
+    private <T extends AbstractField> T add(T field, boolean isKeyField) {
+        type.addField(field);
+        if (isKeyField) {
+            type.addKey(field);
+        }
+        return field;
+    }
 
-   public UniqueIndex addUniqueIndex(String name) {
-      return new DefaultUniqueIndex(name);
-   }
+    public UniqueIndex addUniqueIndex(String name) {
+        return new DefaultUniqueIndex(name);
+    }
 
-   public NotUniqueIndex addNotUniqueIndex(String name) {
-      return new DefaultNotUniqueIndex(name);
-   }
+    public NotUniqueIndex addNotUniqueIndex(String name) {
+        return new DefaultNotUniqueIndex(name);
+    }
 
-   public MultiFieldNotUniqueIndex addMultiFieldNotUniqueIndex(String name) {
-      return new DefaultMultiFieldNotUniqueIndex(name);
-   }
+    public MultiFieldNotUniqueIndex addMultiFieldNotUniqueIndex(String name) {
+        return new DefaultMultiFieldNotUniqueIndex(name);
+    }
 
-   public MultiFieldUniqueIndex addMultiFieldUniqueIndex(String name) {
-      return new DefaultMultiFieldUniqueIndex(name);
-   }
+    public MultiFieldUniqueIndex addMultiFieldUniqueIndex(String name) {
+        return new DefaultMultiFieldUniqueIndex(name);
+    }
 
-   //    private static class DefaultLinkField extends AbstractField implements LinkField {
+    //    private static class DefaultLinkField extends AbstractField implements LinkField {
 //        private GlobType targetType;
 //        private IntegerField targetKeyField;
 //
@@ -179,14 +179,14 @@ public class DefaultFieldFactory {
 //    }
 
 
-   private static Object computeDefaultValue(Field field,
-                                             Annotations annotations,
-                                             Key targetAnnotationClass) {
-      Glob glob = annotations.findAnnotation(targetAnnotationClass);
-      if (glob != null) {
-         Field fieldWithValue = glob.getType().getFieldWithAnnotation(DefaultFieldValueType.key);
-         return glob.getValue(fieldWithValue);
-      }
+    private static Object computeDefaultValue(Field field,
+                                              Annotations annotations,
+                                              Key targetAnnotationClass) {
+        Glob glob = annotations.findAnnotation(targetAnnotationClass);
+        if (glob != null) {
+            Field fieldWithValue = glob.getType().getFieldWithAnnotation(DefaultFieldValueType.key);
+            return glob.getValue(fieldWithValue);
+        }
 //        for (Class annotationClass : defaultValuesAnnotations) {
 //            Annotation annotation = annotations.get(annotationClass);
 //            if (annotation == null) {
@@ -209,6 +209,6 @@ public class DefaultFieldFactory {
 //                throw new InvalidParameter("Cannot determine default value for field: " + field, e);
 //            }
 //        }
-      return null;
-   }
+        return null;
+    }
 }

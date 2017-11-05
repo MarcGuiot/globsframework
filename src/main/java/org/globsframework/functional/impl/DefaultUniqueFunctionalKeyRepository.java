@@ -29,7 +29,8 @@ public class DefaultUniqueFunctionalKeyRepository implements MutableFunctionalKe
         Glob glob = getUnique(functionalKey);
         if (glob == null) {
             return updateIndex(functionalKey);
-        } else {
+        }
+        else {
             return Collections.singletonList(glob);
         }
     }
@@ -52,10 +53,10 @@ public class DefaultUniqueFunctionalKeyRepository implements MutableFunctionalKe
                 indexed.put(type, functionalKeyBuilders);
             }
             dataAccess.all(type)
-                  .forEach(g -> {
-                      FunctionalKey key = builder.create(g);
-                      update(g, key);
-                  });
+                .forEach(g -> {
+                    FunctionalKey key = builder.create(g);
+                    update(g, key);
+                });
             functionalKeyBuilders.put(builder, Boolean.TRUE);
             Glob o = index.get(functionalKey);
             return o != null ? Collections.singletonList(o) : Collections.emptyList();

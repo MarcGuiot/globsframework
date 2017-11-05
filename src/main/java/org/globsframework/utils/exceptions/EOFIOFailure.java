@@ -1,15 +1,15 @@
 package org.globsframework.utils.exceptions;
 
-public class EOFIOFailure extends IOFailure{
-  public EOFIOFailure(Exception e) {
-    super(e);
-  }
+public class EOFIOFailure extends IOFailure {
+    public EOFIOFailure(Exception e) {
+        super(e);
+    }
 
-  public EOFIOFailure(String message) {
-    super(message);
-  }
+    public EOFIOFailure(String message) {
+        super(message);
+    }
 
-  public EOFIOFailure(String message, Throwable cause) {
-    super(message, cause);
-  }
+    public EOFIOFailure(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

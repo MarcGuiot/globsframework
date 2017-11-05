@@ -7,16 +7,16 @@ import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.fields.StringField;
 
 public class DummyObjectWithMaxSizeString {
-  public static GlobType TYPE;
+    public static GlobType TYPE;
 
-  @KeyField
-  public static IntegerField ID;
+    @KeyField
+    public static IntegerField ID;
 
-  @NamingField
-  @MaxSize(10)
-  public static StringField TEXT;
+    @NamingField
+    @MaxSize(10)
+    public static StringField TEXT;
 
-  static {
-     GlobTypeLoaderFactory.create(DummyObjectWithMaxSizeString.class).load();
-  }
+    static {
+        GlobTypeLoaderFactory.create(DummyObjectWithMaxSizeString.class).load();
+    }
 }

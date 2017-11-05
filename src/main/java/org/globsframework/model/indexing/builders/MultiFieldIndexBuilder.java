@@ -4,11 +4,11 @@ import org.globsframework.metamodel.Field;
 import org.globsframework.model.indexing.indices.UpdatableMultiFieldIndex;
 
 public interface MultiFieldIndexBuilder {
-  UpdatableMultiFieldIndex create();
+    UpdatableMultiFieldIndex create();
 
-  MultiFieldIndexBuilder getSubBuilder();
+    MultiFieldIndexBuilder getSubBuilder();
 
-  void setChild(MultiFieldIndexBuilder indexBuilder);
+    void setChild(MultiFieldIndexBuilder indexBuilder);
 
-  Field getField();
+    Field getField();
 }

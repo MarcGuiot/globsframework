@@ -11,7 +11,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @java.lang.annotation.Target({ElementType.FIELD})
 
 public @interface LinkModelName {
-   String value();
+    String value();
 
-   GlobType TYPE = LinkModelNameAnnotationType.TYPE;
+    GlobType TYPE = LinkModelNameAnnotationType.TYPE;
 }

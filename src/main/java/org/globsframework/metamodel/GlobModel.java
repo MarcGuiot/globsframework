@@ -9,17 +9,17 @@ import java.util.Collection;
 
 public interface GlobModel extends Iterable<GlobType> {
 
-   Collection<GlobType> getAll();
+    Collection<GlobType> getAll();
 
-   GlobType getType(String name) throws ItemNotFound;
+    GlobType getType(String name) throws ItemNotFound;
 
-   GlobTypeDependencies getDependencies();
+    GlobTypeDependencies getDependencies();
 
-   <T>
-   Property<GlobType, T> createGlobTypeProperty(String name, final PropertiesBuilder.PropertyBuilder<GlobType, T> valueBuilder);
+    <T>
+    Property<GlobType, T> createGlobTypeProperty(String name, final PropertiesBuilder.PropertyBuilder<GlobType, T> valueBuilder);
 
-   <T>
-   Property<Field, T> createFieldProperty(String name, final PropertiesBuilder.PropertyBuilder<Field, T> fieldValueBuilder);
+    <T>
+    Property<Field, T> createFieldProperty(String name, final PropertiesBuilder.PropertyBuilder<Field, T> fieldValueBuilder);
 
-   GlobLinkModel getLinkModel();
+    GlobLinkModel getLinkModel();
 }

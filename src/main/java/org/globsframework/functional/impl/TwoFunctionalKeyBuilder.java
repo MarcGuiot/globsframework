@@ -28,8 +28,8 @@ public class TwoFunctionalKeyBuilder implements FunctionalKeyBuilder {
 
     public FunctionalKey create(Glob glob) {
         return new TwoFieldsMutableKey(this,
-              glob.getValue(field1),
-              glob.getValue(field2));
+                                       glob.getValue(field1),
+                                       glob.getValue(field2));
     }
 
     public FunctionalKey proxy(Glob glob) {
