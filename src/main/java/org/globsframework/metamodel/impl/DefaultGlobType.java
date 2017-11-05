@@ -53,6 +53,10 @@ public class DefaultGlobType extends DefaultAnnotations implements MutableGlobTy
         return field;
     }
 
+    public <T extends Field> T getTypedField(String name) throws ItemNotFound {
+        return (T)getField(name);
+    }
+
     public boolean hasField(String name) {
         return findField(name) != null;
     }

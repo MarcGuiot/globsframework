@@ -17,6 +17,8 @@ public interface GlobType extends PropertyHolder<GlobType>, Annotations {
 
     Field getField(String name) throws ItemNotFound;
 
+    <T extends Field> T getTypedField(String name) throws ItemNotFound;
+
     Field findField(String name);
 
     boolean hasField(String name);
