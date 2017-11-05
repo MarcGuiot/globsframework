@@ -2,16 +2,18 @@ package org.globsframework.model;
 
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
+import org.globsframework.metamodel.fields.*;
 import org.globsframework.model.impl.*;
 import org.globsframework.model.utils.DefaultFieldValues;
 import org.globsframework.model.utils.FieldValueGetter;
 import org.globsframework.utils.exceptions.InvalidParameter;
+import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.exceptions.MissingInfo;
 
 import java.util.Arrays;
 import java.util.Map;
 
-public class KeyBuilder {
+public class KeyBuilder implements FieldSetter<KeyBuilder>{
     private FieldValuesBuilder fieldValuesBuilder = new FieldValuesBuilder();
     private GlobType globType;
 
@@ -211,5 +213,45 @@ public class KeyBuilder {
 
     public static Key newKey(Field field1, Object value1, Field field2, Object value2) {
         return new TwoFieldKey(field1, value1, field2, value2);
+    }
+
+    public KeyBuilder set(DoubleField field, Double value) throws ItemNotFound {
+        return setValue(field, value);
+    }
+
+    public KeyBuilder set(DoubleField field, double value) throws ItemNotFound {
+        return setValue(field, value);
+    }
+
+    public KeyBuilder set(IntegerField field, Integer value) throws ItemNotFound {
+        return setValue(field, value);
+    }
+
+    public KeyBuilder set(IntegerField field, int value) throws ItemNotFound {
+        return setValue(field, value);
+    }
+
+    public KeyBuilder set(StringField field, String value) throws ItemNotFound {
+        return setValue(field, value);
+    }
+
+    public KeyBuilder set(BooleanField field, Boolean value) throws ItemNotFound {
+        return setValue(field, value);
+    }
+
+    public KeyBuilder set(LongField field, Long value) throws ItemNotFound {
+        return setValue(field, value);
+    }
+
+    public KeyBuilder set(LongField field, long value) throws ItemNotFound {
+        return setValue(field, value);
+    }
+
+    public KeyBuilder set(BlobField field, byte[] value) throws ItemNotFound {
+        return setValue(field, value);
+    }
+
+    public KeyBuilder setValue(Field field, Object value) throws ItemNotFound {
+        return set(field, value);
     }
 }
