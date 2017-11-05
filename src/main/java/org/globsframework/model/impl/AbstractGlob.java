@@ -4,6 +4,7 @@ import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.links.Link;
 import org.globsframework.model.*;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.utils.Ref;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.exceptions.InvalidParameter;
@@ -11,11 +12,10 @@ import org.globsframework.utils.exceptions.InvalidState;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
 public abstract class AbstractGlob extends AbstractFieldValues implements Glob {
-
    protected GlobType type;
    protected Object[] values;
    private boolean disposed = false;
-   private Key key;
+   protected Key key;
 
    protected AbstractGlob(GlobType type) {
       this(type, new Object[type.getFieldCount()]);
@@ -110,7 +110,7 @@ public abstract class AbstractGlob extends AbstractFieldValues implements Glob {
    }
 
    public String toString() {
-      return getKey().toString();
+      return key != null ? getKey().toString() : GlobPrinter.toString(this);
    }
 
    public final boolean matches(FieldValues values) {

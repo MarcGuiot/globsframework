@@ -57,7 +57,8 @@ public class DefaultDirectLink extends AbstractLink implements DirectLink {
       return keyBuilder.get();
    }
 
-   public static DirectLink create(List<Pair<Field, Field>> mappings, String modelName, String name, Annotations annotations) {
+   public static DirectLink create(List<Pair<Field, Field>> mappings, String modelName, String name,
+                                   Annotations annotations) {
       Field first = null;
       Field second = null;
       for (Pair<Field, Field> mapping : mappings) {

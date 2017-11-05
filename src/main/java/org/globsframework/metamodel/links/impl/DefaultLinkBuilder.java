@@ -18,18 +18,18 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class DefaultLinkBuilder<T extends MutableGlobLinkModel.LinkBuilder> implements MutableGlobLinkModel.LinkBuilder<T>, MutableAnnotations<T> {
+public abstract class DefaultLinkBuilder<T extends MutableGlobLinkModel.LinkBuilder>
+      extends DefaultAnnotations<T> implements MutableGlobLinkModel.LinkBuilder<T>, MutableAnnotations<T> {
    private final String modelName;
    private final String name;
    private final List<Pair<Field, Field>> mappings = new ArrayList<>();
-   private final DefaultAnnotations<T> annotations;
    private GlobType sourceType;
    private GlobType targetType;
 
    public DefaultLinkBuilder(String modelName, String name, Annotations annotations) {
+      super(annotations);
       this.modelName = modelName;
       this.name = name;
-      this.annotations = new DefaultAnnotations<T>(annotations);
    }
 
    public String getModelName() {
@@ -38,27 +38,6 @@ public abstract class DefaultLinkBuilder<T extends MutableGlobLinkModel.LinkBuil
 
    public String getName() {
       return name;
-   }
-
-   public T addAnnotation(Glob annotation) {
-      annotations.addAnnotation(annotation);
-      return getT();
-   }
-
-   public Collection<Glob> listAnnotations() {
-      return Collections.unmodifiableCollection(annotations.listAnnotations());
-   }
-
-   public Glob findAnnotation(Key key) {
-      return annotations.findAnnotation(key);
-   }
-
-   public Glob getAnnotation(Key key) {
-      return annotations.getAnnotation(key);
-   }
-
-   public boolean hasAnnotation(Key key) {
-      return annotations.hasAnnotation(key);
    }
 
    abstract T getT();
@@ -97,7 +76,7 @@ public abstract class DefaultLinkBuilder<T extends MutableGlobLinkModel.LinkBuil
       if (mappings.size() == 0) {
          throw new RuntimeException("No mapping defined for link " + modelName + " " + name);
       } else {
-         return DefaultDirectLink.create(mappings, modelName, name, annotations);
+         return DefaultDirectLink.create(mappings, modelName, name, this);
       }
    }
 

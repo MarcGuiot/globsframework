@@ -19,21 +19,27 @@ public interface FieldVisitor {
     class AbstractFieldVisitor implements FieldVisitor {
 
         public void visitInteger(IntegerField field) throws Exception {
+            notManaged(field);
         }
 
         public void visitDouble(DoubleField field) throws Exception {
+            notManaged(field);
         }
 
         public void visitString(StringField field) throws Exception {
+            notManaged(field);
         }
 
         public void visitBoolean(BooleanField field) throws Exception {
+            notManaged(field);
         }
 
         public void visitLong(LongField field) throws Exception {
+            notManaged(field);
         }
 
        public void visitBlob(BlobField field) throws Exception {
+           notManaged(field);
         }
 
         public void notManaged(Field field) throws Exception{

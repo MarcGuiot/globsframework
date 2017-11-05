@@ -11,6 +11,7 @@ import org.globsframework.model.globaccessor.GlobSetAccessor;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
 import java.util.Collection;
+import java.util.stream.Stream;
 
 public interface GlobType extends PropertyHolder<GlobType>, Annotations {
 
@@ -23,6 +24,8 @@ public interface GlobType extends PropertyHolder<GlobType>, Annotations {
    boolean hasField(String name);
 
    Field[] getFields();
+
+   Stream<Field> streamFields();
 
    Field getField(int index);
 

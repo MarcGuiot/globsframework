@@ -5,6 +5,7 @@ import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.KeyAnnotationType;
 import org.globsframework.metamodel.annotations.RequiredAnnotationType;
+import org.globsframework.metamodel.impl.DefaultAnnotations;
 import org.globsframework.metamodel.properties.impl.AbstractDelegatePropertyHolder;
 import org.globsframework.metamodel.type.DataType;
 import org.globsframework.model.Glob;
@@ -18,11 +19,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-abstract public class AbstractField implements Field, AbstractDelegatePropertyHolder<Field> {
+abstract public class AbstractField extends DefaultAnnotations<Field> implements Field, AbstractDelegatePropertyHolder<Field> {
    private final int index;
    private final int keyIndex;
    private final GlobType globType;
-   private final Map<Key, Glob> annotations = new HashMap<Key, Glob>();
    private final String name;
    private final Class valueClass;
    private final Object defaultValue;
@@ -103,42 +103,6 @@ abstract public class AbstractField implements Field, AbstractDelegatePropertyHo
       return Utils.equal(o1, o2);
    }
 
-
-   public Field addAnnotation(Glob glob) {
-      if (glob != null) {
-         annotations.put(glob.getKey(), glob);
-         if (glob.getType() == KeyAnnotationType.TYPE && !isKeyField()){
-            throw new RuntimeException("Key field can not be set after key creation.");
-         }
-      }
-      return this;
-   }
-
-   public void addAll(Annotations annotations) {
-      for (Glob glob : annotations.listAnnotations()) {
-         this.addAnnotation(glob);
-      }
-   }
-
-   public boolean hasAnnotation(Key key) {
-      return annotations.containsKey(key);
-   }
-
-   public Glob getAnnotation(Key key) {
-      Glob annotation = annotations.get(key);
-      if (annotation == null) {
-         throw new ItemNotFound(key == null ? "null" : key.toString());
-      }
-      return annotation;
-   }
-
-   public Glob findAnnotation(Key key) {
-      return annotations.get(key);
-   }
-
-   public Collection<Glob> listAnnotations() {
-      return Collections.unmodifiableCollection(annotations.values());
-   }
 
    final public Object[] getProperties() {
       return properties;

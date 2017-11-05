@@ -10,7 +10,6 @@ import org.globsframework.metamodel.utils.MutableAnnotations;
 import org.globsframework.model.Glob;
 import org.globsframework.utils.exceptions.InvalidState;
 
-import java.util.Arrays;
 import java.util.Collection;
 
 public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
@@ -60,8 +59,8 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
       if (isKey) {
          updateKeyIndex(annotations);
       }
-      field.addAll(annotations);
-      index++;
+       field.addAnnotations(annotations.streamAnnotations());
+       index++;
       return field;
    }
 
@@ -79,8 +78,8 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
       if (isKey) {
          updateKeyIndex(annotations);
       }
-      field.addAll(annotations);
-      index++;
+       field.addAnnotations(annotations.streamAnnotations());
+       index++;
       return field;
    }
 
@@ -97,8 +96,8 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
       if (isKey) {
          updateKeyIndex(annotations);
       }
-      doubleField.addAll(annotations);
-      index++;
+       doubleField.addAnnotations(annotations.streamAnnotations());
+       index++;
       return doubleField;
    }
 
@@ -116,8 +115,8 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
       if (isKey) {
          updateKeyIndex(annotations);
       }
-      longField.addAll(annotations);
-      index++;
+       longField.addAnnotations(annotations.streamAnnotations());
+       index++;
       return longField;
    }
 
@@ -135,8 +134,8 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
       if (isKey) {
          updateKeyIndex(annotations);
       }
-      field.addAll(annotations);
-      index++;
+       field.addAnnotations(annotations.streamAnnotations());
+       index++;
       return field;
    }
 
@@ -175,7 +174,7 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
    private DefaultBlobField createBlobField(String fieldName, Collection<Glob> globAnnotations) {
       Annotations annotations = adaptAnnotation(globAnnotations);
       DefaultBlobField field = factory.addBlob(fieldName, index);
-      field.addAll(annotations);
+      field.addAnnotations(annotations.streamAnnotations());
       index++;
       return field;
    }

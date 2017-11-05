@@ -14,12 +14,15 @@ import org.globsframework.utils.exceptions.InvalidParameter;
 import org.globsframework.utils.exceptions.ItemAlreadyExists;
 import org.globsframework.utils.exceptions.MissingInfo;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
+import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import java.lang.annotation.Annotation;
 import java.lang.annotation.Retention;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.junit.Assert.*;
@@ -391,6 +394,9 @@ public class GlobTypeLoaderTest {
       assertEquals("field annotations", fieldAnnotation.get(MyAnnotationType.VALUE));
       Glob classAnnotation = AnObjectWithCustomAnnotations.TYPE.getAnnotation(MyAnnotationType.UNIQUE_KEY);
       assertEquals("class annotations", classAnnotation.get(MyAnnotationType.VALUE));
+      Collection<Glob> globs = AnObjectWithCustomAnnotations.TYPE.streamAnnotations(MyAnnotationType.TYPE)
+            .collect(Collectors.toList());
+      Assert.assertEquals(1, globs.size());
    }
 
    @Test

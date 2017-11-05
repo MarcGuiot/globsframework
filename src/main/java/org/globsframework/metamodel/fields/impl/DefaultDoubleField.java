@@ -4,6 +4,7 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.DoubleField;
 import org.globsframework.metamodel.fields.FieldValueVisitor;
 import org.globsframework.metamodel.fields.FieldVisitor;
+import org.globsframework.metamodel.fields.FieldVisitorWithContext;
 import org.globsframework.metamodel.type.DataType;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
@@ -22,6 +23,19 @@ public class DefaultDoubleField extends AbstractField implements DoubleField {
    public <T extends FieldVisitor>  T safeVisit(T visitor) {
       try {
          visitor.visitDouble(this);
+         return visitor;
+      }
+      catch (RuntimeException e) {
+         throw new RuntimeException("On " + this, e);
+      }
+      catch (Exception e) {
+         throw new UnexpectedApplicationState("On " + this, e);
+      }
+   }
+
+   public <T extends FieldVisitorWithContext<C>, C> T safeVisit(T visitor, C context) {
+      try {
+         visitor.visitDouble(this, context);
          return visitor;
       }
       catch (RuntimeException e) {

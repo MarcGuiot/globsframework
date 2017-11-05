@@ -1,6 +1,5 @@
 package org.globsframework.metamodel.impl;
 
-import org.globsframework.metamodel.Annotations;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.KeyAnnotationType;
@@ -20,11 +19,12 @@ import org.globsframework.utils.exceptions.ItemAlreadyExists;
 import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.exceptions.TooManyItems;
 
-import java.lang.annotation.Annotation;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-public class DefaultGlobType implements MutableGlobType, MutableAnnotations,
+public class DefaultGlobType extends DefaultAnnotations implements MutableGlobType, MutableAnnotations,
                                         AbstractDelegatePropertyHolder<GlobType> {
    private Field[] fields;
    private Field[] keyFields = new Field[0];
@@ -34,7 +34,6 @@ public class DefaultGlobType implements MutableGlobType, MutableAnnotations,
    private Map<String, Index> indices = new HashMap<String, Index>(2, 1);
    private Map<String, MultiFieldIndex> multiFieldIndices = new HashMap<String, MultiFieldIndex>(2, 1);
    private Map<Class, Object> registered = new ConcurrentHashMap<>();
-   private final Map<Key, Glob> annotations = new HashMap<Key, Glob>();
    private volatile Object properties[] = new Object[]{NULL_OBJECT, NULL_OBJECT};
 
 
@@ -66,7 +65,11 @@ public class DefaultGlobType implements MutableGlobType, MutableAnnotations,
       return fields;
    }
 
-   public Field getField(int index) {
+    public Stream<Field> streamFields() {
+        return Arrays.stream(fields);
+    }
+
+    public Field getField(int index) {
       return fields[index];
    }
 
@@ -191,39 +194,6 @@ public class DefaultGlobType implements MutableGlobType, MutableAnnotations,
       return (T)registered.get(klass);
    }
 
-   public MutableAnnotations addAnnotation(Glob glob) {
-      if (glob != null) {
-         annotations.put(glob.getKey(), glob);
-      }
-      return this;
-   }
-
-   public void addAll(Annotations annotations) {
-      for (Glob glob : annotations.listAnnotations()) {
-         this.addAnnotation(glob);
-      }
-   }
-
-   public boolean hasAnnotation(Key key) {
-      return annotations.containsKey(key);
-   }
-
-   public Glob getAnnotation(Key key) {
-      Glob annotation = annotations.get(key);
-      if (annotation == null) {
-         throw new ItemNotFound(key == null ? "null" : key.toString());
-      }
-      return annotation;
-   }
-
-   public Glob findAnnotation(Key key) {
-      return annotations.get(key);
-   }
-
-   public Collection<Glob> listAnnotations() {
-      return Collections.unmodifiableCollection(annotations.values());
-   }
-
    final public Object[] getProperties() {
       return properties;
    }
@@ -254,7 +224,7 @@ public class DefaultGlobType implements MutableGlobType, MutableAnnotations,
       return stringBuilder.toString();
    }
    private void printAnnotations(StringBuilder stringBuilder, Field field) {
-      Collection<Glob> annotations = field.listAnnotations();
+      Collection<Glob> annotations = field.streamAnnotations().collect(Collectors.toList());
       if (!annotations.isEmpty()) {
          stringBuilder.append('[');
          List<String> toStrings = new ArrayList<>();

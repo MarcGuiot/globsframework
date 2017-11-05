@@ -31,4 +31,10 @@ public interface FieldValuesAccessor {
    long get(LongField field, long valueIfNull) throws ItemNotFound;
 
    byte[] get(BlobField field) throws ItemNotFound;
+
+   default String get(StringField field, String valueIfNull) throws ItemNotFound{
+      String value = get(field);
+      return value != null ? value : valueIfNull;
+   }
+
 }

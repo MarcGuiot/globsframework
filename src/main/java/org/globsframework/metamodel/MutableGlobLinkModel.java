@@ -46,8 +46,6 @@ public interface MutableGlobLinkModel extends GlobLinkModel {
 
    interface LinkBuilder<T extends LinkBuilder> extends MutableAnnotations<T> {
 
-      T addAnnotation(Glob annotation);
-
       T add(Field sourceField, Field targetField);
 
       Link publish();

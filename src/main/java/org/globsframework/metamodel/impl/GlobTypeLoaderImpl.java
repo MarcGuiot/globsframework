@@ -86,9 +86,8 @@ public class GlobTypeLoaderImpl implements GlobTypeLoader {
       for (FieldInitializeProcessor fieldInitializeProcessor : processor) {
          Object value = fieldInitializeProcessor.getValue(type, annotations, classField.getAnnotations());
          if (value instanceof MutableAnnotations) {
-            for (Glob glob : annotations.listAnnotations()) {
-               ((MutableAnnotations)value).addAnnotation(glob);
-            }
+            MutableAnnotations mutableAnnotations = (MutableAnnotations) value;
+            mutableAnnotations.addAnnotations(annotations.streamAnnotations());
          }
          if (value != null) {
             setClassField(classField, value, targetClass);
@@ -203,14 +202,17 @@ public class GlobTypeLoaderImpl implements GlobTypeLoader {
          if (isGlobField(classField)) {
             boolean isKeyField = classField.isAnnotationPresent(KeyField.class);
             String fieldName;
-            if (classField.isAnnotationPresent(FieldNameAnnotation.class)) {
+            boolean hasFieldNameAnnotation = classField.isAnnotationPresent(FieldNameAnnotation.class);
+            if (hasFieldNameAnnotation) {
                fieldName = classField.getAnnotation(FieldNameAnnotation.class).value();
             }
             else {
                fieldName = getFieldName(classField);
             }
             AbstractField field = create(fieldName, classField.getType(), isKeyField, keyCount, fieldIndex, classField);
-            field.addAnnotation(FieldNameAnnotationType.create(fieldName));
+            if (!hasFieldNameAnnotation) {
+               field.addAnnotation(FieldNameAnnotationType.create(fieldName));
+            }
             if (isKeyField) {
                field.addAnnotation(KeyAnnotationType.create(keyCount));
                keyCount++;

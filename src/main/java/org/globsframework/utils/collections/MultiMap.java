@@ -127,7 +127,8 @@ public class MultiMap<K, V> {
     MultiMap<K, V> result = new MultiMap<K, V>();
     for (Map.Entry<K, List<V>> entry : map.entrySet()) {
       final K key = entry.getKey();
-      final ArrayList<V> list = new ArrayList<V>(entry.getValue());
+      final List<V> list = createNewList();
+      list.addAll(entry.getValue());
       result.map.put(key, list);
     }
     return result;

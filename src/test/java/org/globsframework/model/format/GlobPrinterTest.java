@@ -112,6 +112,7 @@ public class GlobPrinterTest {
                                     value(DummyObject.ID, 1),
                                     value(DummyObject.NAME, "obj1"),
                                     value(DummyObject.LINK_ID, 2));
+      glob.getKey();
 
       checkOutput(glob,
                   "===== dummyObject[id=1] ======\n" +

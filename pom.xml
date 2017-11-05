@@ -4,9 +4,7 @@
   <packaging>jar</packaging>
   <artifactId>globs</artifactId>
   <name>Generic Lightweight ObjectS</name>
-  <version>2.0</version>
-
-  <url>http://www.design-up.com</url>
+  <version>2.1</version>
 
   <repositories>
     <repository>
@@ -64,34 +62,6 @@
         </configuration>
       </plugin>
 
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-antrun-plugin</artifactId>
-        <version>1.3</version>
-        <executions>
-          <execution>
-            <id>install_core</id>
-            <phase>install</phase>
-            <configuration>
-              <tasks>
-                <jar destfile="target/globs-core-1.0.jar">
-                  <fileset dir="target/classes">
-                    <include name="**/*.class"/>
-                    <exclude name="**/gui/**"/>
-                    <exclude name="**/sqlstreams/**"/>
-                    <exclude name="**/serialization/**"/>
-                    <exclude name="**/remote/**"/>
-                  </fileset>
-                </jar>
-              </tasks>
-            </configuration>
-            <goals>
-              <goal>run</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-
     </plugins>
   </build>
 
@@ -116,19 +86,15 @@
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-log4j12</artifactId>
+      <artifactId>slf4j-simple</artifactId>
       <version>1.7.22</version>
     </dependency>
-    <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
-      <version>1.2.14</version>
-    </dependency>
+    <!--<dependency>-->
+      <!--<groupId>log4j</groupId>-->
+      <!--<artifactId>log4j</artifactId>-->
+      <!--<version>1.2.14</version>-->
+    <!--</dependency>-->
 
   </dependencies>
-
-  <scm>
-    <connection>scm:svn:https://name:password@globs.dev.java.net/svn/globs/trunk</connection>
-  </scm>
 
 </project>

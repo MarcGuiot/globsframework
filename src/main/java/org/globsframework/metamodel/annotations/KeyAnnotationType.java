@@ -50,8 +50,8 @@ public class KeyAnnotationType {
       DefaultFieldFactory factory = new DefaultFieldFactory(globType);
       TYPE = globType;
       INDEX = factory.addInteger("index", false, 0, 0, null);
-      globType.completeInit();
       UNIQUE_KEY = KeyBuilder.newEmptyKey(TYPE);
+      globType.completeInit();
       UNINITIALIZED = globType.instantiate().set(INDEX, -1);
       ZERO = globType.instantiate().set(INDEX, 0);
       ONE = globType.instantiate().set(INDEX, 1);

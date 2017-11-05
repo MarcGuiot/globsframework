@@ -9,6 +9,10 @@ public class FieldValue {
   private final Field field;
   private final Object value;
 
+  public static FieldValue value(Field field, Object value) {
+    return new FieldValue(field, value);
+  }
+
   public static FieldValue value(DoubleField field, Double value) {
     return new FieldValue(field, value);
   }

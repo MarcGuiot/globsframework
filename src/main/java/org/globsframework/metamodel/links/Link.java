@@ -1,7 +1,5 @@
 package org.globsframework.metamodel.links;
 
-import org.globsframework.metamodel.Annotations;
-import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.utils.MutableAnnotations;
 import org.globsframework.model.Glob;

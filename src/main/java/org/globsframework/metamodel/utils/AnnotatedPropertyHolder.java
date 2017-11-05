@@ -6,9 +6,6 @@ import org.globsframework.metamodel.properties.impl.AbstractPropertyHolder;
 import org.globsframework.model.Glob;
 import org.globsframework.model.Key;
 
-import java.util.Collection;
-import java.util.Collections;
-
 public abstract class AnnotatedPropertyHolder<T> extends AbstractPropertyHolder<T> implements Annotations {
   private Annotations annotations = new DefaultAnnotations();
 
@@ -18,10 +15,6 @@ public abstract class AnnotatedPropertyHolder<T> extends AbstractPropertyHolder<
 
   public Glob getAnnotation(Key key) {
     return annotations.getAnnotation(key);
-  }
-
-  public Collection<Glob> listAnnotations() {
-    return Collections.unmodifiableCollection(annotations.listAnnotations());
   }
 
   public Glob findAnnotation(Key key) {

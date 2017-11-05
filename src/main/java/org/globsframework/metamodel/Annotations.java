@@ -6,17 +6,22 @@ import org.globsframework.model.Key;
 import org.globsframework.utils.Ref;
 
 import java.util.Collection;
+import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 public interface Annotations {
    Annotations EMPTY = new DefaultAnnotations();
+
+   Stream<Glob> streamAnnotations();
+
+   Stream<Glob> streamAnnotations(GlobType type);
 
    boolean hasAnnotation(Key key);
 
    Glob getAnnotation(Key key);
 
    Glob findAnnotation(Key key);
-
-   Collection<Glob> listAnnotations();
 
    default <T> T getValueOrDefault(Key key, Field field, T defaultValue) {
       Glob annotation = findAnnotation(key);
@@ -31,12 +36,8 @@ public interface Annotations {
       return result.get() != null;
    }
 
-   default <T> boolean findValue(Key key, Field field, Ref<T> result) {
-      Glob annotation = findAnnotation(key);
-      if (annotation != null) {
-         result.set((T)annotation.getValue(field));
-         return true;
-      }
-      return false;
+   default Glob findUniqueAnnotation(GlobType globType) {
+      Optional<Glob> first = streamAnnotations(globType).findFirst();
+      return first.isPresent() ? first.get() : null;
    }
 }

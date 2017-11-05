@@ -5,6 +5,7 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.model.FieldValues;
 import org.globsframework.model.MutableGlob;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
 import java.io.IOException;
@@ -78,6 +79,9 @@ public abstract class AbstractMutableGlob extends AbstractGlob implements Mutabl
    }
 
    public MutableGlob setObject(Field field, Object value) {
+      if (field.isKeyField() && key != null) {
+         throw new RuntimeException("Bug mutable glob key field can not be change after access to the key " + field.getFullName()+ ", " + value + "  : " + GlobPrinter.toString(this));
+      }
       final int index = field.getIndex();
       values[index] = value;
       return this;

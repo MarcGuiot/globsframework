@@ -3,8 +3,8 @@ package org.globsframework.utils.collections;
 import java.io.Serializable;
 
 public class Pair<T, D> implements Serializable {
-  private T first;
-  private D second;
+  private final T first;
+  private final D second;
 
   public Pair(T first, D second) {
     this.first = first;

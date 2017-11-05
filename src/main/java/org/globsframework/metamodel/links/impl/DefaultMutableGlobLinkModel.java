@@ -17,6 +17,7 @@ import org.globsframework.utils.collections.MapOfMaps;
 import org.globsframework.utils.exceptions.GlobsException;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 public class DefaultMutableGlobLinkModel implements MutableGlobLinkModel {
    public static final Link[] EMPTY = new Link[0];
@@ -62,9 +63,7 @@ public class DefaultMutableGlobLinkModel implements MutableGlobLinkModel {
       Glob annotation = annotations.findAnnotation(FieldNameAnnotationType.UNIQUE_KEY);
       DirectLinkBuilder builder = getDirectLinkBuilder(linkModel != null ? linkModel.get(LinkModelNameAnnotationType.NAME) : null,
                                                        annotation != null ? annotation.get(FieldNameAnnotationType.NAME) : null);
-      for (Glob glob : annotations.listAnnotations()) {
-         builder.addAnnotation(glob);
-      }
+     builder.addAnnotations(annotations.streamAnnotations());
       return builder;
    }
 
@@ -113,7 +112,7 @@ public class DefaultMutableGlobLinkModel implements MutableGlobLinkModel {
       inboundLinks.put(link.getTargetType(), current);
    }
 
-   private static class AlreadyInitializedBuilder implements DirectLinkBuilder {
+   private static class AlreadyInitializedBuilder  implements DirectLinkBuilder {
       private Link link;
       private OnPublish publish;
 
@@ -149,6 +148,19 @@ public class DefaultMutableGlobLinkModel implements MutableGlobLinkModel {
          return (DirectLink)link;
       }
 
+      public DirectLinkBuilder addAnnotations(Stream<Glob> globs) {
+         globs.forEach(this::addAnnotation);
+         return this;
+      }
+
+      public Stream<Glob> streamAnnotations() {
+         return link.streamAnnotations();
+      }
+
+      public Stream<Glob> streamAnnotations(GlobType type) {
+         return link.streamAnnotations(type);
+      }
+
       public boolean hasAnnotation(Key key) {
          return link.hasAnnotation(key);
       }
@@ -161,8 +173,5 @@ public class DefaultMutableGlobLinkModel implements MutableGlobLinkModel {
          return link.findAnnotation(key);
       }
 
-      public Collection<Glob> listAnnotations() {
-         return Collections.unmodifiableCollection(link.listAnnotations());
-      }
    }
 }

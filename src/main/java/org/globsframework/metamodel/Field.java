@@ -2,6 +2,7 @@ package org.globsframework.metamodel;
 
 import org.globsframework.metamodel.fields.FieldValueVisitor;
 import org.globsframework.metamodel.fields.FieldVisitor;
+import org.globsframework.metamodel.fields.FieldVisitorWithContext;
 import org.globsframework.metamodel.properties.PropertyHolder;
 import org.globsframework.metamodel.type.DataType;
 import org.globsframework.metamodel.utils.MutableAnnotations;
@@ -28,6 +29,8 @@ public interface Field extends PropertyHolder<Field>, MutableAnnotations<Field> 
    <T extends FieldVisitor> T visit(T visitor) throws Exception;
 
    <T extends FieldVisitor> T safeVisit(T visitor);
+
+   <T extends FieldVisitorWithContext<C>, C> T safeVisit(T visitor, C context);
 
    void safeVisit(FieldValueVisitor visitor, Object value);
 

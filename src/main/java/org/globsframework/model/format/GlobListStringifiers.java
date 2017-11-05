@@ -108,7 +108,7 @@ public class GlobListStringifiers {
 
 
         double total = 0;
-//        total = list.stream().filter(glob -> matcher.matches(glob, repository))
+//        total = list.streamAnnotations().filter(glob -> matcher.matches(glob, repository))
 //           .collect(DoubleRef::new, (ref, glob) -> {
 //             for (DoubleField field : fields) {
 //               ref.value += glob.get(field, 0.);
