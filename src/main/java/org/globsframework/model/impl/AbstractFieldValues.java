@@ -5,6 +5,10 @@ import org.globsframework.metamodel.fields.*;
 import org.globsframework.model.FieldValues;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.ZonedDateTime;
+
 public abstract class AbstractFieldValues implements FieldValues {
     public Double get(DoubleField field) {
         return (Double)doGet(field);
@@ -63,10 +67,45 @@ public abstract class AbstractFieldValues implements FieldValues {
         return (Long)doGet(field);
     }
 
-
     public long get(LongField field, long valueIfNull) throws ItemNotFound {
         Object value = doGet(field);
         return value == null ? valueIfNull : (long)value;
+    }
+
+    public double[] get(DoubleArrayField field) throws ItemNotFound {
+        return (double[])doGet(field);
+    }
+
+    public int[] get(IntegerArrayField field) throws ItemNotFound {
+        return (int[])doGet(field);
+    }
+
+    public String[] get(StringArrayField field) throws ItemNotFound {
+        return (String[])doGet(field);
+    }
+
+    public boolean[] get(BooleanArrayField field) {
+        return (boolean[])doGet(field);
+    }
+
+    public long[] get(LongArrayField field) throws ItemNotFound {
+        return (long[])doGet(field);
+    }
+
+    public LocalDate get(DateField field) throws ItemNotFound {
+        return (LocalDate)doGet(field);
+    }
+
+    public ZonedDateTime get(DateTimeField field) throws ItemNotFound {
+        return (ZonedDateTime)doGet(field);
+    }
+
+    public BigDecimal get(BigDecimalField field) throws ItemNotFound {
+        return (BigDecimal)doGet(field);
+    }
+
+    public BigDecimal[] get(BigDecimalArrayField field) throws ItemNotFound {
+        return (BigDecimal[])doGet(field);
     }
 
     protected abstract Object doGet(Field field);

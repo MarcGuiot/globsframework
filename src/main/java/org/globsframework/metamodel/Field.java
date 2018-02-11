@@ -46,5 +46,7 @@ public interface Field extends PropertyHolder<Field>, MutableAnnotations<Field> 
 
     boolean valueEqual(Object o1, Object o2);
 
+    int valueHash(Object o1);
+
     Object normalize(Object value);
 }

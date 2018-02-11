@@ -253,6 +253,33 @@ public class GlobTypeLoaderImpl implements GlobTypeLoader {
         else if (BlobField.class.isAssignableFrom(fieldClass)) {
             return fieldFactory.addBlob(name, index);
         }
+        else if (DoubleArrayField.class.isAssignableFrom(fieldClass)) {
+            return fieldFactory.addDoubleArray(name, isKeyField, keyIndex, index);
+        }
+        else if (IntegerArrayField.class.isAssignableFrom(fieldClass)) {
+            return fieldFactory.addIntegerArray(name, isKeyField, keyIndex, index);
+        }
+        else if (BooleanArrayField.class.isAssignableFrom(fieldClass)) {
+            return fieldFactory.addBooleanArray(name, isKeyField, keyIndex, index);
+        }
+        else if (LongArrayField.class.isAssignableFrom(fieldClass)) {
+            return fieldFactory.addLongArray(name, isKeyField, keyIndex, index);
+        }
+        else if (StringArrayField.class.isAssignableFrom(fieldClass)) {
+            return fieldFactory.addStringArray(name, isKeyField, keyIndex, index);
+        }
+        else if (DateField.class.isAssignableFrom(fieldClass)) {
+            return fieldFactory.addDate(name, isKeyField, keyIndex, index);
+        }
+        else if (DateTimeField.class.isAssignableFrom(fieldClass)) {
+            return fieldFactory.addDateTime(name, isKeyField, keyIndex, index);
+        }
+        else if (BigDecimalField.class.isAssignableFrom(fieldClass)) {
+            return fieldFactory.addBigDecimal(name, isKeyField, keyIndex, index);
+        }
+        else if (BigDecimalArrayField.class.isAssignableFrom(fieldClass)) {
+            return fieldFactory.addBigDecimalArray(name, isKeyField, keyIndex, index);
+        }
         else {
             throw new InvalidParameter("Unknown type " + fieldClass.getName());
         }

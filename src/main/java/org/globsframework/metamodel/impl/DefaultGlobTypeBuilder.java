@@ -64,6 +64,24 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
         return field;
     }
 
+    public GlobTypeBuilder addStringArrayField(String fieldName, Collection<Glob> annotations) {
+        createStringArrayField(fieldName, annotations);
+        return this;
+    }
+
+    private DefaultStringArrayField createStringArrayField(String fieldName, Collection<Glob> globAnnotations) {
+        MutableAnnotations annotations = adaptAnnotation(globAnnotations);
+        boolean isKey = annotations.hasAnnotation(KeyAnnotationType.UNIQUE_KEY);
+        DefaultStringArrayField field = factory.addStringArray(fieldName, isKey, keyIndex, index);
+        if (isKey) {
+            updateKeyIndex(annotations);
+        }
+        field.addAnnotations(annotations.streamAnnotations());
+        index++;
+        return field;
+    }
+
+
     public GlobTypeBuilder addIntegerField(String fieldName, Collection<Glob> globAnnotations) {
         createIntegerField(fieldName, globAnnotations);
         return this;
@@ -83,8 +101,55 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
         return field;
     }
 
+    private DefaultIntegerArrayField createIntegerArrayField(String fieldName, Collection<Glob> globAnnotations) {
+        MutableAnnotations annotations = adaptAnnotation(globAnnotations);
+        boolean isKey = annotations.hasAnnotation(KeyAnnotationType.UNIQUE_KEY);
+        DefaultIntegerArrayField field = factory.addIntegerArray(fieldName, isKey, keyIndex, index);
+        if (isKey) {
+            updateKeyIndex(annotations);
+        }
+        field.addAnnotations(annotations.streamAnnotations());
+        index++;
+        return field;
+    }
+
     public GlobTypeBuilder addDoubleField(String fieldName, Collection<Glob> globAnnotations) {
         createDoubleField(fieldName, globAnnotations);
+        return this;
+    }
+
+    public GlobTypeBuilder addDoubleArrayField(String fieldName, Collection<Glob> globAnnotations) {
+        createDoubleArrayField(fieldName, globAnnotations);
+        return this;
+    }
+
+    public GlobTypeBuilder addIntegerArrayField(String fieldName, Collection<Glob> globAnnotations) {
+        createIntegerArrayField(fieldName, globAnnotations);
+        return this;
+    }
+
+    public GlobTypeBuilder addLongArrayField(String fieldName, Collection<Glob> globAnnotations) {
+        createLongArrayField(fieldName, globAnnotations);
+        return this;
+    }
+
+    public GlobTypeBuilder addBigDecimalField(String fieldName, Collection<Glob> globAnnotations) {
+        createBigDecimalField(fieldName, globAnnotations);
+        return this;
+    }
+
+    public GlobTypeBuilder addBigDecimalArrayField(String fieldName, Collection<Glob> globAnnotations) {
+        createBigDecimalArrayField(fieldName, globAnnotations);
+        return this;
+    }
+
+    public GlobTypeBuilder addDateField(String fieldName, Collection<Glob> globAnnotations) {
+        createDateField(fieldName, globAnnotations);
+        return this;
+    }
+
+    public GlobTypeBuilder addDateTimeField(String fieldName, Collection<Glob> globAnnotations) {
+        createDateTimeField(fieldName, globAnnotations);
         return this;
     }
 
@@ -100,6 +165,67 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
         index++;
         return doubleField;
     }
+
+    private DefaultDoubleArrayField createDoubleArrayField(String fieldName, Collection<Glob> globAnnotations) {
+        MutableAnnotations annotations = adaptAnnotation(globAnnotations);
+        boolean isKey = annotations.hasAnnotation(KeyAnnotationType.UNIQUE_KEY);
+        DefaultDoubleArrayField field = factory.addDoubleArray(fieldName, isKey, keyIndex, index);
+        if (isKey) {
+            updateKeyIndex(annotations);
+        }
+        field.addAnnotations(annotations.streamAnnotations());
+        index++;
+        return field;
+    }
+
+    private DefaultBigDecimalField createBigDecimalField(String fieldName, Collection<Glob> globAnnotations) {
+        MutableAnnotations annotations = adaptAnnotation(globAnnotations);
+        boolean isKey = annotations.hasAnnotation(KeyAnnotationType.UNIQUE_KEY);
+        DefaultBigDecimalField bigDecimalField = factory.addBigDecimal(fieldName, isKey, keyIndex, index);
+        if (isKey) {
+            updateKeyIndex(annotations);
+        }
+        bigDecimalField.addAnnotations(annotations.streamAnnotations());
+        index++;
+        return bigDecimalField;
+    }
+
+    private DefaultBigDecimalArrayField createBigDecimalArrayField(String fieldName, Collection<Glob> globAnnotations) {
+        MutableAnnotations annotations = adaptAnnotation(globAnnotations);
+        boolean isKey = annotations.hasAnnotation(KeyAnnotationType.UNIQUE_KEY);
+        DefaultBigDecimalArrayField bigDecimalArrayField = factory.addBigDecimalArray(fieldName, isKey, keyIndex, index);
+        if (isKey) {
+            updateKeyIndex(annotations);
+        }
+        bigDecimalArrayField.addAnnotations(annotations.streamAnnotations());
+        index++;
+        return bigDecimalArrayField;
+    }
+
+    private DefaultDateTimeField createDateTimeField(String fieldName, Collection<Glob> globAnnotations) {
+        MutableAnnotations annotations = adaptAnnotation(globAnnotations);
+        boolean isKey = annotations.hasAnnotation(KeyAnnotationType.UNIQUE_KEY);
+        DefaultDateTimeField dateTimeField = factory.addDateTime(fieldName, isKey, keyIndex, index);
+        if (isKey) {
+            updateKeyIndex(annotations);
+        }
+        dateTimeField.addAnnotations(annotations.streamAnnotations());
+        index++;
+        return dateTimeField;
+    }
+
+    private DefaultDateField createDateField(String fieldName, Collection<Glob> globAnnotations) {
+        MutableAnnotations annotations = adaptAnnotation(globAnnotations);
+        boolean isKey = annotations.hasAnnotation(KeyAnnotationType.UNIQUE_KEY);
+        DefaultDateField dateField = factory.addDate(fieldName, isKey, keyIndex, index);
+        if (isKey) {
+            updateKeyIndex(annotations);
+        }
+        dateField.addAnnotations(annotations.streamAnnotations());
+        index++;
+        return dateField;
+    }
+
 
     public GlobTypeBuilder addLongField(String fieldName, Collection<Glob> globAnnotations) {
         createLongField(fieldName, globAnnotations);
@@ -118,6 +244,35 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
         longField.addAnnotations(annotations.streamAnnotations());
         index++;
         return longField;
+    }
+
+    private DefaultLongArrayField createLongArrayField(String fieldName, Collection<Glob> globAnnotations) {
+        MutableAnnotations annotations = adaptAnnotation(globAnnotations);
+        boolean isKey = annotations.hasAnnotation(KeyAnnotationType.UNIQUE_KEY);
+        DefaultLongArrayField field = factory.addLongArray(fieldName, isKey, keyIndex, index);
+        if (isKey) {
+            updateKeyIndex(annotations);
+        }
+        field.addAnnotations(annotations.streamAnnotations());
+        index++;
+        return field;
+    }
+
+    public GlobTypeBuilder addBooleanArrayField(String fieldName, Collection<Glob> globAnnotations) {
+        createBooleanArrayField(fieldName, globAnnotations);
+        return this;
+    }
+
+    private DefaultBooleanArrayField createBooleanArrayField(String fieldName, Collection<Glob> globAnnotations) {
+        MutableAnnotations annotations = adaptAnnotation(globAnnotations);
+        boolean isKey = annotations.hasAnnotation(KeyAnnotationType.UNIQUE_KEY);
+        DefaultBooleanArrayField field = factory.addBooleanArray(fieldName, isKey, keyIndex, index);
+        if (isKey) {
+            updateKeyIndex(annotations);
+        }
+        field.addAnnotations(annotations.streamAnnotations());
+        index++;
+        return field;
     }
 
     public GlobTypeBuilder addBooleanField(String fieldName, Collection<Glob> globAnnotations) {
@@ -185,20 +340,56 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
         return createStringField(fieldName, globAnnotations);
     }
 
+    public StringArrayField declareStringArrayField(String fieldName, Collection<Glob> globAnnotations) {
+        return createStringArrayField(fieldName, globAnnotations);
+    }
+
     public IntegerField declareIntegerField(String fieldName, Collection<Glob> annotations) {
         return createIntegerField(fieldName, annotations);
+    }
+
+    public IntegerArrayField declareIntegerArrayField(String fieldName, Collection<Glob> annotations) {
+        return createIntegerArrayField(fieldName, annotations);
     }
 
     public DoubleField declareDoubleField(String fieldName, Collection<Glob> annotations) {
         return createDoubleField(fieldName, annotations);
     }
 
+    public DoubleArrayField declareDoubleArrayField(String fieldName, Collection<Glob> annotations) {
+        return createDoubleArrayField(fieldName, annotations);
+    }
+
+    public BigDecimalField declareBigDecimalField(String fieldName, Collection<Glob> annotations) {
+        return createBigDecimalField(fieldName, annotations);
+    }
+
+    public BigDecimalArrayField declareBigDecimalArrayField(String fieldName, Collection<Glob> annotations) {
+        return createBigDecimalArrayField(fieldName, annotations);
+    }
+
     public BooleanField declareBooleanField(String fieldName, Collection<Glob> annotations) {
         return createBooleanField(fieldName, annotations);
     }
 
+    public BooleanArrayField declareBooleanArrayField(String fieldName, Collection<Glob> annotations) {
+        return createBooleanArrayField(fieldName, annotations);
+    }
+
+    public DateField declareDateField(String fieldName, Collection<Glob> annotations) {
+        return createDateField(fieldName, annotations);
+    }
+
+    public DateTimeField declareDateTimeField(String fieldName, Collection<Glob> annotations) {
+        return createDateTimeField(fieldName, annotations);
+    }
+
     public LongField declareLongField(String fieldName, Collection<Glob> annotations) {
         return createLongField(fieldName, annotations);
+    }
+
+    public LongArrayField declareArrayLongField(String fieldName, Collection<Glob> annotations) {
+        return createLongArrayField(fieldName, annotations);
     }
 
     public BlobField declareBlobField(String fieldName, Collection<Glob> annotations) {

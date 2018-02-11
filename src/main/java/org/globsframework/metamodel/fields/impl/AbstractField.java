@@ -93,6 +93,9 @@ abstract public class AbstractField extends DefaultAnnotations<Field> implements
         return Utils.equal(o1, o2);
     }
 
+    public int valueHash(Object o) {
+        return o.hashCode();
+    }
 
     final public Object[] getProperties() {
         return properties;

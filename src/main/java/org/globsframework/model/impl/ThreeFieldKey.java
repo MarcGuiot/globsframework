@@ -84,22 +84,23 @@ public class ThreeFieldKey extends AbstractKey {
         }
         if (o.getClass() == ThreeFieldKey.class) {
             ThreeFieldKey otherSingleFieldKey = (ThreeFieldKey)o;
+            Field[] keyFields = type.getKeyFields();
             return
                 type == otherSingleFieldKey.getGlobType() &&
-                Utils.equal(otherSingleFieldKey.value1, value1) &&
-                Utils.equal(otherSingleFieldKey.value2, value2) &&
-                Utils.equal(otherSingleFieldKey.value3, value3);
+                keyFields[0].valueEqual(otherSingleFieldKey.value1, value1) &&
+                keyFields[1].valueEqual(otherSingleFieldKey.value2, value2) &&
+                keyFields[2].valueEqual(otherSingleFieldKey.value3, value3);
         }
 
         if (!Key.class.isAssignableFrom(o.getClass())) {
             return false;
         }
-        Field[] fields = type.getFields();
+        Field[] keyFields = type.getKeyFields();
         Key otherKey = (Key)o;
         return type == otherKey.getGlobType()
-               && Utils.equal(value1, otherKey.getValue(fields[0]))
-               && Utils.equal(value2, otherKey.getValue(fields[1]))
-               && Utils.equal(value3, otherKey.getValue(fields[2]));
+               && keyFields[0].valueEqual(value1, otherKey.getValue(keyFields[0]))
+               && keyFields[1].valueEqual(value2, otherKey.getValue(keyFields[1]))
+               && keyFields[2].valueEqual(value3, otherKey.getValue(keyFields[2]));
     }
 
     // optimized - do not use generated code

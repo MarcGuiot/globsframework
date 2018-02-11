@@ -11,6 +11,9 @@ import org.globsframework.utils.exceptions.InvalidParameter;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -110,8 +113,43 @@ public class DefaultFieldValues extends AbstractFieldValues implements MutableFi
     }
 
     public FieldSetter set(LongField field, long value) throws ItemNotFound {
-        setValue(field, value);
-        return this;
+        return setValue(field, value);
+    }
+
+    public FieldSetter set(DoubleArrayField field, double[] value) throws ItemNotFound {
+        return setValue(field, value);
+    }
+
+    public FieldSetter set(IntegerArrayField field, int[] value) throws ItemNotFound {
+        return setValue(field, value);
+    }
+
+    public FieldSetter set(StringArrayField field, String[] value) throws ItemNotFound {
+        return setValue(field, value);
+    }
+
+    public FieldSetter set(BooleanArrayField field, boolean[] value) throws ItemNotFound {
+        return setValue(field, value);
+    }
+
+    public FieldSetter set(LongArrayField field, long[] value) throws ItemNotFound {
+        return setValue(field, value);
+    }
+
+    public FieldSetter set(BigDecimalField field, BigDecimal value) throws ItemNotFound {
+        return setValue(field, value);
+    }
+
+    public FieldSetter set(BigDecimalArrayField field, BigDecimal[] value) throws ItemNotFound {
+        return setValue(field, value);
+    }
+
+    public FieldSetter set(DateField field, LocalDate value) throws ItemNotFound {
+        return setValue(field, value);
+    }
+
+    public FieldSetter set(DateTimeField field, ZonedDateTime value) throws ItemNotFound {
+        return setValue(field, value);
     }
 
     public void setValues(FieldValues values) {

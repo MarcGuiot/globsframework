@@ -13,10 +13,10 @@ import org.globsframework.utils.exceptions.InvalidData;
 import org.globsframework.utils.exceptions.InvalidFormat;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
-import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.time.*;
 
 public class DefaultSerializationInput implements SerializedInput {
@@ -96,6 +96,9 @@ public class DefaultSerializationInput implements SerializedInput {
 
     public int[] readIntArray() {
         int length = readNotNullInt();
+        if (length == -1) {
+            return null;
+        }
         int array[] = new int[length];
         for (int i = 0; i < array.length; i++) {
             array[i] = readNotNullInt();
@@ -105,9 +108,62 @@ public class DefaultSerializationInput implements SerializedInput {
 
     public long[] readLongArray() {
         int length = readNotNullInt();
+        if (length == -1) {
+            return null;
+        }
         long array[] = new long[length];
         for (int i = 0; i < array.length; i++) {
             array[i] = readNotNullLong();
+        }
+        return array;
+    }
+
+    public double[] readDoubleArray() {
+        int length = readNotNullInt();
+        if (length == -1) {
+            return null;
+        }
+        double array[] = new double[length];
+        for (int i = 0; i < array.length; i++) {
+            array[i] = readNotNullDouble();
+        }
+        return array;
+
+    }
+
+    public boolean[] readBooleanArray() {
+        int length = readNotNullInt();
+        if (length == -1) {
+            return null;
+        }
+        boolean array[] = new boolean[length];
+        for (int i = 0; i < array.length; i++) {
+            array[i] = readBoolean();
+        }
+        return array;
+    }
+
+    public BigDecimal[] readBigDecimaleArray() {
+        int length = readNotNullInt();
+        if (length == -1) {
+            return null;
+        }
+        BigDecimal array[] = new BigDecimal[length];
+        for (int i = 0; i < array.length; i++) {
+            array[i] = readBigDecimal();
+        }
+        return array;
+
+    }
+
+    public String[] readStringArray() {
+        int length = readNotNullInt();
+        if (length == -1) {
+            return null;
+        }
+        String array[] = new String[length];
+        for (int i = 0; i < array.length; i++) {
+            array[i] = readUtf8String();
         }
         return array;
     }
@@ -134,16 +190,40 @@ public class DefaultSerializationInput implements SerializedInput {
             builder.set(field, input.readInteger());
         }
 
+        public void visitIntegerArray(IntegerArrayField field) throws Exception {
+            builder.set(field, input.readIntArray());
+        }
+
         public void visitDouble(DoubleField field) throws Exception {
             builder.set(field, input.readDouble());
+        }
+
+        public void visitDoubleArray(DoubleArrayField field) throws Exception {
+            builder.set(field, input.readDoubleArray());
+        }
+
+        public void visitBigDecimal(BigDecimalField field) throws Exception {
+            builder.set(field, input.readBigDecimal());
+        }
+
+        public void visitBigDecimalArray(BigDecimalArrayField field) throws Exception {
+            builder.set(field, input.readBigDecimaleArray());
         }
 
         public void visitString(StringField field) throws Exception {
             builder.set(field, input.readUtf8String());
         }
 
+        public void visitStringArray(StringArrayField field) throws Exception {
+            builder.set(field, input.readStringArray());
+        }
+
         public void visitBoolean(BooleanField field) throws Exception {
             builder.set(field, input.readBoolean());
+        }
+
+        public void visitBooleanArray(BooleanArrayField field) throws Exception {
+            builder.set(field, input.readBooleanArray());
         }
 
         public void visitBlob(BlobField field) throws Exception {
@@ -154,6 +234,37 @@ public class DefaultSerializationInput implements SerializedInput {
             builder.set(field, input.readLong());
         }
 
+        public void visitLongArray(LongArrayField field) throws Exception {
+            builder.set(field, input.readLongArray());
+        }
+
+        public void visitDate(DateField field) throws Exception {
+            int year = input.readNotNullInt();
+            int month = input.readNotNullInt();
+            int day = input.readNotNullInt();
+            builder.set(field, LocalDate.of(year, month, day));
+        }
+
+        public void visitDateTime(DateTimeField field) throws Exception {
+            int year = input.readNotNullInt();
+            int month = input.readNotNullInt();
+            int day = input.readNotNullInt();
+            int hour = input.readNotNullInt();
+            int min = input.readNotNullInt();
+            int second = input.readNotNullInt();
+            int nano = input.readNotNullInt();
+            String zone = input.readUtf8String();
+            builder.set(field, ZonedDateTime.of(LocalDate.of(year, month, day),
+                                                LocalTime.of(hour, min, second, nano), ZoneId.of(zone)));
+        }
+    }
+
+    private BigDecimal readBigDecimal() {
+        String s = readUtf8String();
+        if (s == null) {
+            return null;
+        }
+        return new BigDecimal(s);
     }
 
     static class FieldWithPreviousReader implements FieldVisitor {
@@ -169,16 +280,40 @@ public class DefaultSerializationInput implements SerializedInput {
             builder.set(field, input.readInteger(), input.readInteger());
         }
 
+        public void visitIntegerArray(IntegerArrayField field) throws Exception {
+            builder.set(field, input.readIntArray(), input.readIntArray());
+        }
+
         public void visitDouble(DoubleField field) throws Exception {
             builder.set(field, input.readDouble(), input.readDouble());
+        }
+
+        public void visitDoubleArray(DoubleArrayField field) throws Exception {
+            builder.set(field, input.readDoubleArray(), input.readDoubleArray());
+        }
+
+        public void visitBigDecimal(BigDecimalField field) throws Exception {
+            builder.set(field, input.readBigDecimal(), input.readBigDecimal());
+        }
+
+        public void visitBigDecimalArray(BigDecimalArrayField field) throws Exception {
+            builder.set(field, input.readBigDecimaleArray(), input.readBigDecimaleArray());
         }
 
         public void visitString(StringField field) throws Exception {
             builder.set(field, input.readUtf8String(), input.readUtf8String());
         }
 
+        public void visitStringArray(StringArrayField field) throws Exception {
+            builder.set(field, input.readStringArray(), input.readStringArray());
+        }
+
         public void visitBoolean(BooleanField field) throws Exception {
             builder.set(field, input.readBoolean(), input.readBoolean());
+        }
+
+        public void visitBooleanArray(BooleanArrayField field) throws Exception {
+            builder.set(field, input.readBooleanArray(), input.readBooleanArray());
         }
 
         public void visitBlob(BlobField field) throws Exception {
@@ -189,23 +324,34 @@ public class DefaultSerializationInput implements SerializedInput {
             builder.set(field, input.readLong(), input.readLong());
         }
 
+        public void visitLongArray(LongArrayField field) throws Exception {
+            builder.set(field, input.readLongArray(), input.readLongArray());
+        }
+
+        public void visitDate(DateField field) throws Exception {
+            builder.set(field, input.readDate(), input.readDate());
+        }
+
+        public void visitDateTime(DateTimeField field) throws Exception {
+            builder.set(field, input.readDateTime(), input.readDateTime());
+        }
     }
-/*
-      ZonedDateTime zonedDateTime = glob.get(field);
-      LocalDateTime localDateTime = zonedDateTime.toLocalDateTime();
-      LocalDate date = localDateTime.toLocalDate();
-      Dates.decomposeDate(date, (year, month, day) -> {write(year); write(((byte)month)); write(((byte)day));});
-      LocalTime time = localDateTime.toLocalTime();
-      long l = time.toNanoOfDay();
-      write(l);
-      ZoneOffset offset = zonedDateTime.getOffset();
-      int totalSeconds = offset.getTotalSeconds();
-      write(totalSeconds);
 
- */
-
-    public ZonedDateTime readDate() {
+    private LocalDate readDate() {
         int year = readNotNullInt();
+        if (year == Integer.MIN_VALUE) {
+            return null;
+        }
+        byte month = readByte();
+        byte day = readByte();
+        return LocalDate.of(year, month, day);
+    }
+
+    public ZonedDateTime readDateTime() {
+        int year = readNotNullInt();
+        if (year == Integer.MIN_VALUE) {
+            return null;
+        }
         byte month = readByte();
         byte day = readByte();
         LocalDate localDate = LocalDate.of(year, month, day);
@@ -224,24 +370,14 @@ public class DefaultSerializationInput implements SerializedInput {
     }
 
     public int readNotNullInt() {
-        try {
-            return ((read() & 0xFF)) +
-                   ((read() & 0xFF) << 8) +
-                   ((read() & 0xFF) << 16) +
-                   ((read() & 0xFF) << 24);
-        }
-        catch (IOException e) {
-            throw new UnexpectedApplicationState(e);
-        }
+        return ((read() & 0xFF)) +
+               ((read() & 0xFF) << 8) +
+               ((read() & 0xFF) << 16) +
+               ((read() & 0xFF) << 24);
     }
 
     private boolean isNull() {
-        try {
-            return read() != 0;
-        }
-        catch (IOException e) {
-            throw new UnexpectedApplicationState(e);
-        }
+        return read() != 0;
     }
 
     public Double readDouble() {
@@ -270,13 +406,8 @@ public class DefaultSerializationInput implements SerializedInput {
     }
 
     public Boolean readBoolean() {
-        try {
-            int i = read();
-            return i == 0 ? Boolean.FALSE : i == 1 ? Boolean.TRUE : null;
-        }
-        catch (IOException e) {
-            throw new UnexpectedApplicationState(e);
-        }
+        int i = read();
+        return i == 0 ? Boolean.FALSE : i == 1 ? Boolean.TRUE : null;
     }
 
     public Long readLong() {
@@ -287,22 +418,17 @@ public class DefaultSerializationInput implements SerializedInput {
     }
 
     public long readNotNullLong() {
-        try {
-            return ((read() & 0xFFL)) +
-                   ((read() & 0xFFL) << 8) +
-                   ((read() & 0xFFL) << 16) +
-                   ((read() & 0xFFL) << 24) +
-                   ((read() & 0xFFL) << 32) +
-                   ((read() & 0xFFL) << 40) +
-                   ((read() & 0xFFL) << 48) +
-                   ((read() & 0xFFL) << 56);
-        }
-        catch (IOException e) {
-            throw new UnexpectedApplicationState(e);
-        }
+        return ((read() & 0xFFL)) +
+               ((read() & 0xFFL) << 8) +
+               ((read() & 0xFFL) << 16) +
+               ((read() & 0xFFL) << 24) +
+               ((read() & 0xFFL) << 32) +
+               ((read() & 0xFFL) << 40) +
+               ((read() & 0xFFL) << 48) +
+               ((read() & 0xFFL) << 56);
     }
 
-    private int read() throws IOException {
+    private int read() {
         try {
             int i = inputStream.read();
             if (i == -1) {
@@ -311,18 +437,13 @@ public class DefaultSerializationInput implements SerializedInput {
             count++;
             return i;
         }
-        catch (EOFException e) {
+        catch (IOException e) {
             throw new EOFIOFailure(e);
         }
     }
 
     public byte readByte() {
-        try {
-            return (byte)(read());
-        }
-        catch (IOException e) {
-            throw new UnexpectedApplicationState(e);
-        }
+        return (byte)(read());
     }
 
     public byte[] readBytes() {
@@ -365,16 +486,40 @@ public class DefaultSerializationInput implements SerializedInput {
             builder.set(field, readInteger());
         }
 
+        public void visitIntegerArray(IntegerArrayField field) throws Exception {
+            builder.set(field, readIntArray());
+        }
+
         public void visitDouble(DoubleField field) throws Exception {
             builder.set(field, readDouble());
+        }
+
+        public void visitDoubleArray(DoubleArrayField field) throws Exception {
+            builder.set(field, readDoubleArray());
+        }
+
+        public void visitBigDecimal(BigDecimalField field) throws Exception {
+            builder.set(field, readBigDecimal());
+        }
+
+        public void visitBigDecimalArray(BigDecimalArrayField field) throws Exception {
+            builder.set(field, readBigDecimaleArray());
         }
 
         public void visitString(StringField field) throws Exception {
             builder.set(field, readUtf8String());
         }
 
+        public void visitStringArray(StringArrayField field) throws Exception {
+            builder.set(field, readStringArray());
+        }
+
         public void visitBoolean(BooleanField field) throws Exception {
             builder.set(field, readBoolean());
+        }
+
+        public void visitBooleanArray(BooleanArrayField field) throws Exception {
+            builder.set(field, readBooleanArray());
         }
 
         public void visitBlob(BlobField field) throws Exception {
@@ -383,6 +528,18 @@ public class DefaultSerializationInput implements SerializedInput {
 
         public void visitLong(LongField field) throws Exception {
             builder.set(field, readLong());
+        }
+
+        public void visitLongArray(LongArrayField field) throws Exception {
+            builder.set(field, readLongArray());
+        }
+
+        public void visitDate(DateField field) throws Exception {
+            builder.set(field, readDate());
+        }
+
+        public void visitDateTime(DateTimeField field) throws Exception {
+            builder.set(field, readDateTime());
         }
 
         public Glob getValue() {

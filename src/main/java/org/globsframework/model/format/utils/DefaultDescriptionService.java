@@ -95,7 +95,7 @@ public class DefaultDescriptionService implements DescriptionService {
 
     public GlobStringifier getStringifier(Field targetField) {
         final Ref<GlobStringifier> result = new Ref<GlobStringifier>();
-        targetField.safeVisit(new FieldVisitor() {
+        targetField.safeVisit(new FieldVisitor.AbstractFieldVisitor() {
             public void visitLong(LongField field) throws Exception {
                 result.set(GlobStringifiers.get(field));
             }

@@ -77,7 +77,7 @@ public class SingleFieldKey extends AbstractKey {
         if (o.getClass().equals(SingleFieldKey.class)) {
             SingleFieldKey otherSingleFieldKey = (SingleFieldKey)o;
             return otherSingleFieldKey.keyField == keyField &&
-                   Utils.equal(otherSingleFieldKey.value, value);
+                   keyField.valueEqual(otherSingleFieldKey.value, value);
         }
 
         if (!AbstractKey.class.isAssignableFrom(o.getClass())) {
@@ -85,7 +85,7 @@ public class SingleFieldKey extends AbstractKey {
         }
         Key otherKey = (Key)o;
         return keyField.getGlobType() == otherKey.getGlobType()
-               && Utils.equal(value, otherKey.getValue(keyField));
+               && keyField.valueEqual(value, otherKey.getValue(keyField));
     }
 
     // optimized - do not use generated code
@@ -95,7 +95,7 @@ public class SingleFieldKey extends AbstractKey {
 
     private int computeHash() {
         int hash = getGlobType().hashCode();
-        hash = 31 * hash + (value != null ? value.hashCode() : 0);
+        hash = 31 * hash + (value != null ? keyField.valueHash(value) : 0);
         if (hash == 0) {
             hash = 31;
         }

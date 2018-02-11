@@ -5,6 +5,10 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.model.utils.DefaultFieldValuesWithPrevious;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.ZonedDateTime;
+
 public class FieldValuesWithPreviousBuilder {
     public static FieldValuesWithPreviousBuilder init(GlobType type) {
         return new FieldValuesWithPreviousBuilder(type);
@@ -65,6 +69,42 @@ public class FieldValuesWithPreviousBuilder {
     }
 
     public void set(LongField field, Long newValue, Long previousValue) {
+        setValue(field, newValue, previousValue);
+    }
+
+    public void set(IntegerArrayField field, int[] newValue, int[] previousValue) {
+        setValue(field, newValue, previousValue);
+    }
+
+    public void set(DoubleArrayField field, double[] newValue, double[] previousValue) {
+        setValue(field, newValue, previousValue);
+    }
+
+    public void set(BigDecimalField field, BigDecimal newValue, BigDecimal previousValue) {
+        setValue(field, newValue, previousValue);
+    }
+
+    public void set(LongArrayField field, long[] newValue, long[] previousValue) {
+        setValue(field, newValue, previousValue);
+    }
+
+    public void set(DateField field, LocalDate newValue, LocalDate previousValue) {
+        setValue(field, newValue, previousValue);
+    }
+
+    public void set(DateTimeField field, ZonedDateTime newValue, ZonedDateTime previousValue) {
+        setValue(field, newValue, previousValue);
+    }
+
+    public void set(StringArrayField field, String[] newValue, String[] previousValue) {
+        setValue(field, newValue, previousValue);
+    }
+
+    public void set(BigDecimalArrayField field, BigDecimal[] newValue, BigDecimal[] previousValue) {
+        setValue(field, newValue, previousValue);
+    }
+
+    public void set(BooleanArrayField field, boolean[] newValue, boolean[] previousValue) {
         setValue(field, newValue, previousValue);
     }
 }

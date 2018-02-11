@@ -4,11 +4,12 @@ import org.globsframework.metamodel.GlobModel;
 import org.globsframework.model.ChangeSet;
 import org.globsframework.model.Glob;
 
+import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 
 public interface SerializedInput {
 
-    ZonedDateTime readDate();
+    ZonedDateTime readDateTime();
 
     Integer readInteger();
 
@@ -37,6 +38,14 @@ public interface SerializedInput {
     int[] readIntArray();
 
     long[] readLongArray();
+
+    double[] readDoubleArray();
+
+    boolean[] readBooleanArray();
+
+    BigDecimal[] readBigDecimaleArray();
+
+    String[] readStringArray();
 
     void close();
 

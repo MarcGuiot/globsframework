@@ -86,7 +86,7 @@ public class FieldConverter {
         }
     }
 
-    private class XmlStringifierVisitor implements FieldVisitor {
+    private class XmlStringifierVisitor extends FieldVisitor.AbstractWithErrorVisitor {
         private String stringValue;
         private Object value;
 
@@ -131,7 +131,7 @@ public class FieldConverter {
         }
     }
 
-    private class FieldStringifierVisitor implements FieldVisitor {
+    private class FieldStringifierVisitor extends FieldVisitor.AbstractWithErrorVisitor {
         private Object value;
         private String stringValue;
 

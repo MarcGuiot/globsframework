@@ -4,6 +4,10 @@ import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.ZonedDateTime;
+
 public interface FieldValues extends FieldValuesAccessor {
 
     boolean contains(Field field);
@@ -43,6 +47,10 @@ public interface FieldValues extends FieldValuesAccessor {
             throw new ItemNotFound(field.getName());
         }
 
+        public double[] get(DoubleArrayField field) throws ItemNotFound {
+            throw new ItemNotFound(field.getName());
+        }
+
         public Integer get(IntegerField field) throws ItemNotFound {
             throw new ItemNotFound(field.getName());
         }
@@ -51,7 +59,15 @@ public interface FieldValues extends FieldValuesAccessor {
             throw new ItemNotFound(field.getName());
         }
 
+        public int[] get(IntegerArrayField field) throws ItemNotFound {
+            throw new ItemNotFound(field.getName());
+        }
+
         public String get(StringField field) throws ItemNotFound {
+            throw new ItemNotFound(field.getName());
+        }
+
+        public String[] get(StringArrayField field) throws ItemNotFound {
             throw new ItemNotFound(field.getName());
         }
 
@@ -60,6 +76,10 @@ public interface FieldValues extends FieldValuesAccessor {
         }
 
         public Boolean get(BooleanField field, boolean defaultIfNull) {
+            throw new ItemNotFound(field.getName());
+        }
+
+        public boolean[] get(BooleanArrayField field) {
             throw new ItemNotFound(field.getName());
         }
 
@@ -80,6 +100,26 @@ public interface FieldValues extends FieldValuesAccessor {
         }
 
         public long get(LongField field, long valueIfNull) throws ItemNotFound {
+            throw new ItemNotFound(field.getName());
+        }
+
+        public long[] get(LongArrayField field) throws ItemNotFound {
+            throw new ItemNotFound(field.getName());
+        }
+
+        public BigDecimal get(BigDecimalField field) throws ItemNotFound {
+            throw new ItemNotFound(field.getName());
+        }
+
+        public BigDecimal[] get(BigDecimalArrayField field) throws ItemNotFound {
+            throw new ItemNotFound(field.getName());
+        }
+
+        public LocalDate get(DateField field) throws ItemNotFound {
+            throw new ItemNotFound(field.getName());
+        }
+
+        public ZonedDateTime get(DateTimeField field) throws ItemNotFound {
             throw new ItemNotFound(field.getName());
         }
 

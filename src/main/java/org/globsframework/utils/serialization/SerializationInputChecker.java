@@ -5,6 +5,7 @@ import org.globsframework.model.ChangeSet;
 import org.globsframework.model.Glob;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
+import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 
 public class SerializationInputChecker implements SerializedInput {
@@ -36,7 +37,7 @@ public class SerializationInputChecker implements SerializedInput {
 
     public int[] readIntArray() {
         String value = serializedInput.readUtf8String();
-        if ("int array".equals(value)) {
+        if ("int[]".equals(value)) {
             return serializedInput.readIntArray();
         }
         else {
@@ -46,23 +47,62 @@ public class SerializationInputChecker implements SerializedInput {
 
     public long[] readLongArray() {
         String value = serializedInput.readUtf8String();
-        if ("long array".equals(value)) {
+        if ("long[]".equals(value)) {
             return serializedInput.readLongArray();
         }
         else {
             throw new UnexpectedApplicationState("long array expected but got " + value);
         }
+    }
 
+    public double[] readDoubleArray() {
+        String value = serializedInput.readUtf8String();
+        if ("long[]".equals(value)) {
+            return serializedInput.readDoubleArray();
+        }
+        else {
+            throw new UnexpectedApplicationState("double array expected but got " + value);
+        }
+    }
+
+    public boolean[] readBooleanArray() {
+        String value = serializedInput.readUtf8String();
+        if ("Boolean[]".equals(value)) {
+            return serializedInput.readBooleanArray();
+        }
+        else {
+            throw new UnexpectedApplicationState("Boolean array expected but got " + value);
+        }
+    }
+
+    public BigDecimal[] readBigDecimaleArray() {
+        String value = serializedInput.readUtf8String();
+        if ("BigDecimal[]".equals(value)) {
+            return serializedInput.readBigDecimaleArray();
+        }
+        else {
+            throw new UnexpectedApplicationState("BigDecimal array expected but got " + value);
+        }
+    }
+
+    public String[] readStringArray() {
+        String value = serializedInput.readUtf8String();
+        if ("string[]".equals(value)) {
+            return serializedInput.readStringArray();
+        }
+        else {
+            throw new UnexpectedApplicationState("string array expected but got " + value);
+        }
     }
 
     public void close() {
         serializedInput.close();
     }
 
-    public ZonedDateTime readDate() {
+    public ZonedDateTime readDateTime() {
         String value = serializedInput.readUtf8String();
         if ("Date".equals(value)) {
-            return serializedInput.readDate();
+            return serializedInput.readDateTime();
         }
         else {
             throw new UnexpectedApplicationState("Date expected but got " + value);

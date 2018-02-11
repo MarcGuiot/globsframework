@@ -2,9 +2,7 @@ package org.globsframework.metamodel;
 
 import org.globsframework.metamodel.annotations.DoublePrecision;
 import org.globsframework.metamodel.annotations.KeyField;
-import org.globsframework.metamodel.fields.DoubleField;
-import org.globsframework.metamodel.fields.IntegerField;
-import org.globsframework.metamodel.fields.StringField;
+import org.globsframework.metamodel.fields.*;
 
 public class DummyObject2 {
 

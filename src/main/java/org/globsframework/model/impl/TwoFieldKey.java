@@ -44,16 +44,16 @@ public class TwoFieldKey extends AbstractKey {
     }
 
     public void apply(Functor functor) throws Exception {
-        Field[] fields = type.getKeyFields();
-        functor.process(fields[0], value1);
-        functor.process(fields[1], value2);
+        Field[] keyFields = type.getKeyFields();
+        functor.process(keyFields[0], value1);
+        functor.process(keyFields[1], value2);
     }
 
     public void safeApply(Functor functor) {
         try {
-            Field[] fields = type.getKeyFields();
-            functor.process(fields[0], value1);
-            functor.process(fields[1], value2);
+            Field[] keyFields = type.getKeyFields();
+            functor.process(keyFields[0], value1);
+            functor.process(keyFields[1], value2);
         }
         catch (Exception e) {
             throw new RuntimeException(e);
@@ -84,19 +84,20 @@ public class TwoFieldKey extends AbstractKey {
         }
         if (o.getClass().equals(TwoFieldKey.class)) {
             TwoFieldKey twoFieldKey = (TwoFieldKey)o;
+            Field[] keyFields = type.getKeyFields();
             return type == twoFieldKey.getGlobType() &&
-                   Utils.equal(twoFieldKey.value1, value1) &&
-                   Utils.equal(twoFieldKey.value2, value2);
+                   keyFields[0].valueEqual(twoFieldKey.value1, value1) &&
+                   keyFields[1].valueEqual(twoFieldKey.value2, value2);
         }
 
         if (!Key.class.isAssignableFrom(o.getClass())) {
             return false;
         }
         Key otherKey = (Key)o;
-        Field[] fields = type.getKeyFields();
+        Field[] keyFields = type.getKeyFields();
         return type == otherKey.getGlobType()
-               && Utils.equal(value1, otherKey.getValue(fields[0]))
-               && Utils.equal(value2, otherKey.getValue(fields[1]));
+               && keyFields[0].valueEqual(value1, otherKey.getValue(keyFields[0]))
+               && keyFields[1].valueEqual(value2, otherKey.getValue(keyFields[1]));
     }
 
     // optimized - do not use generated code

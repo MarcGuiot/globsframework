@@ -6,6 +6,10 @@ import org.globsframework.model.FieldSetter;
 import org.globsframework.model.FieldValues;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.ZonedDateTime;
+
 public abstract class AbstractFieldValue<T extends FieldSetter> implements FieldSetter<T>, FieldValues {
 
     protected abstract T doSet(Field field, Object o);
@@ -38,12 +42,48 @@ public abstract class AbstractFieldValue<T extends FieldSetter> implements Field
         return doSet(field, aLong);
     }
 
+    public T set(LongArrayField field, long[] value) throws ItemNotFound {
+        return doSet(field, value);
+    }
+
+    public T set(BigDecimalField field, BigDecimal value) throws ItemNotFound {
+        return doSet(field, value);
+    }
+
+    public T set(BigDecimalArrayField field, BigDecimal[] value) throws ItemNotFound {
+        return doSet(field, value);
+    }
+
     public T set(LongField field, long l) throws ItemNotFound {
         return doSet(field, l);
     }
 
     public T set(BlobField blobField, byte[] bytes) throws ItemNotFound {
         return doSet(blobField, bytes);
+    }
+
+    public T set(DoubleArrayField field, double[] value) throws ItemNotFound {
+        return doSet(field, value);
+    }
+
+    public T set(IntegerArrayField field, int[] value) throws ItemNotFound {
+        return doSet(field, value);
+    }
+
+    public T set(StringArrayField field, String[] value) throws ItemNotFound {
+        return doSet(field, value);
+    }
+
+    public T set(BooleanArrayField field, boolean[] value) throws ItemNotFound {
+        return doSet(field, value);
+    }
+
+    public T set(DateField field, LocalDate value) throws ItemNotFound {
+        return doSet(field, value);
+    }
+
+    public T set(DateTimeField field, ZonedDateTime value) throws ItemNotFound {
+        return doSet(field, value);
     }
 
     public T setValue(Field field, Object o) throws ItemNotFound {
@@ -118,5 +158,41 @@ public abstract class AbstractFieldValue<T extends FieldSetter> implements Field
 
     public byte[] get(BlobField blobField) throws ItemNotFound {
         return (byte[])doGet(blobField);
+    }
+
+    public double[] get(DoubleArrayField field) throws ItemNotFound {
+        return (double[])doGet(field);
+    }
+
+    public int[] get(IntegerArrayField field) throws ItemNotFound {
+        return (int[])doGet(field);
+    }
+
+    public String[] get(StringArrayField field) throws ItemNotFound {
+        return (String[])doGet(field);
+    }
+
+    public boolean[] get(BooleanArrayField field) {
+        return (boolean[])doGet(field);
+    }
+
+    public long[] get(LongArrayField field) throws ItemNotFound {
+        return (long[])doGet(field);
+    }
+
+    public BigDecimal get(BigDecimalField field) throws ItemNotFound {
+        return (BigDecimal)doGet(field);
+    }
+
+    public BigDecimal[] get(BigDecimalArrayField field) throws ItemNotFound {
+        return (BigDecimal[])doGet(field);
+    }
+
+    public LocalDate get(DateField field) throws ItemNotFound {
+        return (LocalDate)doGet(field);
+    }
+
+    public ZonedDateTime get(DateTimeField field) throws ItemNotFound {
+        return (ZonedDateTime)doGet(field);
     }
 }

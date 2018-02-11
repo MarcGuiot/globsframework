@@ -4,6 +4,10 @@ import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 public interface FieldValuesWithPrevious extends FieldValues {
     Object getValue(Field field) throws ItemNotFound;
 
@@ -25,19 +29,37 @@ public interface FieldValuesWithPrevious extends FieldValues {
 
     Double getPrevious(DoubleField field) throws ItemNotFound;
 
+    double[] getPrevious(DoubleArrayField field) throws ItemNotFound;
+
     double getPrevious(DoubleField field, double defaultIfNull) throws ItemNotFound;
 
     Integer getPrevious(IntegerField field) throws ItemNotFound;
 
+    int[] getPrevious(IntegerArrayField field) throws ItemNotFound;
+
     String getPrevious(StringField field) throws ItemNotFound;
 
+    String[] getPrevious(StringArrayField field) throws ItemNotFound;
+
     Boolean getPrevious(BooleanField field) throws ItemNotFound;
+
+    Boolean[] getPrevious(BooleanArrayField field) throws ItemNotFound;
 
     Boolean getPrevious(BooleanField field, boolean defaultIfNull);
 
     Long getPrevious(LongField field) throws ItemNotFound;
 
+    long[] getPrevious(LongArrayField field) throws ItemNotFound;
+
     long getPrevious(LongField field, long valueIfNull) throws ItemNotFound;
+
+    LocalDate getPrevious(DateField field)throws ItemNotFound;
+
+    LocalDateTime getPrevious(DateTimeField field) throws ItemNotFound;
+
+    BigDecimal getPrevious(BigDecimalField field) throws ItemNotFound;
+
+    BigDecimal[] getPrevious(BigDecimalArrayField field) throws ItemNotFound;
 
     byte[] getPrevious(BlobField field) throws ItemNotFound;
 

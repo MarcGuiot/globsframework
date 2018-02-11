@@ -3,6 +3,7 @@ package org.globsframework.utils.serialization;
 import org.globsframework.model.ChangeSet;
 import org.globsframework.model.Glob;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 class SerializedOutputChecker implements SerializedOutput {
@@ -22,14 +23,14 @@ class SerializedOutputChecker implements SerializedOutput {
         serializationOutput.writeChangeSet(changeSet);
     }
 
-    public void write(int[] array) {
-        serializationOutput.writeUtf8String("int array");
-        serializationOutput.write(array);
+    public void write(int[] values) {
+        serializationOutput.writeUtf8String("int[]");
+        serializationOutput.write(values);
     }
 
-    public void write(long[] array) {
-        serializationOutput.writeUtf8String("long array");
-        serializationOutput.write(array);
+    public void write(long[] values) {
+        serializationOutput.writeUtf8String("long[]");
+        serializationOutput.write(values);
     }
 
     public void writeDate(Date date) {
@@ -95,5 +96,25 @@ class SerializedOutputChecker implements SerializedOutput {
     public void writeBytes(byte[] value) {
         serializationOutput.writeUtf8String("Bytes");
         serializationOutput.writeBytes(value);
+    }
+
+    public void write(double[] values) {
+        serializationOutput.writeUtf8String("double[]");
+        serializationOutput.write(values);
+    }
+
+    public void write(String[] values) {
+        serializationOutput.writeUtf8String("String[]");
+        serializationOutput.write(values);
+    }
+
+    public void write(boolean[] values) {
+        serializationOutput.writeUtf8String("boolean[]");
+        serializationOutput.write(values);
+    }
+
+    public void write(BigDecimal[] values) {
+        serializationOutput.writeUtf8String("BigDecimal[]");
+        serializationOutput.write(values);
     }
 }

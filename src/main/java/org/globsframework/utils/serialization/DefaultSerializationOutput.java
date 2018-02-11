@@ -9,6 +9,9 @@ import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 public class DefaultSerializationOutput implements SerializedOutput, ChangeSetVisitor {
@@ -32,18 +35,68 @@ public class DefaultSerializationOutput implements SerializedOutput, ChangeSetVi
         changeSet.safeVisit(this);
     }
 
-    public void write(int[] array) {
-        write(array.length);
-        for (int value : array) {
-            write(value);
+    public void write(int[] values) {
+        if (values == null) {
+            write(-1);
+        }
+        else {
+            write(values.length);
+            for (int value : values) {
+                write(value);
+            }
         }
     }
 
-    public void write(long[] array) {
-        write(array.length);
-        for (long value : array) {
-            write(value);
+    public void write(long[] values) {
+        if (values == null) {
+            write(-1);
         }
+        else {
+            write(values.length);
+            for (long value : values) {
+                write(value);
+            }
+        }
+    }
+
+    public void write(double[] values) {
+        if (values == null) {
+            write(-1);
+        }
+        else {
+            write(values.length);
+            for (double value : values) {
+                write(value);
+            }
+        }
+    }
+
+    public void write(String[] values) {
+        if (values == null) {
+            write(-1);
+        }
+        else {
+            write(values.length);
+            for (String value : values) {
+                writeUtf8String(value);
+            }
+        }
+    }
+
+    public void write(BigDecimal[] values) {
+        if (values == null) {
+            write(-1);
+        }
+        else {
+            write(values.length);
+            for (BigDecimal value : values) {
+                write(value);
+            }
+        }
+    }
+
+    public void write(BigDecimal value) {
+        writeUtf8String(value.toPlainString());
     }
 
     public void write(int value) {
@@ -155,6 +208,22 @@ public class DefaultSerializationOutput implements SerializedOutput, ChangeSetVi
         }
     }
 
+    public void write(boolean[] value) {
+        try {
+            if (value == null) {
+                write(-1);
+                return;
+            }
+            write(value.length);
+            for (boolean b : value) {
+                outputStream.write(b ? 1 : 0);
+            }
+        }
+        catch (IOException e) {
+            throw new UnexpectedApplicationState(e);
+        }
+    }
+
     public void writeByte(int value) {
         try {
             outputStream.write(value);
@@ -224,16 +293,58 @@ public class DefaultSerializationOutput implements SerializedOutput, ChangeSetVi
             writeInteger(value);
         }
 
+        public void visitIntegerArray(IntegerArrayField field, int[] value) throws Exception {
+            write(value);
+        }
+
         public void visitDouble(DoubleField field, Double value) throws Exception {
             writeDouble(value);
+        }
+
+        public void visitDoubleArray(DoubleArrayField field, double[] value) throws Exception {
+            write(value);
+        }
+
+        public void visitBigDecimal(BigDecimalField field, BigDecimal value) throws Exception {
+            write(value);
+        }
+
+        public void visitBigDecimalArray(BigDecimalArrayField field, BigDecimal[] value) throws Exception {
+            if (value == null) {
+                write(-1);
+                return;
+            }
+            else {
+                write(value.length);
+            }
+            for (BigDecimal s : value) {
+                write(s);
+            }
         }
 
         public void visitString(StringField field, String value) throws Exception {
             writeUtf8String(value);
         }
 
+        public void visitStringArray(StringArrayField field, String[] value) throws Exception {
+            if (value == null) {
+                write(-1);
+                return;
+            }
+            else {
+                write(value.length);
+            }
+            for (String s : value) {
+                writeUtf8String(s);
+            }
+        }
+
         public void visitBoolean(BooleanField field, Boolean value) throws Exception {
             writeBoolean(value);
+        }
+
+        public void visitBooleanArray(BooleanArrayField field, boolean[] value) throws Exception {
+            write(value);
         }
 
         public void visitBlob(BlobField field, byte[] value) throws Exception {
@@ -244,6 +355,17 @@ public class DefaultSerializationOutput implements SerializedOutput, ChangeSetVi
             writeLong(value);
         }
 
+        public void visitLongArray(LongArrayField field, long[] value) throws Exception {
+            write(value);
+        }
+
+        public void visitDate(DateField field, LocalDate date) throws Exception {
+            writeDate(date);
+        }
+
+        public void visitDateTime(DateTimeField field, ZonedDateTime zonedDateTime) throws Exception {
+            writeDateTime(zonedDateTime);
+        }
     }
 
     private void writeValues(FieldValuesWithPrevious values) {
@@ -263,16 +385,48 @@ public class DefaultSerializationOutput implements SerializedOutput, ChangeSetVi
             writeInteger(value);
         }
 
+        public void visitIntegerArray(IntegerArrayField field, int[] value) throws Exception {
+            write(value);
+        }
+
         public void visitDouble(DoubleField field, Double value) throws Exception {
             writeDouble(value);
+        }
+
+        public void visitDoubleArray(DoubleArrayField field, double[] value) throws Exception {
+            write(value);
+        }
+
+        public void visitBigDecimal(BigDecimalField field, BigDecimal value) throws Exception {
+            write(value);
+        }
+
+        public void visitBigDecimalArray(BigDecimalArrayField field, BigDecimal[] values) throws Exception {
+            write(values);
         }
 
         public void visitString(StringField field, String value) throws Exception {
             writeUtf8String(value);
         }
 
+        public void visitStringArray(StringArrayField field, String[] value) throws Exception {
+            if (value == null) {
+                write(-1);
+            }
+            else {
+                write(value.length);
+                for (String s : value) {
+                    writeUtf8String(s);
+                }
+            }
+        }
+
         public void visitBoolean(BooleanField field, Boolean value) throws Exception {
             writeBoolean(value);
+        }
+
+        public void visitBooleanArray(BooleanArrayField field, boolean[] values) throws Exception {
+            write(values);
         }
 
         public void visitBlob(BlobField field, byte[] value) throws Exception {
@@ -283,6 +437,17 @@ public class DefaultSerializationOutput implements SerializedOutput, ChangeSetVi
             writeLong(value);
         }
 
+        public void visitLongArray(LongArrayField field, long[] value) throws Exception {
+            write(value);
+        }
+
+        public void visitDate(DateField field, LocalDate date) throws Exception {
+            writeDate(date);
+        }
+
+        public void visitDateTime(DateTimeField field, ZonedDateTime zonedDateTime) throws Exception {
+            writeDateTime(zonedDateTime);
+        }
     }
 
     private class OutputStreamFieldVisitor implements FieldVisitor {
@@ -296,16 +461,40 @@ public class DefaultSerializationOutput implements SerializedOutput, ChangeSetVi
             writeInteger(glob.get(field));
         }
 
+        public void visitIntegerArray(IntegerArrayField field) throws Exception {
+            write(glob.get(field));
+        }
+
         public void visitDouble(DoubleField field) throws Exception {
             writeDouble(glob.get(field));
+        }
+
+        public void visitDoubleArray(DoubleArrayField field) throws Exception {
+            write(glob.get(field));
+        }
+
+        public void visitBigDecimal(BigDecimalField field) throws Exception {
+            write(glob.get(field));
+        }
+
+        public void visitBigDecimalArray(BigDecimalArrayField field) throws Exception {
+            write(glob.get(field));
         }
 
         public void visitString(StringField field) throws Exception {
             writeUtf8String(glob.get(field));
         }
 
+        public void visitStringArray(StringArrayField field) throws Exception {
+            write(glob.get(field));
+        }
+
         public void visitBoolean(BooleanField field) throws Exception {
             writeBoolean(glob.get(field));
+        }
+
+        public void visitBooleanArray(BooleanArrayField field) throws Exception {
+            write(glob.get(field));
         }
 
         public void visitBlob(BlobField field) throws Exception {
@@ -316,5 +505,43 @@ public class DefaultSerializationOutput implements SerializedOutput, ChangeSetVi
             writeLong(glob.get(field));
         }
 
+        public void visitLongArray(LongArrayField field) throws Exception {
+            write(glob.get(field));
+        }
+
+        public void visitDate(DateField field) throws Exception {
+            writeDate(glob.get(field));
+        }
+
+        public void visitDateTime(DateTimeField field) throws Exception {
+            writeDateTime(glob.get(field));
+        }
+    }
+
+    private void writeDate(LocalDate date) {
+        if (date == null) {
+            write(Integer.MIN_VALUE);
+        }
+        else {
+            write(date.getYear());
+            write(date.getMonthValue());
+            write(date.getDayOfMonth());
+        }
+    }
+
+    private void writeDateTime(ZonedDateTime date) {
+        if (date == null) {
+            write(Integer.MIN_VALUE);
+        }
+        else {
+            write(date.getYear());
+            write(date.getMonthValue());
+            write(date.getDayOfMonth());
+            write(date.getHour());
+            write(date.getMinute());
+            write(date.getSecond());
+            write(date.getNano());
+            writeUtf8String(date.getZone().getId());
+        }
     }
 }
