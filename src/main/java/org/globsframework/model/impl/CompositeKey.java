@@ -78,12 +78,7 @@ public class CompositeKey extends AbstractKey {
             return false;
         }
 
-        if (o.getClass().equals(CompositeKey.class)) {
-            CompositeKey other = (CompositeKey)o;
-            return type.equals(other.type) && Arrays.equals(values, other.values);
-        }
-
-        if (!AbstractKey.class.isAssignableFrom(o.getClass())) {
+        if (!Key.class.isAssignableFrom(o.getClass())) {
             return false;
         }
 
@@ -91,8 +86,9 @@ public class CompositeKey extends AbstractKey {
         if (!type.equals(otherKey.getGlobType())) {
             return false;
         }
+
         for (Field field : type.getKeyFields()) {
-            if (!Utils.equal(getValue(field), otherKey.getValue(field))) {
+            if (!field.valueEqual(getValue(field), otherKey.getValue(field))) {
                 return false;
             }
         }
@@ -108,7 +104,7 @@ public class CompositeKey extends AbstractKey {
         int hashCode = type.hashCode();
         for (Field keyField : type.getKeyFields()) {
             Object value = getValue(keyField);
-            hashCode = 31 * hashCode + (value != null ? value.hashCode() : 0);
+            hashCode = 31 * hashCode + (value != null ? keyField.valueHash(value) : 0);
         }
         if (hashCode == 0) {
             hashCode = 31;

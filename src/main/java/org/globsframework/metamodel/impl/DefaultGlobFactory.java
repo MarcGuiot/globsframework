@@ -34,30 +34,7 @@ class DefaultGlobFactory implements GlobFactory {
     }
 
     public GlobSetIntAccessor adapt(Field field) {
-        field.safeVisit(new FieldVisitor() {
-            public void visitInteger(IntegerField field) throws Exception {
-
-            }
-
-            public void visitDouble(DoubleField field) throws Exception {
-
-            }
-
-            public void visitString(StringField field) throws Exception {
-
-            }
-
-            public void visitBoolean(BooleanField field) throws Exception {
-
-            }
-
-            public void visitLong(LongField field) throws Exception {
-
-            }
-
-            public void visitBlob(BlobField field) throws Exception {
-
-            }
+        field.safeVisit(new FieldVisitor.AbstractFieldVisitor() {
         });
         return null;
     }

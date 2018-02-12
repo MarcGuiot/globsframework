@@ -24,6 +24,14 @@ public class GlobTypeBuilderTest {
             .addDoubleField("double")
             .addBlobField("blob")
             .addBooleanField("boolean")
+            .addBooleanArrayField("booleanArray")
+            .addBigDecimalField("bigDecimal")
+            .addBigDecimalArrayField("bigArrayDecimal")
+            .addDoubleArrayField("doubleArray")
+            .addIntegerArrayField("intArray")
+            .addLongArrayField("longArray")
+            .addDateField("date")
+            .addDateTimeField("time")
             .get();
 
         assertEquals("aType", type.getName());
@@ -36,12 +44,18 @@ public class GlobTypeBuilderTest {
 
         checkField(type, "string", StringField.class, DataType.String);
         checkField(type, "int", IntegerField.class, DataType.Integer);
+        checkField(type, "intArray", IntegerArrayField.class, DataType.IntegerArray);
         checkField(type, "long", LongField.class, DataType.Long);
+        checkField(type, "longArray", LongArrayField.class, DataType.LongArray);
         checkField(type, "double", DoubleField.class, DataType.Double);
+        checkField(type, "doubleArray", DoubleArrayField.class, DataType.DoubleArray);
         checkField(type, "blob", BlobField.class, DataType.Bytes);
         checkField(type, "boolean", BooleanField.class, DataType.Boolean);
-//      checkField(type, "date", DateField.class, DataType.Date);
-//      checkField(type, "timestamp", TimeStampField.class, DataType.TimeStamp);
+        checkField(type, "booleanArray", BooleanArrayField.class, DataType.BooleanArray);
+        checkField(type, "bigDecimal", BigDecimalField.class, DataType.BigDecimal);
+        checkField(type, "bigArrayDecimal", BigDecimalArrayField.class, DataType.BigDecimalArray);
+        checkField(type, "date", DateField.class, DataType.Date);
+        checkField(type, "time", DateTimeField.class, DataType.DateTime);
     }
 
     private void checkField(GlobType type, String fieldName, Class<? extends Field> fieldClass, DataType dataType) {

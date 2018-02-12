@@ -118,7 +118,7 @@ public class XmlGlobStreamReader {
             globs.add(glob);
         }
 
-        private static class AccessorDataTypeVisitor implements FieldVisitor {
+        private static class AccessorDataTypeVisitor extends FieldVisitor.AbstractWithErrorVisitor {
             private XmlGlobStream stream;
             private Accessor accessor;
 

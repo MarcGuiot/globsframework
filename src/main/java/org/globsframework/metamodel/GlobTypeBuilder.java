@@ -12,25 +12,59 @@ public interface GlobTypeBuilder {
 
     GlobTypeBuilder addStringField(String fieldName, Collection<Glob> annotations);
 
+    GlobTypeBuilder addStringArrayField(String fieldName, Collection<Glob> globAnnotations);
+
     GlobTypeBuilder addIntegerField(String fieldName, Collection<Glob> globAnnotations);
+
+    GlobTypeBuilder addIntegerArrayField(String fieldName, Collection<Glob> globAnnotations);
 
     GlobTypeBuilder addDoubleField(String fieldName, Collection<Glob> globAnnotations);
 
+    GlobTypeBuilder addDoubleArrayField(String fieldName, Collection<Glob> globAnnotations);
+
+    GlobTypeBuilder addBigDecimalField(String fieldName, Collection<Glob> globAnnotations);
+
+    GlobTypeBuilder addBigDecimalArrayField(String fieldName, Collection<Glob> globAnnotations);
+
+    GlobTypeBuilder addDateField(String fieldName, Collection<Glob> globAnnotations);
+
+    GlobTypeBuilder addDateTimeField(String fieldName, Collection<Glob> globAnnotations);
+
     GlobTypeBuilder addLongField(String fieldName, Collection<Glob> globAnnotations);
 
+    GlobTypeBuilder addLongArrayField(String fieldName, Collection<Glob> globAnnotations);
+
     GlobTypeBuilder addBooleanField(String fieldName, Collection<Glob> globAnnotations);
+
+    GlobTypeBuilder addBooleanArrayField(String fieldName, Collection<Glob> globAnnotations);
 
     GlobTypeBuilder addBlobField(String fieldName, Collection<Glob> globAnnotations);
 
     StringField declareStringField(String fieldName, Collection<Glob> annotations);
 
+    StringArrayField declareStringArrayField(String fieldName, Collection<Glob> globAnnotations);
+
     IntegerField declareIntegerField(String fieldName, Collection<Glob> annotations);
+
+    DoubleArrayField declareDoubleArrayField(String fieldName, Collection<Glob> annotations);
 
     BooleanField declareBooleanField(String fieldName, Collection<Glob> annotations);
 
+    IntegerArrayField declareIntegerArrayField(String fieldName, Collection<Glob> annotations);
+
     DoubleField declareDoubleField(String fieldName, Collection<Glob> annotations);
 
+    BigDecimalField declareBigDecimalField(String fieldName, Collection<Glob> annotations);
+
+    BigDecimalArrayField declareBigDecimalArrayField(String fieldName, Collection<Glob> annotations);
+
+    DateField declareDateField(String fieldName, Collection<Glob> annotations);
+
+    DateTimeField declareDateTimeField(String fieldName, Collection<Glob> annotations);
+
     LongField declareLongField(String fieldName, Collection<Glob> annotations);
+
+    LongArrayField declareArrayLongField(String fieldName, Collection<Glob> annotations);
 
     BlobField declareBlobField(String fieldName, Collection<Glob> annotations);
 
@@ -50,8 +84,40 @@ public interface GlobTypeBuilder {
         return addLongField(fieldName, Arrays.asList(annotations));
     }
 
+    default GlobTypeBuilder addIntegerArrayField(String fieldName, Glob... annotations) {
+        return addIntegerArrayField(fieldName, Arrays.asList(annotations));
+    }
+
+    default GlobTypeBuilder addLongArrayField(String fieldName, Glob... annotations) {
+        return addLongArrayField(fieldName, Arrays.asList(annotations));
+    }
+
     default GlobTypeBuilder addBooleanField(String fieldName, Glob... annotations) {
         return addBooleanField(fieldName, Arrays.asList(annotations));
+    }
+
+    default GlobTypeBuilder addBooleanArrayField(String fieldName, Glob... annotations) {
+        return addBooleanArrayField(fieldName, Arrays.asList(annotations));
+    }
+
+    default GlobTypeBuilder addBigDecimalField(String fieldName, Glob... annotations) {
+        return addBigDecimalField(fieldName, Arrays.asList(annotations));
+    }
+
+    default GlobTypeBuilder addBigDecimalArrayField(String fieldName, Glob... annotations) {
+        return addBigDecimalArrayField(fieldName, Arrays.asList(annotations));
+    }
+
+    default GlobTypeBuilder addDateField(String fieldName, Glob... annotations) {
+        return addDateField(fieldName, Arrays.asList(annotations));
+    }
+
+    default GlobTypeBuilder addDateTimeField(String fieldName, Glob... annotations) {
+        return addDateTimeField(fieldName, Arrays.asList(annotations));
+    }
+
+    default GlobTypeBuilder addDoubleArrayField(String fieldName, Glob... annotations) {
+        return addDoubleArrayField(fieldName, Arrays.asList(annotations));
     }
 
     default GlobTypeBuilder addBlobField(String fieldName, Glob... annotations) {

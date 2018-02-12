@@ -8,6 +8,10 @@ import org.globsframework.model.FieldValues;
 import org.globsframework.model.Key;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.ZonedDateTime;
+
 public class EmptyKey implements Key {
     private final GlobType type;
 
@@ -35,6 +39,10 @@ public class EmptyKey implements Key {
         throw new RuntimeException("Empty key '" + field.getFullName() + " not available");
     }
 
+    public double[] get(DoubleArrayField field) throws ItemNotFound {
+        throw new RuntimeException("Empty key '" + field.getFullName() + " not available");
+    }
+
     public Integer get(IntegerField field) throws ItemNotFound {
         throw new RuntimeException("Empty key '" + field.getFullName() + " not available");
     }
@@ -43,7 +51,15 @@ public class EmptyKey implements Key {
         throw new RuntimeException("Empty key '" + field.getFullName() + " not available");
     }
 
+    public int[] get(IntegerArrayField field) throws ItemNotFound {
+        throw new RuntimeException("Empty key '" + field.getFullName() + " not available");
+    }
+
     public String get(StringField field) throws ItemNotFound {
+        throw new RuntimeException("Empty key '" + field.getFullName() + " not available");
+    }
+
+    public String[] get(StringArrayField field) throws ItemNotFound {
         throw new RuntimeException("Empty key '" + field.getFullName() + " not available");
     }
 
@@ -52,6 +68,10 @@ public class EmptyKey implements Key {
     }
 
     public Boolean get(BooleanField field, boolean defaultIfNull) {
+        throw new RuntimeException("Empty key '" + field.getFullName() + " not available");
+    }
+
+    public boolean[] get(BooleanArrayField field) {
         throw new RuntimeException("Empty key '" + field.getFullName() + " not available");
     }
 
@@ -64,6 +84,26 @@ public class EmptyKey implements Key {
     }
 
     public long get(LongField field, long valueIfNull) throws ItemNotFound {
+        throw new RuntimeException("Empty key '" + field.getFullName() + " not available");
+    }
+
+    public long[] get(LongArrayField field) throws ItemNotFound {
+        throw new RuntimeException("Empty key '" + field.getFullName() + " not available");
+    }
+
+    public BigDecimal get(BigDecimalField field) throws ItemNotFound {
+        throw new RuntimeException("Empty key '" + field.getFullName() + " not available");
+    }
+
+    public BigDecimal[] get(BigDecimalArrayField field) throws ItemNotFound {
+        throw new RuntimeException("Empty key '" + field.getFullName() + " not available");
+    }
+
+    public LocalDate get(DateField field) throws ItemNotFound {
+        throw new RuntimeException("Empty key '" + field.getFullName() + " not available");
+    }
+
+    public ZonedDateTime get(DateTimeField field) throws ItemNotFound {
         throw new RuntimeException("Empty key '" + field.getFullName() + " not available");
     }
 

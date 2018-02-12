@@ -10,6 +10,9 @@ import org.globsframework.utils.exceptions.InvalidParameter;
 import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.exceptions.MissingInfo;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -223,6 +226,10 @@ public class KeyBuilder implements FieldSetter<KeyBuilder>{
         return setValue(field, value);
     }
 
+    public KeyBuilder set(DoubleArrayField field, double[] value) throws ItemNotFound {
+        return setValue(field, value);
+    }
+
     public KeyBuilder set(IntegerField field, Integer value) throws ItemNotFound {
         return setValue(field, value);
     }
@@ -231,7 +238,15 @@ public class KeyBuilder implements FieldSetter<KeyBuilder>{
         return setValue(field, value);
     }
 
+    public KeyBuilder set(IntegerArrayField field, int[] value) throws ItemNotFound {
+        return setValue(field, value);
+    }
+
     public KeyBuilder set(StringField field, String value) throws ItemNotFound {
+        return setValue(field, value);
+    }
+
+    public KeyBuilder set(StringArrayField field, String[] value) throws ItemNotFound {
         return setValue(field, value);
     }
 
@@ -239,7 +254,15 @@ public class KeyBuilder implements FieldSetter<KeyBuilder>{
         return setValue(field, value);
     }
 
+    public KeyBuilder set(BooleanArrayField field, boolean[] value) throws ItemNotFound {
+        return setValue(field, value);
+    }
+
     public KeyBuilder set(LongField field, Long value) throws ItemNotFound {
+        return setValue(field, value);
+    }
+
+    public KeyBuilder set(LongArrayField field, long[] value) throws ItemNotFound {
         return setValue(field, value);
     }
 
@@ -247,7 +270,23 @@ public class KeyBuilder implements FieldSetter<KeyBuilder>{
         return setValue(field, value);
     }
 
+    public KeyBuilder set(BigDecimalField field, BigDecimal value) throws ItemNotFound {
+        return setValue(field, value);
+    }
+
+    public KeyBuilder set(BigDecimalArrayField field, BigDecimal[] value) throws ItemNotFound {
+        return setValue(field, value);
+    }
+
     public KeyBuilder set(BlobField field, byte[] value) throws ItemNotFound {
+        return setValue(field, value);
+    }
+
+    public KeyBuilder set(DateField field, LocalDate value) throws ItemNotFound {
+        return setValue(field, value);
+    }
+
+    public KeyBuilder set(DateTimeField field, ZonedDateTime value) throws ItemNotFound {
         return setValue(field, value);
     }
 

@@ -5,6 +5,10 @@ import org.globsframework.metamodel.links.Link;
 import org.globsframework.model.*;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.ZonedDateTime;
+
 public abstract class AbstractOptGlob extends AbstractKey implements Glob, MutableGlob {
     public abstract GlobType getType();
 
@@ -141,6 +145,46 @@ public abstract class AbstractOptGlob extends AbstractKey implements Glob, Mutab
 
     public MutableGlob set(LongField field, long value) throws ItemNotFound {
         return this;
+    }
+
+    public MutableGlob set(DoubleArrayField field, double[] value) throws ItemNotFound {
+        return null;
+    }
+
+    public MutableGlob set(IntegerArrayField field, int[] value) throws ItemNotFound {
+        return null;
+    }
+
+    public MutableGlob set(StringArrayField field, String[] value) throws ItemNotFound {
+        return null;
+    }
+
+    public MutableGlob set(BooleanArrayField field, boolean[] value) throws ItemNotFound {
+        return null;
+    }
+
+    public MutableGlob set(LongField field, Long value) throws ItemNotFound {
+        return null;
+    }
+
+    public MutableGlob set(LongArrayField field, long[] value) throws ItemNotFound {
+        return null;
+    }
+
+    public MutableGlob set(BigDecimalField field, BigDecimal value) throws ItemNotFound {
+        return null;
+    }
+
+    public MutableGlob set(BigDecimalArrayField field, BigDecimal[] value) throws ItemNotFound {
+        return null;
+    }
+
+    public MutableGlob set(DateField field, LocalDate value) throws ItemNotFound {
+        return null;
+    }
+
+    public MutableGlob set(DateTimeField field, ZonedDateTime value) throws ItemNotFound {
+        return null;
     }
 
     public MutableGlob setValue(Field field, Object value) {

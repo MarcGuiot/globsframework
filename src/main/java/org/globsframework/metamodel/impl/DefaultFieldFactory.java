@@ -30,11 +30,29 @@ public class DefaultFieldFactory {
         return add(new DefaultIntegerField(name, type, index, isKeyField, keyIndex, defaultValue), isKeyField);
     }
 
+    public DefaultIntegerArrayField addIntegerArray(String name,
+                                                    boolean isKeyField,
+                                                    int keyIndex, int index) {
+        return add(new DefaultIntegerArrayField(name, type, index, isKeyField, keyIndex, null), false);
+    }
+
+    public DefaultBooleanArrayField addBooleanArray(String name,
+                                                    boolean isKeyField,
+                                                    int keyIndex, int index) {
+        return add(new DefaultBooleanArrayField(name, type, index, isKeyField, keyIndex, null), false);
+    }
+
     public DefaultLongField addLong(String name,
                                     boolean isKeyField,
                                     int keyIndex, int index,
                                     Long defaultValue) {
         return add(new DefaultLongField(name, type, index, isKeyField, keyIndex, defaultValue), isKeyField);
+    }
+
+    public DefaultLongArrayField addLongArray(String name,
+                                              boolean isKeyField,
+                                              int keyIndex, int index) {
+        return add(new DefaultLongArrayField(name, type, index, isKeyField, keyIndex, null), false);
     }
 
     public DefaultDoubleField addDouble(String name,
@@ -44,6 +62,12 @@ public class DefaultFieldFactory {
         return add(new DefaultDoubleField(name, type, index, isKeyField, keyIndex, defaultValue), isKeyField);
     }
 
+    public DefaultDoubleArrayField addDoubleArray(String name,
+                                                  boolean isKeyField,
+                                                  int keyIndex, int index) {
+        return add(new DefaultDoubleArrayField(name, type, index, isKeyField, keyIndex, null), false);
+    }
+
     public DefaultStringField addString(String name,
                                         boolean isKeyField,
                                         int keyIndex, int index,
@@ -51,11 +75,41 @@ public class DefaultFieldFactory {
         return add(new DefaultStringField(name, type, index, isKeyField, keyIndex, defaultValue), isKeyField);
     }
 
+    public DefaultStringArrayField addStringArray(String name,
+                                                  boolean isKeyField,
+                                                  int keyIndex, int index) {
+        return add(new DefaultStringArrayField(name, type, index, isKeyField, keyIndex, null), false);
+    }
+
     public DefaultBooleanField addBoolean(String name,
                                           boolean isKeyField,
                                           final int keyIndex, int index,
                                           Boolean defaultValue) {
         return add(new DefaultBooleanField(name, type, index, isKeyField, keyIndex, defaultValue), isKeyField);
+    }
+
+    public DefaultBigDecimalField addBigDecimal(String name,
+                                                boolean isKeyField,
+                                                int keyIndex, int index) {
+        return add(new DefaultBigDecimalField(name, type, index, isKeyField, keyIndex, null), false);
+    }
+
+    public DefaultBigDecimalArrayField addBigDecimalArray(String name,
+                                                          boolean isKeyField,
+                                                          int keyIndex, int index) {
+        return add(new DefaultBigDecimalArrayField(name, type, index, isKeyField, keyIndex, null), false);
+    }
+
+    public DefaultDateTimeField addDateTime(String name,
+                                            boolean isKeyField,
+                                            int keyIndex, int index) {
+        return add(new DefaultDateTimeField(name, type, index, isKeyField, keyIndex, null), isKeyField);
+    }
+
+    public DefaultDateField addDate(String name,
+                                    boolean isKeyField,
+                                    int keyIndex, int index) {
+        return add(new DefaultDateField(name, type, index, isKeyField, keyIndex, null), isKeyField);
     }
 
     public DefaultBlobField addBlob(String name, int index) {

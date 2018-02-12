@@ -10,7 +10,6 @@ import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
 class DefaultDeltaGlob extends AbstractFieldValuesWithPrevious implements DeltaGlob {
-
     private Key key;
     private Object[] values;
     private Object[] previousValues;

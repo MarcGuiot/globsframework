@@ -3,6 +3,7 @@ package org.globsframework.utils.serialization;
 import org.globsframework.model.ChangeSet;
 import org.globsframework.model.Glob;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 public interface SerializedOutput {
@@ -36,7 +37,15 @@ public interface SerializedOutput {
 
     void writeChangeSet(ChangeSet changeSet);
 
-    void write(int[] array);
+    void write(int[] values);
 
-    void write(long[] array);
+    void write(long[] values);
+
+    void write(double[] values);
+
+    void write(String[] values);
+
+    void write(boolean[] values);
+
+    void write(BigDecimal[] values);
 }

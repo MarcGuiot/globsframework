@@ -5,10 +5,12 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.model.utils.DefaultFieldValues;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.Map;
 
 public class FieldValuesBuilder {
-
     private DefaultFieldValues values = new DefaultFieldValues();
 
     public static FieldValuesBuilder init() {
@@ -78,9 +80,27 @@ public class FieldValuesBuilder {
         return setValue(field, value);
     }
 
+    public FieldValuesBuilder set(StringArrayField field, String[] value) {
+        return setValue(field, value);
+    }
+
     public FieldValuesBuilder set(IntegerField field, Integer value) {
         return setValue(field, value);
     }
+
+    public FieldValuesBuilder set(IntegerArrayField field, int[] values) {
+        return setValue(field, values);
+    }
+
+    public FieldValuesBuilder set(LongArrayField field, long[] values) {
+        return setValue(field, values);
+    }
+
+    public FieldValuesBuilder set(DoubleArrayField field, double[] values) {
+        return setValue(field, values);
+    }
+
+
 
     public void add(IntegerField field, Integer value) {
         if (value == null) {
@@ -117,7 +137,28 @@ public class FieldValuesBuilder {
         return setValue(field, value);
     }
 
+    public FieldValuesBuilder set(BigDecimalField field, BigDecimal decimal) {
+        return setValue(field, decimal);
+    }
+
+    public FieldValuesBuilder set(BigDecimalArrayField field, BigDecimal[] decimals) {
+        return setValue(field, decimals);
+    }
+
+    public FieldValuesBuilder set(DateField field, LocalDate date) {
+        return setValue(field, date);
+    }
+
+    public FieldValuesBuilder set(DateTimeField field, ZonedDateTime date) {
+        return setValue(field, date);
+    }
+
     public FieldValuesBuilder setValue(Field field, Object value) {
+        values.setValue(field, value);
+        return this;
+    }
+
+    public FieldValuesBuilder set(BooleanArrayField field, boolean[] value) {
         values.setValue(field, value);
         return this;
     }

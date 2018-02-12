@@ -5,7 +5,6 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.AbstractKey;
 import org.globsframework.model.FieldValue;
 import org.globsframework.model.Key;
-import org.globsframework.utils.Utils;
 import org.globsframework.utils.exceptions.InvalidParameter;
 import org.globsframework.utils.exceptions.MissingInfo;
 
@@ -106,23 +105,24 @@ public class FourFieldKey extends AbstractKey {
         }
         if (o.getClass() == FourFieldKey.class) {
             FourFieldKey otherSingleFieldKey = (FourFieldKey)o;
+            Field[] keyFields = getGlobType().getKeyFields();
             return type == otherSingleFieldKey.getGlobType() &&
-                   Utils.equal(otherSingleFieldKey.value1, value1) &&
-                   Utils.equal(otherSingleFieldKey.value2, value2) &&
-                   Utils.equal(otherSingleFieldKey.value3, value3) &&
-                   Utils.equal(otherSingleFieldKey.value4, value4);
+                   keyFields[0].valueEqual(otherSingleFieldKey.value1, value1) &&
+                   keyFields[1].valueEqual(otherSingleFieldKey.value2, value2) &&
+                   keyFields[2].valueEqual(otherSingleFieldKey.value3, value3) &&
+                   keyFields[3].valueEqual(otherSingleFieldKey.value4, value4);
         }
 
         if (!Key.class.isAssignableFrom(o.getClass())) {
             return false;
         }
         Key otherKey = (Key)o;
-        Field[] fields = type.getFields();
+        Field[] keyFields = type.getKeyFields();
         return type == otherKey.getGlobType()
-               && Utils.equal(value1, otherKey.getValue(fields[0]))
-               && Utils.equal(value2, otherKey.getValue(fields[1]))
-               && Utils.equal(value3, otherKey.getValue(fields[2]))
-               && Utils.equal(value4, otherKey.getValue(fields[3]));
+               && keyFields[0].valueEqual(value1, otherKey.getValue(keyFields[0]))
+               && keyFields[1].valueEqual(value2, otherKey.getValue(keyFields[1]))
+               && keyFields[2].valueEqual(value3, otherKey.getValue(keyFields[2]))
+               && keyFields[3].valueEqual(value4, otherKey.getValue(keyFields[3]));
     }
 
     // optimized - do not use generated code
@@ -131,12 +131,12 @@ public class FourFieldKey extends AbstractKey {
     }
 
     private int computeHash() {
-        Field[] fields = type.getFields();
-        int h = fields[0].getGlobType().hashCode();
-        h = 31 * h + (value1 != null ? value1.hashCode() : 0);
-        h = 31 * h + (value2 != null ? value2.hashCode() : 0);
-        h = 31 * h + (value3 != null ? value3.hashCode() : 0);
-        h = 31 * h + (value4 != null ? value4.hashCode() : 0);
+        Field[] fields = type.getKeyFields();
+        int h = type.hashCode();
+        h = 31 * h + (value1 != null ? fields[0].valueHash(value1) : 0);
+        h = 31 * h + (value2 != null ? fields[1].valueHash(value2) : 0);
+        h = 31 * h + (value3 != null ? fields[2].valueHash(value3) : 0);
+        h = 31 * h + (value4 != null ? fields[3].valueHash(value4) : 0);
         if (h == 0) {
             h = 31;
         }

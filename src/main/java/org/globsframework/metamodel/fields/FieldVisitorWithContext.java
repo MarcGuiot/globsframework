@@ -1,17 +1,38 @@
 package org.globsframework.metamodel.fields;
 
 import org.globsframework.metamodel.Field;
+import org.globsframework.metamodel.fields.impl.DefaultBigDecimalArrayField;
+import org.globsframework.metamodel.fields.impl.DefaultBigDecimalField;
+import org.globsframework.metamodel.fields.impl.DefaultBooleanArrayField;
 
 public interface FieldVisitorWithContext<C> {
     void visitInteger(IntegerField field, C context) throws Exception;
 
+    void visitIntegerArray(IntegerArrayField field, C context) throws Exception;
+
     void visitDouble(DoubleField field, C context) throws Exception;
+
+    void visitDoubleArray(DoubleArrayField field, C context) throws Exception;
 
     void visitString(StringField field, C context) throws Exception;
 
+    void visitStringArray(StringArrayField field, C context) throws Exception;
+
     void visitBoolean(BooleanField field, C context) throws Exception;
 
+    void visitBooleanArray(BooleanArrayField field, C context) throws Exception;
+
+    void visitBigDecimal(BigDecimalField field, C context) throws Exception;
+
+    void visitBigArrayDecimal(BigDecimalArrayField field, C context) throws Exception;
+
     void visitLong(LongField field, C context) throws Exception;
+
+    void visitLongArray(LongArrayField field, C context) throws Exception;
+
+    void visitDate(DateField field, C context) throws Exception;
+
+    void visitDateTime(DateTimeField field, C context) throws Exception;
 
     void visitBlob(BlobField field, C context) throws Exception;
 
@@ -21,7 +42,15 @@ public interface FieldVisitorWithContext<C> {
             notManaged(field, context);
         }
 
+        public void visitIntegerArray(IntegerArrayField field, C context) throws Exception {
+            notManaged(field, context);
+        }
+
         public void visitDouble(DoubleField field, C context) throws Exception {
+            notManaged(field, context);
+        }
+
+        public void visitDoubleArray(DoubleArrayField field, C context) throws Exception {
             notManaged(field, context);
         }
 
@@ -29,11 +58,39 @@ public interface FieldVisitorWithContext<C> {
             notManaged(field, context);
         }
 
+        public void visitStringArray(StringArrayField field, C context) throws Exception {
+            notManaged(field, context);
+        }
+
         public void visitBoolean(BooleanField field, C context) throws Exception {
             notManaged(field, context);
         }
 
+        public void visitBooleanArray(BooleanArrayField field, C context) throws Exception {
+            notManaged(field, context);
+        }
+
+        public void visitBigDecimal(BigDecimalField field, C context) throws Exception {
+            notManaged(field, context);
+        }
+
+        public void visitBigArrayDecimal(BigDecimalArrayField field, C context) throws Exception {
+            notManaged(field, context);
+        }
+
         public void visitLong(LongField field, C context) throws Exception {
+            notManaged(field, context);
+        }
+
+        public void visitLongArray(LongArrayField field, C context) throws Exception {
+            notManaged(field, context);
+        }
+
+        public void visitDate(DateField field, C context) throws Exception {
+            notManaged(field, context);
+        }
+
+        public void visitDateTime(DateTimeField field, C context) throws Exception {
             notManaged(field, context);
         }
 

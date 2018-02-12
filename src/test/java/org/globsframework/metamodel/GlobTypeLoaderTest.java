@@ -20,6 +20,7 @@ import org.junit.Test;
 
 import java.lang.annotation.Annotation;
 import java.lang.annotation.Retention;
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -45,6 +46,13 @@ public class GlobTypeLoaderTest {
         public static BooleanField BOOLEAN;
         public static LongField LONG;
         public static BlobField BLOB;
+        public static BigDecimalField A;
+        public static BigDecimalArrayField B;
+        public static DoubleArrayField C;
+        public static IntegerArrayField D;
+        public static LongArrayField E;
+        public static BooleanArrayField F;
+        public static StringArrayField G;
 
         public static UniqueIndex ID_INDEX;
 
@@ -61,6 +69,13 @@ public class GlobTypeLoaderTest {
                 .set(BOOLEAN, false)
                 .set(LONG, 15L)
                 .set(BLOB, TestUtils.SAMPLE_BYTE_ARRAY)
+                .set(A, BigDecimal.valueOf(3.3))
+                .set(B, new BigDecimal[]{BigDecimal.ONE, BigDecimal.ZERO})
+                .set(C, new double[]{2.2, 3.3})
+                .set(D, new int[]{2, 3})
+                .set(E, new long[]{3l, 5l})
+                .set(F, new boolean[]{false, true})
+                .set(G, new String[]{"one", "un"})
                 .get();
     }
 
@@ -74,6 +89,22 @@ public class GlobTypeLoaderTest {
         assertFalse(AnObject.glob.isTrue(AnObject.BOOLEAN));
         assertEquals(new Long(15), AnObject.glob.get(AnObject.LONG));
         assertEquals(TestUtils.SAMPLE_BYTE_ARRAY, AnObject.glob.get(AnObject.BLOB));
+
+        assertTrue(AnObject.A.valueEqual(AnObject.glob.get(AnObject.A), BigDecimal.valueOf(3.3)));
+        assertTrue(AnObject.B.valueEqual(AnObject.glob.get(AnObject.B), new BigDecimal[]{BigDecimal.ONE, BigDecimal.ZERO}));
+        assertTrue(AnObject.C.valueEqual(AnObject.glob.get(AnObject.C), new double[]{2.2, 3.3}));
+        assertTrue(AnObject.D.valueEqual(AnObject.glob.get(AnObject.D), new int[]{2, 3}));
+        assertTrue(AnObject.E.valueEqual(AnObject.glob.get(AnObject.E), new long[]{3l, 5l}));
+        assertTrue(AnObject.F.valueEqual(AnObject.glob.get(AnObject.F), new boolean[]{false, true}));
+        assertTrue(AnObject.G.valueEqual(AnObject.glob.get(AnObject.G), new String[]{"one", "un"}));
+
+        assertFalse(AnObject.A.valueEqual(AnObject.glob.get(AnObject.A), BigDecimal.valueOf(3.4)));
+        assertFalse(AnObject.B.valueEqual(AnObject.glob.get(AnObject.B), new BigDecimal[]{BigDecimal.ZERO, BigDecimal.ONE}));
+        assertFalse(AnObject.C.valueEqual(AnObject.glob.get(AnObject.C), new double[]{2.2, 4.3}));
+        assertFalse(AnObject.D.valueEqual(AnObject.glob.get(AnObject.D), new int[]{3, 2}));
+        assertFalse(AnObject.E.valueEqual(AnObject.glob.get(AnObject.E), new long[]{2l, 5l}));
+        assertFalse(AnObject.F.valueEqual(AnObject.glob.get(AnObject.F), new boolean[]{true, true}));
+        assertFalse(AnObject.G.valueEqual(AnObject.glob.get(AnObject.G), new String[]{"two", "un"}));
 
         assertEquals(0, AnObject.ID.getIndex());
         assertEquals(3, AnObject.BOOLEAN.getIndex());

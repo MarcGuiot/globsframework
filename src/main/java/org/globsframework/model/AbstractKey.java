@@ -5,6 +5,10 @@ import org.globsframework.metamodel.fields.*;
 import org.globsframework.utils.exceptions.InvalidState;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.ZonedDateTime;
+
 public abstract class AbstractKey implements Key, FieldValues {
 
     public Boolean get(BooleanField field, boolean defaultIfNull) {
@@ -41,6 +45,51 @@ public abstract class AbstractKey implements Key, FieldValues {
     public Double get(DoubleField field) {
         checkIsKeyField(field);
         return (Double)getSwitchValue(field);
+    }
+
+    public double[] get(DoubleArrayField field) throws ItemNotFound {
+        checkIsKeyField(field);
+        return (double[])getSwitchValue(field);
+    }
+
+    public int[] get(IntegerArrayField field) throws ItemNotFound {
+        checkIsKeyField(field);
+        return (int[])getSwitchValue(field);
+    }
+
+    public String[] get(StringArrayField field) throws ItemNotFound {
+        checkIsKeyField(field);
+        return (String[])getSwitchValue(field);
+    }
+
+    public boolean[] get(BooleanArrayField field) {
+        checkIsKeyField(field);
+        return (boolean[])getSwitchValue(field);
+    }
+
+    public long[] get(LongArrayField field) throws ItemNotFound {
+        checkIsKeyField(field);
+        return (long[])getSwitchValue(field);
+    }
+
+    public LocalDate get(DateField field) throws ItemNotFound {
+        checkIsKeyField(field);
+        return (LocalDate)getSwitchValue(field);
+    }
+
+    public ZonedDateTime get(DateTimeField field) throws ItemNotFound {
+        checkIsKeyField(field);
+        return (ZonedDateTime)getSwitchValue(field);
+    }
+
+    public BigDecimal get(BigDecimalField field) throws ItemNotFound {
+        checkIsKeyField(field);
+        return (BigDecimal)getSwitchValue(field);
+    }
+
+    public BigDecimal[] get(BigDecimalArrayField field) throws ItemNotFound {
+        checkIsKeyField(field);
+        return (BigDecimal[])getSwitchValue(field);
     }
 
     public boolean isNull(Field field) throws ItemNotFound {
