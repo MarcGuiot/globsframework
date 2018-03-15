@@ -3,6 +3,7 @@ package org.globsframework.model.delta;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.FieldValue;
+import org.globsframework.model.FieldValues;
 import org.globsframework.model.impl.AbstractFieldValues;
 import org.globsframework.utils.Unset;
 import org.globsframework.utils.exceptions.ItemNotFound;
@@ -17,10 +18,10 @@ class DeltaFieldValuesFromArray extends AbstractFieldValues {
     }
 
     public Object getValue(Field field) throws ItemNotFound {
-        return doGet(field);
+        return doCheckedGet(field);
     }
 
-    protected Object doGet(Field field) {
+    protected Object doCheckedGet(Field field) {
         Object value = values[field.getIndex()];
         if (value == Unset.VALUE) {
             throw new ItemNotFound(field.getName() + " not set.");
@@ -46,16 +47,19 @@ class DeltaFieldValuesFromArray extends AbstractFieldValues {
         return count;
     }
 
-    public void apply(Functor functor) throws Exception {
+    public <T extends FieldValues.Functor>
+    T apply(T functor) throws Exception {
         for (Field field : type.getFields()) {
             Object value = values[field.getIndex()];
             if (value != Unset.VALUE && !field.isKeyField()) {
                 functor.process(field, value);
             }
         }
+        return functor;
     }
 
-    public void safeApply(Functor functor) {
+    public <T extends FieldValues.Functor>
+    T safeApply(T functor) {
         try {
             for (Field field : type.getFields()) {
                 Object value = values[field.getIndex()];
@@ -70,6 +74,7 @@ class DeltaFieldValuesFromArray extends AbstractFieldValues {
         catch (Exception e) {
             throw new RuntimeException(e);
         }
+        return functor;
     }
 
     public FieldValue[] toArray() {

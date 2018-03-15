@@ -11,8 +11,6 @@ import org.globsframework.model.*;
 import org.globsframework.model.delta.DefaultChangeSet;
 import org.globsframework.model.delta.MutableChangeSet;
 import org.globsframework.model.format.GlobPrinter;
-import org.globsframework.model.impl.AbstractGlob;
-import org.globsframework.model.impl.DefaultGlob;
 import org.globsframework.model.indexing.IndexManager;
 import org.globsframework.model.indexing.IndexSource;
 import org.globsframework.model.indexing.IndexTables;
@@ -25,10 +23,11 @@ import org.globsframework.utils.collections.Pair;
 import org.globsframework.utils.exceptions.*;
 
 import java.util.*;
+import java.util.stream.IntStream;
 
 public class DefaultGlobRepository implements GlobRepository, IndexSource {
-    private Map<Key, AbstractGlob> pendingDeletions = new HashMap<Key, AbstractGlob>();
-    private MapOfMaps<GlobType, Key, Glob> globs = new MapOfMaps<GlobType, Key, Glob>();
+    private Map<Key, MutableGlob> pendingDeletions = new HashMap<>();
+    private MapOfMaps<GlobType, Key, Glob> globs = new MapOfMaps<>();
     private List<ChangeSetListener> changeListeners = new ArrayList<ChangeSetListener>();
     private List<ChangeSetListener> triggers = new ArrayList<ChangeSetListener>();
     private int bulkDispatchingModeLevel;
@@ -123,7 +122,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
                         builder.append("(").append(value.getField()).append(",").append(value.getValue()).append(")");
                     }
                     throw new ItemAmbiguity("There are several objects of type " + type.getName() +
-                                            " with values " + builder.toString());
+                            " with values " + builder.toString());
                 }
                 result = glob;
             }
@@ -152,8 +151,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
             for (Glob glob : globs.values(type)) {
                 callback.run(glob, this);
             }
-        }
-        else {
+        } else {
             for (Glob glob : globs.values(type)) {
                 if (matcher.matches(glob, this)) {
                     callback.run(glob, this);
@@ -165,8 +163,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
     public void safeApply(GlobType type, GlobMatcher matcher, GlobFunctor callback) {
         try {
             apply(type, matcher, callback);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new UnexpectedApplicationState(e);
         }
     }
@@ -194,7 +191,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
             if (matcher.matches(glob, this)) {
                 if (result != null) {
                     throw new ItemAmbiguity("There are several objects of type " + type.getName() +
-                                            " matching: " + matcher);
+                            " matching: " + matcher);
                 }
                 result = glob;
             }
@@ -212,7 +209,6 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
                     Glob[] temporary = new Glob[tmp.length * 2];
                     System.arraycopy(tmp, 0, temporary, 0, tmp.length);
                     tmp = temporary;
-//          tmp = Arrays.copyOf(tmp, tmp.length * 2);
                 }
                 tmp[i++] = glob;
             }
@@ -221,7 +217,6 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
         Glob[] newTmp = new Glob[i];
         System.arraycopy(tmp, 0, newTmp, 0, i);
         return newTmp;
-//    return Arrays.copyOf(tmp, i);
     }
 
     public Set<GlobType> getTypes() {
@@ -233,30 +228,31 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
     }
 
     public Glob create(GlobType type, FieldValue... values) throws MissingInfo {
-        Object[] globValuesArray = completeValues(type, values);
+        MutableGlob globValuesArray = completeValues(type, values);
         addKeyValues(type, globValuesArray);
         Key key = KeyBuilder.createFromValues(type, globValuesArray);
         return create(type, key, globValuesArray);
     }
 
     public Glob create(Key key, FieldValue... values) throws ItemAlreadyExists {
-        Object[] globValuesArray = completeValues(key.getGlobType(), values);
+        MutableGlob globValuesArray = completeValues(key.getGlobType(), values);
         for (Field field : key.getGlobType().getKeyFields()) {
-            globValuesArray[field.getIndex()] = key.getValue(field);
+            globValuesArray.setValue(field, key.getValue(field));
         }
         return create(key.getGlobType(), key, globValuesArray);
     }
 
-    private Glob create(GlobType type, Key key, Object[] globValuesArray) {
-        checkKeyDoesNotExist(key);
-        AbstractGlob glob = pendingDeletions.remove(key);
-        if (glob == null) {
-            glob = new DefaultGlob(type, globValuesArray);
-        }
-        else {
-            glob.setValues(globValuesArray);
+    private Glob create(GlobType type, Key key, MutableGlob glob) {
+        MutableGlob pendingDelete = pendingDeletions.remove(key);
+        if (pendingDelete != null) {
+            Field[] fields = type.getFields();
+            for (Field field : fields) {
+                pendingDelete.setValue(field, glob.getValue(field));
+            }
+            glob = pendingDelete;
         }
 
+        checkKeyDoesNotExist(key);
         IndexTables indexTables = indexManager.getAssociatedTable(type);
         globs.put(key.getGlobType(), key, glob);
 
@@ -269,43 +265,39 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
         return glob;
     }
 
-    private Object[] completeValues(GlobType type, FieldValue[] values) {
-        Object[] completedArray = new Object[type.getFieldCount()];
-        addDefaultValues(type, completedArray);
-        copyValues(values, completedArray);
-        return completedArray;
+    private MutableGlob completeValues(GlobType type, FieldValue[] values) {
+        MutableGlob mutableGlob = type.instantiate();
+        addDefaultValues(type, mutableGlob);
+        copyValues(values, mutableGlob);
+        return mutableGlob;
     }
 
-    private void copyValues(FieldValue[] values, Object[] completedArray) {
+    private void copyValues(FieldValue[] values, MutableGlob completedArray) {
         for (FieldValue value : values) {
-            completedArray[value.getField().getIndex()] = value.getValue();
+            completedArray.setValue(value.getField(), value.getValue());
         }
     }
 
-    private void copyValues(FieldValues values, final Object[] completedArray) {
-        values.safeApply(new FieldValues.Functor() {
-            public void process(Field field, Object value) throws Exception {
-                completedArray[field.getIndex()] = value;
-            }
-        });
+    private void copyValues(FieldValues values, final MutableGlob mutableGlob) {
+        values.safeApply(mutableGlob::setValue);
     }
 
-    private void addKeyValues(GlobType type, Object[] values) {
+    private void addKeyValues(GlobType type, MutableGlob values) {
         Field[] keyFields = type.getKeyFields();
         if (keyFields.length != 1) {
             return;
         }
         Field field = keyFields[0];
-        if ((values[field.getIndex()] != null) || !(field instanceof IntegerField)) {
+        if ((!values.isNull(field)) || !(field instanceof IntegerField)) {
             return;
         }
-        IntegerField keyField = (IntegerField)field;
-        values[keyField.getIndex()] = idGenerator.getNextId(keyField, 1);
+        IntegerField keyField = (IntegerField) field;
+        values.set(keyField, idGenerator.getNextId(keyField, 1));
     }
 
-    private void addDefaultValues(GlobType type, Object[] values) {
+    private void addDefaultValues(GlobType type, MutableGlob values) {
         for (Field field : type.getFields()) {
-            values[field.getIndex()] = field.getDefaultValue();
+            values.setValue(field, field.getDefaultValue());
         }
     }
 
@@ -316,7 +308,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
             return glob;
         }
 
-        Object[] completedArray = new Object[type.getFieldCount()];
+        MutableGlob completedArray = type.instantiate();
         addDefaultValues(type, completedArray);
         copyValues(valuesForCreate, completedArray);
         copyValues(key.asFieldValues(), completedArray);
@@ -351,8 +343,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
             for (FieldValue value : values) {
                 doUpdate(mutableGlob, key, value.getField(), value.getValue());
             }
-        }
-        finally {
+        } finally {
             completeChangeSet();
         }
     }
@@ -361,7 +352,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
         GlobType globType = mutableGlob.getType();
         if (!field.getGlobType().equals(globType)) {
             throw new InvalidParameter("'" + field + "' is not a field of type '" +
-                                       globType.getName() + "'");
+                    globType.getName() + "'");
         }
         Object previousValue = mutableGlob.getValue(field);
         if (Utils.equal(previousValue, newValue)) {
@@ -369,7 +360,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
         }
         if (field.isKeyField()) {
             throw new OperationDenied("Field '" + field.getName() + "' of object '" +
-                                      key + "' is a key and cannot be changed");
+                    key + "' is a key and cannot be changed");
         }
 
         mutableGlob.setValue(field, newValue);
@@ -398,13 +389,13 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
         GlobType sourceType = sourceKey.getGlobType();
         if (!link.getSourceType().equals(sourceType)) {
             throw new InvalidParameter(
-                "Type '" + sourceType.getName() + "' is not a valid source for link  '" + link + "'");
+                    "Type '" + sourceType.getName() + "' is not a valid source for link  '" + link + "'");
         }
         if (targetKey != null) {
             GlobType targetType = targetKey.getGlobType();
             if (!link.getTargetType().equals(targetType)) {
                 throw new InvalidParameter("Key '" + targetKey + "' is not a valid target for link '" +
-                                           link + "'");
+                        link + "'");
             }
         }
         LinkFieldMappingFunction fieldMappingFunctor = new LinkFieldMappingFunction(targetKey, sourceGlob, sourceKey);
@@ -474,11 +465,9 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
                 globs.remove(key.getGlobType(), key);
                 changeSetToDispatch.processDeletion(key, pair.getSecond());
             }
-        }
-        catch (OperationDenied e) {
+        } catch (OperationDenied e) {
             exception = e;
-        }
-        finally {
+        } finally {
             completeChangeSet();
         }
         if (exception != null) {
@@ -507,7 +496,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
                     Glob glob = entry.getValue();
                     disable(glob);
                     toBeRemoved
-                        .add(new Pair<Key, FieldValues>(entry.getKey(), entry.getValue()));
+                            .add(new Pair<Key, FieldValues>(entry.getKey(), entry.getValue()));
                 }
                 IndexTables indexTables = indexManager.getAssociatedTable(type);
                 if (indexTables != null) {
@@ -519,11 +508,9 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
                 globs.remove(key.getGlobType(), key);
                 changeSetToDispatch.processDeletion(key, pair.getSecond());
             }
-        }
-        catch (OperationDenied e) {
+        } catch (OperationDenied e) {
             exception = e;
-        }
-        finally {
+        } finally {
             completeChangeSet();
         }
         if (exception != null) {
@@ -536,8 +523,8 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
             public void visitCreation(Key key, FieldValues values) {
                 if (contains(key)) {
                     throw new InvalidParameter("Object " + key + " already exists\n" +
-                                               "-- New object values:\n" + GlobPrinter.toString(values) +
-                                               "-- Existing object:\n" + GlobPrinter.toString(find(key))
+                            "-- New object values:\n" + GlobPrinter.toString(values) +
+                            "-- Existing object:\n" + GlobPrinter.toString(find(key))
                     );
                 }
             }
@@ -558,17 +545,16 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
         try {
             startChangeSet();
             changeSet.safeVisit(new ChangeSetExecutor());
-        }
-        finally {
+        } finally {
             completeChangeSet();
         }
     }
 
     private void disable(Glob glob) {
-        if (glob instanceof AbstractGlob) {
-            pendingDeletions.put(glob.getKey(), (AbstractGlob)glob);
-            ((AbstractGlob)glob).dispose();
-        }
+//        if (glob instanceof AbstractDefaultGlob) {
+        pendingDeletions.put(glob.getKey(), (MutableGlob) glob);
+//            ((AbstractDefaultGlob)glob).dispose();
+//        }
     }
 
     public void startChangeSet() {
@@ -627,8 +613,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
             for (ChangeSetListener listener : changeListeners) {
                 listener.globsReset(this, typesList);
             }
-        }
-        finally {
+        } finally {
             completeChangeSet();
         }
     }
@@ -707,8 +692,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
                         System.err.println("------------------------------------------------------------");
                     }
                 }
-            }
-            finally {
+            } finally {
                 bulkDispatchingModeLevel--;
             }
 
@@ -743,9 +727,8 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
         }
 
         try {
-            return (MutableGlob)glob;
-        }
-        catch (ClassCastException e) {
+            return (MutableGlob) glob;
+        } catch (ClassCastException e) {
             throw new OperationDenied("Object '" + key + "' cannot be modified");
         }
     }

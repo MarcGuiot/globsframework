@@ -90,15 +90,6 @@ public class GlobList extends ArrayList<Glob> {
         return result;
     }
 
-    public void keepExistingGlobsOnly(GlobRepository repository) {
-        for (Iterator<Glob> iter = iterator(); iter.hasNext(); ) {
-            Glob glob = iter.next();
-            if (!glob.exists() || !repository.contains(glob.getKey())) {
-                iter.remove();
-            }
-        }
-    }
-
     public void addAll(Collection<Key> keys, GlobRepository repository) {
         for (Key key : keys) {
             Glob glob = repository.find(key);

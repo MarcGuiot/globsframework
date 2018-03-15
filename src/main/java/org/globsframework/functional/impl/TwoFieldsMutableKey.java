@@ -54,9 +54,10 @@ public class TwoFieldsMutableKey extends AbstractFieldValue<MutableFunctionalKey
         return 2;
     }
 
-    public void apply(Functor functor) throws Exception {
+    public <T extends Functor> T apply(T functor) throws Exception {
         functor.process(functionalKeyBuilder.field1, value1);
         functor.process(functionalKeyBuilder.field2, value2);
+        return functor;
     }
 
     public FieldValue[] toArray() {

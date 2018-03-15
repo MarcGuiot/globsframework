@@ -6,6 +6,8 @@ import org.globsframework.metamodel.properties.PropertyHolder;
 import org.globsframework.model.GlobFactory;
 import org.globsframework.model.Key;
 import org.globsframework.model.MutableGlob;
+import org.globsframework.model.globaccessor.GlobGetAccessor;
+import org.globsframework.streams.accessors.GlobAccessor;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
 import java.util.Collection;
@@ -48,6 +50,8 @@ public interface GlobType extends PropertyHolder<GlobType>, Annotations {
     <T> T getRegistered(Class<T> klass);
 
     String describe();
+
+//    GlobGetAccessor getAccessor(Field field);
 
     default MutableGlob instantiate() {
         return getGlobFactory().create();

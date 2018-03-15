@@ -237,16 +237,17 @@ class DefaultDeltaGlob extends AbstractFieldValuesWithPrevious implements DeltaG
         return count;
     }
 
-    public void apply(FieldValues.Functor functor) throws Exception {
+    public <T extends FieldValues.Functor> T  apply(T functor) throws Exception {
         for (Field field : key.getGlobType().getFields()) {
             Object value = values[field.getIndex()];
             if ((value != Unset.VALUE) && !field.isKeyField()) {
                 functor.process(field, value);
             }
         }
+        return functor;
     }
 
-    public void apply(FieldValuesWithPrevious.Functor functor) throws Exception {
+    public <T extends FunctorWithPrevious> T  applyWithPrevious(T functor) throws Exception {
         for (Field field : key.getGlobType().getFields()) {
             final int index = field.getIndex();
             Object value = values[index];
@@ -254,9 +255,11 @@ class DefaultDeltaGlob extends AbstractFieldValuesWithPrevious implements DeltaG
                 functor.process(field, value, previousValues[index]);
             }
         }
+        return functor;
     }
 
-    public void applyOnPrevious(FieldValues.Functor functor) throws Exception {
+    public
+    <T extends FieldValues.Functor> T applyOnPrevious(T functor) throws Exception {
         for (Field field : key.getGlobType().getFields()) {
             final int index = field.getIndex();
             Object value = previousValues[index];
@@ -264,6 +267,7 @@ class DefaultDeltaGlob extends AbstractFieldValuesWithPrevious implements DeltaG
                 functor.process(field, value);
             }
         }
+        return functor;
     }
 
     public FieldValue[] toArray() {

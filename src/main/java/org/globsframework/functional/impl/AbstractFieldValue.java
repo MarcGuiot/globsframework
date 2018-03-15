@@ -90,9 +90,9 @@ public abstract class AbstractFieldValue<T extends FieldSetter> implements Field
         return doSet(field, o);
     }
 
-    public void safeApply(Functor functor) {
+    public <T extends Functor> T safeApply(T functor) {
         try {
-            apply(functor);
+            return apply(functor);
         }
         catch (RuntimeException e) {
             throw e;

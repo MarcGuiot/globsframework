@@ -63,17 +63,17 @@ public interface FieldValuesWithPrevious extends FieldValues {
 
     byte[] getPrevious(BlobField field) throws ItemNotFound;
 
-    void apply(Functor functor) throws Exception;
+    <T extends FunctorWithPrevious> T applyWithPrevious(T functor) throws Exception;
 
-    void safeApply(Functor functor);
+    <T extends FunctorWithPrevious> T safeApplyWithPrevious(T functor);
 
-    void safeApplyOnPrevious(FieldValues.Functor functor);
+    <T extends FieldValues.Functor> T safeApplyOnPrevious(T functor);
 
-    void applyOnPrevious(FieldValues.Functor functor) throws Exception;
+    <T extends FieldValues.Functor> T applyOnPrevious(T functor) throws Exception;
 
     FieldValues getPreviousValues();
 
-    interface Functor {
+    interface FunctorWithPrevious {
         void process(Field field, Object value, Object previousValue) throws Exception;
     }
 }

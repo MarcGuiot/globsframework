@@ -88,5 +88,4 @@ public class DefaultAnnotations<T extends MutableAnnotations> implements Mutable
     public Glob findAnnotation(Key key) {
         return annotations.get(key.getGlobType(), key);
     }
-
 }

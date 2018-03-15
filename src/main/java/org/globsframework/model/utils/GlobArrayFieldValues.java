@@ -3,6 +3,7 @@ package org.globsframework.model.utils;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.FieldValue;
+import org.globsframework.model.FieldValues;
 import org.globsframework.model.impl.AbstractFieldValues;
 import org.globsframework.utils.exceptions.InvalidParameter;
 
@@ -22,7 +23,7 @@ public class GlobArrayFieldValues extends AbstractFieldValues {
         }
     }
 
-    protected Object doGet(Field field) {
+    protected Object doCheckedGet(Field field) {
         return values[field.getIndex()];
     }
 
@@ -34,10 +35,11 @@ public class GlobArrayFieldValues extends AbstractFieldValues {
         return values.length;
     }
 
-    public void apply(Functor functor) throws Exception {
+    public <T extends FieldValues.Functor> T apply(T functor) throws Exception {
         for (Field field : type.getFields()) {
             functor.process(field, values[field.getIndex()]);
         }
+        return functor;
     }
 
     public FieldValue[] toArray() {

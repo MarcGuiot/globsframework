@@ -35,7 +35,7 @@ public class DefaultFieldValues extends AbstractFieldValues implements MutableFi
         return values.containsKey(field);
     }
 
-    protected Object doGet(Field field) {
+    protected Object doCheckedGet(Field field) {
         return values.get(field);
     }
 
@@ -43,10 +43,11 @@ public class DefaultFieldValues extends AbstractFieldValues implements MutableFi
         return values.size();
     }
 
-    public void apply(Functor functor) throws Exception {
+    public <T extends FieldValues.Functor> T apply(T functor) throws Exception {
         for (Map.Entry<Field, Object> entry : values.entrySet()) {
             functor.process(entry.getKey(), entry.getValue());
         }
+        return functor;
     }
 
     public DefaultFieldValues setValue(Field field, Object value) throws InvalidParameter {

@@ -34,7 +34,7 @@ public class DefaultChangeSet implements MutableChangeSet {
 
     public void processUpdate(Key key, FieldValuesWithPrevious values) {
         final DefaultDeltaGlob delta = getGlob(key);
-        values.safeApply(new FieldValuesWithPrevious.Functor() {
+        values.safeApplyWithPrevious(new FieldValuesWithPrevious.FunctorWithPrevious() {
             public void process(Field field, Object value, Object previousValue) throws Exception {
                 delta.processUpdate(field, value, previousValue);
                 removeIfUnchanged(delta);
@@ -333,7 +333,7 @@ public class DefaultChangeSet implements MutableChangeSet {
             }
 
             public void visitUpdate(final Key key, FieldValuesWithPrevious values) throws Exception {
-                values.apply(new FieldValuesWithPrevious.Functor() {
+                values.applyWithPrevious(new FieldValuesWithPrevious.FunctorWithPrevious() {
                     public void process(Field field, Object value, Object previousValue) throws IOException {
                         processUpdate(key, field, value, previousValue);
                     }

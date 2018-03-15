@@ -17,7 +17,7 @@ import java.util.Date;
 public class DefaultSerializationOutput implements SerializedOutput, ChangeSetVisitor {
     private OutputStream outputStream;
     private FieldValues.Functor fieldValuesFunctor = new FieldValuesFunctor();
-    private FieldValuesWithPrevious.Functor fieldValuesWithPreviousFunctor = new FieldValuesWithPreviousFunctor();
+    private FieldValuesWithPrevious.FunctorWithPrevious fieldValuesWithPreviousFunctor = new FieldValuesWithPreviousFunctor();
 
     DefaultSerializationOutput(OutputStream outputStream) {
         this.outputStream = outputStream;
@@ -370,10 +370,10 @@ public class DefaultSerializationOutput implements SerializedOutput, ChangeSetVi
 
     private void writeValues(FieldValuesWithPrevious values) {
         write(values.size());
-        values.safeApply(fieldValuesWithPreviousFunctor);
+        values.safeApplyWithPrevious(fieldValuesWithPreviousFunctor);
     }
 
-    public class FieldValuesWithPreviousFunctor implements FieldValuesWithPrevious.Functor, FieldValueVisitor {
+    public class FieldValuesWithPreviousFunctor implements FieldValuesWithPrevious.FunctorWithPrevious, FieldValueVisitor {
 
         public void process(Field field, Object value, Object previousValue) throws Exception {
             write(field.getIndex());

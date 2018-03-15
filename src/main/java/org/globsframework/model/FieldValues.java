@@ -14,9 +14,11 @@ public interface FieldValues extends FieldValuesAccessor {
 
     int size();
 
-    void apply(Functor functor) throws Exception;
+    <T extends Functor>
+    T apply(T functor) throws Exception;
 
-    void safeApply(Functor functor);
+    <T extends Functor>
+    T safeApply(T functor);
 
     FieldValue[] toArray();
 
@@ -33,10 +35,14 @@ public interface FieldValues extends FieldValuesAccessor {
             return 0;
         }
 
-        public void apply(Functor functor) throws Exception {
+        public <T extends Functor>
+        T apply(T functor) throws Exception {
+            return functor;
         }
 
-        public void safeApply(Functor functor) {
+        public <T extends Functor>
+        T safeApply(T functor) {
+            return functor;
         }
 
         public Double get(DoubleField field) throws ItemNotFound {

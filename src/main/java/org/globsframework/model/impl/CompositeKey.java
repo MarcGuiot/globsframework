@@ -5,8 +5,10 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.AbstractKey;
 import org.globsframework.model.FieldValue;
 import org.globsframework.model.Key;
+import org.globsframework.model.MutableKey;
+import org.globsframework.model.utils.FieldCheck;
 import org.globsframework.model.utils.FieldValueGetter;
-import org.globsframework.utils.Utils;
+import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.exceptions.MissingInfo;
 
 import java.util.Arrays;
@@ -14,7 +16,7 @@ import java.util.Arrays;
 public class CompositeKey extends AbstractKey {
     private final GlobType type;
     private final Object[] values;
-    private final int hashCode;
+    private int hashCode;
 
     public CompositeKey(GlobType type, FieldValueGetter getter) {
         this.type = type;
@@ -30,15 +32,19 @@ public class CompositeKey extends AbstractKey {
         hashCode = computeHash();
     }
 
-    CompositeKey(GlobType type, Object[] globValues) {
+    public CompositeKey(GlobType type) {
+        this.type = type;
+        values = new Object[type.getKeyFields().length];
+    }
+
+    private CompositeKey(GlobType type, Object[] globValues, int hashCode) {
         this.type = type;
         Field[] keyFields = type.getKeyFields();
         this.values = new Object[keyFields.length];
-        int index = 0;
         for (Field field : keyFields) {
-            values[field.getKeyIndex()] = globValues[field.getIndex()];
+            values[field.getKeyIndex()] = globValues[field.getKeyIndex()];
         }
-        hashCode = computeHash();
+        this.hashCode = hashCode;
     }
 
     public GlobType getGlobType() {
@@ -49,17 +55,19 @@ public class CompositeKey extends AbstractKey {
         return type.getKeyFields().length;
     }
 
-    public void apply(Functor functor) throws Exception {
+    public <T extends Functor>
+    T apply(T functor) throws Exception {
         Field[] fields = type.getKeyFields();
-        int index = 0;
         for (Field field : fields) {
             functor.process(field, values[field.getKeyIndex()]);
         }
+        return functor;
     }
 
-    public void safeApply(Functor functor) {
+    public <T extends Functor>
+    T safeApply(T functor) {
         try {
-            apply(functor);
+            return apply(functor);
         }
         catch (RuntimeException e) {
             throw e;
@@ -97,7 +105,10 @@ public class CompositeKey extends AbstractKey {
 
     // optimized - do not use generated code
     public int hashCode() {
-        return hashCode;
+        if (hashCode != 0) {
+            return hashCode;
+        }
+        return hashCode = computeHash();
     }
 
     private int computeHash() {
@@ -143,7 +154,22 @@ public class CompositeKey extends AbstractKey {
         return array;
     }
 
-    protected Object getSwitchValue(Field field) {
+    protected Object doGetValue(Field field) {
         return values[field.getKeyIndex()];
+    }
+
+    public void reset() {
+        Arrays.setAll(values, i -> null);
+        hashCode = 0;
+    }
+
+    public MutableKey duplicateKey() {
+        return new CompositeKey(type, values, hashCode);
+    }
+
+    public MutableKey setValue(Field field, Object value) throws ItemNotFound {
+        FieldCheck.checkIsKeyOf(field, type, value);
+        values[field.getKeyIndex()] = value;
+        return this;
     }
 }

@@ -119,14 +119,12 @@ public class EmptyKey implements Key {
         return 0;
     }
 
-    public void applyOnKeyField(FieldValues.Functor functor) throws Exception {
+    public <T extends FieldValues.Functor> T applyOnKeyField(T functor) throws Exception {
+        return functor;
     }
 
-    public void safeApplyOnKeyField(FieldValues.Functor functor) {
-    }
-
-    public boolean containsKey(Field field) {
-        return false;
+    public <T extends FieldValues.Functor> T  safeApplyOnKeyField(T functor) {
+        return functor;
     }
 
     public FieldValues asFieldValues() {
@@ -141,21 +139,19 @@ public class EmptyKey implements Key {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (o == null) {
+            return false;
+        }
+        if (!Key.class.isAssignableFrom(o.getClass())) {
             return false;
         }
 
-        EmptyKey key = (EmptyKey)o;
-
-        if (type != null ? !type.equals(key.type) : key.type != null) {
-            return false;
-        }
-
-        return true;
+        Key key = (Key)o;
+        return type.equals(key.getGlobType());
     }
 
     public int hashCode() {
-        return type != null ? type.hashCode() : 0;
+        return type.hashCode();
     }
 
     public String toString() {

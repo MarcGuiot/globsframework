@@ -191,9 +191,9 @@ public abstract class AbstractFieldValuesWithPrevious implements FieldValuesWith
         return (BigDecimal[])doGetPrevious(field);
     }
 
-    public void safeApply(FieldValues.Functor functor) {
+    public <T extends FieldValues.Functor> T safeApply(T functor) {
         try {
-            apply(functor);
+            return apply(functor);
         }
         catch (RuntimeException e) {
             throw e;
@@ -203,9 +203,9 @@ public abstract class AbstractFieldValuesWithPrevious implements FieldValuesWith
         }
     }
 
-    public void safeApply(FieldValuesWithPrevious.Functor functor) {
+    public <T extends FunctorWithPrevious> T safeApplyWithPrevious(T functor) {
         try {
-            apply(functor);
+            return applyWithPrevious(functor);
         }
         catch (RuntimeException e) {
             throw e;
@@ -215,9 +215,9 @@ public abstract class AbstractFieldValuesWithPrevious implements FieldValuesWith
         }
     }
 
-    public void safeApplyOnPrevious(FieldValues.Functor functor) {
+    public <T extends FieldValues.Functor> T safeApplyOnPrevious(T functor) {
         try {
-            applyOnPrevious(functor);
+            return applyOnPrevious(functor);
         }
         catch (RuntimeException e) {
             throw e;

@@ -16,7 +16,5 @@ public interface Glob extends FieldValues {
 
     FieldValues getValues();
 
-    boolean exists();
-
     Glob duplicate();
 }

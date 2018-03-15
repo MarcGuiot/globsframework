@@ -262,12 +262,12 @@ public class GlobBuilder implements FieldValues.Functor, FieldSetter<GlobBuilder
         return fieldValuesBuilder.get().size();
     }
 
-    public void apply(Functor functor) throws Exception {
-        fieldValuesBuilder.get().apply(functor);
+    public <T extends FieldValues.Functor> T apply(T functor) throws Exception {
+        return fieldValuesBuilder.get().apply(functor);
     }
 
-    public void safeApply(Functor functor) {
-        fieldValuesBuilder.get().safeApply(functor);
+    public <T extends FieldValues.Functor> T safeApply(T functor) {
+        return fieldValuesBuilder.get().safeApply(functor);
     }
 
     public FieldValue[] toArray() {

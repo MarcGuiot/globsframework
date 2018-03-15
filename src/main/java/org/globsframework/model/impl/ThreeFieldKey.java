@@ -5,44 +5,45 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.AbstractKey;
 import org.globsframework.model.FieldValue;
 import org.globsframework.model.Key;
-import org.globsframework.utils.Utils;
+import org.globsframework.model.MutableKey;
+import org.globsframework.model.utils.FieldCheck;
 import org.globsframework.utils.exceptions.InvalidParameter;
+import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.exceptions.MissingInfo;
 
 import java.util.Arrays;
 
 public class ThreeFieldKey extends AbstractKey {
     private final GlobType type;
-    private final Object value1;
-    private final Object value2;
-    private final Object value3;
-    private final int hashCode;
+    private Object value1;
+    private Object value2;
+    private Object value3;
+    private int hashCode;
+
+    public ThreeFieldKey(GlobType type) {
+        this.type = type;
+    }
+
+    private ThreeFieldKey(GlobType type, Object value1, Object value2, Object value3, int hashCode) {
+        this.type = type;
+        this.value1 = value1;
+        this.value2 = value2;
+        this.value3 = value3;
+        this.hashCode = hashCode;
+    }
 
     public ThreeFieldKey(Field keyField1, Object value1,
                          Field keyField2, Object value2,
                          Field keyField3, Object value3) throws MissingInfo {
-        SingleFieldKey.checkValue(keyField1, value1);
-        SingleFieldKey.checkValue(keyField2, value2);
-        SingleFieldKey.checkValue(keyField3, value3);
-
         Field[] keyFields = keyField1.getGlobType().getKeyFields();
         if (keyFields.length != 3) {
             throw new InvalidParameter("Cannot use a three-fields key for type " + keyField1.getGlobType() + " - " +
                                        "key fields=" + Arrays.toString(keyFields));
         }
         type = keyField1.getGlobType();
-        Field field;
-        field = keyFields[0];
-        this.value1 = field == keyField1 ? value1 : field == keyField2 ? value2 : value3;
-        field.checkValue(this.value1);
-
-        field = keyFields[1];
-        this.value2 = field == keyField2 ? value2 : field == keyField1 ? value1 : value3;
-        field.checkValue(this.value2);
-
-        field = keyFields[2];
-        this.value3 = field == keyField3 ? value3 : field == keyField2 ? value2 : value1;
-        field.checkValue(this.value3);
+        setValue(keyField1, value1);
+        setValue(keyField2, value2);
+        setValue(keyField3, value3);
         hashCode = computeHash();
     }
 
@@ -50,19 +51,21 @@ public class ThreeFieldKey extends AbstractKey {
         return type;
     }
 
-    public void apply(Functor functor) throws Exception {
+    public <T extends Functor> T apply(T functor) throws Exception {
         Field[] fields = type.getFields();
-        functor.process(fields[0], value2);
-        functor.process(fields[1], value1);
+        functor.process(fields[0], value1);
+        functor.process(fields[1], value2);
         functor.process(fields[2], value3);
+        return functor;
     }
 
-    public void safeApply(Functor functor) {
+    public <T extends Functor> T safeApply(T functor) {
         try {
             Field[] fields = type.getFields();
             functor.process(fields[0], value1);
             functor.process(fields[1], value2);
             functor.process(fields[2], value3);
+            return functor;
         }
         catch (Exception e) {
             throw new RuntimeException(e);
@@ -105,7 +108,10 @@ public class ThreeFieldKey extends AbstractKey {
 
     // optimized - do not use generated code
     public int hashCode() {
-        return hashCode;
+        if (hashCode != 0) {
+            return hashCode;
+        }
+        return hashCode = computeHash();
     }
 
     private int computeHash() {
@@ -136,7 +142,7 @@ public class ThreeFieldKey extends AbstractKey {
                fields[2].getName() + "=" + value3 + "]";
     }
 
-    protected Object getSwitchValue(Field field) {
+    protected Object doGetValue(Field field) {
         switch (field.getKeyIndex()) {
             case 0:
                 return value1;
@@ -146,5 +152,30 @@ public class ThreeFieldKey extends AbstractKey {
                 return value3;
         }
         throw new InvalidParameter(field + " is not a key field");
+    }
+
+    public void reset() {
+        value1 = value2 = value3 = null;
+        hashCode = 0;
+    }
+
+    public MutableKey duplicateKey() {
+        return new ThreeFieldKey(type, value1, value2, value3, hashCode);
+    }
+
+    public MutableKey setValue(Field field, Object value) throws ItemNotFound {
+        FieldCheck.checkIsKeyOf(field, type);
+        FieldCheck.checkValue(field, value);
+        int index = field.getKeyIndex();
+        if (index == 0) {
+            value1 = value;
+        }
+        else if (index == 1) {
+            value2 = value;
+        }
+        else {
+            value3 = value;
+        }
+        return this;
     }
 }

@@ -10,12 +10,13 @@ import java.time.LocalDate;
 import java.time.ZonedDateTime;
 
 public abstract class AbstractFieldValues implements FieldValues {
+
     public Double get(DoubleField field) {
-        return (Double)doGet(field);
+        return (Double)doCheckedGet(field);
     }
 
     public double get(DoubleField field, double valueIfNull) throws ItemNotFound {
-        Object o = doGet(field);
+        Object o = doCheckedGet(field);
         if (o == null) {
             return valueIfNull;
         }
@@ -23,11 +24,11 @@ public abstract class AbstractFieldValues implements FieldValues {
     }
 
     public Integer get(IntegerField field) {
-        return (Integer)doGet(field);
+        return (Integer)doCheckedGet(field);
     }
 
     public int get(IntegerField field, int valueIfNull) throws ItemNotFound {
-        Integer value = (Integer)doGet(field);
+        Integer value = (Integer)doCheckedGet(field);
         if (value == null) {
             return valueIfNull;
         }
@@ -35,82 +36,83 @@ public abstract class AbstractFieldValues implements FieldValues {
     }
 
     public String get(StringField field) {
-        return (String)doGet(field);
+        return (String)doCheckedGet(field);
     }
 
     public Boolean get(BooleanField field) {
-        return (Boolean)doGet(field);
+        return (Boolean)doCheckedGet(field);
     }
 
     public boolean isTrue(BooleanField field) {
-        return Boolean.TRUE.equals(doGet(field));
+        return Boolean.TRUE.equals(doCheckedGet(field));
     }
 
     public boolean isNull(Field field) throws ItemNotFound {
-        return doGet(field) == null;
+        return doCheckedGet(field) == null;
     }
 
     public Object getValue(Field field) {
-        return doGet(field);
+        return doCheckedGet(field);
     }
 
     public byte[] get(BlobField field) {
-        return (byte[])doGet(field);
+        return (byte[])doCheckedGet(field);
     }
 
     public Boolean get(BooleanField field, boolean defaultIfNull) {
-        Object value = doGet(field);
+        Object value = doCheckedGet(field);
         return value == null ? Boolean.valueOf(defaultIfNull) : (Boolean)value;
     }
 
     public Long get(LongField field) {
-        return (Long)doGet(field);
+        return (Long)doCheckedGet(field);
     }
 
     public long get(LongField field, long valueIfNull) throws ItemNotFound {
-        Object value = doGet(field);
+        Object value = doCheckedGet(field);
         return value == null ? valueIfNull : (long)value;
     }
 
     public double[] get(DoubleArrayField field) throws ItemNotFound {
-        return (double[])doGet(field);
+        return (double[])doCheckedGet(field);
     }
 
     public int[] get(IntegerArrayField field) throws ItemNotFound {
-        return (int[])doGet(field);
+        return (int[])doCheckedGet(field);
     }
 
     public String[] get(StringArrayField field) throws ItemNotFound {
-        return (String[])doGet(field);
+        return (String[])doCheckedGet(field);
     }
 
     public boolean[] get(BooleanArrayField field) {
-        return (boolean[])doGet(field);
+        return (boolean[])doCheckedGet(field);
     }
 
     public long[] get(LongArrayField field) throws ItemNotFound {
-        return (long[])doGet(field);
+        return (long[])doCheckedGet(field);
     }
 
     public LocalDate get(DateField field) throws ItemNotFound {
-        return (LocalDate)doGet(field);
+        return (LocalDate)doCheckedGet(field);
     }
 
     public ZonedDateTime get(DateTimeField field) throws ItemNotFound {
-        return (ZonedDateTime)doGet(field);
+        return (ZonedDateTime)doCheckedGet(field);
     }
 
     public BigDecimal get(BigDecimalField field) throws ItemNotFound {
-        return (BigDecimal)doGet(field);
+        return (BigDecimal)doCheckedGet(field);
     }
 
     public BigDecimal[] get(BigDecimalArrayField field) throws ItemNotFound {
-        return (BigDecimal[])doGet(field);
+        return (BigDecimal[])doCheckedGet(field);
     }
 
-    protected abstract Object doGet(Field field);
+    protected abstract Object doCheckedGet(Field field);
 
-    public void safeApply(Functor functor) {
+    public <T extends FieldValues.Functor>
+    T safeApply(T functor) {
         try {
             apply(functor);
         }
@@ -120,5 +122,6 @@ public abstract class AbstractFieldValues implements FieldValues {
         catch (Exception e) {
             throw new RuntimeException(e);
         }
+        return functor;
     }
 }

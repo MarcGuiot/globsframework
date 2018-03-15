@@ -4,13 +4,11 @@ import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.FieldValue;
 import org.globsframework.model.FieldValues;
-import org.globsframework.model.FieldValuesWithPrevious;
 import org.globsframework.model.impl.AbstractFieldValuesWithPrevious;
 import org.globsframework.utils.Unset;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
 public class DefaultFieldValuesWithPrevious extends AbstractFieldValuesWithPrevious {
-
     private GlobType type;
     private Object[] values;
     private Object[] previousValues;
@@ -54,22 +52,25 @@ public class DefaultFieldValuesWithPrevious extends AbstractFieldValuesWithPrevi
         return count;
     }
 
-    public void apply(FieldValuesWithPrevious.Functor functor) throws Exception {
+    public <T extends FunctorWithPrevious> T applyWithPrevious(T functor) throws Exception {
         for (Field field : type.getFields()) {
             int index = field.getIndex();
             if (values[index] != Unset.VALUE) {
                 functor.process(field, values[index], previousValues[index]);
             }
         }
+        return functor;
     }
 
-    public void applyOnPrevious(FieldValues.Functor functor) throws Exception {
+    public
+    <T extends FieldValues.Functor> T  applyOnPrevious(T functor) throws Exception {
         for (Field field : type.getFields()) {
             int index = field.getIndex();
             if (previousValues[index] != Unset.VALUE) {
                 functor.process(field, previousValues[index]);
             }
         }
+        return functor;
     }
 
 
@@ -77,13 +78,14 @@ public class DefaultFieldValuesWithPrevious extends AbstractFieldValuesWithPrevi
         return new GlobArrayFieldValues(type, previousValues);
     }
 
-    public void apply(FieldValues.Functor functor) throws Exception {
+    public <T extends FieldValues.Functor> T apply(T functor) throws Exception {
         for (Field field : type.getFields()) {
             int index = field.getIndex();
             if (values[index] != Unset.VALUE) {
                 functor.process(field, values[index]);
             }
         }
+        return functor;
     }
 
     public FieldValue[] toArray() {

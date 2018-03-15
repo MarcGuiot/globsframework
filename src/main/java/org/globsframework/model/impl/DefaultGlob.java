@@ -4,7 +4,7 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.FieldValues;
 import org.globsframework.model.Glob;
 
-public class DefaultGlob extends AbstractMutableGlob {
+public class DefaultGlob extends AbstractDefaultGlob {
 
     public DefaultGlob(GlobType type) {
         super(type);

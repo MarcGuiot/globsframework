@@ -28,15 +28,6 @@ public abstract class DefaultGlobRepositoryTestCase {
         repository.addTrigger(trigger);
     }
 
-    protected Key initWithReadOnlyGlob(int value) {
-        init(GlobRepositoryBuilder.init()
-                 .add(new ReadOnlyGlob(DummyObject.TYPE,
-                                       value(DummyObject.ID, value),
-                                       value(DummyObject.NAME, "name")))
-                 .get());
-        return getKey(value);
-    }
-
     protected Key getKey(int value) {
         return newKey(DummyObject.TYPE, value);
     }

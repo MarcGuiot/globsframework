@@ -12,7 +12,7 @@ public class ArrayFieldValues extends AbstractFieldValues {
         this.values = values;
     }
 
-    protected Object doGet(Field field) {
+    protected Object doCheckedGet(Field field) {
         for (FieldValue value : values) {
             if (value.getField().equals(field)) {
                 return value.getValue();
@@ -34,10 +34,11 @@ public class ArrayFieldValues extends AbstractFieldValues {
         return values.length;
     }
 
-    public void apply(Functor functor) throws Exception {
+    public <T extends Functor> T apply(T functor) throws Exception {
         for (FieldValue value : values) {
             functor.process(value.getField(), value.getValue());
         }
+        return functor;
     }
 
     public FieldValue[] toArray() {

@@ -2,34 +2,29 @@ package org.globsframework.model.impl;
 
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.model.AbstractKey;
-import org.globsframework.model.FieldValue;
-import org.globsframework.model.FieldValues;
-import org.globsframework.model.Key;
+import org.globsframework.model.*;
+import org.globsframework.model.utils.FieldCheck;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.exceptions.InvalidParameter;
+import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.exceptions.MissingInfo;
 
 import java.util.Arrays;
 
 public class SingleFieldKey extends AbstractKey {
-    private final Object value;
     private final Field keyField;
-    private final int hashCode;
+    private Object value;
+    private int hashCode;
 
-    public SingleFieldKey(Field field, Object value) throws MissingInfo {
-        checkValue(field, value);
-        this.keyField = field;
-        this.keyField.checkValue(value);
-        this.value = value;
-        hashCode = computeHash();
+    public SingleFieldKey(Field keyField) {
+        this.keyField = keyField;
     }
 
-    static void checkValue(Field field, Object value) throws MissingInfo {
-//    if (value == null) {
-//      throw new MissingInfo("Field '" + field.getName() +
-//                            "' missing (should not be NULL) for identifying a Glob of type: " + field.getGlobType().getName());
-//    }
+    public SingleFieldKey(Field field, Object value) throws MissingInfo {
+        FieldCheck.checkIsKeyOf(field, field.getGlobType(), value);
+        this.keyField = field;
+        this.value = value;
+        hashCode = computeHash();
     }
 
     public SingleFieldKey(GlobType type, Object value) throws InvalidParameter {
@@ -49,13 +44,17 @@ public class SingleFieldKey extends AbstractKey {
         return keyField.getGlobType();
     }
 
-    public void apply(FieldValues.Functor functor) throws Exception {
+    public <T extends FieldValues.Functor>
+    T  apply(T functor) throws Exception {
         functor.process(keyField, value);
+        return functor;
     }
 
-    public void safeApply(FieldValues.Functor functor) {
+    public <T extends FieldValues.Functor>
+    T safeApply(T functor) {
         try {
             functor.process(keyField, value);
+            return functor;
         }
         catch (Exception e) {
             throw new RuntimeException(e);
@@ -80,7 +79,7 @@ public class SingleFieldKey extends AbstractKey {
                    keyField.valueEqual(otherSingleFieldKey.value, value);
         }
 
-        if (!AbstractKey.class.isAssignableFrom(o.getClass())) {
+        if (!Key.class.isAssignableFrom(o.getClass())) {
             return false;
         }
         Key otherKey = (Key)o;
@@ -90,7 +89,10 @@ public class SingleFieldKey extends AbstractKey {
 
     // optimized - do not use generated code
     public int hashCode() {
-        return hashCode;
+        if (hashCode != 0){
+            return hashCode;
+        }
+        return hashCode = computeHash();
     }
 
     private int computeHash() {
@@ -112,10 +114,25 @@ public class SingleFieldKey extends AbstractKey {
         return getGlobType().getName() + "[" + keyField.getName() + "=" + value + "]";
     }
 
-    protected Object getSwitchValue(Field field) {
+    protected Object doGetValue(Field field) {
         if (field.getKeyIndex() == 0) {
             return value;
         }
         throw new InvalidParameter(field + " is not a key field");
+    }
+
+    public MutableKey setValue(Field field, Object value) throws ItemNotFound {
+        FieldCheck.checkIsKeyOf(field, getGlobType());
+        this.value = value;
+        return this;
+    }
+
+    public void reset() {
+        this.value = null;
+        this.hashCode = 0;
+    }
+
+    public MutableKey duplicateKey() {
+        return new SingleFieldKey(keyField, value);
     }
 }

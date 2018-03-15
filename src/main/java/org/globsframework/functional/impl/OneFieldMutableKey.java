@@ -45,8 +45,9 @@ public class OneFieldMutableKey extends AbstractFieldValue<MutableFunctionalKey>
         return 1;
     }
 
-    public void apply(Functor functor) throws Exception {
+    public <T extends Functor> T apply(T functor) throws Exception {
         functor.process(functionalKeyBuilder.getFields()[0], value);
+        return functor;
     }
 
     public FieldValue[] toArray() {

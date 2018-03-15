@@ -60,12 +60,12 @@ public class ManyFieldsMutableKey extends AbstractFieldValue<MutableFunctionalKe
         return values.length;
     }
 
-    public void apply(Functor functor) throws Exception {
+    public <T extends Functor> T apply(T functor) throws Exception {
         Field[] fields = functionalKeyBuilder.fields;
         for (int i = 0; i < values.length; i++) {
             functor.process(fields[i], values[i]);
-
         }
+        return functor;
     }
 
     public FieldValue[] toArray() {
