@@ -2,6 +2,7 @@ package org.globsframework.model.utils;
 
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
+import org.globsframework.metamodel.fields.FieldValueVisitor;
 import org.globsframework.model.FieldValue;
 import org.globsframework.model.FieldValues;
 import org.globsframework.model.impl.AbstractFieldValuesWithPrevious;
@@ -62,8 +63,7 @@ public class DefaultFieldValuesWithPrevious extends AbstractFieldValuesWithPrevi
         return functor;
     }
 
-    public
-    <T extends FieldValues.Functor> T  applyOnPrevious(T functor) throws Exception {
+    public <T extends FieldValues.Functor> T applyOnPrevious(T functor) throws Exception {
         for (Field field : type.getFields()) {
             int index = field.getIndex();
             if (previousValues[index] != Unset.VALUE) {
@@ -76,6 +76,16 @@ public class DefaultFieldValuesWithPrevious extends AbstractFieldValuesWithPrevi
 
     public FieldValues getPreviousValues() {
         return new GlobArrayFieldValues(type, previousValues);
+    }
+
+    public <T extends FieldValueVisitor> T accept(T functor) throws Exception {
+        for (Field field : type.getFields()) {
+            int index = field.getIndex();
+            if (values[index] != Unset.VALUE) {
+                field.visit(functor, values[index]);
+            }
+        }
+        return functor;
     }
 
     public <T extends FieldValues.Functor> T apply(T functor) throws Exception {
@@ -103,7 +113,7 @@ public class DefaultFieldValuesWithPrevious extends AbstractFieldValuesWithPrevi
     protected Object doGet(Field field) {
         if (!field.getGlobType().equals(type)) {
             throw new ItemNotFound("Field '" + field.getName() + "' is declared for type '" +
-                                   field.getGlobType().getName() + "' and not for '" + type.getName() + "'");
+                    field.getGlobType().getName() + "' and not for '" + type.getName() + "'");
         }
         return values[field.getIndex()];
     }

@@ -4,13 +4,14 @@ import org.globsframework.functional.FunctionalKey;
 import org.globsframework.functional.FunctionalKeyBuilder;
 import org.globsframework.functional.MutableFunctionalKey;
 import org.globsframework.metamodel.Field;
+import org.globsframework.metamodel.fields.FieldValueVisitor;
 import org.globsframework.model.FieldValue;
 import org.globsframework.model.FieldValues;
 
 import java.util.Arrays;
 
 public class ManyFieldsMutableKey extends AbstractFieldValue<MutableFunctionalKey>
-    implements MutableFunctionalKey, FunctionalKey {
+        implements MutableFunctionalKey, FunctionalKey {
     private final ManyFunctionalKeyBuilder functionalKeyBuilder;
     private Object values[];
 
@@ -60,6 +61,14 @@ public class ManyFieldsMutableKey extends AbstractFieldValue<MutableFunctionalKe
         return values.length;
     }
 
+    public <T extends FieldValueVisitor> T accept(T functor) throws Exception {
+        Field[] fields = functionalKeyBuilder.fields;
+        for (int i = 0; i < values.length; i++) {
+            fields[i].visit(functor, values[i]);
+        }
+        return functor;
+    }
+
     public <T extends Functor> T apply(T functor) throws Exception {
         Field[] fields = functionalKeyBuilder.fields;
         for (int i = 0; i < values.length; i++) {
@@ -88,7 +97,7 @@ public class ManyFieldsMutableKey extends AbstractFieldValue<MutableFunctionalKe
             return false;
         }
 
-        ManyFieldsMutableKey that = (ManyFieldsMutableKey)o;
+        ManyFieldsMutableKey that = (ManyFieldsMutableKey) o;
 
         if (!functionalKeyBuilder.equals(that.functionalKeyBuilder)) {
             return false;

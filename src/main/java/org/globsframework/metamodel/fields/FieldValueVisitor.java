@@ -1,8 +1,6 @@
 package org.globsframework.metamodel.fields;
 
 import org.globsframework.metamodel.Field;
-import org.globsframework.metamodel.fields.impl.DefaultBigDecimalField;
-import org.globsframework.metamodel.fields.impl.DefaultBooleanArrayField;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -33,9 +31,9 @@ public interface FieldValueVisitor {
 
     void visitLongArray(LongArrayField field, long[] value) throws Exception;
 
-    void visitDate(DateField field, LocalDate date) throws Exception;
+    void visitDate(DateField field, LocalDate value) throws Exception;
 
-    void visitDateTime(DateTimeField field, ZonedDateTime zonedDateTime) throws Exception;
+    void visitDateTime(DateTimeField field, ZonedDateTime value) throws Exception;
 
     void visitBlob(BlobField field, byte[] value) throws Exception;
 
@@ -43,71 +41,72 @@ public interface FieldValueVisitor {
     class AbstractFieldValueVisitor implements FieldValueVisitor {
 
         public void visitInteger(IntegerField field, Integer value) throws Exception {
-            notManaged(field);
+            notManaged(field, value);
         }
 
         public void visitIntegerArray(IntegerArrayField field, int[] value) throws Exception {
-            notManaged(field);
+            notManaged(field, value);
         }
 
         public void visitDouble(DoubleField field, Double value) throws Exception {
-            notManaged(field);
+            notManaged(field, value);
         }
 
         public void visitDoubleArray(DoubleArrayField field, double[] value) throws Exception {
-            notManaged(field);
+            notManaged(field, value);
         }
 
         public void visitBigDecimal(BigDecimalField field, BigDecimal value) throws Exception {
-            notManaged(field);
+            notManaged(field, value);
         }
 
         public void visitBigDecimalArray(BigDecimalArrayField field, BigDecimal[] value) throws Exception {
-            notManaged(field);
+            notManaged(field, value);
         }
 
         public void visitString(StringField field, String value) throws Exception {
-            notManaged(field);
+            notManaged(field, value);
         }
 
         public void visitStringArray(StringArrayField field, String[] value) throws Exception {
-            notManaged(field);
+            notManaged(field, value);
         }
 
         public void visitBoolean(BooleanField field, Boolean value) throws Exception {
-            notManaged(field);
+            notManaged(field, value);
         }
 
         public void visitBooleanArray(BooleanArrayField field, boolean[] value) throws Exception {
-            notManaged(field);
+            notManaged(field, value);
         }
 
         public void visitBlob(BlobField field, byte[] value) throws Exception {
-            notManaged(field);
+            notManaged(field, value);
         }
 
         public void visitLong(LongField field, Long value) throws Exception {
-            notManaged(field);
+            notManaged(field, value);
         }
 
         public void visitLongArray(LongArrayField field, long[] value) throws Exception {
-            notManaged(field);
+            notManaged(field, value);
         }
 
-        public void visitDate(DateField field, LocalDate date) throws Exception {
-            notManaged(field);
+        public void visitDate(DateField field, LocalDate value) throws Exception {
+            notManaged(field, value);
         }
 
-        public void visitDateTime(DateTimeField field, ZonedDateTime zonedDateTime) throws Exception {
-            notManaged(field);
+        public void visitDateTime(DateTimeField field, ZonedDateTime value) throws Exception {
+            notManaged(field, value);
         }
 
-        public void notManaged(Field field) throws Exception {
+        public void notManaged(Field field, Object value) throws Exception {
         }
 
     }
+
     class AbstractWithErrorVisitor<C> extends AbstractFieldValueVisitor {
-        public void notManaged(Field field) throws Exception {
+        public void notManaged(Field field, Integer value) throws Exception {
             throw new RuntimeException(field.getFullName() + " of type " + field.getDataType() + " not managed.");
         }
     }

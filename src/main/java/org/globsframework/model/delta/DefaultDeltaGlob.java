@@ -2,6 +2,7 @@ package org.globsframework.model.delta;
 
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
+import org.globsframework.metamodel.fields.FieldValueVisitor;
 import org.globsframework.model.*;
 import org.globsframework.model.impl.AbstractFieldValuesWithPrevious;
 import org.globsframework.utils.Unset;
@@ -235,6 +236,17 @@ class DefaultDeltaGlob extends AbstractFieldValuesWithPrevious implements DeltaG
             }
         }
         return count;
+    }
+
+    @Override
+    public <T extends FieldValueVisitor> T accept(T functor) throws Exception {
+        for (Field field : key.getGlobType().getFields()) {
+            Object value = values[field.getIndex()];
+            if ((value != Unset.VALUE) && !field.isKeyField()) {
+                field.visit(functor, value);
+            }
+        }
+        return functor;
     }
 
     public <T extends FieldValues.Functor> T  apply(T functor) throws Exception {

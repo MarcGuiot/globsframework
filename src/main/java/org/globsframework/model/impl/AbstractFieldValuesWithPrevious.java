@@ -191,6 +191,18 @@ public abstract class AbstractFieldValuesWithPrevious implements FieldValuesWith
         return (BigDecimal[])doGetPrevious(field);
     }
 
+    public <T extends FieldValueVisitor> T safeAccept(T functor) {
+        try {
+            return accept(functor);
+        }
+        catch (RuntimeException e) {
+            throw e;
+        }
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public <T extends FieldValues.Functor> T safeApply(T functor) {
         try {
             return apply(functor);

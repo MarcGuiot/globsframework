@@ -1,13 +1,12 @@
 package org.globsframework.metamodel;
 
+import org.globsframework.metamodel.fields.FieldVisitor;
 import org.globsframework.metamodel.index.Index;
 import org.globsframework.metamodel.index.MultiFieldIndex;
 import org.globsframework.metamodel.properties.PropertyHolder;
 import org.globsframework.model.GlobFactory;
 import org.globsframework.model.Key;
 import org.globsframework.model.MutableGlob;
-import org.globsframework.model.globaccessor.GlobGetAccessor;
-import org.globsframework.streams.accessors.GlobAccessor;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
 import java.util.Collection;
@@ -55,5 +54,9 @@ public interface GlobType extends PropertyHolder<GlobType>, Annotations {
 
     default MutableGlob instantiate() {
         return getGlobFactory().create();
+    }
+
+    default <T extends FieldVisitor> T accept(T visitor) throws Exception {
+        return getGlobFactory().accept(visitor);
     }
 }

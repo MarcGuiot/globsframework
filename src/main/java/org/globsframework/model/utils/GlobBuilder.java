@@ -274,6 +274,14 @@ public class GlobBuilder implements FieldValues.Functor, FieldSetter<GlobBuilder
         return mutableGlob.safeApply(functor);
     }
 
+    public <T extends FieldValueVisitor> T accept(T functor) throws Exception {
+        return mutableGlob.accept(functor);
+    }
+
+    public <T extends FieldValueVisitor> T safeAccept(T functor) {
+        return mutableGlob.safeAccept(functor);
+    }
+
     public FieldValue[] toArray() {
         return mutableGlob.toArray();
     }

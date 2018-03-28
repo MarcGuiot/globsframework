@@ -50,6 +50,13 @@ public class DefaultFieldValues extends AbstractFieldValues implements MutableFi
         return functor;
     }
 
+    public <T extends FieldValueVisitor> T accept(T functor) throws Exception {
+        for (Map.Entry<Field, Object> entry : values.entrySet()) {
+            entry.getKey().visit(functor, entry.getValue());
+        }
+        return functor;
+    }
+
     public DefaultFieldValues setValue(Field field, Object value) throws InvalidParameter {
         field.checkValue(value);
         values.put(field, value);

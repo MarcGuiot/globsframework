@@ -2,6 +2,7 @@ package org.globsframework.model.delta;
 
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
+import org.globsframework.metamodel.fields.FieldValueVisitor;
 import org.globsframework.model.FieldValue;
 import org.globsframework.model.FieldValues;
 import org.globsframework.model.impl.AbstractFieldValues;
@@ -47,6 +48,16 @@ class DeltaFieldValuesFromArray extends AbstractFieldValues {
         return count;
     }
 
+    public <T extends FieldValueVisitor> T accept(T functor) throws Exception {
+        for (Field field : type.getFields()) {
+            Object value = values[field.getIndex()];
+            if (value != Unset.VALUE && !field.isKeyField()) {
+                field.visit(functor, value);
+            }
+        }
+        return functor;
+    }
+
     public <T extends FieldValues.Functor>
     T apply(T functor) throws Exception {
         for (Field field : type.getFields()) {
@@ -54,25 +65,6 @@ class DeltaFieldValuesFromArray extends AbstractFieldValues {
             if (value != Unset.VALUE && !field.isKeyField()) {
                 functor.process(field, value);
             }
-        }
-        return functor;
-    }
-
-    public <T extends FieldValues.Functor>
-    T safeApply(T functor) {
-        try {
-            for (Field field : type.getFields()) {
-                Object value = values[field.getIndex()];
-                if (value != Unset.VALUE && !field.isKeyField()) {
-                    functor.process(field, value);
-                }
-            }
-        }
-        catch (RuntimeException e) {
-            throw e;
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
         }
         return functor;
     }

@@ -1,4 +1,4 @@
-package org.globsframework.model.globaccessor;
+package org.globsframework.model.globaccessor.get;
 
 import org.globsframework.model.Glob;
 

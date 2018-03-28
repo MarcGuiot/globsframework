@@ -3,9 +3,11 @@ package org.globsframework.model.impl;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.*;
-import org.globsframework.model.FieldValues;
-import org.globsframework.model.MutableGlob;
+import org.globsframework.metamodel.links.Link;
+import org.globsframework.model.*;
 import org.globsframework.model.format.GlobPrinter;
+import org.globsframework.model.utils.FieldCheck;
+import org.globsframework.utils.exceptions.InvalidParameter;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
 import java.io.IOException;
@@ -42,8 +44,7 @@ public abstract class AbstractMutableGlob extends AbstractGlob implements Mutabl
     }
 
     public MutableGlob set(LongField field, Long value) {
-        setObject(field, value);
-        return this;
+        return setObject(field, value);
     }
 
     public MutableGlob set(LongField field, long value) throws ItemNotFound {
@@ -55,8 +56,7 @@ public abstract class AbstractMutableGlob extends AbstractGlob implements Mutabl
     }
 
     public MutableGlob set(StringField field, String value) {
-        setObject(field, value);
-        return this;
+        return setObject(field, value);
     }
 
     public MutableGlob set(StringArrayField field, String[] value) throws ItemNotFound {
@@ -100,5 +100,53 @@ public abstract class AbstractMutableGlob extends AbstractGlob implements Mutabl
         return this;
     }
 
-    abstract public MutableGlob setObject(Field field, Object value);
+    public Key getTargetKey(Link link) {
+        if (!link.getSourceType().equals(getType())) {
+            throw new InvalidParameter("Link '" + link + " cannot be used with " + this);
+        }
+
+        KeyBuilder keyBuilder = KeyBuilder.init(link.getTargetType());
+        link.apply((sourceField, targetField) -> {
+            Object value = getValue(sourceField);
+            keyBuilder.set(targetField, value);
+
+        });
+        return keyBuilder.get();
+    }
+
+    public FieldValues getValues() {
+        FieldValuesBuilder builder = FieldValuesBuilder.init();
+        for (Field field : getType().getFields()) {
+            if (!field.isKeyField()) {
+                builder.setValue(field, doGet(field));
+            }
+        }
+        return builder.get();
+    }
+
+    public FieldValue[] toArray() {
+        FieldValue[] array = new FieldValue[getType().getFieldCount()];
+        int index = 0;
+        for (Field field : getType().getFields()) {
+            array[index] = new FieldValue(field, doGet(field));
+            index++;
+        }
+        return array;
+    }
+
+    public Object doCheckedGet(Field field) {
+        FieldCheck.check(field, getType());
+        return doGet(field);
+    }
+
+    public MutableGlob setObject(Field field, Object value){
+        FieldCheck.check(field, getType(), value);
+        return doSet(field, value);
+    }
+
+    abstract public MutableGlob doSet(Field field, Object value);
+
+    public Key getKey() {
+        return this;
+    }
 }

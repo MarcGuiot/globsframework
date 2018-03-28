@@ -9,6 +9,8 @@ import org.globsframework.metamodel.type.DataType;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.exceptions.InvalidParameter;
 
+import java.util.Objects;
+
 abstract public class AbstractField extends DefaultAnnotations<Field> implements Field, AbstractDelegatePropertyHolder<Field> {
     private final int index;
     private final int keyIndex;
@@ -107,6 +109,10 @@ abstract public class AbstractField extends DefaultAnnotations<Field> implements
 
     final public Field getValueOwner() {
         return this;
+    }
+
+    public String toString(Object value) {
+        return Objects.toString(value);
     }
 
     public boolean equals(Object o) {

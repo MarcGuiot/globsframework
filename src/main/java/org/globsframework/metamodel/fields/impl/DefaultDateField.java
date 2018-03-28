@@ -43,6 +43,36 @@ public class DefaultDateField extends AbstractField implements DateField {
         }
     }
 
+    @Override
+    public <T extends FieldVisitorWithContext<C>, C> T visit(T visitor, C context) throws Exception {
+        visitor.visitDate(this, context);
+        return visitor;
+    }
+
+    @Override
+    public <T extends FieldVisitorWithTwoContext<C, D>, C, D> T visit(T visitor, C ctx1, D ctx2) throws Exception {
+        visitor.visitDate(this, ctx1, ctx2);
+        return visitor;
+    }
+
+    @Override
+    public <T extends FieldVisitorWithTwoContext<C, D>, C, D> T safeVisit(T visitor, C ctx1, D ctx2) {
+        try {
+            visitor.visitDate(this, ctx1, ctx2);
+            return visitor;
+        }
+        catch (RuntimeException e) {
+            throw new RuntimeException("On " + this, e);
+        }
+        catch (Exception e) {
+            throw new UnexpectedApplicationState("On " + this, e);
+        }
+    }
+
+    public void visit(FieldValueVisitor visitor, Object value) throws Exception {
+        visitor.visitDate(this, (LocalDate)value);
+    }
+
     public void safeVisit(FieldValueVisitor visitor, Object value) {
         try {
             visitor.visitDate(this, (LocalDate)value);

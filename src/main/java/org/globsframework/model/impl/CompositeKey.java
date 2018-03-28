@@ -2,6 +2,7 @@ package org.globsframework.model.impl;
 
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
+import org.globsframework.metamodel.fields.FieldValueVisitor;
 import org.globsframework.model.AbstractKey;
 import org.globsframework.model.FieldValue;
 import org.globsframework.model.Key;
@@ -62,19 +63,6 @@ public class CompositeKey extends AbstractKey {
             functor.process(field, values[field.getKeyIndex()]);
         }
         return functor;
-    }
-
-    public <T extends Functor>
-    T safeApply(T functor) {
-        try {
-            return apply(functor);
-        }
-        catch (RuntimeException e) {
-            throw e;
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 
     // optimized - do not use generated code

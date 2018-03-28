@@ -50,6 +50,8 @@ public interface GlobTypeBuilder {
 
     BooleanField declareBooleanField(String fieldName, Collection<Glob> annotations);
 
+    BooleanArrayField declareBooleanArrayField(String fieldName, Collection<Glob> annotations);
+
     IntegerArrayField declareIntegerArrayField(String fieldName, Collection<Glob> annotations);
 
     DoubleField declareDoubleField(String fieldName, Collection<Glob> annotations);
@@ -128,25 +130,62 @@ public interface GlobTypeBuilder {
         return declareStringField(fieldName, Arrays.asList(annotations));
     }
 
+    default StringArrayField declareStringArrayField(String fieldName, Glob... annotations) {
+        return declareStringArrayField(fieldName, Arrays.asList(annotations));
+    }
+
     default IntegerField declareIntegerField(String fieldName, Glob... annotations) {
         return declareIntegerField(fieldName, Arrays.asList(annotations));
+    }
+
+    default IntegerArrayField declareIntegerArrayField(String fieldName, Glob... annotations) {
+        return declareIntegerArrayField(fieldName, Arrays.asList(annotations));
     }
 
     default BooleanField declareBooleanField(String fieldName, Glob... annotations) {
         return declareBooleanField(fieldName, Arrays.asList(annotations));
     }
 
+    default BooleanArrayField declareBooleanArrayField(String fieldName, Glob... annotations) {
+        return declareBooleanArrayField(fieldName, Arrays.asList(annotations));
+    }
+
     default DoubleField declareDoubleField(String fieldName, Glob... annotations) {
         return declareDoubleField(fieldName, Arrays.asList(annotations));
+    }
+
+    default DoubleArrayField declareDoubleArrayField(String fieldName, Glob... annotations) {
+        return declareDoubleArrayField(fieldName, Arrays.asList(annotations));
     }
 
     default LongField declareLongField(String fieldName, Glob... annotations) {
         return declareLongField(fieldName, Arrays.asList(annotations));
     }
 
+    default BigDecimalField declareBigDecimalField(String fieldName, Glob... annotations) {
+        return declareBigDecimalField(fieldName, Arrays.asList(annotations));
+    }
+
+    default BigDecimalArrayField declareBigDecimalArrayField(String fieldName, Glob... annotations) {
+        return declareBigDecimalArrayField(fieldName, Arrays.asList(annotations));
+    }
+
     default BlobField declareBlobField(String fieldName, Glob... annotations) {
         return declareBlobField(fieldName, Arrays.asList(annotations));
     }
+
+    default LongArrayField declareArrayLongField(String fieldName, Glob... annotations) {
+        return declareArrayLongField(fieldName, Arrays.asList(annotations));
+    }
+
+    default DateField declareDateField(String fieldName, Glob... annotations) {
+        return declareDateField(fieldName, Arrays.asList(annotations));
+    }
+
+    default DateTimeField declareDateTimeField(String fieldName, Glob... annotations) {
+        return declareDateTimeField(fieldName, Arrays.asList(annotations));
+    }
+
 
     <T> void register(Class<T> klass, T t);
 

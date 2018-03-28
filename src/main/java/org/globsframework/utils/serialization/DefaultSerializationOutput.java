@@ -359,12 +359,12 @@ public class DefaultSerializationOutput implements SerializedOutput, ChangeSetVi
             write(value);
         }
 
-        public void visitDate(DateField field, LocalDate date) throws Exception {
-            writeDate(date);
+        public void visitDate(DateField field, LocalDate value) throws Exception {
+            writeDate(value);
         }
 
-        public void visitDateTime(DateTimeField field, ZonedDateTime zonedDateTime) throws Exception {
-            writeDateTime(zonedDateTime);
+        public void visitDateTime(DateTimeField field, ZonedDateTime value) throws Exception {
+            writeDateTime(value);
         }
     }
 
@@ -441,12 +441,12 @@ public class DefaultSerializationOutput implements SerializedOutput, ChangeSetVi
             write(value);
         }
 
-        public void visitDate(DateField field, LocalDate date) throws Exception {
-            writeDate(date);
+        public void visitDate(DateField field, LocalDate value) throws Exception {
+            writeDate(value);
         }
 
-        public void visitDateTime(DateTimeField field, ZonedDateTime zonedDateTime) throws Exception {
-            writeDateTime(zonedDateTime);
+        public void visitDateTime(DateTimeField field, ZonedDateTime value) throws Exception {
+            writeDateTime(value);
         }
     }
 

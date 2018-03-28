@@ -24,7 +24,7 @@ public interface FieldVisitorWithContext<C> {
 
     void visitBigDecimal(BigDecimalField field, C context) throws Exception;
 
-    void visitBigArrayDecimal(BigDecimalArrayField field, C context) throws Exception;
+    void visitBigDecimalArray(BigDecimalArrayField field, C context) throws Exception;
 
     void visitLong(LongField field, C context) throws Exception;
 
@@ -74,7 +74,7 @@ public interface FieldVisitorWithContext<C> {
             notManaged(field, context);
         }
 
-        public void visitBigArrayDecimal(BigDecimalArrayField field, C context) throws Exception {
+        public void visitBigDecimalArray(BigDecimalArrayField field, C context) throws Exception {
             notManaged(field, context);
         }
 

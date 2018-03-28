@@ -90,14 +90,22 @@ public abstract class AbstractFieldValue<T extends FieldSetter> implements Field
         return doSet(field, o);
     }
 
+    public <T extends FieldValueVisitor> T safeAccept(T functor) {
+        try {
+            return accept(functor);
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public <T extends Functor> T safeApply(T functor) {
         try {
             return apply(functor);
-        }
-        catch (RuntimeException e) {
+        } catch (RuntimeException e) {
             throw e;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -113,7 +121,7 @@ public abstract class AbstractFieldValue<T extends FieldSetter> implements Field
     }
 
     public Double get(DoubleField doubleField) throws ItemNotFound {
-        return (Double)getValue(doubleField);
+        return (Double) getValue(doubleField);
     }
 
     public double get(DoubleField doubleField, double v) throws ItemNotFound {
@@ -122,7 +130,7 @@ public abstract class AbstractFieldValue<T extends FieldSetter> implements Field
     }
 
     public Integer get(IntegerField field) throws ItemNotFound {
-        return (Integer)doGet(field);
+        return (Integer) doGet(field);
     }
 
     public int get(IntegerField field, int valueIfNull) throws ItemNotFound {
@@ -131,11 +139,11 @@ public abstract class AbstractFieldValue<T extends FieldSetter> implements Field
     }
 
     public String get(StringField field) throws ItemNotFound {
-        return (String)doGet(field);
+        return (String) doGet(field);
     }
 
     public Boolean get(BooleanField field) throws ItemNotFound {
-        return (Boolean)doGet(field);
+        return (Boolean) doGet(field);
     }
 
     public Boolean get(BooleanField booleanField, boolean valueIfNull) {
@@ -148,7 +156,7 @@ public abstract class AbstractFieldValue<T extends FieldSetter> implements Field
     }
 
     public Long get(LongField field) throws ItemNotFound {
-        return (Long)doGet(field);
+        return (Long) doGet(field);
     }
 
     public long get(LongField longField, long valueIfNull) throws ItemNotFound {
@@ -157,42 +165,42 @@ public abstract class AbstractFieldValue<T extends FieldSetter> implements Field
     }
 
     public byte[] get(BlobField blobField) throws ItemNotFound {
-        return (byte[])doGet(blobField);
+        return (byte[]) doGet(blobField);
     }
 
     public double[] get(DoubleArrayField field) throws ItemNotFound {
-        return (double[])doGet(field);
+        return (double[]) doGet(field);
     }
 
     public int[] get(IntegerArrayField field) throws ItemNotFound {
-        return (int[])doGet(field);
+        return (int[]) doGet(field);
     }
 
     public String[] get(StringArrayField field) throws ItemNotFound {
-        return (String[])doGet(field);
+        return (String[]) doGet(field);
     }
 
     public boolean[] get(BooleanArrayField field) {
-        return (boolean[])doGet(field);
+        return (boolean[]) doGet(field);
     }
 
     public long[] get(LongArrayField field) throws ItemNotFound {
-        return (long[])doGet(field);
+        return (long[]) doGet(field);
     }
 
     public BigDecimal get(BigDecimalField field) throws ItemNotFound {
-        return (BigDecimal)doGet(field);
+        return (BigDecimal) doGet(field);
     }
 
     public BigDecimal[] get(BigDecimalArrayField field) throws ItemNotFound {
-        return (BigDecimal[])doGet(field);
+        return (BigDecimal[]) doGet(field);
     }
 
     public LocalDate get(DateField field) throws ItemNotFound {
-        return (LocalDate)doGet(field);
+        return (LocalDate) doGet(field);
     }
 
     public ZonedDateTime get(DateTimeField field) throws ItemNotFound {
-        return (ZonedDateTime)doGet(field);
+        return (ZonedDateTime) doGet(field);
     }
 }

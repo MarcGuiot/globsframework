@@ -2,6 +2,7 @@ package org.globsframework.model.utils;
 
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
+import org.globsframework.metamodel.fields.FieldValueVisitor;
 import org.globsframework.model.FieldValue;
 import org.globsframework.model.FieldValues;
 import org.globsframework.model.impl.AbstractFieldValues;
@@ -33,6 +34,13 @@ public class GlobArrayFieldValues extends AbstractFieldValues {
 
     public int size() {
         return values.length;
+    }
+
+    public <T extends FieldValueVisitor> T accept(T functor) throws Exception {
+        for (Field field : type.getFields()) {
+            field.visit(functor, values[field.getIndex()]);
+        }
+        return functor;
     }
 
     public <T extends FieldValues.Functor> T apply(T functor) throws Exception {

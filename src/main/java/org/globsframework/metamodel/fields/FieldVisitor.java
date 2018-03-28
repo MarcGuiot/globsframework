@@ -33,6 +33,8 @@ public interface FieldVisitor {
 
     void visitBlob(BlobField field) throws Exception;
 
+//    void visitGlob(GlobField field) throws Exception;
+
 
     class AbstractFieldVisitor implements FieldVisitor {
 

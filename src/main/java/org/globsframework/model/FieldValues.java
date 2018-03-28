@@ -20,6 +20,12 @@ public interface FieldValues extends FieldValuesAccessor {
     <T extends Functor>
     T safeApply(T functor);
 
+    <T extends FieldValueVisitor>
+    T accept(T functor) throws Exception;
+
+    <T extends FieldValueVisitor>
+    T safeAccept(T functor);
+
     FieldValue[] toArray();
 
     interface Functor {
@@ -36,12 +42,20 @@ public interface FieldValues extends FieldValuesAccessor {
         }
 
         public <T extends Functor>
-        T apply(T functor) throws Exception {
+        T apply(T functor) {
             return functor;
         }
 
         public <T extends Functor>
         T safeApply(T functor) {
+            return functor;
+        }
+
+        public <T extends FieldValueVisitor> T accept(T functor) {
+            return functor;
+        }
+
+        public <T extends FieldValueVisitor> T safeAccept(T functor) {
             return functor;
         }
 

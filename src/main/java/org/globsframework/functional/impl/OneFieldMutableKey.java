@@ -4,6 +4,7 @@ import org.globsframework.functional.FunctionalKey;
 import org.globsframework.functional.FunctionalKeyBuilder;
 import org.globsframework.functional.MutableFunctionalKey;
 import org.globsframework.metamodel.Field;
+import org.globsframework.metamodel.fields.FieldValueVisitor;
 import org.globsframework.model.FieldValue;
 
 public class OneFieldMutableKey extends AbstractFieldValue<MutableFunctionalKey>
@@ -47,6 +48,11 @@ public class OneFieldMutableKey extends AbstractFieldValue<MutableFunctionalKey>
 
     public <T extends Functor> T apply(T functor) throws Exception {
         functor.process(functionalKeyBuilder.getFields()[0], value);
+        return functor;
+    }
+
+    public <T extends FieldValueVisitor> T accept(T functor) throws Exception {
+        functionalKeyBuilder.getFields()[0].visit(functor, value);
         return functor;
     }
 

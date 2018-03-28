@@ -124,4 +124,17 @@ public abstract class AbstractFieldValues implements FieldValues {
         }
         return functor;
     }
+
+    public <T extends FieldValueVisitor> T safeAccept(T functor) {
+        try {
+            accept(functor);
+            return functor;
+        }
+        catch (RuntimeException e) {
+            throw e;
+        }
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

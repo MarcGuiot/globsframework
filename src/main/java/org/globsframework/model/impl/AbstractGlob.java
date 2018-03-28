@@ -2,14 +2,14 @@ package org.globsframework.model.impl;
 
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.model.FieldValue;
-import org.globsframework.model.FieldValues;
-import org.globsframework.model.Glob;
-import org.globsframework.model.Key;
+import org.globsframework.metamodel.fields.FieldValueVisitor;
+import org.globsframework.model.*;
 
 import java.util.Objects;
 
 public abstract class AbstractGlob extends AbstractFieldValues implements Glob, Key {
+    private int hashCode;
+
     public abstract GlobType getType();
 
     abstract public Object doGet(Field field);
@@ -50,6 +50,24 @@ public abstract class AbstractGlob extends AbstractFieldValues implements Glob, 
         return true;
     }
 
+    public <T extends FieldValueVisitor> T acceptOnKeyField(T functor) throws Exception {
+        for (Field field : getType().getFields()) {
+            field.visit(functor, doGet(field));
+        }
+        return functor;
+    }
+
+    public <T extends FieldValueVisitor> T safeAcceptOnKeyField(T functor) {
+        try {
+            for (Field field : getType().getKeyFields()) {
+                field.visit(functor, doGet(field));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return functor;
+    }
+
     public <T extends FieldValues.Functor>
     T applyOnKeyField(T functor) throws Exception {
         for (Field field : getType().getFields()) {
@@ -64,8 +82,7 @@ public abstract class AbstractGlob extends AbstractFieldValues implements Glob, 
             for (Field field : getType().getKeyFields()) {
                 functor.process(field, doGet(field));
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
         return functor;
@@ -88,6 +105,13 @@ public abstract class AbstractGlob extends AbstractFieldValues implements Glob, 
             T apply(T functor) throws Exception {
                 for (Field field : type.getKeyFields()) {
                     functor.process(field, AbstractGlob.this.doGet(field));
+                }
+                return functor;
+            }
+
+            public <T extends FieldValueVisitor> T accept(T functor) throws Exception {
+                for (Field field : type.getKeyFields()) {
+                    field.visit(functor, AbstractGlob.this.doGet(field));
                 }
                 return functor;
             }
@@ -122,6 +146,9 @@ public abstract class AbstractGlob extends AbstractFieldValues implements Glob, 
     }
 
     public int hashCode() {
+        if (hashCode != 0) {
+            return hashCode;
+        }
         int hashCode = getType().hashCode();
         for (Field keyField : getType().getKeyFields()) {
             Object value = getValue(keyField);
@@ -130,6 +157,7 @@ public abstract class AbstractGlob extends AbstractFieldValues implements Glob, 
         if (hashCode == 0) {
             hashCode = 31;
         }
+        this.hashCode = hashCode;
         return hashCode;
     }
 
@@ -145,7 +173,7 @@ public abstract class AbstractGlob extends AbstractFieldValues implements Glob, 
             return false;
         }
 
-        Key otherKey = (Key)o;
+        Key otherKey = (Key) o;
         if (!getType().equals(otherKey.getGlobType())) {
             return false;
         }

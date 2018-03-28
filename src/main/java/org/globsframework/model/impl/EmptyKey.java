@@ -127,6 +127,14 @@ public class EmptyKey implements Key {
         return functor;
     }
 
+    public <T extends FieldValueVisitor> T acceptOnKeyField(T functor) throws Exception {
+        return functor;
+    }
+
+    public <T extends FieldValueVisitor> T safeAcceptOnKeyField(T functor) {
+        return functor;
+    }
+
     public FieldValues asFieldValues() {
         return FieldValues.EMPTY;
     }

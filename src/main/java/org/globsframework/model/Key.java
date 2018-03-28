@@ -1,6 +1,7 @@
 package org.globsframework.model;
 
 import org.globsframework.metamodel.GlobType;
+import org.globsframework.metamodel.fields.FieldValueVisitor;
 
 public interface Key extends FieldValuesAccessor {
     GlobType getGlobType();
@@ -10,6 +11,12 @@ public interface Key extends FieldValuesAccessor {
 
     <T extends FieldValues.Functor>
     T safeApplyOnKeyField(T functor);
+
+    <T extends FieldValueVisitor>
+    T acceptOnKeyField(T functor) throws Exception;
+
+    <T extends FieldValueVisitor>
+    T safeAcceptOnKeyField(T functor);
 
     FieldValues asFieldValues();
 }
