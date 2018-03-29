@@ -8,7 +8,7 @@ import org.globsframework.model.*;
 import java.util.Objects;
 
 public abstract class AbstractGlob extends AbstractFieldValues implements Glob, Key {
-    private int hashCode;
+    protected int hashCode;
 
     public abstract GlobType getType();
 

@@ -138,6 +138,9 @@ public abstract class AbstractMutableGlob extends AbstractGlob implements Mutabl
     }
 
     public MutableGlob setObject(Field field, Object value){
+        if (hashCode != 0 && field.isKeyField()) {
+            throw new RuntimeException(field.getFullName() + " is a key value and the hashCode is already computed.");
+        }
         FieldCheck.check(field, getType(), value);
         return doSet(field, value);
     }
