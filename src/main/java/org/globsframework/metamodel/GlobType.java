@@ -2,6 +2,7 @@ package org.globsframework.metamodel;
 
 import org.globsframework.metamodel.fields.FieldVisitor;
 import org.globsframework.metamodel.index.Index;
+import org.globsframework.metamodel.index.SingleFieldIndex;
 import org.globsframework.metamodel.index.MultiFieldIndex;
 import org.globsframework.metamodel.properties.PropertyHolder;
 import org.globsframework.model.GlobFactory;
@@ -42,11 +43,11 @@ public interface GlobType extends PropertyHolder<GlobType>, Annotations {
 
     Collection<Index> getIndices();
 
-    Collection<MultiFieldIndex> getMultiFieldIndices();
-
     GlobFactory getGlobFactory();
 
     <T> T getRegistered(Class<T> klass);
+
+    <T> T getRegistered(Class<T> klass, T NULL);
 
     String describe();
 

@@ -142,7 +142,7 @@ public class DefaultGlobRepositoryIndexingTest extends DefaultGlobRepositoryTest
         localGlobRepository.startChangeSet();
         localGlobRepository.delete(localGlobRepository.findByIndex(DummyObjectIndex.UNIQUE_NAME_INDEX, "e"));
         localGlobRepository.delete(localGlobRepository.findByIndex(DummyObjectIndex.UNIQUE_NAME_INDEX, "b"));
-        Key a = localGlobRepository.findByIndex(DummyObjectIndex.UNIQUE_NAME_INDEX, "a").getFirst().getKey();
+        Key a = localGlobRepository.findByIndex(DummyObjectIndex.UNIQUE_NAME_INDEX, "a").getFirst().get().getKey();
         localGlobRepository.update(a,
                                    FieldValue.value(DummyObjectIndex.UNIQUE_NAME, "b"));
         localGlobRepository.create(DummyObjectIndex.TYPE, FieldValue.value(DummyObjectIndex.UNIQUE_NAME, "a"),

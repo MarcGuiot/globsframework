@@ -15,7 +15,7 @@ public class AutoIncrementAnnotationType {
     public static Glob INSTANCE;
 
     static {
-        GlobTypeLoaderFactory.create(AutoIncrementAnnotationType.class)
+        GlobTypeLoaderFactory.create(AutoIncrementAnnotationType.class, "AutoIncrement")
             .register(GlobCreateFromAnnotation.class, annotation -> INSTANCE)
             .load();
     }

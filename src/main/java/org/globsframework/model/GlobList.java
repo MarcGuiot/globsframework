@@ -343,11 +343,11 @@ public class GlobList extends ArrayList<Glob> {
         return types;
     }
 
-    public Glob getFirst() {
-        if (isEmpty()) {
-            return null;
+    public Optional<Glob> getFirst() {
+        if (isEmpty()){
+            return Optional.empty();
         }
-        return get(0);
+        return Optional.ofNullable(get(0));
     }
 
     public Glob getLast() {

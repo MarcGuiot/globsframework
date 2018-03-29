@@ -2,7 +2,7 @@ package org.globsframework.functional;
 
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.model.Glob;
+import org.globsframework.model.FieldValues;
 
 public interface FunctionalKeyBuilder {
 
@@ -10,9 +10,9 @@ public interface FunctionalKeyBuilder {
 
     Field[] getFields();
 
-    FunctionalKey create(Glob glob);
+    FunctionalKey create(FieldValues fieldValues);
 
-    FunctionalKey proxy(Glob glob);
+    FunctionalKey proxy(FieldValues fieldValues);
 
     MutableFunctionalKey create();
 }

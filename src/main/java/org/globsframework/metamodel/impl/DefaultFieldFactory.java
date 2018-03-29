@@ -17,9 +17,9 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.Key;
 
 public class DefaultFieldFactory {
-    private MutableGlobType type;
+    private DefaultGlobType type;
 
-    public DefaultFieldFactory(MutableGlobType type) {
+    public DefaultFieldFactory(DefaultGlobType type) {
         this.type = type;
     }
 

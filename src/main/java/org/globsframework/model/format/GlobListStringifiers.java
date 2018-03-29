@@ -182,7 +182,7 @@ public class GlobListStringifiers {
                 if (list.size() > 1) {
                     return textForMulti;
                 }
-                return stringifier.toString(list.getFirst(), repository);
+                return stringifier.toString(list.getFirst().orElse(null), repository);
             }
         };
     }

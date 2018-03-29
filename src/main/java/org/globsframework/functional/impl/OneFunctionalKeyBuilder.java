@@ -5,7 +5,7 @@ import org.globsframework.functional.FunctionalKeyBuilder;
 import org.globsframework.functional.MutableFunctionalKey;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.model.Glob;
+import org.globsframework.model.FieldValues;
 
 public class OneFunctionalKeyBuilder implements FunctionalKeyBuilder {
     private Field field;
@@ -24,15 +24,21 @@ public class OneFunctionalKeyBuilder implements FunctionalKeyBuilder {
         return fields;
     }
 
-    public FunctionalKey create(Glob glob) {
-        return new OneFieldMutableKey(this, glob.getValue(field));
+    public FunctionalKey create(FieldValues fieldValues) {
+        return new OneFieldMutableKey(this, fieldValues.getValue(field));
     }
 
-    public FunctionalKey proxy(Glob glob) {
-        return create(glob);
+    public FunctionalKey proxy(FieldValues fieldValues) {
+        return create(fieldValues);
     }
 
     public MutableFunctionalKey create() {
         return new OneFieldMutableKey(this);
+    }
+
+    public String toString() {
+        return "OneFunctionalKeyBuilder{" +
+              "field=" + field +
+              '}';
     }
 }

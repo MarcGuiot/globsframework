@@ -12,6 +12,7 @@ import org.globsframework.model.format.*;
 import org.globsframework.utils.Ref;
 import org.globsframework.utils.Utils;
 
+import java.math.BigDecimal;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
@@ -128,6 +129,14 @@ public class DefaultDescriptionService implements DescriptionService {
                 result.set(new AbstractGlobFieldStringifier<BlobField, byte[]>(field) {
                     protected String valueToString(byte[] values) {
                         return new String(values);
+                    }
+                });
+            }
+
+            public void visitBigDecimal(BigDecimalField field) throws Exception {
+                result.set(new AbstractGlobFieldStringifier<BigDecimalField, BigDecimal>(field) {
+                    protected String valueToString(BigDecimal value) {
+                        return formats.getDecimalFormat().format(value);
                     }
                 });
             }

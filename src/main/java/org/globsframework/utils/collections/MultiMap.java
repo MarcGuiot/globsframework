@@ -3,6 +3,9 @@ package org.globsframework.utils.collections;
 import org.globsframework.utils.Strings;
 
 import java.util.*;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 public class MultiMap<K, V> {
     private Map<K, List<V>> map = new HashMap<K, List<V>>();
@@ -30,6 +33,22 @@ public class MultiMap<K, V> {
         List<V> values;
         values = new ArrayList<V>();
         return values;
+    }
+
+    public void forEachValue(Consumer<V> consumer) {
+        for (Map.Entry<K, List<V>> kListEntry : map.entrySet()) {
+            kListEntry.getValue().forEach(consumer);
+        }
+    }
+
+    public void forEach(BiConsumer<K, List<V>> biConsumer) {
+        for (Map.Entry<K, List<V>> kListEntry : map.entrySet()) {
+            biConsumer.accept(kListEntry.getKey(), kListEntry.getValue());
+        }
+    }
+
+    public Stream<Map.Entry<K, List<V>>> streamEntry(){
+        return map.entrySet().stream();
     }
 
     public boolean isEmpty() {

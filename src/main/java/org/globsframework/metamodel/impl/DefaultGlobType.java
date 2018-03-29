@@ -6,6 +6,7 @@ import org.globsframework.metamodel.annotations.KeyAnnotationType;
 import org.globsframework.metamodel.fields.impl.AbstractField;
 import org.globsframework.metamodel.index.Index;
 import org.globsframework.metamodel.index.MultiFieldIndex;
+import org.globsframework.metamodel.index.SingleFieldIndex;
 import org.globsframework.metamodel.properties.impl.AbstractDelegatePropertyHolder;
 import org.globsframework.metamodel.utils.MutableAnnotations;
 import org.globsframework.metamodel.utils.MutableGlobType;
@@ -22,6 +23,7 @@ import org.globsframework.utils.exceptions.TooManyItems;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class DefaultGlobType extends DefaultAnnotations implements MutableGlobType, MutableAnnotations,
@@ -31,8 +33,7 @@ public class DefaultGlobType extends DefaultAnnotations implements MutableGlobTy
     private GlobFactory globFactory;
     private String name;
     private Map<String, Field> fieldsByName = new TreeMap<String, Field>(); // TODO replace with hashMap?
-    private Map<String, Index> indices = new HashMap<String, Index>(2, 1);
-    private Map<String, MultiFieldIndex> multiFieldIndices = new HashMap<String, MultiFieldIndex>(2, 1);
+    private Map<String, Index> indices = new HashMap<>(2, 1);
     private Map<Class, Object> registered = new ConcurrentHashMap<>();
     private volatile Object properties[] = new Object[]{NULL_OBJECT, NULL_OBJECT};
 
@@ -48,7 +49,7 @@ public class DefaultGlobType extends DefaultAnnotations implements MutableGlobTy
     public Field getField(String name) throws ItemNotFound {
         Field field = fieldsByName.get(name);
         if (field == null) {
-            throw new ItemNotFound("Field '" + name + "' not found in type: " + this.name);
+            throw new ItemNotFound("Field '" + name + "' not found in type: " + this.name + " got " + fieldsByName.keySet());
         }
         return field;
     }
@@ -94,10 +95,10 @@ public class DefaultGlobType extends DefaultAnnotations implements MutableGlobTy
     }
 
     public void addKey(Field field) {
-        Field[] tmp = new Field[keyFields.length + 1];
+        Field[] tmp = new Field[Math.max(field.getKeyIndex() + 1, keyFields.length)];
         System.arraycopy(keyFields, 0, tmp, 0, keyFields.length);
         keyFields = tmp;
-        keyFields[keyFields.length - 1] = field;
+        keyFields[field.getKeyIndex()] = field;
     }
 
     public Field[] getKeyFields() {
@@ -145,37 +146,37 @@ public class DefaultGlobType extends DefaultAnnotations implements MutableGlobTy
             fields[field.getIndex()] = field;
         }
         int keyFieldCount = 0;
+        Set<Integer> keySet = new HashSet<>();
         for (Field field : fields) {
             Glob annotation = field.findAnnotation(KeyAnnotationType.UNIQUE_KEY);
             if (annotation != null) {
                 int index = annotation.get(KeyAnnotationType.INDEX, -1);
                 if (index == -1) {
-                    ((MutableAnnotations)field).addAnnotation(KeyAnnotationType.create(keyFieldCount));
-                }
-                else if (index != keyFieldCount) {
-                    throw new InvalidState("For " + field + " internal index '" + index
-                                           + "' is different from computed '" + keyFieldCount + "'");
+                    ((MutableAnnotations) field).addAnnotation(KeyAnnotationType.create(field.getKeyIndex()));
+                    keySet.add(field.getKeyIndex());
+                } else {
+                    keySet.add(index);
                 }
                 keyFieldCount++;
             }
         }
+        if (!IntStream.range(0, keyFieldCount).allMatch(keySet::contains)) {
+            throw new RuntimeException("Bug unconstitency between key count " + keyFieldCount + " and key id " + keySet);
+        }
+
         globFactory = GlobFactoryService.Builder.getBuilderFactory().get(this);
     }
 
-    public void addIndex(Index index) {
+    void addIndex(SingleFieldIndex index) {
         indices.put(index.getName(), index);
     }
 
-    public void addIndex(MultiFieldIndex index) {
-        multiFieldIndices.put(index.getName(), index);
+    void addIndex(MultiFieldIndex index) {
+        indices.put(index.getName(), index);
     }
 
     public Collection<Index> getIndices() {
         return indices.values();
-    }
-
-    public Collection<MultiFieldIndex> getMultiFieldIndices() {
-        return multiFieldIndices.values();
     }
 
     public GlobFactory getGlobFactory() {
@@ -186,16 +187,16 @@ public class DefaultGlobType extends DefaultAnnotations implements MutableGlobTy
         return indices.get(name);
     }
 
-    public MultiFieldIndex getMultiFieldIndex(String name) {
-        return multiFieldIndices.get(name);
-    }
-
     public <T> void register(Class<T> klass, T t) {
         registered.put(klass, t);
     }
 
     public <T> T getRegistered(Class<T> klass) {
         return (T)registered.get(klass);
+    }
+
+    public <T> T getRegistered(Class<T> klass, T NULL) {
+        return (T) registered.getOrDefault(klass, NULL);
     }
 
     final public Object[] getProperties() {

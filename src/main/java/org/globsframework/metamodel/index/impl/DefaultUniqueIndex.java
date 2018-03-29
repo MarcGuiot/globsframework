@@ -4,27 +4,20 @@ import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.index.IndexVisitor;
 import org.globsframework.metamodel.index.UniqueIndex;
 
-public class DefaultUniqueIndex implements UniqueIndex {
-    private Field field;
-    private String name;
+public class DefaultUniqueIndex extends AbstractSingleIndex implements UniqueIndex {
 
     public DefaultUniqueIndex(String name) {
-        this.name = name;
+        super(name);
     }
 
-    public String getName() {
-        return name;
+    public DefaultUniqueIndex(String name, Field field) {
+        super(name);
+        setField(field);
     }
 
-    public Field getField() {
-        return field;
+    public <T extends IndexVisitor> T visit(T visitor) {
+        visitor.visitUniqueIndex(this);
+        return visitor;
     }
 
-    public void visitIndex(IndexVisitor visitor) {
-        visitor.visiteUniqueIndex(this);
-    }
-
-    public void setField(Field field) {
-        this.field = field;
-    }
 }

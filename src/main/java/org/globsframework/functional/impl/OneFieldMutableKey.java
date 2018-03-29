@@ -85,4 +85,11 @@ public class OneFieldMutableKey extends AbstractFieldValue<MutableFunctionalKey>
         result = 31 * result + (value != null ? value.hashCode() : 0);
         return result;
     }
+
+    public String toString() {
+        return "OneFieldMutableKey{" +
+              "functionalKeyBuilder=" + functionalKeyBuilder +
+              ", value=" + value +
+              '}';
+    }
 }

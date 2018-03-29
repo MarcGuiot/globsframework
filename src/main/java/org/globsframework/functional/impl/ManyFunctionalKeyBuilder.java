@@ -5,7 +5,7 @@ import org.globsframework.functional.FunctionalKeyBuilder;
 import org.globsframework.functional.MutableFunctionalKey;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.model.Glob;
+import org.globsframework.model.FieldValues;
 
 import java.util.Arrays;
 
@@ -13,7 +13,7 @@ public class ManyFunctionalKeyBuilder implements FunctionalKeyBuilder {
     Field fields[];
     int index[];
 
-    public ManyFunctionalKeyBuilder(Field[] fields) {
+    ManyFunctionalKeyBuilder(Field[] fields) {
         this.fields = fields;
         index = new int[fields[0].getGlobType().getFieldCount()];
         Arrays.fill(index, -1);
@@ -32,15 +32,21 @@ public class ManyFunctionalKeyBuilder implements FunctionalKeyBuilder {
         return fields;
     }
 
-    public FunctionalKey create(Glob glob) {
-        return new ManyFieldsMutableKey(this, glob);
+    public FunctionalKey create(FieldValues fieldValues) {
+        return new ManyFieldsMutableKey(this, fieldValues);
     }
 
-    public FunctionalKey proxy(Glob glob) {
-        return create(glob);
+    public FunctionalKey proxy(FieldValues fieldValues) {
+        return create(fieldValues);
     }
 
     public MutableFunctionalKey create() {
         return new ManyFieldsMutableKey(this);
+    }
+
+    public String toString() {
+        return "ManyFunctionalKeyBuilder{" +
+                "fields=" + Arrays.toString(fields) +
+                '}';
     }
 }

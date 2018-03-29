@@ -52,7 +52,7 @@ public class ThreeFieldKey extends AbstractKey {
     }
 
     public <T extends Functor> T apply(T functor) throws Exception {
-        Field[] fields = type.getFields();
+        Field[] fields = type.getKeyFields();
         functor.process(fields[0], value1);
         functor.process(fields[1], value2);
         functor.process(fields[2], value3);
@@ -61,7 +61,7 @@ public class ThreeFieldKey extends AbstractKey {
 
     public <T extends Functor> T safeApply(T functor) {
         try {
-            Field[] fields = type.getFields();
+            Field[] fields = type.getKeyFields();
             functor.process(fields[0], value1);
             functor.process(fields[1], value2);
             functor.process(fields[2], value3);
@@ -135,7 +135,7 @@ public class ThreeFieldKey extends AbstractKey {
     }
 
     public String toString() {
-        Field[] fields = type.getFields();
+        Field[] fields = type.getKeyFields();
         return getGlobType().getName() + "[" +
                fields[0].getName() + "=" + value1 + ", " +
                fields[1].getName() + "=" + value2 + ", " +

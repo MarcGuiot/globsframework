@@ -249,7 +249,7 @@ public class KeyBuilder implements FieldSetter<KeyBuilder> {
         return new TwoFieldKey(field1, value1, field2, value2);
     }
 
-    public static Key create(Field field1, Object value1, Field field2, Object value2, Field field3, Object value3) {
+    public static Key newKey(Field field1, Object value1, Field field2, Object value2, Field field3, Object value3) {
         return new ThreeFieldKey(field1, value1, field2, value2, field3, value3);
     }
 
@@ -269,7 +269,6 @@ public class KeyBuilder implements FieldSetter<KeyBuilder> {
     public KeyBuilder set(DateField field, Date value) throws ItemNotFound {
         return set((Field)field, ((Object)value));
     }
-
 
     public KeyBuilder set(IntegerField field, Integer value) throws ItemNotFound {
         return set((Field)field, ((Object)value));

@@ -20,13 +20,10 @@ import static org.globsframework.utils.Utils.sort;
 
 public class GlobPrinter {
 
-    public static String toString(final FieldValues glob) {
+    public static String toString(final FieldValues fieldValues) {
         final StringBuilder builder = new StringBuilder();
-        glob.safeApply(new FieldValues.Functor() {
-            public void process(Field field, Object value) throws Exception {
-                builder.append(field.getName()).append("=").append(glob.getValue(field)).append(('\n'));
-            }
-        });
+        fieldValues.safeApply((field, value) ->
+              builder.append(field.getName()).append("=").append(fieldValues.getValue(field)).append(('\n')));
         return builder.toString();
     }
 
@@ -43,6 +40,12 @@ public class GlobPrinter {
     }
 
     public static GlobPrinter init(GlobList list) {
+        return new GlobPrinter(list);
+    }
+
+    public static GlobPrinter init(Glob glob) {
+        GlobList list = new GlobList();
+        list.add(glob);
         return new GlobPrinter(list);
     }
 

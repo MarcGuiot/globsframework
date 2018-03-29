@@ -20,9 +20,12 @@ import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Modifier;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.IntStream;
 
 public class GlobTypeLoaderImpl implements GlobTypeLoader {
     private DefaultGlobType type;
@@ -198,9 +201,18 @@ public class GlobTypeLoaderImpl implements GlobTypeLoader {
     private void processFields(Class<?> targetClass) {
         int fieldIndex = 0;
         int keyCount = 0;
+        Set<Integer> allocatedKeys = new HashSet<>();
         for (java.lang.reflect.Field classField : targetClass.getFields()) {
+            int keyIndex = -1;
             if (isGlobField(classField)) {
                 boolean isKeyField = classField.isAnnotationPresent(KeyField.class);
+                if (isKeyField) {
+                    keyIndex = classField.getAnnotation(KeyField.class).value();
+                    if (keyIndex == -1) {
+                        keyIndex = keyCount;
+                    }
+                    allocatedKeys.add(keyIndex);
+                }
                 String fieldName;
                 boolean hasFieldNameAnnotation = classField.isAnnotationPresent(FieldNameAnnotation.class);
                 if (hasFieldNameAnnotation) {
@@ -209,7 +221,7 @@ public class GlobTypeLoaderImpl implements GlobTypeLoader {
                 else {
                     fieldName = getFieldName(classField);
                 }
-                AbstractField field = create(fieldName, classField.getType(), isKeyField, keyCount, fieldIndex, classField);
+                AbstractField field = create(fieldName, classField.getType(), isKeyField, keyIndex, fieldIndex, classField);
                 if (!hasFieldNameAnnotation) {
                     field.addAnnotation(FieldNameAnnotationType.create(fieldName));
                 }
@@ -222,9 +234,12 @@ public class GlobTypeLoaderImpl implements GlobTypeLoader {
                 processFieldAnnotations(classField, field);
             }
         }
+        if (!IntStream.range(0, keyCount).allMatch(allocatedKeys::contains)) {
+            throw new RuntimeException("Bug unconstitency between key count " + keyCount + " and key id " + allocatedKeys);
+        }
     }
 
-    AbstractField create(String name, Class<?> fieldClass, boolean isKeyField, int keyIndex, int index, java.lang.reflect.Field field) {
+    private AbstractField create(String name, Class<?> fieldClass, boolean isKeyField, int keyIndex, int index, java.lang.reflect.Field field) {
         if (StringField.class.isAssignableFrom(fieldClass)) {
             DefaultString defaultString = field.getAnnotation(DefaultString.class);
             String defaultValue = defaultString != null ? defaultString.value() : null;
@@ -288,12 +303,12 @@ public class GlobTypeLoaderImpl implements GlobTypeLoader {
     private void processIndex(Class<?> targetClass) {
         for (java.lang.reflect.Field classField : targetClass.getFields()) {
             if (isUniqueIndexField(classField)) {
-                Index index = fieldFactory.addUniqueIndex(classField.getName());
+                SingleFieldIndex index = fieldFactory.addUniqueIndex(classField.getName());
                 setClassField(classField, index, targetClass);
                 type.addIndex(index);
             }
             if (isNotUniqueIndexField(classField)) {
-                Index index = fieldFactory.addNotUniqueIndex(classField.getName());
+                SingleFieldIndex index = fieldFactory.addNotUniqueIndex(classField.getName());
                 setClassField(classField, index, targetClass);
                 type.addIndex(index);
             }
@@ -383,19 +398,31 @@ public class GlobTypeLoaderImpl implements GlobTypeLoader {
     }
 
     public void defineUniqueIndex(UniqueIndex index, Field field) {
+        if (index == null) {
+            throw new RuntimeException("index is null. Was load call before?");
+        }
         ((DefaultUniqueIndex)type.getIndex(index.getName())).setField(field);
     }
 
     public void defineNonUniqueIndex(NotUniqueIndex index, Field field) {
+        if (index == null) {
+            throw new RuntimeException("index is null. Was load call before?");
+        }
         ((DefaultNotUniqueIndex)type.getIndex(index.getName())).setField(field);
     }
 
     public void defineMultiFieldUniqueIndex(MultiFieldUniqueIndex index, Field... fields) {
-        ((DefaultMultiFieldUniqueIndex)type.getMultiFieldIndex(index.getName())).setField(fields);
+        if (index == null) {
+            throw new RuntimeException("index is null. Was load call before?");
+        }
+        ((DefaultMultiFieldUniqueIndex)type.getIndex(index.getName())).setField(fields);
     }
 
     public void defineMultiFieldNotUniqueIndex(MultiFieldNotUniqueIndex index, Field... fields) {
-        ((DefaultMultiFieldNotUniqueIndex)type.getMultiFieldIndex(index.getName())).setField(fields);
+        if (index == null) {
+            throw new RuntimeException("index is null. Was load call before?");
+        }
+        ((DefaultMultiFieldNotUniqueIndex)type.getIndex(index.getName())).setField(fields);
     }
 
     public <T> GlobTypeLoader register(Class<T> klass, T t) {

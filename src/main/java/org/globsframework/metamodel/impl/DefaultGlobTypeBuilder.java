@@ -8,7 +8,6 @@ import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.fields.impl.*;
 import org.globsframework.metamodel.utils.MutableAnnotations;
 import org.globsframework.model.Glob;
-import org.globsframework.utils.exceptions.InvalidState;
 
 import java.util.Collection;
 
@@ -17,7 +16,6 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
     private DefaultFieldFactory factory;
     private int index;
     private int keyIndex;
-    private Boolean isKeyFromGlob;
 
     public static GlobTypeBuilder init(String typeName) {
         return new DefaultGlobTypeBuilder(typeName);
@@ -54,11 +52,8 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
         MutableAnnotations annotations = adaptAnnotation(globAnnotations);
         String defaultValue = annotations.getValueOrDefault(DefaultStringAnnotationType.UNIQUE_KEY,
                                                             DefaultStringAnnotationType.DEFAULT_VALUE, null);
-        boolean isKey = annotations.hasAnnotation(KeyAnnotationType.UNIQUE_KEY);
-        DefaultStringField field = factory.addString(fieldName, isKey, keyIndex, index, defaultValue);
-        if (isKey) {
-            updateKeyIndex(annotations);
-        }
+        Glob key = annotations.findAnnotation(KeyAnnotationType.UNIQUE_KEY);
+        DefaultStringField field = factory.addString(fieldName, key != null, getKeyId(key), index, defaultValue);
         field.addAnnotations(annotations.streamAnnotations());
         index++;
         return field;
@@ -71,16 +66,12 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
 
     private DefaultStringArrayField createStringArrayField(String fieldName, Collection<Glob> globAnnotations) {
         MutableAnnotations annotations = adaptAnnotation(globAnnotations);
-        boolean isKey = annotations.hasAnnotation(KeyAnnotationType.UNIQUE_KEY);
-        DefaultStringArrayField field = factory.addStringArray(fieldName, isKey, keyIndex, index);
-        if (isKey) {
-            updateKeyIndex(annotations);
-        }
+        Glob key = annotations.findAnnotation(KeyAnnotationType.UNIQUE_KEY);
+        DefaultStringArrayField field = factory.addStringArray(fieldName, key != null, getKeyId(key), index);
         field.addAnnotations(annotations.streamAnnotations());
         index++;
         return field;
     }
-
 
     public GlobTypeBuilder addIntegerField(String fieldName, Collection<Glob> globAnnotations) {
         createIntegerField(fieldName, globAnnotations);
@@ -91,23 +82,30 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
         DefaultIntegerField field;
         MutableAnnotations annotations = adaptAnnotation(globAnnotations);
         Integer defaultValue = annotations.getValueOrDefault(DefaultIntegerAnnotationType.UNIQUE_KEY, DefaultIntegerAnnotationType.DEFAULT_VALUE, null);
-        boolean isKey = annotations.hasAnnotation(KeyAnnotationType.UNIQUE_KEY);
-        field = factory.addInteger(fieldName, isKey, keyIndex, index, defaultValue);
-        if (isKey) {
-            updateKeyIndex(annotations);
-        }
+        Glob key = annotations.findAnnotation(KeyAnnotationType.UNIQUE_KEY);
+        field = factory.addInteger(fieldName, key != null, getKeyId(key), index, defaultValue);
         field.addAnnotations(annotations.streamAnnotations());
         index++;
         return field;
     }
 
+    private int getKeyId(Glob key) {
+        if (key != null) {
+            Integer index = key.get(KeyAnnotationType.INDEX);
+            if (index == -1) {
+                return keyIndex++;
+            } else {
+                return index;
+            }
+        } else {
+            return 0;
+        }
+    }
+
     private DefaultIntegerArrayField createIntegerArrayField(String fieldName, Collection<Glob> globAnnotations) {
         MutableAnnotations annotations = adaptAnnotation(globAnnotations);
-        boolean isKey = annotations.hasAnnotation(KeyAnnotationType.UNIQUE_KEY);
-        DefaultIntegerArrayField field = factory.addIntegerArray(fieldName, isKey, keyIndex, index);
-        if (isKey) {
-            updateKeyIndex(annotations);
-        }
+        Glob key = annotations.findAnnotation(KeyAnnotationType.UNIQUE_KEY);
+        DefaultIntegerArrayField field = factory.addIntegerArray(fieldName, key != null, getKeyId(key), index);
         field.addAnnotations(annotations.streamAnnotations());
         index++;
         return field;
@@ -156,11 +154,8 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
     private DefaultDoubleField createDoubleField(String fieldName, Collection<Glob> globAnnotations) {
         MutableAnnotations annotations = adaptAnnotation(globAnnotations);
         Double defaultValue = annotations.getValueOrDefault(DefaultDoubleAnnotationType.UNIQUE_KEY, DefaultDoubleAnnotationType.DEFAULT_VALUE, null);
-        boolean isKey = annotations.hasAnnotation(KeyAnnotationType.UNIQUE_KEY);
-        DefaultDoubleField doubleField = factory.addDouble(fieldName, isKey, keyIndex, index, defaultValue);
-        if (isKey) {
-            updateKeyIndex(annotations);
-        }
+        Glob key = annotations.findAnnotation(KeyAnnotationType.UNIQUE_KEY);
+        DefaultDoubleField doubleField = factory.addDouble(fieldName, key != null, getKeyId(key), index, defaultValue);
         doubleField.addAnnotations(annotations.streamAnnotations());
         index++;
         return doubleField;
@@ -168,11 +163,8 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
 
     private DefaultDoubleArrayField createDoubleArrayField(String fieldName, Collection<Glob> globAnnotations) {
         MutableAnnotations annotations = adaptAnnotation(globAnnotations);
-        boolean isKey = annotations.hasAnnotation(KeyAnnotationType.UNIQUE_KEY);
-        DefaultDoubleArrayField field = factory.addDoubleArray(fieldName, isKey, keyIndex, index);
-        if (isKey) {
-            updateKeyIndex(annotations);
-        }
+        Glob key = annotations.findAnnotation(KeyAnnotationType.UNIQUE_KEY);
+        DefaultDoubleArrayField field = factory.addDoubleArray(fieldName, key != null, getKeyId(key), index);
         field.addAnnotations(annotations.streamAnnotations());
         index++;
         return field;
@@ -180,11 +172,8 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
 
     private DefaultBigDecimalField createBigDecimalField(String fieldName, Collection<Glob> globAnnotations) {
         MutableAnnotations annotations = adaptAnnotation(globAnnotations);
-        boolean isKey = annotations.hasAnnotation(KeyAnnotationType.UNIQUE_KEY);
-        DefaultBigDecimalField bigDecimalField = factory.addBigDecimal(fieldName, isKey, keyIndex, index);
-        if (isKey) {
-            updateKeyIndex(annotations);
-        }
+        Glob key = annotations.findAnnotation(KeyAnnotationType.UNIQUE_KEY);
+        DefaultBigDecimalField bigDecimalField = factory.addBigDecimal(fieldName, key != null, getKeyId(key), index);
         bigDecimalField.addAnnotations(annotations.streamAnnotations());
         index++;
         return bigDecimalField;
@@ -192,11 +181,8 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
 
     private DefaultBigDecimalArrayField createBigDecimalArrayField(String fieldName, Collection<Glob> globAnnotations) {
         MutableAnnotations annotations = adaptAnnotation(globAnnotations);
-        boolean isKey = annotations.hasAnnotation(KeyAnnotationType.UNIQUE_KEY);
-        DefaultBigDecimalArrayField bigDecimalArrayField = factory.addBigDecimalArray(fieldName, isKey, keyIndex, index);
-        if (isKey) {
-            updateKeyIndex(annotations);
-        }
+        Glob key = annotations.findAnnotation(KeyAnnotationType.UNIQUE_KEY);
+        DefaultBigDecimalArrayField bigDecimalArrayField = factory.addBigDecimalArray(fieldName, key != null, getKeyId(key), index);
         bigDecimalArrayField.addAnnotations(annotations.streamAnnotations());
         index++;
         return bigDecimalArrayField;
@@ -204,11 +190,8 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
 
     private DefaultDateTimeField createDateTimeField(String fieldName, Collection<Glob> globAnnotations) {
         MutableAnnotations annotations = adaptAnnotation(globAnnotations);
-        boolean isKey = annotations.hasAnnotation(KeyAnnotationType.UNIQUE_KEY);
-        DefaultDateTimeField dateTimeField = factory.addDateTime(fieldName, isKey, keyIndex, index);
-        if (isKey) {
-            updateKeyIndex(annotations);
-        }
+        Glob key = annotations.findAnnotation(KeyAnnotationType.UNIQUE_KEY);
+        DefaultDateTimeField dateTimeField = factory.addDateTime(fieldName, key != null, getKeyId(key), index);
         dateTimeField.addAnnotations(annotations.streamAnnotations());
         index++;
         return dateTimeField;
@@ -216,11 +199,8 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
 
     private DefaultDateField createDateField(String fieldName, Collection<Glob> globAnnotations) {
         MutableAnnotations annotations = adaptAnnotation(globAnnotations);
-        boolean isKey = annotations.hasAnnotation(KeyAnnotationType.UNIQUE_KEY);
-        DefaultDateField dateField = factory.addDate(fieldName, isKey, keyIndex, index);
-        if (isKey) {
-            updateKeyIndex(annotations);
-        }
+        Glob key = annotations.findAnnotation(KeyAnnotationType.UNIQUE_KEY);
+        DefaultDateField dateField = factory.addDate(fieldName, key != null, getKeyId(key), index);
         dateField.addAnnotations(annotations.streamAnnotations());
         index++;
         return dateField;
@@ -235,12 +215,9 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
     private DefaultLongField createLongField(String fieldName, Collection<Glob> globAnnotations) {
         MutableAnnotations annotations = adaptAnnotation(globAnnotations);
         Long defaultValue = annotations.getValueOrDefault(DefaultLongAnnotationType.UNIQUE_KEY,
-                                                          DefaultLongAnnotationType.DEFAULT_VALUE, null);
-        boolean isKey = annotations.hasAnnotation(KeyAnnotationType.UNIQUE_KEY);
-        DefaultLongField longField = factory.addLong(fieldName, isKey, keyIndex, index, defaultValue);
-        if (isKey) {
-            updateKeyIndex(annotations);
-        }
+              DefaultLongAnnotationType.DEFAULT_VALUE, null);
+        Glob key = annotations.findAnnotation(KeyAnnotationType.UNIQUE_KEY);
+        DefaultLongField longField = factory.addLong(fieldName, key != null, getKeyId(key), index, defaultValue);
         longField.addAnnotations(annotations.streamAnnotations());
         index++;
         return longField;
@@ -248,11 +225,8 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
 
     private DefaultLongArrayField createLongArrayField(String fieldName, Collection<Glob> globAnnotations) {
         MutableAnnotations annotations = adaptAnnotation(globAnnotations);
-        boolean isKey = annotations.hasAnnotation(KeyAnnotationType.UNIQUE_KEY);
-        DefaultLongArrayField field = factory.addLongArray(fieldName, isKey, keyIndex, index);
-        if (isKey) {
-            updateKeyIndex(annotations);
-        }
+        Glob key = annotations.findAnnotation(KeyAnnotationType.UNIQUE_KEY);
+        DefaultLongArrayField field = factory.addLongArray(fieldName, key != null, getKeyId(key), index);
         field.addAnnotations(annotations.streamAnnotations());
         index++;
         return field;
@@ -265,11 +239,8 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
 
     private DefaultBooleanArrayField createBooleanArrayField(String fieldName, Collection<Glob> globAnnotations) {
         MutableAnnotations annotations = adaptAnnotation(globAnnotations);
-        boolean isKey = annotations.hasAnnotation(KeyAnnotationType.UNIQUE_KEY);
-        DefaultBooleanArrayField field = factory.addBooleanArray(fieldName, isKey, keyIndex, index);
-        if (isKey) {
-            updateKeyIndex(annotations);
-        }
+        Glob key = annotations.findAnnotation(KeyAnnotationType.UNIQUE_KEY);
+        DefaultBooleanArrayField field = factory.addBooleanArray(fieldName, key != null, getKeyId(key), index);
         field.addAnnotations(annotations.streamAnnotations());
         index++;
         return field;
@@ -283,45 +254,42 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
     private DefaultBooleanField createBooleanField(String fieldName, Collection<Glob> globAnnotations) {
         MutableAnnotations annotations = adaptAnnotation(globAnnotations);
         Boolean defaultValue = annotations.getValueOrDefault(DefaultBooleanAnnotationType.UNIQUE_KEY,
-                                                             DefaultBooleanAnnotationType.DEFAULT_VALUE, null);
-        boolean isKey = annotations.hasAnnotation(KeyAnnotationType.UNIQUE_KEY);
-        DefaultBooleanField field = factory.addBoolean(fieldName, isKey, keyIndex, index, defaultValue);
-        if (isKey) {
-            updateKeyIndex(annotations);
-        }
+              DefaultBooleanAnnotationType.DEFAULT_VALUE, null);
+        Glob key = annotations.findAnnotation(KeyAnnotationType.UNIQUE_KEY);
+        DefaultBooleanField field = factory.addBoolean(fieldName, key != null, getKeyId(key), index, defaultValue);
         field.addAnnotations(annotations.streamAnnotations());
         index++;
         return field;
     }
 
-    private void updateKeyIndex(MutableAnnotations annotations) {
-        Glob annotation = annotations.getAnnotation(KeyAnnotationType.UNIQUE_KEY);
-        int tmpKeyIndex = -1;
-        if (annotation != null) {
-            tmpKeyIndex = annotation.get(KeyAnnotationType.INDEX, -1);
-        }
-        if (tmpKeyIndex == -1) {
-            if (isKeyFromGlob == null) {
-                isKeyFromGlob = false;
-            }
-            else if (isKeyFromGlob) {
-                throw new InvalidState("Forbidden to mix keyIndex from annotation and default");
-            }
-            annotations.addAnnotation(KeyAnnotationType.create(keyIndex));
-            keyIndex++;
-        }
-        else {
-            keyIndex = tmpKeyIndex;
-            if (isKeyFromGlob == null) {
-                isKeyFromGlob = true;
-            }
-            else {
-                if (!isKeyFromGlob) {
-                    throw new InvalidState("Forbidden to mix keyIndex from annotation and default");
-                }
-            }
-        }
-    }
+//    private void updateKeyIndex(MutableAnnotations annotations) {
+//        Glob annotation = annotations.getAnnotation(KeyAnnotationType.UNIQUE_KEY);
+//        int tmpKeyIndex = -1;
+//        if (annotation != null) {
+//            tmpKeyIndex = annotation.get(KeyAnnotationType.INDEX, -1);
+//        }
+//        if (tmpKeyIndex == -1) {
+//            if (isKeyFromGlob == null) {
+//                isKeyFromGlob = false;
+//            }
+//            else if (isKeyFromGlob) {
+//                throw new InvalidState("Forbidden to mix keyIndex from annotation and default");
+//            }
+//            annotations.addAnnotation(KeyAnnotationType.create(keyIndex));
+//            keyIndex++;
+//        }
+//        else {
+//            keyIndex = tmpKeyIndex;
+//            if (isKeyFromGlob == null) {
+//                isKeyFromGlob = true;
+//            }
+//            else {
+//                if (!isKeyFromGlob) {
+//                    throw new InvalidState("Forbidden to mix keyIndex from annotation and default");
+//                }
+//            }
+//        }
+//    }
 
     public GlobTypeBuilder addBlobField(String fieldName, Collection<Glob> globAnnotations) {
         createBlobField(fieldName, globAnnotations);

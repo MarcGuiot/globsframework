@@ -2,6 +2,7 @@ package org.globsframework.model;
 
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.fields.*;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
 import java.math.BigDecimal;
@@ -27,6 +28,14 @@ public interface FieldValues extends FieldValuesAccessor {
     T safeAccept(T functor);
 
     FieldValue[] toArray();
+
+    default String getNotNull(StringField field) {
+        String value = get(field);
+        if (value == null) {
+            throw new NullPointerException(field.getFullName() + " should not be null " + GlobPrinter.toString(this));
+        }
+        return value;
+    }
 
     interface Functor {
         void process(Field field, Object value) throws Exception;

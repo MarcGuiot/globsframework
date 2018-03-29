@@ -2,12 +2,12 @@ package org.globsframework.metamodel.index;
 
 import org.globsframework.metamodel.Field;
 
-import java.io.Serializable;
+import java.util.stream.Stream;
 
-public interface Index extends Serializable {
+public interface Index {
     String getName();
 
-    Field getField();
+    <T extends IndexVisitor> T visit(T indexVisitor);
 
-    void visitIndex(IndexVisitor visitor);
+    Stream<Field> fields();
 }

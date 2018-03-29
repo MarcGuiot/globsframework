@@ -2,7 +2,7 @@ package org.globsframework.model.repository;
 
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.metamodel.index.Index;
+import org.globsframework.metamodel.index.SingleFieldIndex;
 import org.globsframework.metamodel.index.MultiFieldIndex;
 import org.globsframework.metamodel.links.Link;
 import org.globsframework.model.*;
@@ -57,7 +57,7 @@ public class GlobRepositoryDecorator implements GlobRepository {
         return getRepository().getSorted(type, comparator, matcher);
     }
 
-    public GlobList findByIndex(Index index, Object value) {
+    public GlobList findByIndex(SingleFieldIndex index, Object value) {
         return getRepository().findByIndex(index, value);
     }
 

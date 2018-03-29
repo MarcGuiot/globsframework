@@ -2,7 +2,7 @@ package org.globsframework.model.repository;
 
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.metamodel.index.Index;
+import org.globsframework.metamodel.index.SingleFieldIndex;
 import org.globsframework.metamodel.index.MultiFieldIndex;
 import org.globsframework.metamodel.links.Link;
 import org.globsframework.model.*;
@@ -139,7 +139,7 @@ public class ReplicationGlobRepository extends DefaultGlobRepository implements 
         }
     }
 
-    public GlobList findByIndex(Index index, Object value) {
+    public GlobList findByIndex(SingleFieldIndex index, Object value) {
         if (managedTypes.contains(index.getField().getGlobType())) {
             return super.findByIndex(index, value);
         }

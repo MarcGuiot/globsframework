@@ -8,6 +8,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
+import java.util.Optional;
+
 
 public interface FieldValuesAccessor {
 
@@ -58,6 +60,10 @@ public interface FieldValuesAccessor {
     default String get(StringField field, String valueIfNull) throws ItemNotFound {
         String value = get(field);
         return value != null ? value : valueIfNull;
+    }
+
+    default Optional<String> getOpt(StringField field) {
+        return Optional.ofNullable(get(field));
     }
 
 }

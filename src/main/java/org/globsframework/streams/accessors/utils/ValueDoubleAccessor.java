@@ -5,6 +5,9 @@ import org.globsframework.streams.accessors.DoubleAccessor;
 public class ValueDoubleAccessor implements DoubleAccessor {
     private Double value;
 
+    public ValueDoubleAccessor() {
+    }
+
     public ValueDoubleAccessor(Double value) {
         this.value = value;
     }

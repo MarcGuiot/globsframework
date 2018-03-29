@@ -32,7 +32,7 @@ public class DefaultFunctionalKeyBuilderFactory implements FunctionalKeyBuilderF
         if (keys.size() == 1) {
             return new OneFunctionalKeyBuilder(keys.get(0));
         }
-        keys.sort(Comparator.comparingInt(Field::getIndex));
+        keys.sort(Comparator.comparingInt(Field::getIndex)); // ??supprimer le 11/12/2017
         if (keys.size() == 2) {
             return new TwoFunctionalKeyBuilder(keys.get(0), keys.get(1));
         }

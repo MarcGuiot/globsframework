@@ -17,7 +17,7 @@ import java.util.Map;
 public class IndexManager {
     private Map<Field, IndexTables> fieldToIndex = new HashMap<Field, IndexTables>();
     private Map<GlobType, IndexTables> globTypeToIndex = new HashMap<GlobType, IndexTables>();
-    private Map<Index, IndexedTable> indexAssociationTableMap = new HashMap<Index, IndexedTable>();
+    private Map<SingleFieldIndex, IndexedTable> indexAssociationTableMap = new HashMap<SingleFieldIndex, IndexedTable>();
     private Map<MultiFieldIndex, GlobRepository.MultiFieldIndexed> multiFieldIndexTableMap = new HashMap<MultiFieldIndex, GlobRepository.MultiFieldIndexed>();
 
     private IndexSource indexSource;
@@ -45,18 +45,15 @@ public class IndexManager {
         IndexTables tables = globTypeToIndex.get(type);
         if (tables == null) {
             Collection<Index> indices = type.getIndices();
-            if (!indices.isEmpty()) {
-                for (Index index : indices) {
-                    //register in globTypeToIndex
+            indices.forEach(index -> index.visit(new DispatchIndexVisitor() {
+                public void visitSingleIndex(SingleFieldIndex index) {
                     getAssociatedTable(index);
                 }
-            }
-            Collection<MultiFieldIndex> multiFieldIndices = type.getMultiFieldIndices();
-            if (!multiFieldIndices.isEmpty()) {
-                for (MultiFieldIndex index : multiFieldIndices) {
+
+                public void visitMultiFieldIndex(MultiFieldIndex index) {
                     getAssociatedTable(index);
                 }
-            }
+            }));
             IndexTables createdTables = globTypeToIndex.get(type);
             if (createdTables == null) {
                 globTypeToIndex.put(type, new NULLIndexTables());
@@ -66,11 +63,11 @@ public class IndexManager {
         return tables;
     }
 
-    public IndexedTable getAssociatedTable(Index index) {
+    public IndexedTable getAssociatedTable(SingleFieldIndex index) {
         IndexedTable indexedTable = indexAssociationTableMap.get(index);
         if (indexedTable == null) {
             UpdateIndexVisitor updateIndexVisitor = new UpdateIndexVisitor();
-            index.visitIndex(updateIndexVisitor);
+            index.visit(updateIndexVisitor);
             indexedTable = updateIndexVisitor.getTable();
         }
         return indexedTable;
@@ -81,8 +78,7 @@ public class IndexManager {
         IndexTables tables = fieldToIndex.get(field);
         if (tables == null) {
             tables = new OneIndexTable(indexedTable);
-        }
-        else {
+        } else {
             tables = tables.add(indexedTable);
         }
         fieldToIndex.put(field, tables);
@@ -92,27 +88,26 @@ public class IndexManager {
         IndexTables globTypeTables = globTypeToIndex.get(type);
         if (globTypeTables == null) {
             globTypeTables = new OneIndexTable(indexedTable);
-        }
-        else {
+        } else {
             globTypeTables = globTypeTables.add(indexedTable);
         }
         globTypeToIndex.put(type, globTypeTables);
     }
 
-    private class UpdateIndexVisitor implements IndexVisitor {
+    private class UpdateIndexVisitor extends AbstractIndexVisitor {
         private IndexedTable indexedTable;
 
-        public void visiteUniqueIndex(UniqueIndex index) {
+        public void visitUniqueIndex(UniqueIndex index) {
             indexedTable = new DefaultUniqueIndex(index.getField());
             addIndex(index);
         }
 
-        public void visiteNotUniqueIndex(NotUniqueIndex index) {
+        public void visitNotUniqueIndex(NotUniqueIndex index) {
             indexedTable = new DefaultNotUniqueIndex(index.getField());
             addIndex(index);
         }
 
-        private void addIndex(Index index) {
+        private void addIndex(SingleFieldIndex index) {
             Field field = index.getField();
             updateFieldToIndexTables(field, indexedTable);
             updateGlobTypeToIndexTables(field.getGlobType(), indexedTable);
@@ -127,14 +122,14 @@ public class IndexManager {
         }
     }
 
-    class UpdateMultiIndexVisitor implements MultiFieldIndexVisitor {
+    class UpdateMultiIndexVisitor extends AbstractIndexVisitor {
         private MultiFieldIndexBuilder multiFieldIndexed;
         private MiddleLevelIndex rootIndex;
 
         public void visitNotUnique(MultiFieldNotUniqueIndex index) {
             Field[] fields = index.getFields();
             multiFieldIndexed =
-                new DefaultMultiMiddleFieldIndexBuilder(fields[0]);
+                  new DefaultMultiMiddleFieldIndexBuilder(fields[0]);
             rootIndex = new MiddleLevelIndex(multiFieldIndexed);
             MultiFieldIndexBuilder sub = multiFieldIndexed;
             for (int i = 1; i < fields.length; i++) {
@@ -143,8 +138,7 @@ public class IndexManager {
                     DefaultMultiMiddleFieldIndexBuilder tmp = new DefaultMultiMiddleFieldIndexBuilder(field);
                     sub.setChild(tmp);
                     sub = tmp;
-                }
-                else {
+                } else {
                     MultiFieldIndexBuilder tmp = new NotUniqueLeafFieldIndexBuilder(field);
                     sub.setChild(tmp);
                     sub = tmp;
@@ -158,7 +152,7 @@ public class IndexManager {
         public void visitUnique(MultiFieldUniqueIndex index) {
             Field[] fields = index.getFields();
             multiFieldIndexed =
-                new DefaultMultiMiddleFieldIndexBuilder(fields[0]);
+                  new DefaultMultiMiddleFieldIndexBuilder(fields[0]);
             rootIndex = new MiddleLevelIndex(multiFieldIndexed);
             updateFieldToIndexTables(fields[0], rootIndex);
             MultiFieldIndexBuilder sub = multiFieldIndexed;
@@ -168,8 +162,7 @@ public class IndexManager {
                     DefaultMultiMiddleFieldIndexBuilder tmp = new DefaultMultiMiddleFieldIndexBuilder(field);
                     sub.setChild(tmp);
                     sub = tmp;
-                }
-                else {
+                } else {
                     MultiFieldIndexBuilder tmp = new UniqueLeafFieldIndexBuilder(field);
                     sub.setChild(tmp);
                     sub = tmp;

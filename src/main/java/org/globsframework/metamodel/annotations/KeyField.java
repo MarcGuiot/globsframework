@@ -11,4 +11,6 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @NoType
 public @interface KeyField {
 
+    int value() default -1;
+
 }

@@ -5,9 +5,9 @@ import org.globsframework.functional.FunctionalKeyBuilder;
 import org.globsframework.functional.MutableFunctionalKey;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.model.Glob;
+import org.globsframework.model.FieldValues;
 
-public class TwoFunctionalKeyBuilder implements FunctionalKeyBuilder {
+class TwoFunctionalKeyBuilder implements FunctionalKeyBuilder {
     final Field field1;
     final Field field2;
     private Field fields[];
@@ -26,17 +26,24 @@ public class TwoFunctionalKeyBuilder implements FunctionalKeyBuilder {
         return fields;
     }
 
-    public FunctionalKey create(Glob glob) {
+    public FunctionalKey create(FieldValues fieldValues) {
         return new TwoFieldsMutableKey(this,
-                                       glob.getValue(field1),
-                                       glob.getValue(field2));
+                fieldValues.getValue(field1),
+                fieldValues.getValue(field2));
     }
 
-    public FunctionalKey proxy(Glob glob) {
-        return create(glob);
+    public FunctionalKey proxy(FieldValues fieldValues) {
+        return create(fieldValues);
     }
 
     public MutableFunctionalKey create() {
         return new TwoFieldsMutableKey(this);
+    }
+
+    public String toString() {
+        return "TwoFunctionalKeyBuilder{" +
+                "field1=" + field1 +
+                ", field2=" + field2 +
+                '}';
     }
 }

@@ -5,6 +5,9 @@ import org.globsframework.streams.accessors.BooleanAccessor;
 public class ValueBooleanAccessor implements BooleanAccessor {
     private Boolean value;
 
+    public ValueBooleanAccessor() {
+    }
+
     public ValueBooleanAccessor(Boolean value) {
         this.value = value;
     }

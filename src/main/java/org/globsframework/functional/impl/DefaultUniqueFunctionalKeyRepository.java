@@ -4,25 +4,35 @@ import org.globsframework.functional.FunctionalKey;
 import org.globsframework.functional.FunctionalKeyBuilder;
 import org.globsframework.functional.MutableFunctionalKeyRepository;
 import org.globsframework.metamodel.GlobType;
+import org.globsframework.metamodel.impl.DefaultGlobTypeBuilder;
 import org.globsframework.model.Glob;
 import org.globsframework.model.format.GlobPrinter;
+import org.globsframework.model.impl.DefaultGlob;
+import org.globsframework.utils.collections.ConcurrentMapOfMaps;
+import org.globsframework.utils.collections.MapOfMaps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 
 public class DefaultUniqueFunctionalKeyRepository implements MutableFunctionalKeyRepository {
     static private final Logger LOGGER = LoggerFactory.getLogger(DefaultUniqueFunctionalKeyRepository.class);
+    private static final Glob NULL = new DefaultGlob(DefaultGlobTypeBuilder.init("NULL GLOB").get());
     private final DataAccess dataAccess;
     private final Map<FunctionalKey, Glob> index = new ConcurrentHashMap<>();
-    private final Map<GlobType, Map<FunctionalKeyBuilder, Boolean>> indexed = new ConcurrentHashMap<>();
+    private final MapOfMaps<GlobType, FunctionalKeyBuilder, Boolean> indexed = new ConcurrentMapOfMaps<>();
 
     public DefaultUniqueFunctionalKeyRepository(DataAccess dataAccess) {
         this.dataAccess = dataAccess;
+    }
+
+    public DefaultUniqueFunctionalKeyRepository(DataAccess dataAccess, Collection<FunctionalKeyBuilder> functionalKeyBuilders) {
+        this.dataAccess = dataAccess;
+        for (FunctionalKeyBuilder functionalKeyBuilder : functionalKeyBuilders) {
+            indexed.put(functionalKeyBuilder.getType(), functionalKeyBuilder, Boolean.FALSE);
+        }
     }
 
     public Collection<Glob> get(FunctionalKey functionalKey) {
@@ -35,7 +45,33 @@ public class DefaultUniqueFunctionalKeyRepository implements MutableFunctionalKe
         }
     }
 
+    public Glob computeUniqueIfAbsent(FunctionalKey functionalKey, Function<FunctionalKey, Glob> mappingFunction) {
+        Glob glob = index.get(functionalKey);
+        if (glob != null) {
+            if (glob == NULL) {
+                return null;
+            }
+            return glob;
+        }
+        glob = mappingFunction.apply(functionalKey);
+        if (glob == null) {
+            index.put(functionalKey, NULL);
+        }
+        else {
+            index.put(functionalKey, glob);
+        }
+        return glob;
+    }
+
     public Glob getUnique(FunctionalKey functionalKey) {
+        Glob glob = index.get(functionalKey);
+        if (glob != null) {
+            if (glob == NULL) {
+                return null;
+            }
+           return glob;
+        }
+        updateIndex(functionalKey);
         return index.get(functionalKey);
     }
 
@@ -43,21 +79,16 @@ public class DefaultUniqueFunctionalKeyRepository implements MutableFunctionalKe
         FunctionalKeyBuilder builder = functionalKey.getBuilder();
         GlobType type = builder.getType();
         Map<FunctionalKeyBuilder, Boolean> functionalKeyBuilders = indexed.get(type);
-        if (functionalKeyBuilders != null && functionalKeyBuilders.containsKey(builder)) {
+        if (functionalKeyBuilders != null && functionalKeyBuilders.get(builder) == Boolean.TRUE) {
             return Collections.emptyList();
         }
         synchronized (type) {
-            functionalKeyBuilders = indexed.get(type);
-            if (functionalKeyBuilders == null) {
-                functionalKeyBuilders = new ConcurrentHashMap<>();
-                indexed.put(type, functionalKeyBuilders);
-            }
             dataAccess.all(type)
                 .forEach(g -> {
                     FunctionalKey key = builder.create(g);
                     update(g, key);
                 });
-            functionalKeyBuilders.put(builder, Boolean.TRUE);
+            indexed.put(type, builder, Boolean.TRUE);
             Glob o = index.get(functionalKey);
             return o != null ? Collections.singletonList(o) : Collections.emptyList();
         }
@@ -78,4 +109,9 @@ public class DefaultUniqueFunctionalKeyRepository implements MutableFunctionalKe
             }
         }
     }
+
+    public void setNull(FunctionalKey oppositeKey) {
+        index.put(oppositeKey, NULL);
+    }
+
 }

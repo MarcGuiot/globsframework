@@ -2,7 +2,7 @@ package org.globsframework.model;
 
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.metamodel.index.Index;
+import org.globsframework.metamodel.index.SingleFieldIndex;
 import org.globsframework.metamodel.index.MultiFieldIndex;
 import org.globsframework.metamodel.links.Link;
 import org.globsframework.model.utils.GlobFunctor;
@@ -43,7 +43,7 @@ public interface ReadOnlyGlobRepository {
 
     Glob[] getSorted(GlobType type, Comparator<Glob> comparator, GlobMatcher matcher);
 
-    GlobList findByIndex(Index index, Object value);
+    GlobList findByIndex(SingleFieldIndex index, Object value);
 
     MultiFieldIndexed findByIndex(MultiFieldIndex uniqueIndex, Field field, Object value);
 

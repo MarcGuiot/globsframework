@@ -23,7 +23,7 @@ public class DefaultSerializationInput implements SerializedInput {
     private InputStream inputStream;
     public int count;
 
-    DefaultSerializationInput(InputStream inputStream) {
+    public DefaultSerializationInput(InputStream inputStream) {
         this.inputStream = inputStream;
     }
 

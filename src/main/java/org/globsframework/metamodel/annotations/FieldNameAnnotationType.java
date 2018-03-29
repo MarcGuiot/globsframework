@@ -1,5 +1,6 @@
 package org.globsframework.metamodel.annotations;
 
+import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.metamodel.impl.DefaultFieldFactory;
@@ -33,5 +34,13 @@ public class FieldNameAnnotationType {
         UNIQUE_KEY = KeyBuilder.newEmptyKey(TYPE);
         NAME.addAnnotation(create("name"));
         globType.register(GlobCreateFromAnnotation.class, annotation -> create((FieldNameAnnotation)annotation));
+    }
+
+    public static String getName(Field field) {
+        Glob annotation = field.findAnnotation(UNIQUE_KEY);
+        if (annotation != null) {
+            return annotation.get(NAME);
+        }
+        return field.getName();
     }
 }

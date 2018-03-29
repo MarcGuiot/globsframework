@@ -11,7 +11,7 @@ import org.globsframework.model.FieldValues;
 import java.util.Arrays;
 
 public class ManyFieldsMutableKey extends AbstractFieldValue<MutableFunctionalKey>
-        implements MutableFunctionalKey, FunctionalKey {
+    implements MutableFunctionalKey, FunctionalKey {
     private final ManyFunctionalKeyBuilder functionalKeyBuilder;
     private Object values[];
 
@@ -109,5 +109,12 @@ public class ManyFieldsMutableKey extends AbstractFieldValue<MutableFunctionalKe
         int result = functionalKeyBuilder.hashCode();
         result = 31 * result + Arrays.hashCode(values);
         return result;
+    }
+
+    public String toString() {
+        return "ManyFieldsMutableKey{" +
+              "functionalKeyBuilder=" + functionalKeyBuilder +
+              ", values=" + Arrays.toString(values) +
+              '}';
     }
 }

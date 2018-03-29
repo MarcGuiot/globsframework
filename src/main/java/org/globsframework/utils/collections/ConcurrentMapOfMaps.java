@@ -5,6 +5,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class ConcurrentMapOfMaps<KEY1, KEY2, VALUE> extends MapOfMaps<KEY1, KEY2, VALUE> {
 
+    public ConcurrentMapOfMaps() {
+    }
+
     public ConcurrentMapOfMaps(ConcurrentMapOfMaps<KEY1, KEY2, VALUE> maps) {
         super(maps);
     }

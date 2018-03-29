@@ -5,6 +5,7 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.index.Index;
 import org.globsframework.metamodel.index.MultiFieldIndex;
+import org.globsframework.metamodel.index.SingleFieldIndex;
 import org.globsframework.metamodel.links.FieldMappingFunction;
 import org.globsframework.metamodel.links.Link;
 import org.globsframework.model.*;
@@ -247,12 +248,15 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
         if (pendingDelete != null) {
             Field[] fields = type.getFields();
             for (Field field : fields) {
-                pendingDelete.setValue(field, glob.getValue(field));
+                if (!field.isKeyField()) {
+                    pendingDelete.setValue(field, glob.getValue(field));
+                }
             }
             glob = pendingDelete;
         }
 
         checkKeyDoesNotExist(key);
+
         IndexTables indexTables = indexManager.getAssociatedTable(type);
         globs.put(key.getGlobType(), key, glob);
 
@@ -372,7 +376,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
         return true;
     }
 
-    public GlobList findByIndex(Index index, Object value) {
+    public GlobList findByIndex(SingleFieldIndex index, Object value) {
         return indexManager.getAssociatedTable(index).findByIndex(value);
     }
 

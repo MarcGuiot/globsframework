@@ -18,8 +18,7 @@ import java.time.ZonedDateTime;
 public abstract class AbstractMutableGlob extends AbstractGlob implements MutableGlob  {
 
     public MutableGlob set(IntegerField field, Integer value) {
-        setObject(field, value);
-        return this;
+        return setObject(field, value);
     }
 
     public MutableGlob set(IntegerField field, int value) throws ItemNotFound {
@@ -31,8 +30,7 @@ public abstract class AbstractMutableGlob extends AbstractGlob implements Mutabl
     }
 
     public MutableGlob set(DoubleField field, Double value) {
-        setObject(field, value);
-        return this;
+        return setObject(field, value);
     }
 
     public MutableGlob set(DoubleField field, double value) throws ItemNotFound {

@@ -27,11 +27,7 @@ public class MapOfMaps<KEY1, KEY2, VALUE> {
     }
 
     public VALUE put(KEY1 key1, KEY2 key2, VALUE value) {
-        Map<KEY2, VALUE> map = maps.get(key1);
-        if (map == null) {
-            map = createInnerMap();
-            maps.put(key1, map);
-        }
+        Map<KEY2, VALUE> map = maps.computeIfAbsent(key1, (KEY1 key11) -> createInnerMap());
         return map.put(key2, value);
     }
 
@@ -44,15 +40,7 @@ public class MapOfMaps<KEY1, KEY2, VALUE> {
     }
 
     public Map<KEY2, VALUE> get(KEY1 key1) {
-        Map<KEY2, VALUE> map = maps.get(key1);
-        if (map != null) {
-            return map;
-        }
-        else {
-            Map<KEY2, VALUE> valueHashMap = createInnerMap();
-            maps.put(key1, valueHashMap);
-            return valueHashMap;
-        }
+        return maps.getOrDefault(key1, Collections.emptyMap());
     }
 
     public Iterator<VALUE> iterator() {
@@ -85,6 +73,21 @@ public class MapOfMaps<KEY1, KEY2, VALUE> {
             result.addAll(map.values());
         }
         return result;
+    }
+
+    public MapOfMaps<KEY1, KEY2, VALUE> merge(MapOfMaps<KEY1, KEY2, VALUE> maps) {
+        Set<Map.Entry<KEY1, Map<KEY2, VALUE>>> entries = maps.maps.entrySet();
+        for (Map.Entry<KEY1, Map<KEY2, VALUE>> entry : entries) {
+            this.maps.compute(entry.getKey(), (key1, key2VALUEMap) -> {
+                if (key2VALUEMap == null) {
+                    return entry.getValue();
+                } else {
+                    key2VALUEMap.putAll(entry.getValue());
+                    return key2VALUEMap;
+                }
+            });
+        }
+        return this;
     }
 
     public int size() {
@@ -129,12 +132,10 @@ public class MapOfMaps<KEY1, KEY2, VALUE> {
     }
 
     public void putAll(KEY1 key, Map<KEY2, VALUE> values) {
-        if (maps.containsKey(key)) {
-            maps.get(key).putAll(values);
-        }
-        else {
-            maps.put(key, createInnerMap(values));
-        }
+        maps.merge(key, values, (oldValues, newValues) -> {
+            oldValues.putAll(newValues);
+            return oldValues;
+        });
     }
 
     private class MapOfMapIterator implements Iterator<VALUE> {

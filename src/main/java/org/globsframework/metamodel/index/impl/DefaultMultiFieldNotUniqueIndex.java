@@ -1,6 +1,7 @@
 package org.globsframework.metamodel.index.impl;
 
-import org.globsframework.metamodel.index.MultiFieldIndexVisitor;
+import org.globsframework.metamodel.Field;
+import org.globsframework.metamodel.index.IndexVisitor;
 import org.globsframework.metamodel.index.MultiFieldNotUniqueIndex;
 
 public class DefaultMultiFieldNotUniqueIndex extends AbstractMultiFieldIndex implements MultiFieldNotUniqueIndex {
@@ -9,7 +10,12 @@ public class DefaultMultiFieldNotUniqueIndex extends AbstractMultiFieldIndex imp
         super(name);
     }
 
-    public void visit(MultiFieldIndexVisitor multiFieldIndexVisitor) {
-        multiFieldIndexVisitor.visitNotUnique(this);
+    public DefaultMultiFieldNotUniqueIndex(String name, Field[] fields) {
+        super(name, fields);
+    }
+
+    public <T extends IndexVisitor> T visit(T indexVisitor) {
+        indexVisitor.visitNotUnique(this);
+        return indexVisitor;
     }
 }

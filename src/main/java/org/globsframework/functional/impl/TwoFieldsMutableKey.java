@@ -101,4 +101,12 @@ public class TwoFieldsMutableKey extends AbstractFieldValue<MutableFunctionalKey
         result = 31 * result + (value2 != null ? value2.hashCode() : 0);
         return result;
     }
+
+    public String toString() {
+        return "TwoFieldsMutableKey{" +
+              "functionalKeyBuilder=" + functionalKeyBuilder +
+              ", value1=" + value1 +
+              ", value2=" + value2 +
+              '}';
+    }
 }

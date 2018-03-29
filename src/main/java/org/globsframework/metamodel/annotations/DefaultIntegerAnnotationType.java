@@ -19,7 +19,7 @@ public class DefaultIntegerAnnotationType {
     }
 
     static {
-        GlobTypeLoaderFactory.create(DefaultIntegerAnnotationType.class)
+        GlobTypeLoaderFactory.create(DefaultIntegerAnnotationType.class, "defaultIntegerValue")
             .register(GlobCreateFromAnnotation.class, annotation -> create((DefaultInteger)annotation))
             .load();
     }
