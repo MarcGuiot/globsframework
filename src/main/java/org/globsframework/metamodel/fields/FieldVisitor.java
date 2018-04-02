@@ -33,7 +33,9 @@ public interface FieldVisitor {
 
     void visitBlob(BlobField field) throws Exception;
 
-//    void visitGlob(GlobField field) throws Exception;
+    void visitGlob(GlobField field) throws Exception;
+
+    void visitGlobArray(GlobArrayField field) throws Exception;
 
 
     class AbstractFieldVisitor implements FieldVisitor {
@@ -95,6 +97,14 @@ public interface FieldVisitor {
         }
 
         public void visitBlob(BlobField field) throws Exception {
+            notManaged(field);
+        }
+
+        public void visitGlob(GlobField field) throws Exception {
+            notManaged(field);
+        }
+
+        public void visitGlobArray(GlobArrayField field) throws Exception {
             notManaged(field);
         }
 

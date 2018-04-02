@@ -4,6 +4,7 @@ import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.model.FieldSetter;
 import org.globsframework.model.FieldValues;
+import org.globsframework.model.Glob;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
 import java.math.BigDecimal;
@@ -84,6 +85,14 @@ public abstract class AbstractFieldValue<T extends FieldSetter> implements Field
 
     public T set(DateTimeField field, ZonedDateTime value) throws ItemNotFound {
         return doSet(field, value);
+    }
+
+    public T set(GlobField field, Glob value) throws ItemNotFound {
+        return doSet(field, value);
+    }
+
+    public T set(GlobArrayField field, Glob[] values) throws ItemNotFound {
+        return doSet(field, values);
     }
 
     public T setValue(Field field, Object o) throws ItemNotFound {
@@ -202,5 +211,13 @@ public abstract class AbstractFieldValue<T extends FieldSetter> implements Field
 
     public ZonedDateTime get(DateTimeField field) throws ItemNotFound {
         return (ZonedDateTime) doGet(field);
+    }
+
+    public Glob get(GlobField field) throws ItemNotFound {
+        return (Glob) doGet(field);
+    }
+
+    public Glob[] get(GlobArrayField field) throws ItemNotFound {
+        return (Glob[]) doGet(field);
     }
 }

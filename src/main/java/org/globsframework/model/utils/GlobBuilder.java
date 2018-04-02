@@ -140,6 +140,16 @@ public class GlobBuilder implements FieldValues.Functor, FieldSetter<GlobBuilder
         return this;
     }
 
+    public GlobBuilder set(GlobField field, Glob value) throws ItemNotFound {
+        mutableGlob.set(field, value);
+        return this;
+    }
+
+    public GlobBuilder set(GlobArrayField field, Glob[] values) throws ItemNotFound {
+        mutableGlob.set(field, values);
+        return this;
+    }
+
     public GlobBuilder setValue(Field field, Object value) throws ItemNotFound {
         mutableGlob.setValue(field, value);
         return this;
@@ -255,6 +265,14 @@ public class GlobBuilder implements FieldValues.Functor, FieldSetter<GlobBuilder
     }
 
     public byte[] get(BlobField field) throws ItemNotFound {
+        return mutableGlob.get(field);
+    }
+
+    public Glob get(GlobField field) throws ItemNotFound {
+        return mutableGlob.get(field);
+    }
+
+    public Glob[] get(GlobArrayField field) throws ItemNotFound {
         return mutableGlob.get(field);
     }
 

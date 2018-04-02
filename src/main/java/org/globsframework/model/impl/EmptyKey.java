@@ -5,6 +5,7 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.model.FieldValue;
 import org.globsframework.model.FieldValues;
+import org.globsframework.model.Glob;
 import org.globsframework.model.Key;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
@@ -108,6 +109,14 @@ public class EmptyKey implements Key {
     }
 
     public byte[] get(BlobField field) throws ItemNotFound {
+        throw new RuntimeException("Empty key '" + field.getFullName() + " not available");
+    }
+
+    public Glob get(GlobField field) throws ItemNotFound {
+        throw new RuntimeException("Empty key '" + field.getFullName() + " not available");
+    }
+
+    public Glob[] get(GlobArrayField field) throws ItemNotFound {
         throw new RuntimeException("Empty key '" + field.getFullName() + " not available");
     }
 

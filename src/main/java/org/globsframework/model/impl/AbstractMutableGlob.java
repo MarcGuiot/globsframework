@@ -1,16 +1,13 @@
 package org.globsframework.model.impl;
 
 import org.globsframework.metamodel.Field;
-import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.links.Link;
 import org.globsframework.model.*;
-import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.FieldCheck;
 import org.globsframework.utils.exceptions.InvalidParameter;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
@@ -93,6 +90,14 @@ public abstract class AbstractMutableGlob extends AbstractGlob implements Mutabl
         return setObject(field, value);
     }
 
+    public MutableGlob set(GlobField field, Glob value) throws ItemNotFound {
+        return setObject(field, value);
+    }
+
+    public MutableGlob set(GlobArrayField field, Glob[] values) throws ItemNotFound {
+        return setObject(field, values);
+    }
+
     public MutableGlob setValues(FieldValues values) {
         values.safeApply(this::setObject);
         return this;
@@ -106,7 +111,7 @@ public abstract class AbstractMutableGlob extends AbstractGlob implements Mutabl
         KeyBuilder keyBuilder = KeyBuilder.init(link.getTargetType());
         link.apply((sourceField, targetField) -> {
             Object value = getValue(sourceField);
-            keyBuilder.set(targetField, value);
+            keyBuilder.setObject(targetField, value);
 
         });
         return keyBuilder.get();

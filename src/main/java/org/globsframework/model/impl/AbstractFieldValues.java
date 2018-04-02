@@ -3,6 +3,7 @@ package org.globsframework.model.impl;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.model.FieldValues;
+import org.globsframework.model.Glob;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
 import java.math.BigDecimal;
@@ -107,6 +108,14 @@ public abstract class AbstractFieldValues implements FieldValues {
 
     public BigDecimal[] get(BigDecimalArrayField field) throws ItemNotFound {
         return (BigDecimal[])doCheckedGet(field);
+    }
+
+    public Glob get(GlobField field) throws ItemNotFound {
+        return (Glob)doCheckedGet(field);
+    }
+
+    public Glob[] get(GlobArrayField field) throws ItemNotFound {
+        return (Glob[])doCheckedGet(field);
     }
 
     protected abstract Object doCheckedGet(Field field);

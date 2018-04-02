@@ -219,6 +219,26 @@ class DefaultGlobFactory implements GlobFactory {
                 }
             };
         }
+
+        @Override
+        public void visitGlob(GlobField field) {
+            getAccessor = new AbstractGlobGetGlobAccessor() {
+                @Override
+                public Glob get(Glob glob) {
+                    return glob.get(field);
+                }
+            };
+        }
+
+        @Override
+        public void visitGlobArray(GlobArrayField field) {
+            getAccessor = new AbstractGlobGetGlobArrayAccessor() {
+                @Override
+                public Glob[] get(Glob glob) {
+                    return glob.get(field);
+                }
+            };
+        }
     }
 
     private static class SetAccessorValueVisitor implements FieldVisitor {
@@ -374,6 +394,28 @@ class DefaultGlobFactory implements GlobFactory {
                     glob.set(field, value);
                 }
             };
+        }
+
+        @Override
+        public void visitGlob(GlobField field) {
+            setAccessor = new AbstractGlobSetGlobAccessor() {
+                @Override
+                public void set(MutableGlob glob, Glob value) {
+                    glob.set(field, value);
+                }
+            };
+
+        }
+
+        @Override
+        public void visitGlobArray(GlobArrayField field) {
+            setAccessor = new AbstractGlobSetGlobArrayAccessor() {
+                @Override
+                public void set(MutableGlob glob, Glob[] value) {
+                    glob.set(field, value);
+                }
+            };
+
         }
     }
 }

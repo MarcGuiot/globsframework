@@ -262,35 +262,6 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
         return field;
     }
 
-//    private void updateKeyIndex(MutableAnnotations annotations) {
-//        Glob annotation = annotations.getAnnotation(KeyAnnotationType.UNIQUE_KEY);
-//        int tmpKeyIndex = -1;
-//        if (annotation != null) {
-//            tmpKeyIndex = annotation.get(KeyAnnotationType.INDEX, -1);
-//        }
-//        if (tmpKeyIndex == -1) {
-//            if (isKeyFromGlob == null) {
-//                isKeyFromGlob = false;
-//            }
-//            else if (isKeyFromGlob) {
-//                throw new InvalidState("Forbidden to mix keyIndex from annotation and default");
-//            }
-//            annotations.addAnnotation(KeyAnnotationType.create(keyIndex));
-//            keyIndex++;
-//        }
-//        else {
-//            keyIndex = tmpKeyIndex;
-//            if (isKeyFromGlob == null) {
-//                isKeyFromGlob = true;
-//            }
-//            else {
-//                if (!isKeyFromGlob) {
-//                    throw new InvalidState("Forbidden to mix keyIndex from annotation and default");
-//                }
-//            }
-//        }
-//    }
-
     public GlobTypeBuilder addBlobField(String fieldName, Collection<Glob> globAnnotations) {
         createBlobField(fieldName, globAnnotations);
         return this;
@@ -299,6 +270,24 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
     private DefaultBlobField createBlobField(String fieldName, Collection<Glob> globAnnotations) {
         Annotations annotations = adaptAnnotation(globAnnotations);
         DefaultBlobField field = factory.addBlob(fieldName, index);
+        field.addAnnotations(annotations.streamAnnotations());
+        index++;
+        return field;
+    }
+
+    private GlobField createGlobField(String fieldName, GlobType globType, Collection<Glob> globAnnotations) {
+        MutableAnnotations annotations = adaptAnnotation(globAnnotations);
+        Glob key = annotations.findAnnotation(KeyAnnotationType.UNIQUE_KEY);
+        DefaultGlobField field = factory.addGlob(fieldName, globType, key != null, getKeyId(key), index);
+        field.addAnnotations(annotations.streamAnnotations());
+        index++;
+        return field;
+    }
+
+    private GlobArrayField createGlobArrayField(String fieldName, GlobType globType, Collection<Glob> globAnnotations) {
+        MutableAnnotations annotations = adaptAnnotation(globAnnotations);
+        Glob key = annotations.findAnnotation(KeyAnnotationType.UNIQUE_KEY);
+        DefaultGlobArrayField field = factory.addGlobArray(fieldName, globType, key != null, getKeyId(key), index);
         field.addAnnotations(annotations.streamAnnotations());
         index++;
         return field;
@@ -362,6 +351,14 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
 
     public BlobField declareBlobField(String fieldName, Collection<Glob> annotations) {
         return createBlobField(fieldName, annotations);
+    }
+
+    public GlobField declareGlobField(String fieldName, GlobType globType, Collection<Glob> annotations) {
+        return createGlobField(fieldName, globType, annotations);
+    }
+
+    public GlobArrayField declareGlobArrayField(String fieldName, GlobType globType, Collection<Glob> annotations) {
+        return createGlobArrayField(fieldName, globType, annotations);
     }
 
     public <T> void register(Class<T> klass, T t) {

@@ -1,6 +1,7 @@
 package org.globsframework.metamodel.fields;
 
 import org.globsframework.metamodel.Field;
+import org.globsframework.model.Glob;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -36,6 +37,10 @@ public interface FieldValueVisitor {
     void visitDateTime(DateTimeField field, ZonedDateTime value) throws Exception;
 
     void visitBlob(BlobField field, byte[] value) throws Exception;
+
+    void visitGlob(GlobField field, Glob value) throws Exception;
+
+    void visitGlobArray(GlobArrayField field, Glob[] value) throws Exception;
 
 
     class AbstractFieldValueVisitor implements FieldValueVisitor {
@@ -81,6 +86,14 @@ public interface FieldValueVisitor {
         }
 
         public void visitBlob(BlobField field, byte[] value) throws Exception {
+            notManaged(field, value);
+        }
+
+        public void visitGlob(GlobField field, Glob value) throws Exception {
+            notManaged(field, value);
+        }
+
+        public void visitGlobArray(GlobArrayField field, Glob[] value) throws Exception {
             notManaged(field, value);
         }
 

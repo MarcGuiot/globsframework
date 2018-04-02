@@ -45,5 +45,9 @@ public interface FieldSetter<T extends FieldSetter> {
 
     T set(DateTimeField field, ZonedDateTime value) throws ItemNotFound;
 
+    T set(GlobField field, Glob value) throws ItemNotFound;
+
+    T set(GlobArrayField field, Glob[] values) throws ItemNotFound;
+
     T setValue(Field field, Object value) throws ItemNotFound;
 }

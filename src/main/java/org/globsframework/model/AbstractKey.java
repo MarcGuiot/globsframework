@@ -165,4 +165,14 @@ public abstract class AbstractKey extends AbstractFieldValues implements Mutable
         setValue(field, value);
         return this;
     }
+
+    public MutableKey set(GlobField field, Glob value) throws ItemNotFound {
+        setValue(field, value);
+        return this;
+    }
+
+    public MutableKey set(GlobArrayField field, Glob[] values) throws ItemNotFound {
+        setValue(field, values);
+        return this;
+    }
 }

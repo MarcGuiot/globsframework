@@ -1,6 +1,8 @@
 package org.globsframework.metamodel.fields;
 
 import org.globsframework.metamodel.Field;
+import org.globsframework.metamodel.fields.impl.DefaultGlobArrayField;
+import org.globsframework.metamodel.fields.impl.DefaultGlobField;
 
 public interface FieldVisitorWithTwoContext<C,D> {
     void visitInteger(IntegerField field, C ctx1, D ctx2) throws Exception;
@@ -32,6 +34,10 @@ public interface FieldVisitorWithTwoContext<C,D> {
     void visitDateTime(DateTimeField field, C ctx1, D ctx2) throws Exception;
 
     void visitBlob(BlobField field, C ctx1, D ctx2) throws Exception;
+
+    void visitGlob(GlobField field, C ctx1, D ctx2)throws Exception;
+
+    void visitGlobArray(GlobArrayField field, C ctx1, D ctx2) throws Exception;
 
     class AbstractFieldVisitor<C, D> implements FieldVisitorWithTwoContext<C, D> {
 
@@ -92,6 +98,14 @@ public interface FieldVisitorWithTwoContext<C,D> {
         }
 
         public void visitBlob(BlobField field, C ctx1, D ctx2) throws Exception {
+            notManaged(field, ctx1, ctx2);
+        }
+
+        public void visitGlob(GlobField field, C ctx1, D ctx2) throws Exception {
+            notManaged(field, ctx1, ctx2);
+        }
+
+        public void visitGlobArray(GlobArrayField field, C ctx1, D ctx2) throws Exception {
             notManaged(field, ctx1, ctx2);
         }
 

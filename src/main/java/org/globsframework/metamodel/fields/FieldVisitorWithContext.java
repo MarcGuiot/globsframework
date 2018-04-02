@@ -36,6 +36,10 @@ public interface FieldVisitorWithContext<C> {
 
     void visitBlob(BlobField field, C context) throws Exception;
 
+    void visitGlob(GlobField field, C context) throws Exception;
+
+    void visitGlobArray(GlobArrayField field, C context) throws Exception;
+
     class AbstractFieldVisitor<C> implements FieldVisitorWithContext<C> {
 
         public void visitInteger(IntegerField field, C context) throws Exception {
@@ -95,6 +99,14 @@ public interface FieldVisitorWithContext<C> {
         }
 
         public void visitBlob(BlobField field, C context) throws Exception {
+            notManaged(field, context);
+        }
+
+        public void visitGlob(GlobField field, C context) throws Exception {
+            notManaged(field, context);
+        }
+
+        public void visitGlobArray(GlobArrayField field, C context) throws Exception {
             notManaged(field, context);
         }
 

@@ -107,4 +107,12 @@ public class FieldValuesWithPreviousBuilder {
     public void set(BooleanArrayField field, boolean[] newValue, boolean[] previousValue) {
         setValue(field, newValue, previousValue);
     }
+
+    public void set(GlobField field, Glob newValue, Glob previousValue) {
+        setValue(field, newValue, previousValue);
+    }
+
+    public void set(GlobArrayField field, Glob[] newValue, Glob[] previousValue) {
+        setValue(field, newValue, previousValue);
+    }
 }

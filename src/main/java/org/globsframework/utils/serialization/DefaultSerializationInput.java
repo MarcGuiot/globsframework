@@ -30,7 +30,7 @@ public class DefaultSerializationInput implements SerializedInput {
     public Glob readGlob(GlobModel model) {
         GlobType globType = model.getType(readUtf8String());
         GlobBuilder builder = GlobBuilder.init(globType);
-        InputStreamFieldVisitor fieldVisitorInput = new InputStreamFieldVisitor(builder);
+        InputStreamFieldVisitor fieldVisitorInput = new InputStreamFieldVisitor(model, builder);
         for (Field field : globType.getFields()) {
             field.safeVisit(fieldVisitorInput);
         }
@@ -42,21 +42,21 @@ public class DefaultSerializationInput implements SerializedInput {
         int count = readInteger();
         for (int i = 0; i < count; i++) {
             GlobType type = model.getType(readUtf8String());
-            Key key = KeyBuilder.createFromValues(type, readValues(type));
+            Key key = KeyBuilder.createFromValues(type, readValues(model, type));
             int state = readByte();
             switch (state) {
                 case 1: {
-                    FieldValues values = readValues(type);
+                    FieldValues values = readValues(model, type);
                     changeSet.processCreation(key, values);
                     break;
                 }
                 case 2: {
-                    FieldValuesWithPrevious values = readValuesWithPrevious(type);
+                    FieldValuesWithPrevious values = readValuesWithPrevious(model, type);
                     changeSet.processUpdate(key, values);
                     break;
                 }
                 case 3: {
-                    FieldValues values = readValues(type);
+                    FieldValues values = readValues(model, type);
                     changeSet.processDeletion(key, values);
                     break;
                 }
@@ -67,9 +67,9 @@ public class DefaultSerializationInput implements SerializedInput {
         return changeSet;
     }
 
-    private FieldValues readValues(GlobType type) {
+    private FieldValues readValues(GlobModel model, GlobType type) {
         FieldValuesBuilder builder = FieldValuesBuilder.init();
-        FieldReader fieldReader = new FieldReader(this, builder);
+        FieldReader fieldReader = new FieldReader(this, model, builder);
         int fieldCount = readNotNullInt();
         while (fieldCount != 0) {
             int fieldIndex = readNotNullInt();
@@ -80,9 +80,9 @@ public class DefaultSerializationInput implements SerializedInput {
         return builder.get();
     }
 
-    private FieldValuesWithPrevious readValuesWithPrevious(GlobType type) {
+    private FieldValuesWithPrevious readValuesWithPrevious(GlobModel model, GlobType type) {
         FieldValuesWithPreviousBuilder builder = FieldValuesWithPreviousBuilder.init(type);
-        FieldWithPreviousReader fieldReader = new FieldWithPreviousReader(this, builder);
+        FieldWithPreviousReader fieldReader = new FieldWithPreviousReader(this, model, builder);
         int fieldCount = readNotNullInt();
         while (fieldCount != 0) {
             int fieldIndex = readNotNullInt();
@@ -171,18 +171,19 @@ public class DefaultSerializationInput implements SerializedInput {
     public void close() {
         try {
             inputStream.close();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException("fail to close", e);
         }
     }
 
     static class FieldReader implements FieldVisitor {
         private DefaultSerializationInput input;
+        private GlobModel model;
         private FieldValuesBuilder builder;
 
-        public FieldReader(DefaultSerializationInput input, FieldValuesBuilder builder) {
+        public FieldReader(DefaultSerializationInput input, GlobModel model, FieldValuesBuilder builder) {
             this.input = input;
+            this.model = model;
             this.builder = builder;
         }
 
@@ -230,6 +231,25 @@ public class DefaultSerializationInput implements SerializedInput {
             builder.set(field, input.readBytes());
         }
 
+        public void visitGlob(GlobField field) throws Exception {
+            if (input.readBoolean()) {
+                builder.set(field, input.readGlob(model));
+            }
+        }
+
+        public void visitGlobArray(GlobArrayField field) throws Exception {
+            int len = input.readNotNullInt();
+            if (len >= 0) {
+                Glob[] values = new Glob[len];
+                for (int i = 0; i < values.length; i++) {
+                    if (input.readBoolean()) {
+                        values[i] = input.readGlob(model);
+                    }
+                }
+                builder.set(field, values);
+            }
+        }
+
         public void visitLong(LongField field) throws Exception {
             builder.set(field, input.readLong());
         }
@@ -255,7 +275,7 @@ public class DefaultSerializationInput implements SerializedInput {
             int nano = input.readNotNullInt();
             String zone = input.readUtf8String();
             builder.set(field, ZonedDateTime.of(LocalDate.of(year, month, day),
-                                                LocalTime.of(hour, min, second, nano), ZoneId.of(zone)));
+                    LocalTime.of(hour, min, second, nano), ZoneId.of(zone)));
         }
     }
 
@@ -269,10 +289,12 @@ public class DefaultSerializationInput implements SerializedInput {
 
     static class FieldWithPreviousReader implements FieldVisitor {
         private DefaultSerializationInput input;
+        private GlobModel model;
         private FieldValuesWithPreviousBuilder builder;
 
-        public FieldWithPreviousReader(DefaultSerializationInput input, FieldValuesWithPreviousBuilder builder) {
+        public FieldWithPreviousReader(DefaultSerializationInput input, GlobModel model, FieldValuesWithPreviousBuilder builder) {
             this.input = input;
+            this.model = model;
             this.builder = builder;
         }
 
@@ -318,6 +340,39 @@ public class DefaultSerializationInput implements SerializedInput {
 
         public void visitBlob(BlobField field) throws Exception {
             builder.set(field, input.readBytes(), input.readBytes());
+        }
+
+        public void visitGlob(GlobField field) throws Exception {
+            Glob newValue = null;
+            if (input.readBoolean()) {
+                newValue = input.readGlob(model);
+            }
+            Glob previousValue = null;
+            if (input.readBoolean()) {
+                previousValue = input.readGlob(model);
+            }
+            builder.set(field, newValue, previousValue);
+        }
+
+        public void visitGlobArray(GlobArrayField field) throws Exception {
+            int lenNewValues = input.readNotNullInt();
+            Glob[] newValue = null;
+            if (lenNewValues >= 0) {
+                newValue = new Glob[lenNewValues];
+                for (int i = 0; i < newValue.length; i++) {
+                    newValue[i] = input.readBoolean() ? input.readGlob(model) : null;
+                }
+            }
+
+            int lenPreviousValues = input.readNotNullInt();
+            Glob[] previousValue = null;
+            if (lenPreviousValues >= 0) {
+                previousValue = new Glob[lenPreviousValues];
+                for (int i = 0; i < previousValue.length; i++) {
+                    previousValue[i] = input.readBoolean() ? input.readGlob(model) : null;
+                }
+            }
+            builder.set(field, newValue, previousValue);
         }
 
         public void visitLong(LongField field) throws Exception {
@@ -371,9 +426,9 @@ public class DefaultSerializationInput implements SerializedInput {
 
     public int readNotNullInt() {
         return ((read() & 0xFF)) +
-               ((read() & 0xFF) << 8) +
-               ((read() & 0xFF) << 16) +
-               ((read() & 0xFF) << 24);
+                ((read() & 0xFF) << 8) +
+                ((read() & 0xFF) << 16) +
+                ((read() & 0xFF) << 24);
     }
 
     private boolean isNull() {
@@ -399,8 +454,7 @@ public class DefaultSerializationInput implements SerializedInput {
         }
         try {
             return new String(bytes, "UTF-8");
-        }
-        catch (UnsupportedEncodingException e) {
+        } catch (UnsupportedEncodingException e) {
             throw new InvalidFormat(e);
         }
     }
@@ -419,13 +473,13 @@ public class DefaultSerializationInput implements SerializedInput {
 
     public long readNotNullLong() {
         return ((read() & 0xFFL)) +
-               ((read() & 0xFFL) << 8) +
-               ((read() & 0xFFL) << 16) +
-               ((read() & 0xFFL) << 24) +
-               ((read() & 0xFFL) << 32) +
-               ((read() & 0xFFL) << 40) +
-               ((read() & 0xFFL) << 48) +
-               ((read() & 0xFFL) << 56);
+                ((read() & 0xFFL) << 8) +
+                ((read() & 0xFFL) << 16) +
+                ((read() & 0xFFL) << 24) +
+                ((read() & 0xFFL) << 32) +
+                ((read() & 0xFFL) << 40) +
+                ((read() & 0xFFL) << 48) +
+                ((read() & 0xFFL) << 56);
     }
 
     private int read() {
@@ -436,14 +490,13 @@ public class DefaultSerializationInput implements SerializedInput {
             }
             count++;
             return i;
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new EOFIOFailure(e);
         }
     }
 
     public byte readByte() {
-        return (byte)(read());
+        return (byte) (read());
     }
 
     public byte[] readBytes() {
@@ -469,16 +522,17 @@ public class DefaultSerializationInput implements SerializedInput {
             }
             count += readed;
             return bytes;
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new UnexpectedApplicationState(e);
         }
     }
 
     private class InputStreamFieldVisitor implements FieldVisitor {
+        private GlobModel model;
         private GlobBuilder builder;
 
-        public InputStreamFieldVisitor(GlobBuilder builder) {
+        public InputStreamFieldVisitor(GlobModel model, GlobBuilder builder) {
+            this.model = model;
             this.builder = builder;
         }
 
@@ -524,6 +578,25 @@ public class DefaultSerializationInput implements SerializedInput {
 
         public void visitBlob(BlobField field) throws Exception {
             builder.set(field, readBytes());
+        }
+
+        public void visitGlob(GlobField field) throws Exception {
+            if (readBoolean()) {
+                builder.set(field, readGlob(model));
+            }
+        }
+
+        public void visitGlobArray(GlobArrayField field) throws Exception {
+            int len = readNotNullInt();
+            if (len >= 0) {
+                Glob[] values = new Glob[len];
+                for (int i = 0; i < values.length; i++) {
+                    if (readBoolean()) {
+                        values[i] = readGlob(model);
+                    }
+                }
+                builder.set(field, values);
+            }
         }
 
         public void visitLong(LongField field) throws Exception {

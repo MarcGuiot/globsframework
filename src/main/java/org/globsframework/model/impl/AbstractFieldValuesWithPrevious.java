@@ -4,6 +4,7 @@ import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.model.FieldValues;
 import org.globsframework.model.FieldValuesWithPrevious;
+import org.globsframework.model.Glob;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
 import java.math.BigDecimal;
@@ -110,6 +111,14 @@ public abstract class AbstractFieldValuesWithPrevious implements FieldValuesWith
         return (byte[])doGet(field);
     }
 
+    public Glob get(GlobField field) throws ItemNotFound {
+        return (Glob) doGet(field);
+    }
+
+    public Glob[] get(GlobArrayField field) throws ItemNotFound {
+        return (Glob[]) doGet(field);
+    }
+
     public Object getPreviousValue(Field field) throws ItemNotFound {
         return doGetPrevious(field);
     }
@@ -189,6 +198,14 @@ public abstract class AbstractFieldValuesWithPrevious implements FieldValuesWith
 
     public BigDecimal[] getPrevious(BigDecimalArrayField field) throws ItemNotFound {
         return (BigDecimal[])doGetPrevious(field);
+    }
+
+    public Glob getPrevious(GlobField field) throws ItemNotFound {
+        return (Glob) doGetPrevious(field);
+    }
+
+    public Glob[] getPrevious(GlobArrayField field) throws ItemNotFound {
+        return (Glob[]) doGetPrevious(field);
     }
 
     public <T extends FieldValueVisitor> T safeAccept(T functor) {

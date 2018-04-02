@@ -57,6 +57,10 @@ public interface FieldValuesAccessor {
 
     byte[] get(BlobField field) throws ItemNotFound;
 
+    Glob get(GlobField field) throws ItemNotFound;
+
+    Glob[] get(GlobArrayField field) throws ItemNotFound;
+
     default String get(StringField field, String valueIfNull) throws ItemNotFound {
         String value = get(field);
         return value != null ? value : valueIfNull;

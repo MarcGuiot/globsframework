@@ -15,5 +15,7 @@ public enum DataType {
     BooleanArray,
     Date,
     DateTime,
-    Bytes;
+    Bytes,
+    Glob,
+    GlobArray
 }

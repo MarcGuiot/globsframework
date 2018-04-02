@@ -156,6 +156,14 @@ public interface FieldValues extends FieldValuesAccessor {
             throw new ItemNotFound(field.getName());
         }
 
+        public Glob get(GlobField field) throws ItemNotFound {
+            throw new ItemNotFound(field.getName());
+        }
+
+        public Glob[] get(GlobArrayField field) throws ItemNotFound {
+            throw new ItemNotFound(field.getName());
+        }
+
         public FieldValue[] toArray() {
             return new FieldValue[0];
         }

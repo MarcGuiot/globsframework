@@ -87,7 +87,7 @@ public class XmlChangeSetParser {
                     Field field = globType.findField(xmlAttrName);
                     Object value = getValue(globType, xmlAttrName, xmlValue, field, false);
                     if (field.isKeyField()) {
-                        keyBuilder.set(field, value);
+                        keyBuilder.setObject(field, value);
                     }
                     else {
                         valuesBuilder.setValue(field, value);

@@ -53,7 +53,7 @@ public class DefaultDirectLink extends AbstractLink implements DirectLink {
 
     public Key getTargetKey(Glob source) {
         KeyBuilder keyBuilder = KeyBuilder.init(targetType);
-        mappings.forEach(pair -> keyBuilder.set(pair.getSecond(), source.getValue(pair.getSecond())));
+        mappings.forEach(pair -> keyBuilder.setObject(pair.getSecond(), source.getValue(pair.getSecond())));
         return keyBuilder.get();
     }
 

@@ -32,7 +32,7 @@ public class DefaultGlobType extends DefaultAnnotations implements MutableGlobTy
     private Field[] keyFields = new Field[0];
     private GlobFactory globFactory;
     private String name;
-    private Map<String, Field> fieldsByName = new TreeMap<String, Field>(); // TODO replace with hashMap?
+    private Map<String, Field> fieldsByName = new HashMap<>();
     private Map<String, Index> indices = new HashMap<>(2, 1);
     private Map<Class, Object> registered = new ConcurrentHashMap<>();
     private volatile Object properties[] = new Object[]{NULL_OBJECT, NULL_OBJECT};

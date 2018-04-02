@@ -153,6 +153,14 @@ public class FieldValuesBuilder {
         return setValue(field, date);
     }
 
+    public FieldValuesBuilder set(GlobField field, Glob value) {
+        return setValue(field, value);
+    }
+
+    public FieldValuesBuilder set(GlobArrayField field, Glob[] values) {
+        return setValue(field, values);
+    }
+
     public FieldValuesBuilder setValue(Field field, Object value) {
         values.setValue(field, value);
         return this;
@@ -162,6 +170,7 @@ public class FieldValuesBuilder {
         values.setValue(field, value);
         return this;
     }
+
 
     public FieldValuesBuilder set(FieldValue... values) {
         for (FieldValue value : values) {

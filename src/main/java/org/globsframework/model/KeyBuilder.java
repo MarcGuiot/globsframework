@@ -31,13 +31,13 @@ public class KeyBuilder implements FieldSetter<KeyBuilder> {
 
     public static KeyBuilder init(Field field, Object value) {
         KeyBuilder keyBuilder = new KeyBuilder(field.getGlobType());
-        keyBuilder.set(field, value);
+        keyBuilder.setObject(field, value);
         return keyBuilder;
     }
 
     public static KeyBuilder init(Field field, int value) {
         KeyBuilder keyBuilder = new KeyBuilder(field.getGlobType());
-        keyBuilder.set(field, value);
+        keyBuilder.setObject(field, value);
         return keyBuilder;
     }
 
@@ -62,7 +62,7 @@ public class KeyBuilder implements FieldSetter<KeyBuilder> {
         this.globType = type;
     }
 
-    public KeyBuilder set(Field field, Object value) throws InvalidParameter {
+    public KeyBuilder setObject(Field field, Object value) throws InvalidParameter {
         settable.setValue(field, value);
         return this;
     }
@@ -263,84 +263,92 @@ public class KeyBuilder implements FieldSetter<KeyBuilder> {
     }
 
     public KeyBuilder set(DoubleField field, Double value) throws ItemNotFound {
-        return set((Field)field, ((Object)value));
+        return setObject(field, value);
     }
 
     public KeyBuilder set(DateField field, Date value) throws ItemNotFound {
-        return set((Field)field, ((Object)value));
+        return setObject(field, value);
     }
 
     public KeyBuilder set(IntegerField field, Integer value) throws ItemNotFound {
-        return set((Field)field, ((Object)value));
+        return setObject(field, value);
     }
 
 
     public KeyBuilder set(StringField field, String value) throws ItemNotFound {
-        return set((Field)field, ((Object)value));
+        return setObject(field, value);
     }
 
     public KeyBuilder set(BooleanField field, Boolean value) throws ItemNotFound {
-        return set((Field)field, ((Object)value));
+        return setObject(field, value);
     }
 
     public KeyBuilder set(LongField field, Long value) throws ItemNotFound {
-        return set((Field)field, ((Object)value));
+        return setObject(field, value);
     }
 
     public KeyBuilder set(LongField field, long value) throws ItemNotFound {
-        return set((Field)field, ((Object)value));
+        return setObject(field, value);
     }
 
     public KeyBuilder set(BlobField field, byte[] value) throws ItemNotFound {
-        return set((Field)field, ((Object)value));
+        return setObject(field, value);
     }
 
     public KeyBuilder set(DoubleArrayField field, double[] value) throws ItemNotFound {
-        return set((Field)field, ((Object)value));
+        return setObject(field, value);
     }
 
     public KeyBuilder setValue(Field field, Object value) throws ItemNotFound {
-        return set((Field)field, ((Object)value));
+        return setObject(field, value);
     }
 
     public KeyBuilder set(DoubleField field, double value) throws ItemNotFound {
-        return set((Field)field, ((Object)value));
+        return setObject(field, value);
     }
 
     public KeyBuilder set(IntegerField field, int value) throws ItemNotFound {
-        return set((Field)field, ((Object)value));
+        return setObject(field, value);
     }
 
     public KeyBuilder set(IntegerArrayField field, int[] value) throws ItemNotFound {
-        return set((Field)field, ((Object)value));
+        return setObject(field, value);
     }
 
     public KeyBuilder set(StringArrayField field, String[] value) throws ItemNotFound {
-        return set((Field)field, ((Object)value));
+        return setObject(field, value);
     }
 
     public KeyBuilder set(BooleanArrayField field, boolean[] value) throws ItemNotFound {
-        return set((Field)field, ((Object)value));
+        return setObject(field, value);
     }
 
     public KeyBuilder set(LongArrayField field, long[] value) throws ItemNotFound {
-        return set((Field)field, ((Object)value));
+        return setObject(field, value);
     }
 
     public KeyBuilder set(BigDecimalField field, BigDecimal value) throws ItemNotFound {
-        return set((Field)field, ((Object)value));
+        return setObject(field, value);
     }
 
     public KeyBuilder set(BigDecimalArrayField field, BigDecimal[] value) throws ItemNotFound {
-        return set((Field)field, ((Object)value));
+        return setObject(field, value);
     }
 
     public KeyBuilder set(DateField field, LocalDate value) throws ItemNotFound {
-        return set((Field)field, ((Object)value));
+        return setObject(field, value);
     }
 
     public KeyBuilder set(DateTimeField field, ZonedDateTime value) throws ItemNotFound {
-        return set((Field)field, ((Object)value));
+        return setObject(field, value);
+    }
+
+    public KeyBuilder set(GlobField field, Glob value) throws ItemNotFound {
+        return setObject(field, value);
+    }
+
+    public KeyBuilder set(GlobArrayField field, Glob[] values) throws ItemNotFound {
+        return setObject(field, values);
     }
 
     public GlobType getGlobType() {

@@ -2,10 +2,7 @@ package org.globsframework.model.utils;
 
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.fields.*;
-import org.globsframework.model.FieldSetter;
-import org.globsframework.model.FieldValue;
-import org.globsframework.model.FieldValues;
-import org.globsframework.model.MutableFieldValues;
+import org.globsframework.model.*;
 import org.globsframework.model.impl.AbstractFieldValues;
 import org.globsframework.utils.exceptions.InvalidParameter;
 import org.globsframework.utils.exceptions.ItemNotFound;
@@ -158,6 +155,14 @@ public class DefaultFieldValues extends AbstractFieldValues implements MutableFi
 
     public FieldSetter set(DateTimeField field, ZonedDateTime value) throws ItemNotFound {
         return setValue(field, value);
+    }
+
+    public FieldSetter set(GlobField field, Glob value) throws ItemNotFound {
+        return setValue(field, value);
+    }
+
+    public FieldSetter set(GlobArrayField field, Glob[] values) throws ItemNotFound {
+        return setValue(field, values);
     }
 
     public void setValues(FieldValues values) {

@@ -70,6 +70,10 @@ public interface GlobTypeBuilder {
 
     BlobField declareBlobField(String fieldName, Collection<Glob> annotations);
 
+    GlobField declareGlobField(String fieldName, GlobType globType, Collection<Glob> annotations);
+
+    GlobArrayField declareGlobArrayField(String fieldName, GlobType globType, Collection<Glob> annotations);
+
     default GlobTypeBuilder addStringField(String fieldName, Glob... annotations) {
         return addStringField(fieldName, Arrays.asList(annotations));
     }
@@ -184,6 +188,14 @@ public interface GlobTypeBuilder {
 
     default DateTimeField declareDateTimeField(String fieldName, Glob... annotations) {
         return declareDateTimeField(fieldName, Arrays.asList(annotations));
+    }
+
+    default GlobField declareGlobField(String fieldName, GlobType globType, Glob... annotations) {
+        return declareGlobField(fieldName, globType, Arrays.asList(annotations));
+    }
+
+    default GlobArrayField declareGlobArrayField(String fieldName, GlobType globType, Glob... annotations) {
+        return declareGlobArrayField(fieldName, globType, Arrays.asList(annotations));
     }
 
 

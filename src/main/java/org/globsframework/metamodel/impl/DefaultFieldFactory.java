@@ -2,7 +2,10 @@ package org.globsframework.metamodel.impl;
 
 import org.globsframework.metamodel.Annotations;
 import org.globsframework.metamodel.Field;
+import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.DefaultFieldValueType;
+import org.globsframework.metamodel.fields.GlobArrayField;
+import org.globsframework.metamodel.fields.GlobField;
 import org.globsframework.metamodel.fields.impl.*;
 import org.globsframework.metamodel.index.MultiFieldNotUniqueIndex;
 import org.globsframework.metamodel.index.MultiFieldUniqueIndex;
@@ -114,6 +117,16 @@ public class DefaultFieldFactory {
 
     public DefaultBlobField addBlob(String name, int index) {
         return add(new DefaultBlobField(name, type, index), false);
+    }
+
+    public DefaultGlobField addGlob(String name, GlobType globType, boolean isKeyField,
+                             int keyIndex, int index) {
+        return add(new DefaultGlobField(name, type, globType, index, isKeyField, keyIndex), isKeyField);
+    }
+
+    public DefaultGlobArrayField addGlobArray(String name, GlobType globType,boolean isKeyField,
+                                       int keyIndex, int index) {
+        return add(new DefaultGlobArrayField(name, type, globType, index, isKeyField, keyIndex), isKeyField);
     }
 
     private <T extends AbstractField> T add(T field, boolean isKeyField) {
