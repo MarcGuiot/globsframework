@@ -295,6 +295,26 @@ public class GlobTypeLoaderImpl implements GlobTypeLoader {
         else if (BigDecimalArrayField.class.isAssignableFrom(fieldClass)) {
             return fieldFactory.addBigDecimalArray(name, isKeyField, keyIndex, index);
         }
+        else if (GlobField.class.isAssignableFrom(fieldClass)) {
+            Target annotation = field.getAnnotation(Target.class);
+            GlobType type;
+            try {
+                type = (GlobType) annotation.value().getField("TYPE").get(null);
+            } catch (Exception e) {
+                throw new RuntimeException("Can not find a static GlobType named TYPE in " + annotation.value().getName(), e);
+            }
+            return fieldFactory.addGlob(name, type, isKeyField, keyIndex, index);
+        }
+        else if (GlobArrayField.class.isAssignableFrom(fieldClass)) {
+            Target annotation = field.getAnnotation(Target.class);
+            GlobType type;
+            try {
+                type = (GlobType) annotation.value().getField("TYPE").get(null);
+            } catch (Exception e) {
+                throw new RuntimeException("Can not find a static GlobType named TYPE in " + annotation.value().getName(), e);
+            }
+            return fieldFactory.addGlobArray(name, type, isKeyField, keyIndex, index);
+        }
         else {
             throw new InvalidParameter("Unknown type " + fieldClass.getName());
         }

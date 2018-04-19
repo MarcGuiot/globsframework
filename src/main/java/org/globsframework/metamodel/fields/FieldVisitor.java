@@ -114,7 +114,7 @@ public interface FieldVisitor {
 
     class AbstractWithErrorVisitor extends AbstractFieldVisitor {
         public void notManaged(Field field) throws Exception {
-            throw new RuntimeException(field.getFullName() + " of type " + field.getDataType() + " not managed.");
+            throw new RuntimeException(field.getFullName() + " of type " + field.getDataType() + " not managed on " + getClass().getName());
         }
     }
 

@@ -1,7 +1,7 @@
 package org.globsframework.streams.accessors;
 
-import org.globsframework.model.GlobList;
+import org.globsframework.model.Glob;
 
 public interface GlobsAccessor extends Accessor {
-    GlobList getGlobs();
+    Glob[] getGlobs();
 }

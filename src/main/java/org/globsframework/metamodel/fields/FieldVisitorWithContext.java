@@ -116,7 +116,7 @@ public interface FieldVisitorWithContext<C> {
 
     class AbstractWithErrorVisitor<C> extends AbstractFieldVisitor<C> {
         public void notManaged(Field field, C context) throws Exception {
-            throw new RuntimeException(field.getFullName() + " of type " + field.getDataType() + " not managed.");
+            throw new RuntimeException(field.getFullName() + " of type " + field.getDataType() + " not managed on " + getClass().getName());
         }
     }
 
