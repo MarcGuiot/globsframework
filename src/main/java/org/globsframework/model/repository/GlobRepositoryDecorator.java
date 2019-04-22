@@ -41,6 +41,10 @@ public class GlobRepositoryDecorator implements GlobRepository {
         return getRepository().getAll(type, matcher);
     }
 
+    public void safeApply(GlobFunctor callback) {
+        getRepository().safeApply(callback);
+    }
+
     public void apply(GlobType type, GlobMatcher matcher, GlobFunctor callback) throws Exception {
         getRepository().apply(type, matcher, callback);
     }

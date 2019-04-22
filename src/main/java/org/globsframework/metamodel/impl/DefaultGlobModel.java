@@ -6,10 +6,13 @@ import org.globsframework.metamodel.properties.Property;
 import org.globsframework.metamodel.properties.impl.PropertiesBuilder;
 import org.globsframework.metamodel.utils.GlobTypeDependencies;
 import org.globsframework.utils.exceptions.ItemNotFound;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
 public class DefaultGlobModel implements MutableGlobModel {
+    private static Logger LOGGER = LoggerFactory.getLogger(DefaultGlobModel.class);
     private Map<String, GlobType> typesByName = new HashMap<>();
     private GlobModel innerModel;
     private GlobTypeDependencies dependencies;
@@ -35,6 +38,10 @@ public class DefaultGlobModel implements MutableGlobModel {
             return innerModel.getType(name);
         }
         throw new ItemNotFound("No object type found with name: " + name);
+    }
+
+    public boolean hasType(String name) {
+        return typesByName.containsKey(name);
     }
 
     public Collection<GlobType> getAll() {
@@ -79,7 +86,10 @@ public class DefaultGlobModel implements MutableGlobModel {
     }
 
     public void add(GlobType type) {
-        typesByName.put(type.getName(), type);
+        GlobType put = typesByName.put(type.getName(), type);
+        if (put != null && put != type) {
+            LOGGER.error(type.getName() + " already registered  : " + type.describe() +" AND " + put.describe());
+        }
     }
 
     public void complete() {

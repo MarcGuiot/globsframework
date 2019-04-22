@@ -165,6 +165,14 @@ public class DefaultFieldValues extends AbstractFieldValues implements MutableFi
         return setValue(field, values);
     }
 
+    public FieldSetter set(GlobUnionField field, Glob value) throws ItemNotFound {
+        return setValue(field, value);
+    }
+
+    public FieldSetter set(GlobArrayUnionField field, Glob[] values) throws ItemNotFound {
+        return setValue(field, values);
+    }
+
     public void setValues(FieldValues values) {
         values.safeApply(new FieldValues.Functor() {
             public void process(Field field, Object value) throws IOException {

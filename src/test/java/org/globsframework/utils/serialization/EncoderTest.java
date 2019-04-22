@@ -3,12 +3,10 @@ package org.globsframework.utils.serialization;
 import org.globsframework.metamodel.DummyModel;
 import org.globsframework.model.Glob;
 import org.globsframework.model.utils.GlobBuilder;
-import org.globsframework.utils.Dates;
 import org.globsframework.utils.TestUtils;
 import org.junit.Test;
 
 import java.util.Arrays;
-import java.util.Date;
 
 import static org.globsframework.metamodel.DummyObject.*;
 import static org.junit.Assert.*;
@@ -45,8 +43,6 @@ public class EncoderTest {
 
     @Test
     public void testEncodesGlobs() throws Exception {
-        Date date = Dates.parse("2006/11/26");
-        Date timestamp = Dates.parse("2000/12/25");
         int id = 1;
         int linkId = 33;
         String name = "aName";

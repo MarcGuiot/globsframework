@@ -5,7 +5,6 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatcher;
-import org.globsframework.utils.Log;
 import org.globsframework.utils.exceptions.*;
 
 import java.util.Collection;
@@ -21,8 +20,7 @@ public class StrictGlobRepository extends GlobRepositoryDecorator {
     public void apply(GlobType type, GlobMatcher matcher, GlobFunctor callback) throws Exception {
         try {
             super.apply(type, matcher, callback);
-        }
-        catch (Throwable e) {
+        } catch (Throwable e) {
             exceptionHandler.onException(e);
             throw new RuntimeException(e);
         }
@@ -31,8 +29,7 @@ public class StrictGlobRepository extends GlobRepositoryDecorator {
     public Glob create(GlobType type, FieldValue... values) throws MissingInfo, ItemAlreadyExists {
         try {
             return super.create(type, values);
-        }
-        catch (Throwable e) {
+        } catch (Throwable e) {
             exceptionHandler.onException(e);
             throw new RuntimeException(e);
         }
@@ -41,8 +38,7 @@ public class StrictGlobRepository extends GlobRepositoryDecorator {
     public Glob create(Key key, FieldValue... values) throws ItemAlreadyExists {
         try {
             return super.create(key, values);
-        }
-        catch (Throwable e) {
+        } catch (Throwable e) {
             exceptionHandler.onException(e);
             throw new RuntimeException(e);
         }
@@ -52,8 +48,7 @@ public class StrictGlobRepository extends GlobRepositoryDecorator {
     public void update(Key key, Field field, Object newValue) throws ItemNotFound {
         try {
             super.update(key, field, newValue);
-        }
-        catch (Throwable e) {
+        } catch (Throwable e) {
             exceptionHandler.onException(e);
             throw new RuntimeException(e);
         }
@@ -62,8 +57,7 @@ public class StrictGlobRepository extends GlobRepositoryDecorator {
     public void update(Key key, FieldValue... values) {
         try {
             super.update(key, values);
-        }
-        catch (Throwable e) {
+        } catch (Throwable e) {
             exceptionHandler.onException(e);
             throw new RuntimeException(e);
         }
@@ -72,8 +66,7 @@ public class StrictGlobRepository extends GlobRepositoryDecorator {
     public void delete(Key key) throws ItemNotFound, OperationDenied {
         try {
             super.delete(key);
-        }
-        catch (Throwable e) {
+        } catch (Throwable e) {
             exceptionHandler.onException(e);
             throw new RuntimeException(e);
         }
@@ -82,8 +75,7 @@ public class StrictGlobRepository extends GlobRepositoryDecorator {
     public void delete(Collection<Key> keys) throws ItemNotFound, OperationDenied {
         try {
             super.delete(keys);
-        }
-        catch (Throwable e) {
+        } catch (Throwable e) {
             exceptionHandler.onException(e);
             throw new RuntimeException(e);
         }
@@ -92,8 +84,7 @@ public class StrictGlobRepository extends GlobRepositoryDecorator {
     public void delete(GlobList list) throws OperationDenied {
         try {
             super.delete(list);
-        }
-        catch (Throwable e) {
+        } catch (Throwable e) {
             exceptionHandler.onException(e);
             throw new RuntimeException(e);
         }
@@ -102,8 +93,7 @@ public class StrictGlobRepository extends GlobRepositoryDecorator {
     public void deleteAll(GlobType... types) throws OperationDenied {
         try {
             super.deleteAll(types);
-        }
-        catch (Throwable e) {
+        } catch (Throwable e) {
             exceptionHandler.onException(e);
             throw new RuntimeException(e);
         }
@@ -112,9 +102,7 @@ public class StrictGlobRepository extends GlobRepositoryDecorator {
     public void apply(ChangeSet changeSet) throws InvalidParameter {
         try {
             super.apply(changeSet);
-        }
-        catch (Throwable e) {
-            Log.write("in strict glob repository", e);
+        } catch (Throwable e) {
             exceptionHandler.onException(e);
             throw new RuntimeException(e);
         }
@@ -123,8 +111,7 @@ public class StrictGlobRepository extends GlobRepositoryDecorator {
     public void completeChangeSet() {
         try {
             super.completeChangeSet();
-        }
-        catch (Throwable e) {
+        } catch (Throwable e) {
             exceptionHandler.onException(e);
             throw new RuntimeException(e);
         }
@@ -133,8 +120,7 @@ public class StrictGlobRepository extends GlobRepositoryDecorator {
     public void completeChangeSetWithoutTriggers() {
         try {
             super.completeChangeSetWithoutTriggers();
-        }
-        catch (Throwable e) {
+        } catch (Throwable e) {
             exceptionHandler.onException(e);
             throw new RuntimeException(e);
         }
@@ -143,8 +129,7 @@ public class StrictGlobRepository extends GlobRepositoryDecorator {
     public void reset(GlobList newGlobs, GlobType... changedTypes) {
         try {
             super.reset(newGlobs, changedTypes);
-        }
-        catch (Throwable e) {
+        } catch (Throwable e) {
             exceptionHandler.onException(e);
             throw new RuntimeException(e);
         }

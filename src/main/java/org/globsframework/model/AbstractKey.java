@@ -175,4 +175,14 @@ public abstract class AbstractKey extends AbstractFieldValues implements Mutable
         setValue(field, values);
         return this;
     }
+
+    public MutableKey set(GlobUnionField field, Glob value) throws ItemNotFound {
+        setValue(field, value);
+        return this;
+    }
+
+    public MutableKey set(GlobArrayUnionField field, Glob[] values) throws ItemNotFound {
+        setValue(field, values);
+        return this;
+    }
 }

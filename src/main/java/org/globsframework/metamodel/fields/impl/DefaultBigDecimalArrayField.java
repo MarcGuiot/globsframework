@@ -91,7 +91,7 @@ public class DefaultBigDecimalArrayField extends AbstractField implements BigDec
         return Arrays.hashCode(((BigDecimal[])o));
     }
 
-    public String toString(Object value) {
+    public String toString(Object value, String offset) {
         return Arrays.toString(((BigDecimal[]) value));
     }
 }

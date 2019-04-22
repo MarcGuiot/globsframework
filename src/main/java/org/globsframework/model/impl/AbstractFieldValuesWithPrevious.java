@@ -119,6 +119,14 @@ public abstract class AbstractFieldValuesWithPrevious implements FieldValuesWith
         return (Glob[]) doGet(field);
     }
 
+    public Glob get(GlobUnionField field) throws ItemNotFound {
+        return (Glob) doGet(field);
+    }
+
+    public Glob[] get(GlobArrayUnionField field) throws ItemNotFound {
+        return (Glob[]) doGet(field);
+    }
+
     public Object getPreviousValue(Field field) throws ItemNotFound {
         return doGetPrevious(field);
     }
@@ -205,6 +213,14 @@ public abstract class AbstractFieldValuesWithPrevious implements FieldValuesWith
     }
 
     public Glob[] getPrevious(GlobArrayField field) throws ItemNotFound {
+        return (Glob[]) doGetPrevious(field);
+    }
+
+    public Glob getPrevious(GlobUnionField field) throws ItemNotFound {
+        return (Glob) doGetPrevious(field);
+    }
+
+    public Glob[] getPrevious(GlobArrayUnionField field) throws ItemNotFound {
         return (Glob[]) doGetPrevious(field);
     }
 

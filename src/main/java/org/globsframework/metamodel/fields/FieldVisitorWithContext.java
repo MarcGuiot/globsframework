@@ -40,6 +40,10 @@ public interface FieldVisitorWithContext<C> {
 
     void visitGlobArray(GlobArrayField field, C context) throws Exception;
 
+    void visitUnionGlob(GlobUnionField field, C context) throws Exception;
+
+    void visitUnionGlobArray(GlobArrayUnionField field, C context) throws Exception;
+
     class AbstractFieldVisitor<C> implements FieldVisitorWithContext<C> {
 
         public void visitInteger(IntegerField field, C context) throws Exception {
@@ -107,6 +111,14 @@ public interface FieldVisitorWithContext<C> {
         }
 
         public void visitGlobArray(GlobArrayField field, C context) throws Exception {
+            notManaged(field, context);
+        }
+
+        public void visitUnionGlob(GlobUnionField field, C context) throws Exception {
+            notManaged(field, context);
+        }
+
+        public void visitUnionGlobArray(GlobArrayUnionField field, C context) throws Exception {
             notManaged(field, context);
         }
 

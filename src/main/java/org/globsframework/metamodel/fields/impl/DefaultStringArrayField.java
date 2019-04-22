@@ -86,7 +86,7 @@ public class DefaultStringArrayField extends AbstractField implements StringArra
         return Arrays.hashCode(((String[]) o));
     }
 
-    public String toString(Object value) {
+    public String toString(Object value, String offset) {
         return Arrays.toString(((String[]) value));
     }
 

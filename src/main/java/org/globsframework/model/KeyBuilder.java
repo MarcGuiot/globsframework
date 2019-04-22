@@ -351,6 +351,14 @@ public class KeyBuilder implements FieldSetter<KeyBuilder> {
         return setObject(field, values);
     }
 
+    public KeyBuilder set(GlobUnionField field, Glob value) throws ItemNotFound {
+        return setObject(field, value);
+    }
+
+    public KeyBuilder set(GlobArrayUnionField field, Glob[] values) throws ItemNotFound {
+        return setObject(field, values);
+    }
+
     public GlobType getGlobType() {
         return globType;
     }

@@ -20,11 +20,9 @@ import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Modifier;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class GlobTypeLoaderImpl implements GlobTypeLoader {
@@ -115,9 +113,8 @@ public class GlobTypeLoaderImpl implements GlobTypeLoader {
     }
 
     private void processClass(Class targetClass) {
-
         for (java.lang.reflect.Field field : targetClass.getFields()) {
-            if (field.getType().equals(GlobType.class)) {
+            if (field.getType().equals(GlobType.class) && Modifier.isStatic(field.getModifiers()) && Modifier.isPublic(field.getModifiers())) {
                 createType(field, targetClass);
             }
         }
@@ -239,6 +236,19 @@ public class GlobTypeLoaderImpl implements GlobTypeLoader {
         }
     }
 
+    GlobType getTypeFromClass(Class aClass) {
+        for (java.lang.reflect.Field field : aClass.getFields()) {
+            if (field.getType().equals(GlobType.class) && Modifier.isStatic(field.getModifiers()) && Modifier.isPublic(field.getModifiers())) {
+                try {
+                    return (GlobType) field.get(null);
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+        throw new RuntimeException("No static public GlobType field found in " + aClass.getName());
+    }
+
     private AbstractField create(String name, Class<?> fieldClass, boolean isKeyField, int keyIndex, int index, java.lang.reflect.Field field) {
         if (StringField.class.isAssignableFrom(fieldClass)) {
             DefaultString defaultString = field.getAnnotation(DefaultString.class);
@@ -297,6 +307,9 @@ public class GlobTypeLoaderImpl implements GlobTypeLoader {
         }
         else if (GlobField.class.isAssignableFrom(fieldClass)) {
             Target annotation = field.getAnnotation(Target.class);
+            if (annotation == null) {
+                throw new RuntimeException("Missing Target annotation on " + this.name + "." + name);
+            }
             GlobType type;
             try {
                 type = (GlobType) annotation.value().getField("TYPE").get(null);
@@ -307,15 +320,26 @@ public class GlobTypeLoaderImpl implements GlobTypeLoader {
         }
         else if (GlobArrayField.class.isAssignableFrom(fieldClass)) {
             Target annotation = field.getAnnotation(Target.class);
-            GlobType type;
-            try {
-                type = (GlobType) annotation.value().getField("TYPE").get(null);
-            } catch (Exception e) {
-                throw new RuntimeException("Can not find a static GlobType named TYPE in " + annotation.value().getName(), e);
+            if (annotation == null) {
+                throw new RuntimeException("Missing Target annotation on " + this.name + "." + name);
             }
+            GlobType type = getTypeFromClass(annotation.value());
             return fieldFactory.addGlobArray(name, type, isKeyField, keyIndex, index);
-        }
-        else {
+        } else if (GlobUnionField.class.isAssignableFrom(fieldClass)) {
+            Targets annotation = field.getAnnotation(Targets.class);
+            if (annotation == null) {
+                throw new RuntimeException("Missing Targets annotation on " + this.name + "." + name);
+            }
+            List<GlobType> types = Arrays.stream(annotation.value()).map(this::getTypeFromClass).collect(Collectors.toList());
+            return fieldFactory.addGlobUnion(name, types, index);
+        } else if (GlobArrayUnionField.class.isAssignableFrom(fieldClass)) {
+            Targets annotation = field.getAnnotation(Targets.class);
+            if (annotation == null) {
+                throw new RuntimeException("Missing Targets annotation on " + this.name + "." + name);
+            }
+            List<GlobType> types = Arrays.stream(annotation.value()).map(this::getTypeFromClass).collect(Collectors.toList());
+            return fieldFactory.addGlobArrayUnion(name, types, index);
+        } else {
             throw new InvalidParameter("Unknown type " + fieldClass.getName());
         }
     }

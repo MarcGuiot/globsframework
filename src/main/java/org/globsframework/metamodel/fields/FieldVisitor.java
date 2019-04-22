@@ -37,6 +37,9 @@ public interface FieldVisitor {
 
     void visitGlobArray(GlobArrayField field) throws Exception;
 
+    void visitUnionGlob(GlobUnionField field) throws Exception;
+
+    void visitUnionGlobArray(GlobArrayUnionField field) throws Exception;
 
     class AbstractFieldVisitor implements FieldVisitor {
 
@@ -105,6 +108,14 @@ public interface FieldVisitor {
         }
 
         public void visitGlobArray(GlobArrayField field) throws Exception {
+            notManaged(field);
+        }
+
+        public void visitUnionGlob(GlobUnionField field) throws Exception {
+            notManaged(field);
+        }
+
+        public void visitUnionGlobArray(GlobArrayUnionField field) throws Exception {
             notManaged(field);
         }
 

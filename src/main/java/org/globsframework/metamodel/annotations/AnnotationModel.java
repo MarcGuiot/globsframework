@@ -13,6 +13,7 @@ public class AnnotationModel {
                 FieldNameAnnotationType.TYPE, KeyAnnotationType.TYPE,
                 LinkModelNameAnnotationType.TYPE, MaxSizeType.TYPE,
                 IgnoredAnnotationType.TYPE,
+                CommentType.TYPE,
                 NamingFieldAnnotationType.TYPE, RequiredAnnotationType.TYPE,
                 NotUniqueIndexType.TYPE, FunctionalFieldOrderType.TYPE);
 }

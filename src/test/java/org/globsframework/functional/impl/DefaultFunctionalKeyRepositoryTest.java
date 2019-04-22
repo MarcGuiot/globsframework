@@ -37,6 +37,8 @@ public class DefaultFunctionalKeyRepositoryTest {
 
         Collection<Glob> a11 = linkManager.get(functionalKeyBuilderMuli.create().set(DummyObject.NAME, "a1").getShared());
         Assert.assertEquals(2, a11.size());
+
+        Assert.assertEquals(2, linkManager.getAll(functionalKeyBuilderMuli).count());
     }
 
 
@@ -87,7 +89,11 @@ public class DefaultFunctionalKeyRepositoryTest {
                                       .set(DummyObject.COUNT, 2).getShared()).iterator().next();
         Assert.assertEquals(2, l3.get(DummyObject.ID).intValue());
 
+        Assert.assertEquals(3, linkManager.getAll(functionalKeyBuilder).count());
+
         FunctionalKeyBuilderFactory multiFunctionalKeyBuilderFactory = FunctionalKeyBuilderFactory.create(DummyObject.TYPE);
         FunctionalKeyBuilder functionalKeyBuilderMuli = multiFunctionalKeyBuilderFactory.add(DummyObject.NAME).create();
+
+//        Assert.assertEquals(3, linkManager.getAll(functionalKeyBuilderMuli).count());
     }
 }

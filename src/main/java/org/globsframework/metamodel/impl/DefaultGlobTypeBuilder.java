@@ -1,15 +1,18 @@
 package org.globsframework.metamodel.impl;
 
 import org.globsframework.metamodel.Annotations;
+import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.GlobTypeBuilder;
 import org.globsframework.metamodel.annotations.*;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.fields.impl.*;
+import org.globsframework.metamodel.type.DataType;
 import org.globsframework.metamodel.utils.MutableAnnotations;
 import org.globsframework.model.Glob;
 
 import java.util.Collection;
+import java.util.List;
 
 public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
     private DefaultGlobType type;
@@ -24,10 +27,6 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
     public DefaultGlobTypeBuilder(String typeName) {
         type = new DefaultGlobType(typeName);
         factory = new DefaultFieldFactory(type);
-    }
-
-    public GlobTypeBuilder addIntegerKey(String fieldName, Glob... globAnnotations) {
-        return this;
     }
 
     private MutableAnnotations adaptAnnotation(Collection<Glob> annotations) {
@@ -293,6 +292,30 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
         return field;
     }
 
+    private GlobUnionField createGlobUnionField(String fieldName, List<GlobType> types, Collection<Glob> globAnnotations) {
+        MutableAnnotations annotations = adaptAnnotation(globAnnotations);
+        Glob key = annotations.findAnnotation(KeyAnnotationType.UNIQUE_KEY);
+        if (key != null) {
+            throw new RuntimeException(fieldName + " of type unionField cannot be a key");
+        }
+        DefaultGlobUnionField field = factory.addGlobUnion(fieldName, types, index);
+        field.addAnnotations(annotations.streamAnnotations());
+        index++;
+        return field;
+    }
+
+    private GlobArrayUnionField createGlobUnionArrayField(String fieldName, List<GlobType> types, Collection<Glob> globAnnotations) {
+        MutableAnnotations annotations = adaptAnnotation(globAnnotations);
+        Glob key = annotations.findAnnotation(KeyAnnotationType.UNIQUE_KEY);
+        if (key != null) {
+            throw new RuntimeException(fieldName + " of type unionField cannot be a key");
+        }
+        DefaultArrayGlobUnionField field = factory.addGlobArrayUnion(fieldName, types, index);
+        field.addAnnotations(annotations.streamAnnotations());
+        index++;
+        return field;
+    }
+
     public StringField declareStringField(String fieldName, Collection<Glob> globAnnotations) {
         return createStringField(fieldName, globAnnotations);
     }
@@ -345,7 +368,7 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
         return createLongField(fieldName, annotations);
     }
 
-    public LongArrayField declareArrayLongField(String fieldName, Collection<Glob> annotations) {
+    public LongArrayField declareLongArrayField(String fieldName, Collection<Glob> annotations) {
         return createLongArrayField(fieldName, annotations);
     }
 
@@ -361,12 +384,60 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
         return createGlobArrayField(fieldName, globType, annotations);
     }
 
+    public GlobUnionField declareGlobUnionField(String fieldName, List<GlobType> types, Collection<Glob> annotations) {
+        return createGlobUnionField(fieldName, types, annotations);
+    }
+
+    public GlobArrayUnionField declareGlobUnionArrayField(String fieldName, List<GlobType> types, Collection<Glob> annotations) {
+        return createGlobUnionArrayField(fieldName, types, annotations);
+    }
+
+    public Field declare(String fieldName, DataType dataType, Collection<Glob> annotations) {
+        switch (dataType) {
+            case String:
+                return declareStringField(fieldName, annotations);
+            case StringArray:
+                return declareStringArrayField(fieldName, annotations);
+            case Double:
+                return declareDoubleField(fieldName, annotations);
+            case DoubleArray:
+                return declareDoubleArrayField(fieldName, annotations);
+            case BigDecimal:
+                return declareBigDecimalField(fieldName, annotations);
+            case BigDecimalArray:
+                return declareBigDecimalArrayField(fieldName, annotations);
+            case Long:
+                return declareLongField(fieldName, annotations);
+            case LongArray:
+                return declareLongArrayField(fieldName, annotations);
+            case Integer:
+                return declareIntegerField(fieldName, annotations);
+            case IntegerArray:
+                return declareIntegerArrayField(fieldName, annotations);
+            case Boolean:
+                return declareBooleanField(fieldName, annotations);
+            case BooleanArray:
+                return declareBooleanArrayField(fieldName, annotations);
+            case Date:
+                return declareDateField(fieldName, annotations);
+            case DateTime:
+                return declareDateTimeField(fieldName, annotations);
+            case Bytes:
+                return declareBlobField(fieldName, annotations);
+        }
+        throw new RuntimeException("creation of " + dataType + " not possible without additional parameter (globType)");
+    }
+
     public <T> void register(Class<T> klass, T t) {
         type.register(klass, t);
     }
 
     public GlobType get() {
         type.completeInit();
+        return type;
+    }
+
+    public GlobType unCompleteType() {
         return type;
     }
 

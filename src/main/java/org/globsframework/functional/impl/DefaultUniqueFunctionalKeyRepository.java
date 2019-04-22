@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 public class DefaultUniqueFunctionalKeyRepository implements MutableFunctionalKeyRepository {
     static private final Logger LOGGER = LoggerFactory.getLogger(DefaultUniqueFunctionalKeyRepository.class);
@@ -61,6 +62,22 @@ public class DefaultUniqueFunctionalKeyRepository implements MutableFunctionalKe
             index.put(functionalKey, glob);
         }
         return glob;
+    }
+
+    public Stream<FunctionalKey> getAll(FunctionalKeyBuilder builder) {
+        GlobType type = builder.getType();
+        Map<FunctionalKeyBuilder, Boolean> functionalKeyBuilders = indexed.get(type);
+        if (functionalKeyBuilders == null || functionalKeyBuilders.get(builder) != Boolean.TRUE) {
+            synchronized (type) {
+                dataAccess.all(type)
+                        .forEach(g -> {
+                            FunctionalKey key = builder.create(g);
+                            update(g, key);
+                        });
+                indexed.put(type, builder, Boolean.TRUE);
+            }
+        }
+        return index.keySet().stream().filter(functionalKey -> functionalKey.getBuilder() == builder);
     }
 
     public Glob getUnique(FunctionalKey functionalKey) {

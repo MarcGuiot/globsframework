@@ -5,7 +5,6 @@ import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.type.DataType;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
-import java.math.BigDecimal;
 import java.util.Arrays;
 
 public class DefaultDoubleArrayField extends AbstractField implements DoubleArrayField {
@@ -88,7 +87,7 @@ public class DefaultDoubleArrayField extends AbstractField implements DoubleArra
         return Arrays.hashCode(((double[]) o));
     }
 
-    public String toString(Object value) {
+    public String toString(Object value, String offset) {
         return Arrays.toString(((double[]) value));
     }
 

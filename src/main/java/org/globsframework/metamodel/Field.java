@@ -84,5 +84,26 @@ public interface Field extends PropertyHolder<Field>, MutableAnnotations<Field> 
         return (DoubleField) this;
     }
 
-    String toString(Object value);
+    default LongField asLongField() {
+        if (!(this instanceof LongField)) {
+            throw new RuntimeException(getFullName() + " is not a LongField but a " + getDataType());
+        }
+        return (LongField) this;
+    }
+
+    default DateField asDateField() {
+        if (!(this instanceof DateField)) {
+            throw new RuntimeException(getFullName() + " is not a DateField but a " + getDataType());
+        }
+        return (DateField) this;
+    }
+
+    default DateTimeField asDateTimeField() {
+        if (!(this instanceof DateTimeField)) {
+            throw new RuntimeException(getFullName() + " is not a DateTimeField but a " + getDataType());
+        }
+        return (DateTimeField) this;
+    }
+
+    String toString(Object value, String offset);
 }

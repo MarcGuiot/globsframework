@@ -2,8 +2,8 @@ package org.globsframework.model;
 
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.metamodel.index.SingleFieldIndex;
 import org.globsframework.metamodel.index.MultiFieldIndex;
+import org.globsframework.metamodel.index.SingleFieldIndex;
 import org.globsframework.metamodel.links.Link;
 import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.model.utils.GlobMatcher;
@@ -34,6 +34,8 @@ public interface ReadOnlyGlobRepository {
     void apply(GlobType type, GlobMatcher matcher, GlobFunctor callback) throws Exception;
 
     void safeApply(GlobType type, GlobMatcher matcher, GlobFunctor callback);
+
+    void safeApply(GlobFunctor callback);
 
     Glob findUnique(GlobType type, FieldValue... values)
         throws ItemAmbiguity;

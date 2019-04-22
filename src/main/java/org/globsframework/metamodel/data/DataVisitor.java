@@ -1,5 +1,12 @@
 package org.globsframework.metamodel.data;
 
+
+// a data structure that we can only visit (like a SAX API for Json)
+// It is expected to be simpler than using GlobType.
+// less typed
+// we should be able to represent here data like sql where (Constraints)
+
+
 public interface DataVisitor {
     DataVisitor pushArray();
     DataVisitor pushObject();

@@ -17,10 +17,10 @@ import org.globsframework.utils.exceptions.*;
 import java.util.*;
 
 public class ReplicationGlobRepository extends DefaultGlobRepository implements GlobRepository {
-    private Set<GlobType> managedTypes = new HashSet<GlobType>();
+    private Set<GlobType> managedTypes = new HashSet<>();
     private GlobRepository originalRepository;
-    private List<ChangeSetListener> triggers = new ArrayList<ChangeSetListener>();
-    private List<ChangeSetListener> listeners = new ArrayList<ChangeSetListener>();
+    private List<ChangeSetListener> triggers = new ArrayList<>();
+    private List<ChangeSetListener> listeners = new ArrayList<>();
     private ChangeSetListener forwardChangeSetListener;
 
     public ReplicationGlobRepository(GlobRepository repository, GlobType... managedTypes) {
@@ -106,6 +106,21 @@ public class ReplicationGlobRepository extends DefaultGlobRepository implements 
         else {
             originalRepository.apply(type, globMatcher, callback);
         }
+    }
+
+    public void safeApply(GlobFunctor callback) {
+        super.safeApply(new GlobFunctor() {
+            public void run(Glob glob, GlobRepository repository) throws Exception {
+                callback.run(glob, ReplicationGlobRepository.this);
+            }
+        });
+        originalRepository.safeApply(new GlobFunctor() {
+            public void run(Glob glob, GlobRepository repository) throws Exception {
+                if (!managedTypes.contains(glob.getType())){
+                    callback.run(glob, ReplicationGlobRepository.this);
+                }
+            }
+        });
     }
 
     public void safeApply(GlobType type, GlobMatcher matcher, GlobFunctor callback) {

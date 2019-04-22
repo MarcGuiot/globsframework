@@ -169,6 +169,17 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
         }
     }
 
+    public void safeApply(GlobFunctor callback) {
+        try {
+            Iterator<Glob> iterator = globs.iterator();
+            while (iterator.hasNext()) {
+                callback.run(iterator.next(), this);
+            }
+        } catch (Exception e) {
+            throw new UnexpectedApplicationState(e);
+        }
+    }
+
 
     public boolean contains(GlobType type) {
         return !globs.values(type).isEmpty();

@@ -39,6 +39,10 @@ public interface FieldVisitorWithTwoContext<C,D> {
 
     void visitGlobArray(GlobArrayField field, C ctx1, D ctx2) throws Exception;
 
+    void visitUnionGlob(GlobUnionField field, C ctx1, D ctx2)throws Exception;
+
+    void visitUnionGlobArray(GlobArrayUnionField field, C ctx1, D ctx2) throws Exception;
+
     class AbstractFieldVisitor<C, D> implements FieldVisitorWithTwoContext<C, D> {
 
         public void visitInteger(IntegerField field, C ctx1, D ctx2) throws Exception {
@@ -106,6 +110,14 @@ public interface FieldVisitorWithTwoContext<C,D> {
         }
 
         public void visitGlobArray(GlobArrayField field, C ctx1, D ctx2) throws Exception {
+            notManaged(field, ctx1, ctx2);
+        }
+
+        public void visitUnionGlob(GlobUnionField field, C ctx1, D ctx2) throws Exception {
+            notManaged(field, ctx1, ctx2);
+        }
+
+        public void visitUnionGlobArray(GlobArrayUnionField field, C ctx1, D ctx2) throws Exception {
             notManaged(field, ctx1, ctx2);
         }
 

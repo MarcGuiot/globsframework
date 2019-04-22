@@ -6,7 +6,6 @@ import org.globsframework.model.*;
 import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
 import org.globsframework.model.utils.GlobFunctor;
-import org.globsframework.utils.Dates;
 import org.globsframework.utils.TestUtils;
 import org.junit.Test;
 
@@ -16,6 +15,7 @@ import java.util.List;
 
 import static org.globsframework.model.FieldValue.value;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class DefaultGlobRepositoryIndexingTest extends DefaultGlobRepositoryTestCase {
@@ -56,7 +56,7 @@ public class DefaultGlobRepositoryIndexingTest extends DefaultGlobRepositoryTest
         assertEquals(2, findIDByDateIndex(20010101).get(0).intValue());
         assertEquals(1, findIDByDateIndex(20030101).get(0).intValue());
         repository.delete(obj3);
-        assertTrue(repository.findByIndex(DummyObjectIndex.DATE_INDEX, Dates.parse("2001/01/01")).isEmpty());
+        assertTrue(repository.findByIndex(DummyObjectIndex.DATE_INDEX, 20010101).isEmpty());
 
         repository.create(DummyObjectIndex.TYPE,
                           value(DummyObjectIndex.ID, 3),

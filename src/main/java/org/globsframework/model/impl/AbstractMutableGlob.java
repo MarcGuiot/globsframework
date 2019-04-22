@@ -98,6 +98,14 @@ public abstract class AbstractMutableGlob extends AbstractGlob implements Mutabl
         return setObject(field, values);
     }
 
+    public MutableGlob set(GlobUnionField field, Glob value) throws ItemNotFound {
+        return setObject(field, value);
+    }
+
+    public MutableGlob set(GlobArrayUnionField field, Glob[] values) throws ItemNotFound {
+        return setObject(field, values);
+    }
+
     public MutableGlob setValues(FieldValues values) {
         values.safeApply(this::setObject);
         return this;

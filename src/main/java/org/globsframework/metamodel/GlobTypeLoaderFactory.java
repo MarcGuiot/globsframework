@@ -79,7 +79,7 @@ public class GlobTypeLoaderFactory {
     // this code is expected to be called very soon during the initialisation
     // before ony GlobType is created from the GlobTypeLoader
     // warning : a glob type created from a globTypeBuilder will trigger
-    // a ca                                               ll to GlobTypeLoader to access globs that modelize annotations
+    // a call to GlobTypeLoader to access globs that modelize annotations
 
     static public FieldInitializeProcessorService getFieldInitializeProcessorService() {
         if (fieldInitializeProcessorService == null) {

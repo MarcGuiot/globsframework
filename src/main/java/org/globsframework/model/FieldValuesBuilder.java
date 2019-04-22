@@ -161,6 +161,14 @@ public class FieldValuesBuilder {
         return setValue(field, values);
     }
 
+    public FieldValuesBuilder set(GlobUnionField field, Glob value) {
+        return setValue(field, value);
+    }
+
+    public FieldValuesBuilder set(GlobArrayUnionField field, Glob[] values) {
+        return setValue(field, values);
+    }
+
     public FieldValuesBuilder setValue(Field field, Object value) {
         values.setValue(field, value);
         return this;

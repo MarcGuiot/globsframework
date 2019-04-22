@@ -15,9 +15,17 @@ public class GlobModelBuilder {
         return new GlobModelBuilder(inner, types);
     }
 
-    public void add(GlobType type) {
+    public GlobModelBuilder add(GlobType type) {
         globModel.add(type);
+        return this;
     }
+
+    public GlobModelBuilder add(GlobModel model) {
+        model.getAll().forEach(globType -> globModel.add(globType));
+    return this;
+    }
+
+
 
     public GlobModel get() {
         globModel.complete();

@@ -120,6 +120,14 @@ public class EmptyKey implements Key {
         throw new RuntimeException("Empty key '" + field.getFullName() + " not available");
     }
 
+    public Glob get(GlobUnionField field) throws ItemNotFound {
+        throw new RuntimeException("Empty key '" + field.getFullName() + " not available");
+    }
+
+    public Glob[] get(GlobArrayUnionField field) throws ItemNotFound {
+        throw new RuntimeException("Empty key '" + field.getFullName() + " not available");
+    }
+
     public boolean contains(Field field) {
         return false;
     }

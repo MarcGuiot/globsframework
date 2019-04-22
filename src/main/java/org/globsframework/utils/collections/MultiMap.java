@@ -96,7 +96,8 @@ public class MultiMap<K, V> {
     }
 
     public List<V> remove(K k) {
-        return map.remove(k);
+        List<V> remove = map.remove(k);
+        return remove != null ? remove : Collections.emptyList();
     }
 
     public boolean removeValue(V value) {

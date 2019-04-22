@@ -31,8 +31,8 @@ import static org.junit.Assert.*;
 public class GlobTypeLoaderTest {
 
     static GlobModel globModel =
-        GlobModelBuilder.create(AnObjectWithALinkField.TYPE, AnObjectWithASingleIntegerFieldUsedAsALink.TYPE,
-                                AnObjectWithRequiredLinks.TYPE, AnObjectWithRequiredLinkField.TYPE).get();
+            GlobModelBuilder.create(AnObjectWithALinkField.TYPE, AnObjectWithASingleIntegerFieldUsedAsALink.TYPE,
+                    AnObjectWithRequiredLinks.TYPE, AnObjectWithRequiredLinkField.TYPE).get();
 
     public static class AnObject {
 
@@ -53,30 +53,44 @@ public class GlobTypeLoaderTest {
         public static LongArrayField E;
         public static BooleanArrayField F;
         public static StringArrayField G;
+        @Target(AnObject.class)
+        public static GlobField H;
+        @Target(AnObject.class)
+        public static GlobArrayField I;
+        @Targets({AnObject.class, AnObjectWithRequiredLinkField.class})
+        public static GlobUnionField J;
+        @Targets({AnObject.class, AnObjectWithRequiredLinkField.class})
+        public static GlobArrayUnionField K;
 
         public static UniqueIndex ID_INDEX;
 
         static {
             GlobTypeLoaderFactory.create(AnObject.class).load()
-                .defineUniqueIndex(ID_INDEX, ID);
+                    .defineUniqueIndex(ID_INDEX, ID);
         }
 
         private static Glob glob =
-            GlobBuilder.init(TYPE)
-                .set(ID, 1)
-                .set(STRING, "string1")
-                .set(DOUBLE, 1.1)
-                .set(BOOLEAN, false)
-                .set(LONG, 15L)
-                .set(BLOB, TestUtils.SAMPLE_BYTE_ARRAY)
-                .set(A, BigDecimal.valueOf(3.3))
-                .set(B, new BigDecimal[]{BigDecimal.ONE, BigDecimal.ZERO})
-                .set(C, new double[]{2.2, 3.3})
-                .set(D, new int[]{2, 3})
-                .set(E, new long[]{3l, 5l})
-                .set(F, new boolean[]{false, true})
-                .set(G, new String[]{"one", "un"})
-                .get();
+                GlobBuilder.init(TYPE)
+                        .set(ID, 1)
+                        .set(STRING, "string1")
+                        .set(DOUBLE, 1.1)
+                        .set(BOOLEAN, false)
+                        .set(LONG, 15L)
+                        .set(BLOB, TestUtils.SAMPLE_BYTE_ARRAY)
+                        .set(A, BigDecimal.valueOf(3.3))
+                        .set(B, new BigDecimal[]{BigDecimal.ONE, BigDecimal.ZERO})
+                        .set(C, new double[]{2.2, 3.3})
+                        .set(D, new int[]{2, 3})
+                        .set(E, new long[]{3l, 5l})
+                        .set(F, new boolean[]{false, true})
+                        .set(G, new String[]{"one", "un"})
+                        .set(H, AnObject.TYPE.instantiate().set(AnObject.ID, 2).set(AnObject.E, new long[]{1, 2, 3}))
+                        .set(I, new Glob[]{AnObject.TYPE.instantiate().set(AnObject.BOOLEAN, true), AnObject.TYPE.instantiate().set(AnObject.G, new String[]{"A", "B"}), AnObject.TYPE.instantiate().set(AnObject.ID, 2)})
+                        .set(J, AnObjectWithALinkField.TYPE.instantiate().set(AnObjectWithALinkField.ID, 2))
+                        .set(K, new Glob[]{AnObjectWithALinkField.TYPE.instantiate().set(AnObjectWithALinkField.ID, 2),
+                                AnObjectWithALinkField.TYPE.instantiate().set(AnObjectWithALinkField.ID, 3),
+                                AnObject.TYPE.instantiate().set(AnObject.C, new double[]{3.3, 2.2})})
+                        .get();
     }
 
     @Test
@@ -97,6 +111,13 @@ public class GlobTypeLoaderTest {
         assertTrue(AnObject.E.valueEqual(AnObject.glob.get(AnObject.E), new long[]{3l, 5l}));
         assertTrue(AnObject.F.valueEqual(AnObject.glob.get(AnObject.F), new boolean[]{false, true}));
         assertTrue(AnObject.G.valueEqual(AnObject.glob.get(AnObject.G), new String[]{"one", "un"}));
+        assertTrue(AnObject.H.valueEqual(AnObject.glob.get(AnObject.H), AnObject.TYPE.instantiate().set(AnObject.ID, 2).set(AnObject.E, new long[]{1, 2, 3})));
+        assertTrue(AnObject.I.valueEqual(AnObject.glob.get(AnObject.I), new Glob[]{AnObject.TYPE.instantiate().set(AnObject.BOOLEAN, true), AnObject.TYPE.instantiate().set(AnObject.G, new String[]{"A", "B"}), AnObject.TYPE.instantiate().set(AnObject.ID, 2)}));
+        assertTrue(AnObject.J.valueEqual(AnObject.glob.get(AnObject.J), AnObjectWithALinkField.TYPE.instantiate().set(AnObjectWithALinkField.ID, 2)));
+        assertTrue(AnObject.K.valueEqual(AnObject.glob.get(AnObject.K), new Glob[]{AnObjectWithALinkField.TYPE.instantiate().set(AnObjectWithALinkField.ID, 2),
+                AnObjectWithALinkField.TYPE.instantiate().set(AnObjectWithALinkField.ID, 3),
+                AnObject.TYPE.instantiate().set(AnObject.C, new double[]{3.3, 2.2})}));
+
 
         assertFalse(AnObject.A.valueEqual(AnObject.glob.get(AnObject.A), BigDecimal.valueOf(3.4)));
         assertFalse(AnObject.B.valueEqual(AnObject.glob.get(AnObject.B), new BigDecimal[]{BigDecimal.ZERO, BigDecimal.ONE}));
@@ -105,6 +126,13 @@ public class GlobTypeLoaderTest {
         assertFalse(AnObject.E.valueEqual(AnObject.glob.get(AnObject.E), new long[]{2l, 5l}));
         assertFalse(AnObject.F.valueEqual(AnObject.glob.get(AnObject.F), new boolean[]{true, true}));
         assertFalse(AnObject.G.valueEqual(AnObject.glob.get(AnObject.G), new String[]{"two", "un"}));
+        assertFalse(AnObject.H.valueEqual(AnObject.glob.get(AnObject.H), AnObject.TYPE.instantiate().set(AnObject.ID, 2).set(AnObject.E, new long[]{1, 3, 2})));
+        assertFalse(AnObject.I.valueEqual(AnObject.glob.get(AnObject.I), new Glob[]{AnObject.TYPE.instantiate().set(AnObject.BOOLEAN, false), AnObject.TYPE.instantiate().set(AnObject.G, new String[]{"A", "B"}), AnObject.TYPE.instantiate().set(AnObject.ID, 2)}));
+        assertFalse(AnObject.J.valueEqual(AnObject.glob.get(AnObject.J), AnObjectWithALinkField.TYPE.instantiate().set(AnObjectWithALinkField.ID, 4)));
+        assertFalse(AnObject.K.valueEqual(AnObject.glob.get(AnObject.K), new Glob[]{AnObjectWithALinkField.TYPE.instantiate().set(AnObjectWithALinkField.ID, 5),
+                AnObjectWithALinkField.TYPE.instantiate().set(AnObjectWithALinkField.ID, 3),
+                AnObject.TYPE.instantiate().set(AnObject.C, new double[]{3.3, 2.2})}));
+
 
         assertEquals(0, AnObject.ID.getIndex());
         assertEquals(3, AnObject.BOOLEAN.getIndex());
@@ -127,10 +155,9 @@ public class GlobTypeLoaderTest {
         try {
             GlobTypeLoaderFactory.create(AnObjectWithNoTypeDef.class).load();
             fail();
-        }
-        catch (MissingInfo e) {
+        } catch (MissingInfo e) {
             assertEquals("Class " + AnObjectWithNoTypeDef.class.getName() +
-                         " must have a TYPE field of class " + GlobType.class.getName(), e.getMessage());
+                    " must have a TYPE field of class " + GlobType.class.getName(), e.getMessage());
         }
     }
 
@@ -145,10 +172,9 @@ public class GlobTypeLoaderTest {
         try {
             GlobTypeLoaderFactory.create(AnObjectWithSeveralTypeDefs.class).load();
             fail();
-        }
-        catch (ItemAlreadyExists e) {
+        } catch (ItemAlreadyExists e) {
             assertEquals("Class " + AnObjectWithSeveralTypeDefs.class.getName() +
-                         " must have only one TYPE field of class " + GlobType.class.getName(), e.getMessage());
+                    " must have only one TYPE field of class " + GlobType.class.getName(), e.getMessage());
         }
     }
 
@@ -164,8 +190,7 @@ public class GlobTypeLoaderTest {
         try {
             GlobTypeLoaderFactory.createAndLoad(AnObjectForDoubleInit.class);
             fail();
-        }
-        catch (UnexpectedApplicationState e) {
+        } catch (UnexpectedApplicationState e) {
         }
     }
 
@@ -180,8 +205,7 @@ public class GlobTypeLoaderTest {
         try {
             GlobTypeLoaderFactory.createAndLoad(AnObjectWithNoKey.class);
             fail();
-        }
-        catch (InvalidParameter e) {
+        } catch (InvalidParameter e) {
             assertEquals("GlobType anObjectWithNoKey has no key field", e.getMessage());
         }
     }
@@ -201,7 +225,7 @@ public class GlobTypeLoaderTest {
     @Test
     public void testAnObjectWithACompositeKey() throws Exception {
         TestUtils.assertSetEquals(AnObjectWithACompositeKey.TYPE.getKeyFields(),
-                                  AnObjectWithACompositeKey.ID1, AnObjectWithACompositeKey.ID2);
+                AnObjectWithACompositeKey.ID1, AnObjectWithACompositeKey.ID2);
     }
 
     public static class AnObjectWithALinkField {
@@ -217,9 +241,9 @@ public class GlobTypeLoaderTest {
         static {
             GlobTypeLoader loader = GlobTypeLoaderFactory.create(AnObjectWithALinkField.class);
             loader.register(MutableGlobLinkModel.LinkRegister.class, mutableGlobLinkModel ->
-                LINK = mutableGlobLinkModel.getDirectLinkBuilder(LINK)
-                    .add(AnObjectWithALinkField.LINK_ID, AnObject.ID)
-                    .publish());
+                    LINK = mutableGlobLinkModel.getDirectLinkBuilder(LINK)
+                            .add(AnObjectWithALinkField.LINK_ID, AnObject.ID)
+                            .publish());
             loader.load();
         }
     }
@@ -256,11 +280,10 @@ public class GlobTypeLoaderTest {
         try {
             AnObjectWithALinkFieldWithoutTheTargetAnnotation.link.getSourceType();
             fail();
-        }
-        catch (UnInitializedLink.LinkNotInitialized e) {
+        } catch (UnInitializedLink.LinkNotInitialized e) {
             assertEquals("link anObjectWithALinkFieldWithoutTheTargetAnnotation:link not initialized. (missing code is something like : loader.register(MutableGlobLinkModel.LinkRegister.class,\n" +
-                         "                      (linkModel) -> LINK = linkModel.getLinkBuilder(\"ModelName\", \"linkName\").add(sourceFieldId, targetFieldId).publish()); )",
-                         e.getMessage());
+                            "                      (linkModel) -> LINK = linkModel.getLinkBuilder(\"ModelName\", \"linkName\").add(sourceFieldId, targetFieldId).publish()); )",
+                    e.getMessage());
         }
     }
 
@@ -278,16 +301,15 @@ public class GlobTypeLoaderTest {
         try {
             GlobTypeLoader loader = GlobTypeLoaderFactory.create(AnObjectWithALinkFieldTargettingAMultiKeyObject.class);
             loader.register(MutableGlobLinkModel.LinkRegister.class, mutableGlobLinkModel ->
-                AnObjectWithALinkFieldTargettingAMultiKeyObject.LINK =
-                    mutableGlobLinkModel.getDirectLinkBuilder(AnObjectWithALinkFieldTargettingAMultiKeyObject.LINK)
-                        .add(AnObjectWithALinkFieldTargettingAMultiKeyObject.ID, AnObjectWithACompositeKey.ID1).publish());
+                    AnObjectWithALinkFieldTargettingAMultiKeyObject.LINK =
+                            mutableGlobLinkModel.getDirectLinkBuilder(AnObjectWithALinkFieldTargettingAMultiKeyObject.LINK)
+                                    .add(AnObjectWithALinkFieldTargettingAMultiKeyObject.ID, AnObjectWithACompositeKey.ID1).publish());
             loader.load();
             GlobModelBuilder.create(AnObjectWithALinkFieldTargettingAMultiKeyObject.TYPE).get();
             fail();
-        }
-        catch (InvalidParameter e) {
+        } catch (InvalidParameter e) {
             assertEquals("All key field of target must be references. Missing : [anObjectWithACompositeKey.id2]",
-                         e.getMessage());
+                    e.getMessage());
         }
     }
 
@@ -305,13 +327,12 @@ public class GlobTypeLoaderTest {
         try {
             GlobTypeLoaderFactory.createAndLoad(AnObjectWithALinkFieldTargettingANonGlobsObject.class);
             fail();
-        }
-        catch (InvalidParameter e) {
+        } catch (InvalidParameter e) {
             assertEquals("LinkField 'link' in type '" +
-                         AnObjectWithALinkFieldTargettingANonGlobsObject.TYPE.getName() +
-                         "' cannot reference target class '" + String.class.getName() +
-                         "' because it does not define a Glob type",
-                         e.getMessage());
+                            AnObjectWithALinkFieldTargettingANonGlobsObject.TYPE.getName() +
+                            "' cannot reference target class '" + String.class.getName() +
+                            "' because it does not define a Glob type",
+                    e.getMessage());
         }
     }
 
@@ -340,9 +361,9 @@ public class GlobTypeLoaderTest {
     public void testAnObjectWithALinkFieldTargettingAnObjectWithAStringId() throws Exception {
         GlobTypeLoader loader = GlobTypeLoaderFactory.create(AnObjectWithALinkFieldTargettingAnObjectWithAStringId.class);
         loader.register(MutableGlobLinkModel.LinkRegister.class, mutableGlobLinkModel ->
-            AnObjectWithALinkFieldTargettingAnObjectWithAStringId.LINK = mutableGlobLinkModel.getDirectLinkBuilder(AnObjectWithALinkFieldTargettingAnObjectWithAStringId.LINK)
-                .add(AnObjectWithALinkFieldTargettingAnObjectWithAStringId.LINK_ID, AnObjectWithAStringId.ID)
-                .publish());
+                AnObjectWithALinkFieldTargettingAnObjectWithAStringId.LINK = mutableGlobLinkModel.getDirectLinkBuilder(AnObjectWithALinkFieldTargettingAnObjectWithAStringId.LINK)
+                        .add(AnObjectWithALinkFieldTargettingAnObjectWithAStringId.LINK_ID, AnObjectWithAStringId.ID)
+                        .publish());
 
     }
 
@@ -358,8 +379,8 @@ public class GlobTypeLoaderTest {
 
             loader.register(MutableGlobLinkModel.LinkRegister.class, mutableGlobLinkModel -> {
                 LINK = mutableGlobLinkModel.getLinkBuilder(LINK)
-                    .add(LINK_ID, AnObject.ID)
-                    .publish();
+                        .add(LINK_ID, AnObject.ID)
+                        .publish();
             });
             loader.load();
         }
@@ -396,7 +417,7 @@ public class GlobTypeLoaderTest {
         static public Key UNIQUE_KEY;
 
         public static Glob create(Annotation annotation) {
-            return TYPE.instantiate().set(VALUE, ((MyAnnotation)annotation).value());
+            return TYPE.instantiate().set(VALUE, ((MyAnnotation) annotation).value());
         }
 
         static {
@@ -426,15 +447,15 @@ public class GlobTypeLoaderTest {
         Glob classAnnotation = AnObjectWithCustomAnnotations.TYPE.getAnnotation(MyAnnotationType.UNIQUE_KEY);
         assertEquals("class annotations", classAnnotation.get(MyAnnotationType.VALUE));
         Collection<Glob> globs = AnObjectWithCustomAnnotations.TYPE.streamAnnotations(MyAnnotationType.TYPE)
-            .collect(Collectors.toList());
+                .collect(Collectors.toList());
         Assert.assertEquals(1, globs.size());
     }
 
     @Test
     public void testRetrievingAnnotatedFields() throws Exception {
         assertEquals(AnObjectWithCustomAnnotations.ID,
-                     AnObjectWithCustomAnnotations.TYPE.getFieldWithAnnotation(
-                         MyAnnotationType.UNIQUE_KEY));
+                AnObjectWithCustomAnnotations.TYPE.getFieldWithAnnotation(
+                        MyAnnotationType.UNIQUE_KEY));
     }
 
     public static class AnObjectWithCustomLinkAnnotations {
@@ -487,7 +508,7 @@ public class GlobTypeLoaderTest {
     public void testAnObjectWithDefaultValues() throws Exception {
         assertEquals(7, DummyObjectWithDefaultValues.INTEGER.getDefaultValue());
         assertEquals(7, DummyObjectWithDefaultValues.INTEGER.getAnnotation(DefaultIntegerAnnotationType.UNIQUE_KEY)
-            .get(DefaultIntegerAnnotationType.DEFAULT_VALUE).intValue());
+                .get(DefaultIntegerAnnotationType.DEFAULT_VALUE).intValue());
         assertEquals(3.14159265, DummyObjectWithDefaultValues.DOUBLE.getDefaultValue());
         assertEquals(5l, DummyObjectWithDefaultValues.LONG.getDefaultValue());
         assertEquals(true, DummyObjectWithDefaultValues.BOOLEAN.getDefaultValue());
@@ -512,11 +533,10 @@ public class GlobTypeLoaderTest {
         try {
             GlobTypeLoaderFactory.createAndLoad(AnObjectWithADefaultValueTypeError.class);
             fail();
-        }
-        catch (InvalidParameter e) {
+        } catch (InvalidParameter e) {
             assertEquals("Field anObjectWithADefaultValueTypeError.count should declare a default value " +
-                         "with annotation @DefaultInteger instead of @DefaultBoolean",
-                         e.getMessage());
+                            "with annotation @DefaultInteger instead of @DefaultBoolean",
+                    e.getMessage());
         }
     }
 
@@ -536,7 +556,7 @@ public class GlobTypeLoaderTest {
             GlobTypeLoader loader = GlobTypeLoaderFactory.create(AnObjectWithRequiredLinks.class);
             loader.register(MutableGlobLinkModel.LinkRegister.class, mutableGlobLinkModel -> {
                 LINK = mutableGlobLinkModel.getDirectLinkBuilder(LINK)
-                    .add(LINK_ID, DummyObject.ID).publish();
+                        .add(LINK_ID, DummyObject.ID).publish();
             });
             loader.load();
         }
@@ -564,8 +584,8 @@ public class GlobTypeLoaderTest {
         static {
             GlobTypeLoader loader = GlobTypeLoaderFactory.create(AnObjectWithRequiredLinkField.class);
             loader.register(MutableGlobLinkModel.LinkRegister.class, mutableGlobLinkModel ->
-                LINK = mutableGlobLinkModel.getDirectLinkBuilder(LINK)
-                    .add(LINK_ID, DummyObject.ID).publish());
+                    LINK = mutableGlobLinkModel.getDirectLinkBuilder(LINK)
+                            .add(LINK_ID, DummyObject.ID).publish());
             loader.load();
         }
     }

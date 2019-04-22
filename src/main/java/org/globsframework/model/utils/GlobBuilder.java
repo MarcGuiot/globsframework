@@ -10,6 +10,9 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 
+/*
+Set the default value
+ */
 public class GlobBuilder implements FieldValues.Functor, FieldSetter<GlobBuilder>, FieldValues {
     private GlobType globType;
     private MutableGlob mutableGlob;
@@ -150,6 +153,16 @@ public class GlobBuilder implements FieldValues.Functor, FieldSetter<GlobBuilder
         return this;
     }
 
+    public GlobBuilder set(GlobUnionField field, Glob value) throws ItemNotFound {
+        mutableGlob.set(field, value);
+        return this;
+    }
+
+    public GlobBuilder set(GlobArrayUnionField field, Glob[] values) throws ItemNotFound {
+        mutableGlob.set(field, values);
+        return this;
+    }
+
     public GlobBuilder setValue(Field field, Object value) throws ItemNotFound {
         mutableGlob.setValue(field, value);
         return this;
@@ -273,6 +286,14 @@ public class GlobBuilder implements FieldValues.Functor, FieldSetter<GlobBuilder
     }
 
     public Glob[] get(GlobArrayField field) throws ItemNotFound {
+        return mutableGlob.get(field);
+    }
+
+    public Glob get(GlobUnionField field) throws ItemNotFound {
+        return mutableGlob.get(field);
+    }
+
+    public Glob[] get(GlobArrayUnionField field) throws ItemNotFound {
         return mutableGlob.get(field);
     }
 

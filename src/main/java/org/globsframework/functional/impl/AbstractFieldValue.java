@@ -95,6 +95,14 @@ public abstract class AbstractFieldValue<T extends FieldSetter> implements Field
         return doSet(field, values);
     }
 
+    public T set(GlobUnionField field, Glob value) throws ItemNotFound {
+        return doSet(field, value);
+    }
+
+    public T set(GlobArrayUnionField field, Glob[] values) throws ItemNotFound {
+        return doSet(field, values);
+    }
+
     public T setValue(Field field, Object o) throws ItemNotFound {
         return doSet(field, o);
     }
@@ -218,6 +226,14 @@ public abstract class AbstractFieldValue<T extends FieldSetter> implements Field
     }
 
     public Glob[] get(GlobArrayField field) throws ItemNotFound {
+        return (Glob[]) doGet(field);
+    }
+
+    public Glob get(GlobUnionField field) throws ItemNotFound {
+        return (Glob) doGet(field);
+    }
+
+    public Glob[] get(GlobArrayUnionField field) throws ItemNotFound {
         return (Glob[]) doGet(field);
     }
 }

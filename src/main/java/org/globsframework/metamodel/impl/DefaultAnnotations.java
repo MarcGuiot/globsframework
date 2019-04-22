@@ -41,7 +41,7 @@ public class DefaultAnnotations<T extends MutableAnnotations> implements Mutable
             synchronized (this) {
                 MapOfMaps<GlobType, Key, Glob> tmp = new MapOfMaps<>(annotations);
                 Glob old = tmp.put(glob.getType(), glob.getKey(), glob);
-                if (old != null) {
+                if (old != null && old != glob) {
                     LOGGER.warn(GlobPrinter.toString(glob) + " has replaced " + GlobPrinter.toString(old));
                 }
                 annotations = tmp;
@@ -55,7 +55,7 @@ public class DefaultAnnotations<T extends MutableAnnotations> implements Mutable
             MapOfMaps<GlobType, Key, Glob> tmp = new MapOfMaps<>(annotations);
             globs.forEach(glob -> {
                 Glob old = tmp.put(glob.getType(), glob.getKey(), glob);
-                if (old != null) {
+                if (old != null && old != glob) {
                     LOGGER.warn(GlobPrinter.toString(glob) + " has replaced " + GlobPrinter.toString(old));
                 }
             });

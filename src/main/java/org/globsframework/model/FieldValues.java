@@ -11,36 +11,6 @@ import java.time.ZonedDateTime;
 
 public interface FieldValues extends FieldValuesAccessor {
 
-    boolean contains(Field field);
-
-    int size();
-
-    <T extends Functor>
-    T apply(T functor) throws Exception;
-
-    <T extends Functor>
-    T safeApply(T functor);
-
-    <T extends FieldValueVisitor>
-    T accept(T functor) throws Exception;
-
-    <T extends FieldValueVisitor>
-    T safeAccept(T functor);
-
-    FieldValue[] toArray();
-
-    default String getNotNull(StringField field) {
-        String value = get(field);
-        if (value == null) {
-            throw new NullPointerException(field.getFullName() + " should not be null " + GlobPrinter.toString(this));
-        }
-        return value;
-    }
-
-    interface Functor {
-        void process(Field field, Object value) throws Exception;
-    }
-
     FieldValues EMPTY = new FieldValues() {
         public boolean contains(Field field) {
             return false;
@@ -164,8 +134,113 @@ public interface FieldValues extends FieldValuesAccessor {
             throw new ItemNotFound(field.getName());
         }
 
+        public Glob get(GlobUnionField field) throws ItemNotFound {
+            throw new ItemNotFound(field.getName());
+        }
+
+        public Glob[] get(GlobArrayUnionField field) throws ItemNotFound {
+            throw new ItemNotFound(field.getName());
+        }
+
         public FieldValue[] toArray() {
             return new FieldValue[0];
         }
     };
+    Glob[] EMPTYARRAY = new Glob[0];
+
+    boolean contains(Field field);
+
+    int size();
+
+    <T extends Functor>
+    T apply(T functor) throws Exception;
+
+    <T extends Functor>
+    T safeApply(T functor);
+
+    <T extends FieldValueVisitor>
+    T accept(T functor) throws Exception;
+
+    <T extends FieldValueVisitor>
+    T safeAccept(T functor);
+
+    FieldValue[] toArray();
+
+    default Glob[] getOrEmpty(GlobArrayUnionField field){
+        Glob[] globs = get(field);
+        return globs != null ? globs : EMPTYARRAY;
+    }
+
+    default Glob[] getOrEmpty(GlobArrayField field){
+        Glob[] globs = get(field);
+        return globs != null ? globs : EMPTYARRAY;
+    }
+
+    default String getNotNull(StringField field) {
+        String value = get(field);
+        if (value == null) {
+            throw new NullPointerException(field.getFullName() + " should not be null " + GlobPrinter.toString(this));
+        }
+        return value;
+    }
+
+    default Glob[] getNotNull(GlobArrayUnionField field) {
+        Glob[] value = get(field);
+        if (value == null) {
+            throw new NullPointerException(field.getFullName() + " should not be null " + GlobPrinter.toString(this));
+        }
+        return value;
+    }
+
+    default Glob[] getNotNull(GlobArrayField field) {
+        Glob[] value = get(field);
+        if (value == null) {
+            throw new NullPointerException(field.getFullName() + " should not be null " + GlobPrinter.toString(this));
+        }
+        return value;
+    }
+
+    default Glob getNotNull(GlobUnionField field) {
+        Glob value = get(field);
+        if (value == null) {
+            throw new NullPointerException(field.getFullName() + " should not be null " + GlobPrinter.toString(this));
+        }
+        return value;
+    }
+
+    default Glob getNotNull(GlobField field) {
+        Glob value = get(field);
+        if (value == null) {
+            throw new NullPointerException(field.getFullName() + " should not be null " + GlobPrinter.toString(this));
+        }
+        return value;
+    }
+
+    default Double getNotNull(DoubleField field) {
+        Double value = get(field);
+        if (value == null) {
+            throw new NullPointerException(field.getFullName() + " should not be null " + GlobPrinter.toString(this));
+        }
+        return value;
+    }
+
+    default double[] getNotNull(DoubleArrayField field) {
+        double[] value = get(field);
+        if (value == null) {
+            throw new NullPointerException(field.getFullName() + " should not be null " + GlobPrinter.toString(this));
+        }
+        return value;
+    }
+
+    default String[] getNotNull(StringArrayField field) {
+        String[] value = get(field);
+        if (value == null) {
+            throw new NullPointerException(field.getFullName() + " should not be null " + GlobPrinter.toString(this));
+        }
+        return value;
+    }
+
+    interface Functor {
+        void process(Field field, Object value) throws Exception;
+    }
 }

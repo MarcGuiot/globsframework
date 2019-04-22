@@ -23,7 +23,7 @@ interface DeltaState {
     DeltaState UPDATED = new UpdatedDeltaState();
     DeltaState DELETED = new DeletedDeltaState();
 
-    public static class UnchangedDeltaState implements DeltaState {
+    class UnchangedDeltaState implements DeltaState {
         public void processCreation(DeltaGlob delta, FieldValues values) {
             delta.setState(CREATED);
             delta.setValues(values);
@@ -51,7 +51,7 @@ interface DeltaState {
         }
     }
 
-    public static class CreatedDeltaState implements DeltaState {
+    class CreatedDeltaState implements DeltaState {
         public void processCreation(DeltaGlob delta, FieldValues values) {
             throw new InvalidState("Object " + delta.getKey() + " already exists");
         }
@@ -77,7 +77,7 @@ interface DeltaState {
         }
     }
 
-    public static class UpdatedDeltaState implements DeltaState {
+    class UpdatedDeltaState implements DeltaState {
         public void processCreation(DeltaGlob delta, FieldValues values) {
             throw new InvalidState("Object " + delta.getKey() + " already exists");
         }
@@ -113,7 +113,7 @@ interface DeltaState {
         }
     }
 
-    public static class DeletedDeltaState implements DeltaState {
+    class DeletedDeltaState implements DeltaState {
         public void processCreation(DeltaGlob delta, FieldValues values) {
             delta.setState(UPDATED);
             delta.setValues(values);

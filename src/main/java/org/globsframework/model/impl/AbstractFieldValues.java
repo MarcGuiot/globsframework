@@ -118,6 +118,14 @@ public abstract class AbstractFieldValues implements FieldValues {
         return (Glob[])doCheckedGet(field);
     }
 
+    public Glob get(GlobUnionField field) throws ItemNotFound {
+        return (Glob)doCheckedGet(field);
+    }
+
+    public Glob[] get(GlobArrayUnionField field) throws ItemNotFound {
+        return (Glob[])doCheckedGet(field);
+    }
+
     protected abstract Object doCheckedGet(Field field);
 
     public <T extends FieldValues.Functor>

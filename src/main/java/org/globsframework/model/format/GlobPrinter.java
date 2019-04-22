@@ -2,6 +2,10 @@ package org.globsframework.model.format;
 
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
+import org.globsframework.metamodel.fields.GlobArrayField;
+import org.globsframework.metamodel.fields.GlobArrayUnionField;
+import org.globsframework.metamodel.fields.GlobField;
+import org.globsframework.metamodel.fields.GlobUnionField;
 import org.globsframework.metamodel.utils.GlobTypeComparator;
 import org.globsframework.model.FieldValues;
 import org.globsframework.model.Glob;
@@ -23,7 +27,11 @@ public class GlobPrinter {
     public static String toString(final FieldValues fieldValues) {
         final StringBuilder builder = new StringBuilder();
         fieldValues.safeApply((field, value) ->
-              builder.append(field.getName()).append("=").append(fieldValues.getValue(field)).append(('\n')));
+                builder
+                        .append(field.getName())
+                        .append("=")
+                        .append(field.toString(fieldValues.getValue(field), ""))
+                        .append('\n'));
         return builder.toString();
     }
 
@@ -144,8 +152,7 @@ public class GlobPrinter {
                 if (found) {
                     rows.add(row);
                 }
-            }
-            else {
+            } else {
                 rows.add(row);
             }
         }
@@ -175,6 +182,16 @@ public class GlobPrinter {
     private String getValue(Glob glob, Field field, Object value) {
         if (value == null) {
             return "";
+        }
+        if (field instanceof GlobField || field instanceof GlobUnionField) {
+            return Arrays.toString(createRow(((Glob) value).getType(), ((Glob) value)));
+        } else if (field instanceof GlobArrayField || field instanceof GlobArrayUnionField) {
+            StringBuilder builder = new StringBuilder();
+            for (Glob globChild : ((Glob[]) value)) {
+                builder.append(Arrays.toString(createRow(globChild.getType(), globChild)));
+                builder.append(",");
+            }
+            return builder.toString();
         }
         return Strings.toString(value);
     }

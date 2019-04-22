@@ -1,5 +1,6 @@
 package org.globsframework.metamodel.fields.impl;
 
+import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.type.DataType;
@@ -92,8 +93,7 @@ public class DefaultGlobField extends AbstractField implements GlobField {
 
     public boolean valueEqual(Object o1, Object o2) {
         return (o1 == null) && (o2 == null) ||
-                !((o1 == null) || (o2 == null)) &&
-                        ((Glob) o1).getKey().equals(((Glob) o2).getKey());
+                !((o1 == null) || (o2 == null)) && isSameGlob(getType(), (Glob)o1, (Glob)o2);
     }
 
     public void checkValue(Object object) throws InvalidParameter {
@@ -102,6 +102,36 @@ public class DefaultGlobField extends AbstractField implements GlobField {
                     + ") is not authorized for field: " + getName() +
                     " (expected Glob)");
         }
+    }
+
+    public static boolean isSameGlob(GlobType type, Glob g1, Glob g2) {
+        Field[] fields = type.getFields();
+        for (Field field : fields) {
+            if (!field.valueEqual(g1.getValue(field), g2.getValue(field))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public String toString(Object value, String offset) {
+        if (value == null) {
+            return "null";
+        }
+        else {
+            return toString((Glob) value, offset);
+        }
+    }
+
+    public static String toString(final Glob glob, String offset) {
+        final StringBuilder builder = new StringBuilder();
+        offset += "  ";
+        String finalOffset = offset;
+        builder.append("[\n");
+        glob.safeApply((field, value) ->
+                builder.append(finalOffset).append(field.getName()).append("=")
+                        .append(field.toString(value, finalOffset)).append(('\n')));
+        return builder.deleteCharAt(builder.length() - 1).append("]").toString();
     }
 
 }

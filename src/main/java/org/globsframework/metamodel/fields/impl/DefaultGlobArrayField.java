@@ -4,10 +4,9 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.type.DataType;
 import org.globsframework.model.Glob;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.utils.exceptions.InvalidParameter;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
-
-import java.util.Arrays;
 
 public class DefaultGlobArrayField extends AbstractField implements GlobArrayField {
     private final GlobType targetType;
@@ -87,8 +86,21 @@ public class DefaultGlobArrayField extends AbstractField implements GlobArrayFie
     public boolean valueEqual(Object o1, Object o2) {
         return (o1 == null) && (o2 == null) ||
                 !((o1 == null) || (o2 == null)) &&
-                        Arrays.equals(((Glob[]) o1), ((Glob[]) o2));
+                        isSameGlob(getType(), ((Glob[]) o1), ((Glob[]) o2));
     }
+
+    public static boolean isSameGlob(GlobType type, Glob[] g1, Glob[] g2) {
+        if (g1.length != g2.length) {
+            return false;
+        }
+        for (int i = 0; i < g1.length; i++) {
+            if (!DefaultGlobField.isSameGlob(type, g1[i], g2[i])) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 
     public void checkValue(Object object) throws InvalidParameter {
         if ((object != null) && (!(object instanceof Glob[]))) {
@@ -97,4 +109,14 @@ public class DefaultGlobArrayField extends AbstractField implements GlobArrayFie
                     " (expected Glob)");
         }
     }
+
+    public String toString(Object value, String offset) {
+        if (value == null) {
+            return "null";
+        }
+        else {
+            return DefaultArrayGlobUnionField.toString(offset, ((Glob[]) value));
+        }
+    }
+
 }

@@ -5,9 +5,11 @@ import org.globsframework.metamodel.fields.*;
 import org.globsframework.model.globaccessor.get.GlobGetAccessor;
 import org.globsframework.model.globaccessor.get.GlobGetDoubleAccessor;
 import org.globsframework.model.globaccessor.get.GlobGetIntAccessor;
+import org.globsframework.model.globaccessor.get.GlobGetLongAccessor;
 import org.globsframework.model.globaccessor.set.GlobSetAccessor;
 import org.globsframework.model.globaccessor.set.GlobSetDoubleAccessor;
 import org.globsframework.model.globaccessor.set.GlobSetIntAccessor;
+import org.globsframework.model.globaccessor.set.GlobSetLongAccessor;
 
 public interface GlobFactory {
 
@@ -62,11 +64,19 @@ public interface GlobFactory {
         return (GlobSetDoubleAccessor) getSetValueAccessor(field);
     }
 
+    default GlobSetLongAccessor getSetAccessor(LongField field) {
+        return (GlobSetLongAccessor) getSetValueAccessor(field);
+    }
+
     default GlobGetIntAccessor getGetAccessor(IntegerField field) {
         return (GlobGetIntAccessor) getGetValueAccessor(field);
     }
 
     default GlobGetDoubleAccessor getGetAccessor(DoubleField field) {
         return (GlobGetDoubleAccessor) getGetValueAccessor(field);
+    }
+
+    default GlobGetLongAccessor getGetAccessor(LongField field) {
+        return (GlobGetLongAccessor) getGetValueAccessor(field);
     }
 }

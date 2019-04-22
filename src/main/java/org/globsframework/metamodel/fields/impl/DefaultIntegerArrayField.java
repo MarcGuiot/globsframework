@@ -5,7 +5,6 @@ import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.type.DataType;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
-import java.math.BigDecimal;
 import java.util.Arrays;
 
 public class DefaultIntegerArrayField extends AbstractField implements IntegerArrayField {
@@ -86,7 +85,7 @@ public class DefaultIntegerArrayField extends AbstractField implements IntegerAr
         return Arrays.hashCode(((int[]) o));
     }
 
-    public String toString(Object value) {
+    public String toString(Object value, String offset) {
         return Arrays.toString(((int[]) value));
     }
 

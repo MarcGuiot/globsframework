@@ -3,7 +3,10 @@ package org.globsframework.model.impl;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.FieldValueVisitor;
-import org.globsframework.model.*;
+import org.globsframework.model.FieldValue;
+import org.globsframework.model.FieldValues;
+import org.globsframework.model.Glob;
+import org.globsframework.model.Key;
 
 import java.util.Objects;
 
@@ -18,11 +21,22 @@ public abstract class AbstractGlob extends AbstractFieldValues implements Glob, 
         StringBuilder buffer = new StringBuilder(getType().getName()).append("[");
         GlobType type = getType();
         Field[] keyFields = type.getKeyFields();
-        for (int i = 0; i < keyFields.length; i++) {
-            Field field = keyFields[i];
-            buffer.append(field.getName()).append("=").append(doGet(field));
-            if (i < keyFields.length - 1) {
-                buffer.append(", ");
+        if (keyFields.length != 0) {
+            for (int i = 0; i < keyFields.length; i++) {
+                Field field = keyFields[i];
+                buffer.append(field.getName()).append("=").append(doGet(field));
+                if (i < keyFields.length - 1) {
+                    buffer.append(", ");
+                }
+            }
+        } else {
+            Field[] fields = type.getFields();
+            for (int i = 0; i < fields.length; i++) {
+                Field field = fields[i];
+                buffer.append(field.getName()).append("=").append(field.toString(doGet(field), ""));
+                if (i < fields.length - 1) {
+                    buffer.append(", ");
+                }
             }
         }
         buffer.append("]");
@@ -165,6 +179,7 @@ public abstract class AbstractGlob extends AbstractFieldValues implements Glob, 
         if (this == o) {
             return true;
         }
+
         if (o == null) {
             return false;
         }
@@ -178,8 +193,23 @@ public abstract class AbstractGlob extends AbstractFieldValues implements Glob, 
             return false;
         }
 
-        for (Field field : getType().getKeyFields()) {
+        Field[] keyFields = getType().getKeyFields();
+        if (keyFields.length == 0) {
+            return o instanceof Glob && reallyEquals((Glob) o);
+        }
+
+        for (Field field : keyFields) {
             if (!field.valueEqual(getValue(field), otherKey.getValue(field))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean reallyEquals(Glob glob) {
+        GlobType type = getType();
+        for (Field field : type.getFields()) {
+            if (!field.valueEqual(getValue(field), glob.getValue(field))) {
                 return false;
             }
         }

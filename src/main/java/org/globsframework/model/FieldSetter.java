@@ -49,5 +49,9 @@ public interface FieldSetter<T extends FieldSetter> {
 
     T set(GlobArrayField field, Glob[] values) throws ItemNotFound;
 
+    T set(GlobUnionField field, Glob value) throws ItemNotFound;
+
+    T set(GlobArrayUnionField field, Glob[] values) throws ItemNotFound;
+
     T setValue(Field field, Object value) throws ItemNotFound;
 }

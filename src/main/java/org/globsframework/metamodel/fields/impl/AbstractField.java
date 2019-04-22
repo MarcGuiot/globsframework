@@ -111,7 +111,7 @@ abstract public class AbstractField extends DefaultAnnotations<Field> implements
         return this;
     }
 
-    public String toString(Object value) {
+    public String toString(Object value, String offset) {
         return Objects.toString(value);
     }
 

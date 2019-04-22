@@ -7,7 +7,6 @@ import org.globsframework.metamodel.fields.*;
 import org.globsframework.model.*;
 import org.globsframework.model.delta.DefaultChangeSet;
 import org.globsframework.model.delta.MutableChangeSet;
-import org.globsframework.model.utils.GlobBuilder;
 import org.globsframework.utils.exceptions.EOFIOFailure;
 import org.globsframework.utils.exceptions.InvalidData;
 import org.globsframework.utils.exceptions.InvalidFormat;
@@ -20,6 +19,8 @@ import java.math.BigDecimal;
 import java.time.*;
 
 public class DefaultSerializationInput implements SerializedInput {
+    public static final String ORG_GLOBSFRAMWORK_SERIALIZATION_MAX_LEN = "org.globsframwork.serialization.max.len";
+    public static final int MAX_SIZE_FOR_BYTES = Integer.getInteger(ORG_GLOBSFRAMWORK_SERIALIZATION_MAX_LEN, 512 * 1024);
     private InputStream inputStream;
     public int count;
 
@@ -29,12 +30,12 @@ public class DefaultSerializationInput implements SerializedInput {
 
     public Glob readGlob(GlobModel model) {
         GlobType globType = model.getType(readUtf8String());
-        GlobBuilder builder = GlobBuilder.init(globType);
-        InputStreamFieldVisitor fieldVisitorInput = new InputStreamFieldVisitor(model, builder);
+        MutableGlob mutableGlob = globType.instantiate();
+        InputStreamFieldVisitor fieldVisitorInput = new InputStreamFieldVisitor(model, mutableGlob);
         for (Field field : globType.getFields()) {
             field.safeVisit(fieldVisitorInput);
         }
-        return builder.get();
+        return mutableGlob;
     }
 
     public ChangeSet readChangeSet(GlobModel model) {
@@ -191,7 +192,7 @@ public class DefaultSerializationInput implements SerializedInput {
             builder.set(field, input.readInteger());
         }
 
-        public void visitIntegerArray(IntegerArrayField field) throws Exception {
+        public void visitIntegerArray(IntegerArrayField field) {
             builder.set(field, input.readIntArray());
         }
 
@@ -199,15 +200,15 @@ public class DefaultSerializationInput implements SerializedInput {
             builder.set(field, input.readDouble());
         }
 
-        public void visitDoubleArray(DoubleArrayField field) throws Exception {
+        public void visitDoubleArray(DoubleArrayField field) {
             builder.set(field, input.readDoubleArray());
         }
 
-        public void visitBigDecimal(BigDecimalField field) throws Exception {
+        public void visitBigDecimal(BigDecimalField field) {
             builder.set(field, input.readBigDecimal());
         }
 
-        public void visitBigDecimalArray(BigDecimalArrayField field) throws Exception {
+        public void visitBigDecimalArray(BigDecimalArrayField field) {
             builder.set(field, input.readBigDecimaleArray());
         }
 
@@ -215,7 +216,7 @@ public class DefaultSerializationInput implements SerializedInput {
             builder.set(field, input.readUtf8String());
         }
 
-        public void visitStringArray(StringArrayField field) throws Exception {
+        public void visitStringArray(StringArrayField field) {
             builder.set(field, input.readStringArray());
         }
 
@@ -223,7 +224,7 @@ public class DefaultSerializationInput implements SerializedInput {
             builder.set(field, input.readBoolean());
         }
 
-        public void visitBooleanArray(BooleanArrayField field) throws Exception {
+        public void visitBooleanArray(BooleanArrayField field) {
             builder.set(field, input.readBooleanArray());
         }
 
@@ -250,22 +251,41 @@ public class DefaultSerializationInput implements SerializedInput {
             }
         }
 
+        public void visitUnionGlob(GlobUnionField field) {
+            if (input.readBoolean()) {
+                builder.set(field, input.readGlob(model));
+            }
+        }
+
+        public void visitUnionGlobArray(GlobArrayUnionField field) {
+            int len = input.readNotNullInt();
+            if (len >= 0) {
+                Glob[] values = new Glob[len];
+                for (int i = 0; i < values.length; i++) {
+                    if (input.readBoolean()) {
+                        values[i] = input.readGlob(model);
+                    }
+                }
+                builder.set(field, values);
+            }
+        }
+
         public void visitLong(LongField field) throws Exception {
             builder.set(field, input.readLong());
         }
 
-        public void visitLongArray(LongArrayField field) throws Exception {
+        public void visitLongArray(LongArrayField field) {
             builder.set(field, input.readLongArray());
         }
 
-        public void visitDate(DateField field) throws Exception {
+        public void visitDate(DateField field) {
             int year = input.readNotNullInt();
             int month = input.readNotNullInt();
             int day = input.readNotNullInt();
             builder.set(field, LocalDate.of(year, month, day));
         }
 
-        public void visitDateTime(DateTimeField field) throws Exception {
+        public void visitDateTime(DateTimeField field) {
             int year = input.readNotNullInt();
             int month = input.readNotNullInt();
             int day = input.readNotNullInt();
@@ -302,7 +322,7 @@ public class DefaultSerializationInput implements SerializedInput {
             builder.set(field, input.readInteger(), input.readInteger());
         }
 
-        public void visitIntegerArray(IntegerArrayField field) throws Exception {
+        public void visitIntegerArray(IntegerArrayField field) {
             builder.set(field, input.readIntArray(), input.readIntArray());
         }
 
@@ -310,15 +330,15 @@ public class DefaultSerializationInput implements SerializedInput {
             builder.set(field, input.readDouble(), input.readDouble());
         }
 
-        public void visitDoubleArray(DoubleArrayField field) throws Exception {
+        public void visitDoubleArray(DoubleArrayField field) {
             builder.set(field, input.readDoubleArray(), input.readDoubleArray());
         }
 
-        public void visitBigDecimal(BigDecimalField field) throws Exception {
+        public void visitBigDecimal(BigDecimalField field) {
             builder.set(field, input.readBigDecimal(), input.readBigDecimal());
         }
 
-        public void visitBigDecimalArray(BigDecimalArrayField field) throws Exception {
+        public void visitBigDecimalArray(BigDecimalArrayField field) {
             builder.set(field, input.readBigDecimaleArray(), input.readBigDecimaleArray());
         }
 
@@ -326,7 +346,7 @@ public class DefaultSerializationInput implements SerializedInput {
             builder.set(field, input.readUtf8String(), input.readUtf8String());
         }
 
-        public void visitStringArray(StringArrayField field) throws Exception {
+        public void visitStringArray(StringArrayField field) {
             builder.set(field, input.readStringArray(), input.readStringArray());
         }
 
@@ -334,7 +354,7 @@ public class DefaultSerializationInput implements SerializedInput {
             builder.set(field, input.readBoolean(), input.readBoolean());
         }
 
-        public void visitBooleanArray(BooleanArrayField field) throws Exception {
+        public void visitBooleanArray(BooleanArrayField field) {
             builder.set(field, input.readBooleanArray(), input.readBooleanArray());
         }
 
@@ -375,19 +395,52 @@ public class DefaultSerializationInput implements SerializedInput {
             builder.set(field, newValue, previousValue);
         }
 
+        public void visitUnionGlob(GlobUnionField field) {
+            Glob newValue = null;
+            if (input.readBoolean()) {
+                newValue = input.readGlob(model);
+            }
+            Glob previousValue = null;
+            if (input.readBoolean()) {
+                previousValue = input.readGlob(model);
+            }
+            builder.set(field, newValue, previousValue);
+        }
+
+        public void visitUnionGlobArray(GlobArrayUnionField field) {
+            int lenNewValues = input.readNotNullInt();
+            Glob[] newValue = null;
+            if (lenNewValues >= 0) {
+                newValue = new Glob[lenNewValues];
+                for (int i = 0; i < newValue.length; i++) {
+                    newValue[i] = input.readBoolean() ? input.readGlob(model) : null;
+                }
+            }
+
+            int lenPreviousValues = input.readNotNullInt();
+            Glob[] previousValue = null;
+            if (lenPreviousValues >= 0) {
+                previousValue = new Glob[lenPreviousValues];
+                for (int i = 0; i < previousValue.length; i++) {
+                    previousValue[i] = input.readBoolean() ? input.readGlob(model) : null;
+                }
+            }
+            builder.set(field, newValue, previousValue);
+        }
+
         public void visitLong(LongField field) throws Exception {
             builder.set(field, input.readLong(), input.readLong());
         }
 
-        public void visitLongArray(LongArrayField field) throws Exception {
+        public void visitLongArray(LongArrayField field) {
             builder.set(field, input.readLongArray(), input.readLongArray());
         }
 
-        public void visitDate(DateField field) throws Exception {
+        public void visitDate(DateField field) {
             builder.set(field, input.readDate(), input.readDate());
         }
 
-        public void visitDateTime(DateTimeField field) throws Exception {
+        public void visitDateTime(DateTimeField field) {
             builder.set(field, input.readDateTime(), input.readDateTime());
         }
     }
@@ -418,6 +471,7 @@ public class DefaultSerializationInput implements SerializedInput {
     }
 
     public Integer readInteger() {
+
         if (isNull()) {
             return null;
         }
@@ -506,8 +560,8 @@ public class DefaultSerializationInput implements SerializedInput {
                 return null;
             }
             int readed = 0;
-            if (length > 512 * 1024) {
-                throw new InvalidData("More than " + 512 * 1024 + " : " + length);
+            if (MAX_SIZE_FOR_BYTES != -1 && length > MAX_SIZE_FOR_BYTES) {
+                throw new InvalidData("More than " + MAX_SIZE_FOR_BYTES + " bytes to write  (" + length + ") see " + ORG_GLOBSFRAMWORK_SERIALIZATION_MAX_LEN);
             }
             if (length < 0) {
                 throw new InvalidData("negative length : " + length);
@@ -529,64 +583,64 @@ public class DefaultSerializationInput implements SerializedInput {
 
     private class InputStreamFieldVisitor implements FieldVisitor {
         private GlobModel model;
-        private GlobBuilder builder;
+        private MutableGlob mutableGlob;
 
-        public InputStreamFieldVisitor(GlobModel model, GlobBuilder builder) {
+        public InputStreamFieldVisitor(GlobModel model, MutableGlob mutableGlob) {
             this.model = model;
-            this.builder = builder;
+            this.mutableGlob = mutableGlob;
         }
 
-        public void visitInteger(IntegerField field) throws Exception {
-            builder.set(field, readInteger());
+        public void visitInteger(IntegerField field) {
+            mutableGlob.set(field, readInteger());
         }
 
-        public void visitIntegerArray(IntegerArrayField field) throws Exception {
-            builder.set(field, readIntArray());
+        public void visitIntegerArray(IntegerArrayField field) {
+            mutableGlob.set(field, readIntArray());
         }
 
-        public void visitDouble(DoubleField field) throws Exception {
-            builder.set(field, readDouble());
+        public void visitDouble(DoubleField field) {
+            mutableGlob.set(field, readDouble());
         }
 
-        public void visitDoubleArray(DoubleArrayField field) throws Exception {
-            builder.set(field, readDoubleArray());
+        public void visitDoubleArray(DoubleArrayField field) {
+            mutableGlob.set(field, readDoubleArray());
         }
 
-        public void visitBigDecimal(BigDecimalField field) throws Exception {
-            builder.set(field, readBigDecimal());
+        public void visitBigDecimal(BigDecimalField field) {
+            mutableGlob.set(field, readBigDecimal());
         }
 
-        public void visitBigDecimalArray(BigDecimalArrayField field) throws Exception {
-            builder.set(field, readBigDecimaleArray());
+        public void visitBigDecimalArray(BigDecimalArrayField field) {
+            mutableGlob.set(field, readBigDecimaleArray());
         }
 
-        public void visitString(StringField field) throws Exception {
-            builder.set(field, readUtf8String());
+        public void visitString(StringField field) {
+            mutableGlob.set(field, readUtf8String());
         }
 
-        public void visitStringArray(StringArrayField field) throws Exception {
-            builder.set(field, readStringArray());
+        public void visitStringArray(StringArrayField field) {
+            mutableGlob.set(field, readStringArray());
         }
 
-        public void visitBoolean(BooleanField field) throws Exception {
-            builder.set(field, readBoolean());
+        public void visitBoolean(BooleanField field) {
+            mutableGlob.set(field, readBoolean());
         }
 
-        public void visitBooleanArray(BooleanArrayField field) throws Exception {
-            builder.set(field, readBooleanArray());
+        public void visitBooleanArray(BooleanArrayField field) {
+            mutableGlob.set(field, readBooleanArray());
         }
 
-        public void visitBlob(BlobField field) throws Exception {
-            builder.set(field, readBytes());
+        public void visitBlob(BlobField field) {
+            mutableGlob.set(field, readBytes());
         }
 
-        public void visitGlob(GlobField field) throws Exception {
+        public void visitGlob(GlobField field) {
             if (readBoolean()) {
-                builder.set(field, readGlob(model));
+                mutableGlob.set(field, readGlob(model));
             }
         }
 
-        public void visitGlobArray(GlobArrayField field) throws Exception {
+        public void visitGlobArray(GlobArrayField field) {
             int len = readNotNullInt();
             if (len >= 0) {
                 Glob[] values = new Glob[len];
@@ -595,28 +649,47 @@ public class DefaultSerializationInput implements SerializedInput {
                         values[i] = readGlob(model);
                     }
                 }
-                builder.set(field, values);
+                mutableGlob.set(field, values);
             }
         }
 
-        public void visitLong(LongField field) throws Exception {
-            builder.set(field, readLong());
+        public void visitUnionGlob(GlobUnionField field) {
+            if (readBoolean()) {
+                mutableGlob.set(field, readGlob(model));
+            }
         }
 
-        public void visitLongArray(LongArrayField field) throws Exception {
-            builder.set(field, readLongArray());
+        public void visitUnionGlobArray(GlobArrayUnionField field) {
+            int len = readNotNullInt();
+            if (len >= 0) {
+                Glob[] values = new Glob[len];
+                for (int i = 0; i < values.length; i++) {
+                    if (readBoolean()) {
+                        values[i] = readGlob(model);
+                    }
+                }
+                mutableGlob.set(field, values);
+            }
         }
 
-        public void visitDate(DateField field) throws Exception {
-            builder.set(field, readDate());
+        public void visitLong(LongField field) {
+            mutableGlob.set(field, readLong());
         }
 
-        public void visitDateTime(DateTimeField field) throws Exception {
-            builder.set(field, readDateTime());
+        public void visitLongArray(LongArrayField field) {
+            mutableGlob.set(field, readLongArray());
+        }
+
+        public void visitDate(DateField field) {
+            mutableGlob.set(field, readDate());
+        }
+
+        public void visitDateTime(DateTimeField field) {
+            mutableGlob.set(field, readDateTime());
         }
 
         public Glob getValue() {
-            return builder.get();
+            return mutableGlob;
         }
 
     }

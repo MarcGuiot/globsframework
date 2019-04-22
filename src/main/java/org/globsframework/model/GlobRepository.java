@@ -64,7 +64,7 @@ public interface GlobRepository extends ReadOnlyGlobRepository {
     /**
      * Replaces all the globs of given types with those of the provided list.
      * If no types are given, all globs will be replaced.
-     * A {@link ChangeSetListener#globsReset(GlobRepository, java.util.Set} notification
+     * A {@link ChangeSetListener#globsReset(GlobRepository, java.util.Set)} notification
      * is sent after the reset is performed.
      */
     void reset(GlobList newGlobs, GlobType... changedTypes);

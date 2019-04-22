@@ -42,6 +42,10 @@ public interface FieldValueVisitor {
 
     void visitGlobArray(GlobArrayField field, Glob[] value) throws Exception;
 
+    void visitUnionGlob(GlobUnionField field, Glob value) throws Exception;
+
+    void visitUnionGlobArray(GlobArrayUnionField field, Glob[] value) throws Exception;
+
 
     class AbstractFieldValueVisitor implements FieldValueVisitor {
 
@@ -90,6 +94,14 @@ public interface FieldValueVisitor {
         }
 
         public void visitGlob(GlobField field, Glob value) throws Exception {
+            notManaged(field, value);
+        }
+
+        public void visitUnionGlob(GlobUnionField field, Glob value) throws Exception {
+            notManaged(field, value);
+        }
+
+        public void visitUnionGlobArray(GlobArrayUnionField field, Glob[] value) throws Exception {
             notManaged(field, value);
         }
 

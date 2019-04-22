@@ -2,6 +2,7 @@ package org.globsframework.model;
 
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.fields.*;
+import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
 import java.math.BigDecimal;
@@ -60,6 +61,10 @@ public interface FieldValuesAccessor {
     Glob get(GlobField field) throws ItemNotFound;
 
     Glob[] get(GlobArrayField field) throws ItemNotFound;
+
+    Glob get(GlobUnionField field) throws ItemNotFound;
+
+    Glob[] get(GlobArrayUnionField field) throws ItemNotFound;
 
     default String get(StringField field, String valueIfNull) throws ItemNotFound {
         String value = get(field);

@@ -239,6 +239,26 @@ class DefaultGlobFactory implements GlobFactory {
                 }
             };
         }
+
+        @Override
+        public void visitUnionGlob(GlobUnionField field) throws Exception {
+            getAccessor = new AbstractGlobGetGlobUnionAccessor() {
+                @Override
+                public Glob get(Glob glob) {
+                    return glob.get(field);
+                }
+            };
+        }
+
+        @Override
+        public void visitUnionGlobArray(GlobArrayUnionField field) throws Exception {
+            getAccessor = new AbstractGlobGetGlobUnionArrayAccessor() {
+                @Override
+                public Glob[] get(Glob glob) {
+                    return glob.get(field);
+                }
+            };
+        }
     }
 
     private static class SetAccessorValueVisitor implements FieldVisitor {
@@ -404,7 +424,6 @@ class DefaultGlobFactory implements GlobFactory {
                     glob.set(field, value);
                 }
             };
-
         }
 
         @Override
@@ -415,7 +434,26 @@ class DefaultGlobFactory implements GlobFactory {
                     glob.set(field, value);
                 }
             };
+        }
 
+        @Override
+        public void visitUnionGlob(GlobUnionField field) throws Exception {
+            setAccessor = new AbstractGlobSetGlobUnionAccessor() {
+                @Override
+                public void set(MutableGlob glob, Glob value) {
+                    glob.set(field, value);
+                }
+            };
+        }
+
+        @Override
+        public void visitUnionGlobArray(GlobArrayUnionField field) throws Exception {
+            setAccessor = new AbstractGlobSetGlobUnionArrayAccessor() {
+                @Override
+                public void set(MutableGlob glob, Glob[] value) {
+                    glob.set(field, value);
+                }
+            };
         }
     }
 }

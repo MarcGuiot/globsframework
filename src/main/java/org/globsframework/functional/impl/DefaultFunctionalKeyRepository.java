@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 public class DefaultFunctionalKeyRepository implements MutableFunctionalKeyRepository {
     private final DataAccess dataAccess;
@@ -65,6 +66,22 @@ public class DefaultFunctionalKeyRepository implements MutableFunctionalKeyRepos
         else {
             return globCollection.size() == 1 ? globCollection.iterator().next() : null;
         }
+    }
+
+    public Stream<FunctionalKey> getAll(FunctionalKeyBuilder builder) {
+        GlobType type = builder.getType();
+        Map<FunctionalKeyBuilder, Boolean> functionalKeyBuilders = indexed.get(type);
+        if (functionalKeyBuilders == null || functionalKeyBuilders.get(builder) != Boolean.TRUE) {
+            synchronized (type) {
+                dataAccess.all(type)
+                        .forEach(g -> {
+                            FunctionalKey key = builder.create(g);
+                            update(g, key);
+                        });
+                indexed.put(type, builder, Boolean.TRUE);
+            }
+        }
+        return index.keySet().stream().filter(functionalKey -> functionalKey.getBuilder() == builder);
     }
 
     private Collection<Glob> updateIndex(FunctionalKey functionalKey) {

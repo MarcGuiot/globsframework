@@ -2,8 +2,6 @@ package org.globsframework.metamodel;
 
 import org.globsframework.metamodel.fields.FieldVisitor;
 import org.globsframework.metamodel.index.Index;
-import org.globsframework.metamodel.index.SingleFieldIndex;
-import org.globsframework.metamodel.index.MultiFieldIndex;
 import org.globsframework.metamodel.properties.PropertyHolder;
 import org.globsframework.model.GlobFactory;
 import org.globsframework.model.Key;
@@ -60,4 +58,13 @@ public interface GlobType extends PropertyHolder<GlobType>, Annotations {
     default <T extends FieldVisitor> T accept(T visitor) throws Exception {
         return getGlobFactory().accept(visitor);
     }
+
+    default <T extends FieldVisitor> T saveAccept(T visitor) {
+        try {
+            return getGlobFactory().accept(visitor);
+        } catch (Exception e) {
+            throw new RuntimeException("for visitor : " + visitor.getClass().getName(), e);
+        }
+    }
+
 }

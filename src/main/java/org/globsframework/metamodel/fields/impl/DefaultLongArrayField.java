@@ -85,7 +85,7 @@ public class DefaultLongArrayField extends AbstractField implements LongArrayFie
         return Arrays.hashCode(((long[]) o));
     }
 
-    public String toString(Object value) {
+    public String toString(Object value, String offset) {
         return Arrays.toString(((long[]) value));
     }
 

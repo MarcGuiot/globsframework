@@ -5,7 +5,6 @@ import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.type.DataType;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
-import java.math.BigDecimal;
 import java.util.Arrays;
 
 public class DefaultBooleanArrayField extends AbstractField implements BooleanArrayField {
@@ -88,7 +87,7 @@ public class DefaultBooleanArrayField extends AbstractField implements BooleanAr
         return Arrays.hashCode(((boolean[]) o));
     }
 
-    public String toString(Object value) {
+    public String toString(Object value, String offset) {
         return Arrays.toString(((boolean[]) value));
     }
 

@@ -3,6 +3,7 @@ package org.globsframework.utils.serialization;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.model.*;
+import org.globsframework.utils.exceptions.InvalidData;
 import org.globsframework.utils.exceptions.InvalidFormat;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
@@ -13,6 +14,9 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.Date;
+
+import static org.globsframework.utils.serialization.DefaultSerializationInput.MAX_SIZE_FOR_BYTES;
+import static org.globsframework.utils.serialization.DefaultSerializationInput.ORG_GLOBSFRAMWORK_SERIALIZATION_MAX_LEN;
 
 public class DefaultSerializationOutput implements SerializedOutput, ChangeSetVisitor {
     private OutputStream outputStream;
@@ -233,6 +237,9 @@ public class DefaultSerializationOutput implements SerializedOutput, ChangeSetVi
                 write(value1);
                 return;
             }
+            if (MAX_SIZE_FOR_BYTES != -1 && value.length > MAX_SIZE_FOR_BYTES) {
+                throw new InvalidData("More than " + MAX_SIZE_FOR_BYTES + " bytes to write  (" + value.length + ") see " + ORG_GLOBSFRAMWORK_SERIALIZATION_MAX_LEN);
+            }
             write(value.length);
             outputStream.write(value);
         } catch (IOException e) {
@@ -352,6 +359,26 @@ public class DefaultSerializationOutput implements SerializedOutput, ChangeSetVi
             }
         }
 
+        public void visitUnionGlob(GlobUnionField field, Glob value) throws Exception {
+            writeUtf8String(value.getType().getName());
+            writeValues(value);
+        }
+
+        public void visitUnionGlobArray(GlobArrayUnionField field, Glob[] value) throws Exception {
+            if (value == null) {
+                write(-1);
+            } else {
+                write(value.length);
+                for (Glob glob : value) {
+                    write(glob != null);
+                    if (glob != null) {
+                        writeUtf8String(glob.getType().getName());
+                        writeValues(glob);
+                    }
+                }
+            }
+        }
+
         public void visitLong(LongField field, Long value) {
             writeLong(value);
         }
@@ -434,8 +461,11 @@ public class DefaultSerializationOutput implements SerializedOutput, ChangeSetVi
         }
 
         public void visitGlob(GlobField field, Glob value) throws Exception {
-            write(value != null);
-            writeGlob(value);
+            boolean isNull = value != null;
+            write(isNull);
+            if (isNull) {
+                writeGlob(value);
+            }
         }
 
         public void visitGlobArray(GlobArrayField field, Glob[] value) throws Exception {
@@ -448,6 +478,27 @@ public class DefaultSerializationOutput implements SerializedOutput, ChangeSetVi
                     writeGlob(glob);
                 }
             }
+        }
+
+        public void visitUnionGlob(GlobUnionField field, Glob value) throws Exception {
+            boolean isNull = value != null;
+            write(isNull);
+            if (isNull) {
+                writeGlob(value);
+            }
+        }
+
+        public void visitUnionGlobArray(GlobArrayUnionField field, Glob[] value) throws Exception {
+            if (value == null) {
+                write(-1);
+            }
+            else {
+                write(value.length);
+                for (Glob glob : value) {
+                    writeGlob(glob);
+                }
+            }
+
         }
 
         public void visitLong(LongField field, Long value) {
@@ -541,6 +592,30 @@ public class DefaultSerializationOutput implements SerializedOutput, ChangeSetVi
                 }
             }
 
+        }
+
+        public void visitUnionGlob(GlobUnionField field) throws Exception {
+            Glob glob = this.glob.get(field);
+            write(glob != null);
+            if (glob != null) {
+                writeGlob(glob);
+            }
+        }
+
+        public void visitUnionGlobArray(GlobArrayUnionField field) throws Exception {
+            Glob[] globs = glob.get(field);
+            if (globs == null) {
+                write(-1);
+            }
+            else {
+                write(globs.length);
+                for (Glob glob : globs) {
+                    write(glob != null);
+                    if (glob != null) {
+                        writeGlob(glob);
+                    }
+                }
+            }
         }
 
         public void visitLong(LongField field) {

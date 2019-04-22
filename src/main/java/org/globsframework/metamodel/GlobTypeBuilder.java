@@ -2,10 +2,12 @@ package org.globsframework.metamodel;
 
 import org.globsframework.metamodel.annotations.KeyAnnotationType;
 import org.globsframework.metamodel.fields.*;
+import org.globsframework.metamodel.type.DataType;
 import org.globsframework.model.Glob;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 public interface GlobTypeBuilder {
     GlobTypeBuilder addAnnotation(Glob annotation);
@@ -66,13 +68,19 @@ public interface GlobTypeBuilder {
 
     LongField declareLongField(String fieldName, Collection<Glob> annotations);
 
-    LongArrayField declareArrayLongField(String fieldName, Collection<Glob> annotations);
+    LongArrayField declareLongArrayField(String fieldName, Collection<Glob> annotations);
 
     BlobField declareBlobField(String fieldName, Collection<Glob> annotations);
 
     GlobField declareGlobField(String fieldName, GlobType globType, Collection<Glob> annotations);
 
     GlobArrayField declareGlobArrayField(String fieldName, GlobType globType, Collection<Glob> annotations);
+
+    GlobUnionField declareGlobUnionField(String fieldName, List<GlobType> types, Collection<Glob> annotations);
+
+    GlobArrayUnionField declareGlobUnionArrayField(String fieldName, List<GlobType> types, Collection<Glob> annotations);
+
+    Field declare(String fieldName, DataType dataType, Collection<Glob> annotations);
 
     default GlobTypeBuilder addStringField(String fieldName, Glob... annotations) {
         return addStringField(fieldName, Arrays.asList(annotations));
@@ -178,8 +186,8 @@ public interface GlobTypeBuilder {
         return declareBlobField(fieldName, Arrays.asList(annotations));
     }
 
-    default LongArrayField declareArrayLongField(String fieldName, Glob... annotations) {
-        return declareArrayLongField(fieldName, Arrays.asList(annotations));
+    default LongArrayField declareLongArrayField(String fieldName, Glob... annotations) {
+        return declareLongArrayField(fieldName, Arrays.asList(annotations));
     }
 
     default DateField declareDateField(String fieldName, Glob... annotations) {
@@ -198,10 +206,19 @@ public interface GlobTypeBuilder {
         return declareGlobArrayField(fieldName, globType, Arrays.asList(annotations));
     }
 
+    default GlobUnionField declareGlobUnionField(String fieldName, List<GlobType> types, Glob... annotations) {
+        return declareGlobUnionField(fieldName, types, Arrays.asList(annotations));
+    }
+
+    default GlobArrayUnionField declareGlobUnionArrayField(String fieldName, List<GlobType> types, Glob... annotations) {
+        return declareGlobUnionArrayField(fieldName, types, Arrays.asList(annotations));
+    }
 
     <T> void register(Class<T> klass, T t);
 
     GlobType get();
+
+    GlobType unCompleteType();
 
     default GlobTypeBuilder addIntegerKey(String fieldName) {
         addIntegerField(fieldName, KeyAnnotationType.UNINITIALIZED);

@@ -3,7 +3,6 @@ package org.globsframework.utils;
 import org.globsframework.utils.exceptions.InvalidParameter;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
-import java.lang.reflect.Array;
 import java.util.*;
 
 public class Utils {
@@ -11,7 +10,11 @@ public class Utils {
     }
 
     public static boolean equal(Object o1, Object o2) {
-        return (o1 == null) && (o2 == null) || !((o1 == null) || (o2 == null)) && o1.equals(o2);
+        return Objects.equals(o1, o2); //o1 == null) && (o2 == null) || !((o1 == null) || (o2 == null)) && o1.equals(o2);
+    }
+
+    public static boolean equalWithHash(Object o1, Object o2) {
+        return (o1 == o2) || (o1 != null && o2 != null && o1.hashCode() == o2.hashCode() && o1.equals(o2));
     }
 
     public static boolean equalIgnoreCase(String o1, String o2) {
@@ -140,7 +143,7 @@ public class Utils {
     }
 
     public static int randomInt(int max) {
-        return (int)Math.round(Math.random() * max);
+        return (int) Math.round(Math.random() * max);
     }
 
     public static boolean isEmpty(Object[] array) {
@@ -308,7 +311,7 @@ public class Utils {
             System.err.println("dumpStack ------------------------------------------");
             for (StackTraceElement element : elements) {
                 System.err.println("  at " + element.getClassName() + "." + element.getMethodName()
-                                   + "(" + element.getFileName() + ":" + element.getLineNumber() + ')');
+                        + "(" + element.getFileName() + ":" + element.getLineNumber() + ')');
             }
         }
     }
@@ -347,48 +350,21 @@ public class Utils {
         return builder.toString();
     }
 
-    public static String capitalize(String value) {
-        if ((value == null) || "".equals(value)) {
-            return value;
+    public static class NullAwareComparator<T extends Comparable> implements Comparator<T> {
+        public static NullAwareComparator INSTANCE = new NullAwareComparator();
+
+        public int compare(T o1, T o2) {
+            if (o1 != null && o2 != null) {
+                return o1.compareTo(o2);
+            }
+            if (o1 == null) {
+                if (o2 == null) {
+                    return 0;
+                }
+                return -1;
+            }
+            return 1;
         }
-        return value.substring(0, 1).toUpperCase() + value.substring(1, value.length());
     }
 
-
-    // code from java 1.6
-    public static <T> T[] copyOf(T[] original, int newLength) {
-        return (T[])copyOf(original, newLength, original.getClass());
-    }
-
-    public static <T, U> T[] copyOf(U[] original, int newLength, Class<? extends T[]> newType) {
-        T[] copy = ((Object)newType == (Object)Object[].class)
-                   ? (T[])new Object[newLength]
-                   : (T[])Array.newInstance(newType.getComponentType(), newLength);
-        System.arraycopy(original, 0, copy, 0,
-                         Math.min(original.length, newLength));
-        return copy;
-    }
-
-    public static Integer[] box(int[] array) {
-        Integer[] result = new Integer[array.length];
-        for (int i = 0; i < array.length; i++) {
-            result[i] = array[i];
-        }
-        return result;
-    }
-
-    public interface MapAdapter<KEY, VALUE, D> {
-
-        KEY getKey(D d);
-
-        VALUE getValue(D d);
-    }
-
-    public static <KEY, VALUE, D> Map<KEY, VALUE> adapt(D[] ds, MapAdapter<KEY, VALUE, D> mapAdapter) {
-        Map<KEY, VALUE> map = new HashMap<KEY, VALUE>(ds.length);
-        for (D d : ds) {
-            map.put(mapAdapter.getKey(d), mapAdapter.getValue(d));
-        }
-        return map;
-    }
 }

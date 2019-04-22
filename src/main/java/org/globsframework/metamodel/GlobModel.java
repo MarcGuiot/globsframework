@@ -13,6 +13,8 @@ public interface GlobModel extends Iterable<GlobType> {
 
     GlobType getType(String name) throws ItemNotFound;
 
+    boolean hasType(String name);
+
     GlobTypeDependencies getDependencies();
 
     <T>
