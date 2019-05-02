@@ -30,14 +30,22 @@ public class DefaultGlobModel implements MutableGlobModel {
     }
 
     public GlobType getType(String name) throws ItemNotFound {
+        GlobType globType = findType(name);
+        if (globType == null) {
+            throw new ItemNotFound("No object type found with name: " + name);
+        }
+        return globType;
+    }
+
+    public GlobType findType(String name) {
         GlobType globType = typesByName.get(name);
         if (globType != null) {
             return globType;
         }
         if (innerModel != null) {
-            return innerModel.getType(name);
+            return innerModel.findType(name);
         }
-        throw new ItemNotFound("No object type found with name: " + name);
+        return null;
     }
 
     public boolean hasType(String name) {
@@ -88,7 +96,7 @@ public class DefaultGlobModel implements MutableGlobModel {
     public void add(GlobType type) {
         GlobType put = typesByName.put(type.getName(), type);
         if (put != null && put != type) {
-            LOGGER.error(type.getName() + " already registered  : " + type.describe() +" AND " + put.describe());
+            LOGGER.error(type.getName() + " already registered  : " + type.describe() + " AND " + put.describe());
         }
     }
 
