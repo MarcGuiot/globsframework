@@ -22,39 +22,7 @@ public class GlobTypeLoaderFactory {
     }
 
     public static GlobTypeLoader create(Class<?> targetClass) {
-        return create(targetClass, null, null);
-    }
-
-    public interface FactoryBuilder {
-        FactoryBuilder withName(String name);
-
-        FactoryBuilder withModel(String name);
-
-        GlobTypeLoader create();
-    }
-
-    static class DefaultFactoryBuilder implements FactoryBuilder {
-        private final Class<?> klass;
-        private String name;
-        private String model;
-
-        DefaultFactoryBuilder(Class<?> klass) {
-            this.klass = klass;
-        }
-
-        public FactoryBuilder withName(String name) {
-            this.name = name;
-            return this;
-        }
-
-        public FactoryBuilder withModel(String model) {
-            this.model = model;
-            return this;
-        }
-
-        public GlobTypeLoader create() {
-            return GlobTypeLoaderFactory.create(klass, name, model);
-        }
+        return create(targetClass, (String[]) null, null);
     }
 
     public static FactoryBuilder build(Class<?> targetClass) {
@@ -62,24 +30,23 @@ public class GlobTypeLoaderFactory {
     }
 
     public static GlobTypeLoader create(Class<?> targetClass, String name) {
-        return create(targetClass, null, name);
+        return create(targetClass, (String[]) null, name);
     }
 
     public static GlobTypeLoader create(Class<?> targetClass, String modelName, String name) {
+        return create(targetClass, modelName == null ? null : modelName.split("\\."), name);
+    }
+
+    public static GlobTypeLoader create(Class<?> targetClass, String[] modelName, String name) {
         initProcessorService();
         FieldInitializeProcessorService service = fieldInitializeProcessorService;
         return create(targetClass, modelName, name, service);
     }
 
-    public static GlobTypeLoader create(Class<?> targetClass, String modelName, String name,
+    public static GlobTypeLoader create(Class<?> targetClass, String[] modelName, String name,
                                         FieldInitializeProcessorService service) {
         return new GlobTypeLoaderImpl(targetClass, modelName, name, service);
     }
-
-    // this code is expected to be called very soon during the initialisation
-    // before ony GlobType is created from the GlobTypeLoader
-    // warning : a glob type created from a globTypeBuilder will trigger
-    // a call to GlobTypeLoader to access globs that modelize annotations
 
     static public FieldInitializeProcessorService getFieldInitializeProcessorService() {
         if (fieldInitializeProcessorService == null) {
@@ -104,6 +71,11 @@ public class GlobTypeLoaderFactory {
             }
         }
     }
+
+    // this code is expected to be called very soon during the initialisation
+    // before ony GlobType is created from the GlobTypeLoader
+    // warning : a glob type created from a globTypeBuilder will trigger
+    // a call to GlobTypeLoader to access globs that modelize annotations
 
     private static void addFieldInitializeProcessorService(FieldInitializeProcessorServiceImpl newProcessorService) {
         newProcessorService.add(Link.class, UnInitializedLink::new);
@@ -132,6 +104,38 @@ public class GlobTypeLoaderFactory {
 //         }
 //         return null;
 //      });
+    }
+
+    public interface FactoryBuilder {
+        FactoryBuilder withName(String name);
+
+        FactoryBuilder withModel(String name);
+
+        GlobTypeLoader create();
+    }
+
+    static class DefaultFactoryBuilder implements FactoryBuilder {
+        private final Class<?> klass;
+        private String name;
+        private String[] model;
+
+        DefaultFactoryBuilder(Class<?> klass) {
+            this.klass = klass;
+        }
+
+        public FactoryBuilder withName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public FactoryBuilder withModel(String model) {
+            this.model = model.split("\\.");
+            return this;
+        }
+
+        public GlobTypeLoader create() {
+            return GlobTypeLoaderFactory.create(klass, model, name);
+        }
     }
 
 }

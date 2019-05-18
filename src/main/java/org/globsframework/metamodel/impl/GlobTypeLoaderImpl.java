@@ -28,13 +28,13 @@ import java.util.stream.IntStream;
 public class GlobTypeLoaderImpl implements GlobTypeLoader {
     private DefaultGlobType type;
     private DefaultFieldFactory fieldFactory;
-    private String modelName;
+    private String[] modelName;
     private Class<?> targetClass;
     private String name;
     private FieldInitializeProcessorService fieldInitializeProcessorService;
     private Map<Class, Object> registered = new ConcurrentHashMap<>();
 
-    public GlobTypeLoaderImpl(Class<?> targetClass, String modelName, String name,
+    public GlobTypeLoaderImpl(Class<?> targetClass, String[] modelName, String name,
                               FieldInitializeProcessorService fieldInitializeProcessorService) {
         this.modelName = modelName;
         this.fieldInitializeProcessorService = fieldInitializeProcessorService;
@@ -131,7 +131,7 @@ public class GlobTypeLoaderImpl implements GlobTypeLoader {
             throw new ItemAlreadyExists("Class " + targetClass.getName() +
                                         " must have only one TYPE field of class " + GlobType.class.getName());
         }
-        this.type = new DefaultGlobType(getTypeName(targetClass));
+        this.type = new DefaultGlobType(modelName, getTypeName(targetClass));
         for (Annotation annotation : classField.getAnnotations()) {
             Glob glob = processAnnotation(annotation);
             if (glob != null) {

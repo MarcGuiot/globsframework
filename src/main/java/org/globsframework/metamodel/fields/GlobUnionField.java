@@ -4,7 +4,6 @@ import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 
 import java.util.Collection;
-import java.util.List;
 
 public interface GlobUnionField extends Field {
     Collection<GlobType> getTypes();

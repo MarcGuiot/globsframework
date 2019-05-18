@@ -17,7 +17,7 @@ public class DefaultGlobUnionField extends AbstractField implements GlobUnionFie
 
     public DefaultGlobUnionField(String name, GlobType globType, List<GlobType> targetTypes,
                                  int index, boolean isKeyField, final int keyIndex) {
-        super(name, globType, Glob.class, index, keyIndex, isKeyField, null, DataType.Glob);
+        super(name, globType, Glob.class, index, keyIndex, isKeyField, null, DataType.GlobUnion);
         this.targetTypes = new HashMap<>();
         targetTypes.forEach(this::__add__);
     }

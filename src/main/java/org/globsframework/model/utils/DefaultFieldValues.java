@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-public class DefaultFieldValues extends AbstractFieldValues implements MutableFieldValues {
+public class DefaultFieldValues extends AbstractMutableFieldValues  {
     private Map<Field, Object> values = new HashMap<Field, Object>();
 
     public DefaultFieldValues() {
@@ -75,110 +75,6 @@ public class DefaultFieldValues extends AbstractFieldValues implements MutableFi
         }
         builder.append(']');
         return builder.toString();
-    }
-
-    public DefaultFieldValues set(IntegerField field, Integer value) {
-        setValue(field, value);
-        return this;
-    }
-
-    public DefaultFieldValues set(DoubleField field, Double value) {
-        setValue(field, value);
-        return this;
-    }
-
-    public DefaultFieldValues set(StringField field, String value) {
-        setValue(field, value);
-        return this;
-    }
-
-    public DefaultFieldValues set(BooleanField field, Boolean value) {
-        setValue(field, value);
-        return this;
-    }
-
-    public DefaultFieldValues set(LongField field, Long value) throws ItemNotFound {
-        setValue(field, value);
-        return this;
-    }
-
-    public DefaultFieldValues set(BlobField field, byte[] value) {
-        setValue(field, value);
-        return this;
-    }
-
-    public FieldSetter set(DoubleField field, double value) throws ItemNotFound {
-        setValue(field, value);
-        return this;
-    }
-
-    public FieldSetter set(IntegerField field, int value) throws ItemNotFound {
-        setValue(field, value);
-        return this;
-    }
-
-    public FieldSetter set(LongField field, long value) throws ItemNotFound {
-        return setValue(field, value);
-    }
-
-    public FieldSetter set(DoubleArrayField field, double[] value) throws ItemNotFound {
-        return setValue(field, value);
-    }
-
-    public FieldSetter set(IntegerArrayField field, int[] value) throws ItemNotFound {
-        return setValue(field, value);
-    }
-
-    public FieldSetter set(StringArrayField field, String[] value) throws ItemNotFound {
-        return setValue(field, value);
-    }
-
-    public FieldSetter set(BooleanArrayField field, boolean[] value) throws ItemNotFound {
-        return setValue(field, value);
-    }
-
-    public FieldSetter set(LongArrayField field, long[] value) throws ItemNotFound {
-        return setValue(field, value);
-    }
-
-    public FieldSetter set(BigDecimalField field, BigDecimal value) throws ItemNotFound {
-        return setValue(field, value);
-    }
-
-    public FieldSetter set(BigDecimalArrayField field, BigDecimal[] value) throws ItemNotFound {
-        return setValue(field, value);
-    }
-
-    public FieldSetter set(DateField field, LocalDate value) throws ItemNotFound {
-        return setValue(field, value);
-    }
-
-    public FieldSetter set(DateTimeField field, ZonedDateTime value) throws ItemNotFound {
-        return setValue(field, value);
-    }
-
-    public FieldSetter set(GlobField field, Glob value) throws ItemNotFound {
-        return setValue(field, value);
-    }
-
-    public FieldSetter set(GlobArrayField field, Glob[] values) throws ItemNotFound {
-        return setValue(field, values);
-    }
-
-    public FieldSetter set(GlobUnionField field, Glob value) throws ItemNotFound {
-        return setValue(field, value);
-    }
-
-    public FieldSetter set(GlobArrayUnionField field, Glob[] values) throws ItemNotFound {
-        return setValue(field, values);
-    }
-
-    public void setValues(FieldValues values) {
-        values.safeApply(new FieldValues.Functor() {
-            public void process(Field field, Object value) throws IOException {
-                setValue(field, value);
-            }
-        });
     }
 
     public void remove(Field field) {

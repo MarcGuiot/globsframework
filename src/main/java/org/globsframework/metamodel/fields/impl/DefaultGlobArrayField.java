@@ -4,21 +4,39 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.type.DataType;
 import org.globsframework.model.Glob;
-import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.utils.exceptions.InvalidParameter;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
+
+import java.util.Collection;
+import java.util.Collections;
 
 public class DefaultGlobArrayField extends AbstractField implements GlobArrayField {
     private final GlobType targetType;
 
     public DefaultGlobArrayField(String name, GlobType globType, GlobType targetType,
                                  int index, boolean isKeyField, final int keyIndex) {
-        super(name, globType, Glob[].class, index, keyIndex, isKeyField, null, DataType.Glob);
+        super(name, globType, Glob[].class, index, keyIndex, isKeyField, null, DataType.GlobArray);
         this.targetType = targetType;
+    }
+
+    public static boolean isSameGlob(GlobType type, Glob[] g1, Glob[] g2) {
+        if (g1.length != g2.length) {
+            return false;
+        }
+        for (int i = 0; i < g1.length; i++) {
+            if (!DefaultGlobField.isSameGlob(type, g1[i], g2[i])) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public GlobType getType() {
         return targetType;
+    }
+
+    public Collection<GlobType> getTypes() {
+        return Collections.singletonList(getType());
     }
 
     public <T extends FieldVisitor> T visit(T visitor) throws Exception {
@@ -89,19 +107,6 @@ public class DefaultGlobArrayField extends AbstractField implements GlobArrayFie
                         isSameGlob(getType(), ((Glob[]) o1), ((Glob[]) o2));
     }
 
-    public static boolean isSameGlob(GlobType type, Glob[] g1, Glob[] g2) {
-        if (g1.length != g2.length) {
-            return false;
-        }
-        for (int i = 0; i < g1.length; i++) {
-            if (!DefaultGlobField.isSameGlob(type, g1[i], g2[i])) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-
     public void checkValue(Object object) throws InvalidParameter {
         if ((object != null) && (!(object instanceof Glob[]))) {
             throw new InvalidParameter("Value '" + object + "' (" + object.getClass().getName()
@@ -113,8 +118,7 @@ public class DefaultGlobArrayField extends AbstractField implements GlobArrayFie
     public String toString(Object value, String offset) {
         if (value == null) {
             return "null";
-        }
-        else {
+        } else {
             return DefaultArrayGlobUnionField.toString(offset, ((Glob[]) value));
         }
     }

@@ -5,12 +5,13 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.FieldValueVisitor;
 import org.globsframework.model.FieldValue;
 import org.globsframework.model.FieldValues;
+import org.globsframework.model.MutableFieldValues;
 import org.globsframework.model.impl.AbstractFieldValues;
 import org.globsframework.utils.exceptions.InvalidParameter;
 
 import java.util.Arrays;
 
-public class GlobArrayFieldValues extends AbstractFieldValues {
+public class GlobArrayFieldValues extends AbstractMutableFieldValues {
     private GlobType type;
     private Object[] values;
 
@@ -57,5 +58,14 @@ public class GlobArrayFieldValues extends AbstractFieldValues {
             result[index++] = new FieldValue(field, values[field.getIndex()]);
         }
         return result;
+    }
+
+    public MutableFieldValues setValue(Field field, Object value) throws InvalidParameter {
+        if (field.getGlobType() != type) {
+            throw new RuntimeException(field.getFullName() + " is not of type " + type.getName());
+        }
+        field.checkValue(value);
+        values[field.getIndex()] = value;
+        return this;
     }
 }

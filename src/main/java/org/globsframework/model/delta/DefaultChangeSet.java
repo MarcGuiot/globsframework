@@ -6,6 +6,7 @@ import org.globsframework.model.*;
 import org.globsframework.model.utils.BreakException;
 import org.globsframework.model.utils.ChangeVisitor;
 import org.globsframework.utils.Strings;
+import org.globsframework.utils.collections.LinksMapOfMaps;
 import org.globsframework.utils.collections.MapOfMaps;
 import org.globsframework.utils.exceptions.InvalidState;
 
@@ -14,7 +15,19 @@ import java.io.StringWriter;
 import java.util.*;
 
 public class DefaultChangeSet implements MutableChangeSet {
-    private MapOfMaps<GlobType, Key, DefaultDeltaGlob> deltaGlobsByKey = new MapOfMaps<GlobType, Key, DefaultDeltaGlob>();
+    private MapOfMaps<GlobType, Key, DefaultDeltaGlob> deltaGlobsByKey;
+
+    public DefaultChangeSet() {
+        this(new LinksMapOfMaps<>());
+    }
+
+    private DefaultChangeSet(MapOfMaps<GlobType, Key, DefaultDeltaGlob> deltaGlobsByKey) {
+        this.deltaGlobsByKey = deltaGlobsByKey;
+    }
+
+    static public DefaultChangeSet createOrdered() {
+        return new DefaultChangeSet(new LinksMapOfMaps<>());
+    }
 
     public void processCreation(Key key, FieldValues values) {
         DefaultDeltaGlob delta = getGlob(key);
@@ -54,13 +67,17 @@ public class DefaultChangeSet implements MutableChangeSet {
         }
     }
 
-    private DefaultDeltaGlob getGlob(Key key) {
+    protected DefaultDeltaGlob getGlob(Key key) {
         DefaultDeltaGlob glob = deltaGlobsByKey.get(key.getGlobType(), key);
         if (glob == null) {
-            glob = new DefaultDeltaGlob(key);
+            glob = createDeltaGlob(key);
             deltaGlobsByKey.put(key.getGlobType(), key, glob);
         }
         return glob;
+    }
+
+    protected DefaultDeltaGlob createDeltaGlob(Key key) {
+        return new DefaultDeltaGlob(key);
     }
 
     public void visit(ChangeSetVisitor visitor) throws Exception {
@@ -73,11 +90,9 @@ public class DefaultChangeSet implements MutableChangeSet {
     public void safeVisit(ChangeSetVisitor visitor) {
         try {
             visit(visitor);
-        }
-        catch (RuntimeException e) {
+        } catch (RuntimeException e) {
             throw e;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -100,13 +115,10 @@ public class DefaultChangeSet implements MutableChangeSet {
     public void safeVisit(GlobType type, ChangeSetVisitor visitor) {
         try {
             visit(type, visitor);
-        }
-        catch (BreakException e) {
-        }
-        catch (RuntimeException e) {
+        } catch (BreakException e) {
+        } catch (RuntimeException e) {
             throw e;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -121,8 +133,7 @@ public class DefaultChangeSet implements MutableChangeSet {
     public void safeVisit(Key key, ChangeSetVisitor visitor) {
         try {
             visit(key, visitor);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -155,7 +166,7 @@ public class DefaultChangeSet implements MutableChangeSet {
         }
         Set<Key> result = new HashSet<Key>();
         for (Map.Entry entry : deltaGlobsByKey.get(type).entrySet()) {
-            result.add((Key)entry.getKey());
+            result.add((Key) entry.getKey());
         }
         return result;
     }
@@ -166,9 +177,9 @@ public class DefaultChangeSet implements MutableChangeSet {
         }
         Set<Key> result = new HashSet<Key>();
         for (Map.Entry entry : deltaGlobsByKey.get(type).entrySet()) {
-            DefaultDeltaGlob delta = (DefaultDeltaGlob)entry.getValue();
+            DefaultDeltaGlob delta = (DefaultDeltaGlob) entry.getValue();
             if (delta.isCreated()) {
-                result.add((Key)entry.getKey());
+                result.add((Key) entry.getKey());
             }
         }
         return result;
@@ -247,6 +258,15 @@ public class DefaultChangeSet implements MutableChangeSet {
         if (keyDefaultDeltaGlobMap != null) {
             DefaultDeltaGlob defaultDeltaGlob = keyDefaultDeltaGlobMap.get(key);
             return defaultDeltaGlob.getPreviousValues();
+        }
+        return null;
+    }
+
+    public FieldValues getNewValues(Key key) {
+        Map<Key, DefaultDeltaGlob> keyDefaultDeltaGlobMap = deltaGlobsByKey.get(key.getGlobType());
+        if (keyDefaultDeltaGlobMap != null) {
+            DefaultDeltaGlob defaultDeltaGlob = keyDefaultDeltaGlobMap.get(key);
+            return defaultDeltaGlob;
         }
         return null;
     }
@@ -351,8 +371,7 @@ public class DefaultChangeSet implements MutableChangeSet {
             StringWriter writer = new StringWriter();
             visit(new PrintChangeVisitor(writer));
             return writer.toString();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }

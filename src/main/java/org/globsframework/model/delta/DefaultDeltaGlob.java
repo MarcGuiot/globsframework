@@ -14,8 +14,10 @@ class DefaultDeltaGlob extends AbstractFieldValuesWithPrevious implements DeltaG
     private Key key;
     private Object[] values;
     private Object[] previousValues;
-    private DeltaState state = DeltaState.UNCHANGED;
+    private DeltaState state;
     private DeltaFieldValuesFromArray previousFieldValue;
+
+    
 
     public DefaultDeltaGlob(Key key) {
         this.key = key;
@@ -24,6 +26,7 @@ class DefaultDeltaGlob extends AbstractFieldValuesWithPrevious implements DeltaG
         this.previousValues = new Object[fieldCount];
         initWithKey(key);
         resetValues();
+        state = DeltaState.UNCHANGED;
     }
 
     private void initWithKey(Key key) {
@@ -36,6 +39,7 @@ class DefaultDeltaGlob extends AbstractFieldValuesWithPrevious implements DeltaG
     }
 
     private DefaultDeltaGlob() {
+        state = DeltaState.UNCHANGED;
     }
 
     protected Object doGet(Field field) {
@@ -220,6 +224,16 @@ class DefaultDeltaGlob extends AbstractFieldValuesWithPrevious implements DeltaG
         return value;
     }
 
+    public <T extends FieldValueVisitor> T acceptOnPrevious(T functor) throws Exception {
+        for (Field field : key.getGlobType().getFields()) {
+            Object value = previousValues[field.getIndex()];
+            if ((value != Unset.VALUE) && !field.isKeyField()) {
+                field.visit(functor, value);
+            }
+        }
+        return functor;
+    }
+
     public boolean contains(Field field) {
         if (field.isKeyField()) {
             return false;
@@ -235,10 +249,12 @@ class DefaultDeltaGlob extends AbstractFieldValuesWithPrevious implements DeltaG
                 count++;
             }
         }
+        if (count < 0) {
+            throw new RuntimeException("Where?");
+        }
         return count;
     }
 
-    @Override
     public <T extends FieldValueVisitor> T accept(T functor) throws Exception {
         for (Field field : key.getGlobType().getFields()) {
             Object value = values[field.getIndex()];

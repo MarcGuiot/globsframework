@@ -271,4 +271,18 @@ public abstract class AbstractFieldValuesWithPrevious implements FieldValuesWith
             throw new RuntimeException(e);
         }
     }
+
+    public <T extends FieldValueVisitor> T safeAcceptOnPrevious(T functor) {
+        try {
+            return acceptOnPrevious(functor);
+        }
+        catch (RuntimeException e) {
+            throw e;
+        }
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
 }

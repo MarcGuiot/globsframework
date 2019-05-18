@@ -21,6 +21,23 @@ public class KeyBuilder implements FieldSetter<KeyBuilder> {
     private GlobType globType;
     private MutableKey settable;
 
+    private KeyBuilder(GlobType type) {
+        Field[] keyFields = type.getKeyFields();
+        int len = keyFields.length;
+        if (len == 1) {
+            settable = new SingleFieldKey(keyFields[0]);
+        } else if (len == 2) {
+            settable = new TwoFieldKey(type);
+        } else if (len == 3) {
+            settable = new ThreeFieldKey(type);
+        } else if (len == 4) {
+            settable = new FourFieldKey(type);
+        } else {
+            settable = new CompositeKey(type);
+        }
+        this.globType = type;
+    }
+
     public static KeyBuilder init(GlobType type) {
         return new KeyBuilder(type);
     }
@@ -41,40 +58,6 @@ public class KeyBuilder implements FieldSetter<KeyBuilder> {
         return keyBuilder;
     }
 
-    private KeyBuilder(GlobType type) {
-        Field[] keyFields = type.getKeyFields();
-        int len = keyFields.length;
-        if (len == 1) {
-            settable = new SingleFieldKey(keyFields[0]);
-        }
-        else if (len == 2) {
-            settable = new TwoFieldKey(type);
-        }
-        else if (len == 3) {
-            settable = new ThreeFieldKey(type);
-        }
-        else if (len == 4) {
-            settable = new FourFieldKey(type);
-        }
-        else {
-            settable = new CompositeKey(type);
-        }
-        this.globType = type;
-    }
-
-    public KeyBuilder setObject(Field field, Object value) throws InvalidParameter {
-        settable.setValue(field, value);
-        return this;
-    }
-
-    public Key get() {
-        return settable.duplicateKey();
-    }
-
-    public Key getShared() {
-        return settable;
-    }
-
     public static Key newKey(GlobType type, Object value) throws InvalidParameter {
         return new SingleFieldKey(type, value);
     }
@@ -85,11 +68,6 @@ public class KeyBuilder implements FieldSetter<KeyBuilder> {
 
     public static Key newKey(Field field1, Object value1, Field field2, Object value2) throws InvalidParameter {
         return new TwoFieldKey(field1, value1, field2, value2);
-    }
-
-    public KeyBuilder reuse() {
-        settable.reset();
-        return this;
     }
 
     public static Key createFromValues(GlobType type, final Map<Field, Object> values) throws MissingInfo {
@@ -108,8 +86,8 @@ public class KeyBuilder implements FieldSetter<KeyBuilder> {
             Field field2 = keyFields[1];
             Field field3 = keyFields[2];
             return new ThreeFieldKey(field1, values.get(field1),
-                                     field2, values.get(field2),
-                                     field3, values.get(field3));
+                    field2, values.get(field2),
+                    field3, values.get(field3));
         }
         if (keyFields.length == 4) {
             Field field1 = keyFields[0];
@@ -117,9 +95,9 @@ public class KeyBuilder implements FieldSetter<KeyBuilder> {
             Field field3 = keyFields[2];
             Field field4 = keyFields[3];
             return new FourFieldKey(field1, values.get(field1),
-                                    field2, values.get(field2),
-                                    field3, values.get(field3),
-                                    field4, values.get(field4));
+                    field2, values.get(field2),
+                    field3, values.get(field3),
+                    field4, values.get(field4));
         }
         return createKey(type, new FieldValueGetter() {
             public boolean contains(Field field) {
@@ -148,8 +126,8 @@ public class KeyBuilder implements FieldSetter<KeyBuilder> {
             Field field2 = keyFields[1];
             Field field3 = keyFields[2];
             return new ThreeFieldKey(field1, values.getValue(field1),
-                                     field2, values.getValue(field2),
-                                     field3, values.getValue(field3));
+                    field2, values.getValue(field2),
+                    field3, values.getValue(field3));
         }
         if (keyFields.length == 4) {
             Field field1 = keyFields[0];
@@ -157,9 +135,9 @@ public class KeyBuilder implements FieldSetter<KeyBuilder> {
             Field field3 = keyFields[2];
             Field field4 = keyFields[3];
             return new FourFieldKey(field1, values.getValue(field1),
-                                     field2, values.getValue(field2),
-                                    field3, values.getValue(field3),
-                                    field4, values.getValue(field4));
+                    field2, values.getValue(field2),
+                    field3, values.getValue(field3),
+                    field4, values.getValue(field4));
         }
 
         return createKey(type, new FieldValueGetter() {
@@ -185,7 +163,7 @@ public class KeyBuilder implements FieldSetter<KeyBuilder> {
 
         if (values.length != type.getFieldCount()) {
             throw new InvalidParameter("Array should have " + type.getFieldCount() + " elements for type: " +
-                                       type.getName() + " - array content: " + Arrays.toString(values));
+                    type.getName() + " - array content: " + Arrays.toString(values));
         }
 
         Field[] keyFields = type.getKeyFields();
@@ -204,8 +182,8 @@ public class KeyBuilder implements FieldSetter<KeyBuilder> {
             Field field2 = keyFields[1];
             Field field3 = keyFields[2];
             return new ThreeFieldKey(field1, values[field1.getIndex()],
-                                     field2, values[field2.getIndex()],
-                                     field3, values[field3.getIndex()]);
+                    field2, values[field2.getIndex()],
+                    field3, values[field3.getIndex()]);
         }
         if (keyFields.length == 4) {
             Field field1 = keyFields[0];
@@ -213,9 +191,9 @@ public class KeyBuilder implements FieldSetter<KeyBuilder> {
             Field field3 = keyFields[2];
             Field field4 = keyFields[3];
             return new FourFieldKey(field1, values[field1.getIndex()],
-                                    field2, values[field2.getIndex()],
-                                    field3, values[field3.getIndex()],
-                                    field4, values[field4.getIndex()]);
+                    field2, values[field2.getIndex()],
+                    field3, values[field3.getIndex()],
+                    field4, values[field4.getIndex()]);
         }
         return createKey(type, new FieldValueGetter() {
             public boolean contains(Field field) {
@@ -229,10 +207,10 @@ public class KeyBuilder implements FieldSetter<KeyBuilder> {
     }
 
     private static Key createSingle(GlobType type, Field field, boolean present, Object value)
-        throws MissingInfo {
+            throws MissingInfo {
         if (!present) {
             throw new MissingInfo("Field '" + field.getName() +
-                                  "' missing for identifying a Glob of type: " + type.getName());
+                    "' missing for identifying a Glob of type: " + type.getName());
         }
         return newKey(type, value);
     }
@@ -260,6 +238,24 @@ public class KeyBuilder implements FieldSetter<KeyBuilder> {
 
     public static KeyBuilder create(GlobType type) {
         return init(type);
+    }
+
+    public KeyBuilder setObject(Field field, Object value) throws InvalidParameter {
+        settable.setValue(field, value);
+        return this;
+    }
+
+    public Key get() {
+        return settable.duplicateKey();
+    }
+
+    public Key getShared() {
+        return settable;
+    }
+
+    public KeyBuilder reuse() {
+        settable.reset();
+        return this;
     }
 
     public KeyBuilder set(DoubleField field, Double value) throws ItemNotFound {

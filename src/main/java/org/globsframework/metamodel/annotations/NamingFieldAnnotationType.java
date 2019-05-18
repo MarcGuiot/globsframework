@@ -17,7 +17,7 @@ public class NamingFieldAnnotationType {
     public static Glob UNIQUE_GLOB;
 
     static {
-        GlobTypeLoaderFactory.create(NamingFieldAnnotationType.class)
+        GlobTypeLoaderFactory.create(NamingFieldAnnotationType.class, "NamingFieldAnnotation")
             .register(GlobCreateFromAnnotation.class, new GlobCreateFromAnnotation() {
                 public Glob create(Annotation annotation) {
                     return UNIQUE_GLOB;

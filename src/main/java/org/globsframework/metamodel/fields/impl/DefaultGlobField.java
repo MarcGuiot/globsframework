@@ -8,6 +8,9 @@ import org.globsframework.model.Glob;
 import org.globsframework.utils.exceptions.InvalidParameter;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
+import java.util.Collection;
+import java.util.Collections;
+
 public class DefaultGlobField extends AbstractField implements GlobField {
     private final GlobType targetType;
 
@@ -134,4 +137,7 @@ public class DefaultGlobField extends AbstractField implements GlobField {
         return builder.deleteCharAt(builder.length() - 1).append("]").toString();
     }
 
+    public Collection<GlobType> getTypes() {
+        return Collections.singletonList(getType());
+    }
 }

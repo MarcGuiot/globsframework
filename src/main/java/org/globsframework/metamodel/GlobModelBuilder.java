@@ -25,8 +25,6 @@ public class GlobModelBuilder {
     return this;
     }
 
-
-
     public GlobModel get() {
         globModel.complete();
         return globModel;

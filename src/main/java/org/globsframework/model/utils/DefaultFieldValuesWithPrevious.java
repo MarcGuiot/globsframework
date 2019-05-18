@@ -5,6 +5,7 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.FieldValueVisitor;
 import org.globsframework.model.FieldValue;
 import org.globsframework.model.FieldValues;
+import org.globsframework.model.MutableFieldValues;
 import org.globsframework.model.impl.AbstractFieldValuesWithPrevious;
 import org.globsframework.utils.Unset;
 import org.globsframework.utils.exceptions.ItemNotFound;
@@ -23,6 +24,15 @@ public class DefaultFieldValuesWithPrevious extends AbstractFieldValuesWithPrevi
             values[index] = Unset.VALUE;
             previousValues[index] = Unset.VALUE;
         }
+    }
+
+
+    public MutableFieldValues getNewValues() {
+        return new GlobArrayFieldValues(type, values);
+    }
+
+    public MutableFieldValues getPreviousValues() {
+        return new GlobArrayFieldValues(type, previousValues);
     }
 
     public void setValue(Field field, Object value, Object previousValue) {
@@ -53,6 +63,16 @@ public class DefaultFieldValuesWithPrevious extends AbstractFieldValuesWithPrevi
         return count;
     }
 
+    public <T extends FieldValueVisitor> T acceptOnPrevious(T functor) throws Exception {
+        for (Field field : type.getFields()) {
+            int index = field.getIndex();
+            if (previousValues[index] != Unset.VALUE) {
+                field.visit(functor, previousValues[index]);
+            }
+        }
+        return functor;
+    }
+
     public <T extends FunctorWithPrevious> T applyWithPrevious(T functor) throws Exception {
         for (Field field : type.getFields()) {
             int index = field.getIndex();
@@ -73,10 +93,6 @@ public class DefaultFieldValuesWithPrevious extends AbstractFieldValuesWithPrevi
         return functor;
     }
 
-
-    public FieldValues getPreviousValues() {
-        return new GlobArrayFieldValues(type, previousValues);
-    }
 
     public <T extends FieldValueVisitor> T accept(T functor) throws Exception {
         for (Field field : type.getFields()) {

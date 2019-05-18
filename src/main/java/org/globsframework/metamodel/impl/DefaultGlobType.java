@@ -28,17 +28,23 @@ import java.util.stream.Stream;
 
 public class DefaultGlobType extends DefaultAnnotations implements MutableGlobType, MutableAnnotations,
                                                                    AbstractDelegatePropertyHolder<GlobType> {
+    public static final String[] EMPTY_SCOPE = new String[0];
     private Field[] fields;
     private Field[] keyFields = new Field[0];
     private GlobFactory globFactory;
+    private String[] scope;
     private String name;
     private Map<String, Field> fieldsByName = new HashMap<>();
     private Map<String, Index> indices = new HashMap<>(2, 1);
     private Map<Class, Object> registered = new ConcurrentHashMap<>();
     private volatile Object properties[] = new Object[]{NULL_OBJECT, NULL_OBJECT};
 
-
     public DefaultGlobType(String name) {
+        this(null, name);
+    }
+
+    public DefaultGlobType(String[] scope, String name) {
+        this.scope = scope == null ? EMPTY_SCOPE : null;
         this.name = name;
     }
 
