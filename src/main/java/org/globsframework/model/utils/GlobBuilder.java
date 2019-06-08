@@ -13,7 +13,7 @@ import java.time.ZonedDateTime;
 /*
 Set the default value
  */
-public class GlobBuilder implements FieldValues.Functor, FieldSetter<GlobBuilder>, FieldValues {
+public class GlobBuilder implements  FieldSetter<GlobBuilder>, FieldValues {
     private GlobType globType;
     private MutableGlob mutableGlob;
 
@@ -27,29 +27,38 @@ public class GlobBuilder implements FieldValues.Functor, FieldSetter<GlobBuilder
 
     public static GlobBuilder init(GlobType type, FieldValues values) {
         GlobBuilder builder = new GlobBuilder(type);
-        values.safeApply(builder);
+        values.safeApply(forward(builder));
         return builder;
     }
 
     public static GlobBuilder init(GlobType type, FieldValue... values) {
         GlobBuilder builder = new GlobBuilder(type);
         FieldValues fieldValues = new ArrayFieldValues(values);
-        fieldValues.safeApply(builder);
+        fieldValues.safeApply(forward(builder));
         return builder;
     }
 
     public static GlobBuilder init(Key key, FieldValue... values) {
         GlobBuilder builder = new GlobBuilder(key.getGlobType());
-        key.safeApplyOnKeyField(builder);
+        Functor functor = forward(builder);
+        key.safeApplyOnKeyField(functor);
         FieldValues fieldValues = new ArrayFieldValues(values);
-        fieldValues.safeApply(builder);
+        fieldValues.safeApply(forward(builder));
         return builder;
+    }
+
+    private static Functor forward(GlobBuilder builder) {
+        return new Functor() {
+            public void process(Field field, Object value) throws Exception {
+                builder.setValue(field, value);
+            }
+        };
     }
 
     public static GlobBuilder init(Key key, FieldValues values) {
         GlobBuilder builder = new GlobBuilder(key.getGlobType());
-        key.safeApplyOnKeyField(builder);
-        values.safeApply(builder);
+        key.safeApplyOnKeyField(forward(builder));
+        values.safeApply(forward(builder));
         return builder;
     }
 
@@ -323,6 +332,10 @@ public class GlobBuilder implements FieldValues.Functor, FieldSetter<GlobBuilder
 
     public FieldValue[] toArray() {
         return mutableGlob.toArray();
+    }
+
+    public FieldValues withoutKeyField() {
+        return null;
     }
 
     public String toString() {

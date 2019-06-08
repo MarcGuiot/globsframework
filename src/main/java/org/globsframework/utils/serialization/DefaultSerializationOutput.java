@@ -251,21 +251,21 @@ public class DefaultSerializationOutput implements SerializedOutput, ChangeSetVi
         writeUtf8String(key.getGlobType().getName());
         writeValues(key.asFieldValues());
         writeByte(1);
-        writeValues(values);
+        writeValues(values.withoutKeyField());
     }
 
     public void visitUpdate(Key key, FieldValuesWithPrevious values) {
         writeUtf8String(key.getGlobType().getName());
         writeValues(key.asFieldValues());
         writeByte(2);
-        writeValues(values);
+        writeValuesWithPrevious(values);
     }
 
     public void visitDeletion(Key key, FieldValues values) {
         writeUtf8String(key.getGlobType().getName());
         writeValues(key.asFieldValues());
         writeByte(3);
-        writeValues(values);
+        writeValues(values.withoutKeyField());
     }
 
     private void writeValues(FieldValues values) {
@@ -396,9 +396,9 @@ public class DefaultSerializationOutput implements SerializedOutput, ChangeSetVi
         }
     }
 
-    private void writeValues(FieldValuesWithPrevious values) {
+    private void writeValuesWithPrevious(FieldValuesWithPrevious values) {
         write(values.size());
-        values.safeApplyWithPrevious(fieldValuesWithPreviousFunctor);
+        values.safeApplyWithPreviousButKey(fieldValuesWithPreviousFunctor);
     }
 
     public class FieldValuesWithPreviousFunctor implements FieldValuesWithPrevious.FunctorWithPrevious, FieldValueVisitor {

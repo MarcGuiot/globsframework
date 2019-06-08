@@ -3,7 +3,6 @@ package org.globsframework.model.repository;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.IntegerField;
-import org.globsframework.metamodel.index.Index;
 import org.globsframework.metamodel.index.MultiFieldIndex;
 import org.globsframework.metamodel.index.SingleFieldIndex;
 import org.globsframework.metamodel.links.FieldMappingFunction;
@@ -24,7 +23,6 @@ import org.globsframework.utils.collections.Pair;
 import org.globsframework.utils.exceptions.*;
 
 import java.util.*;
-import java.util.stream.IntStream;
 
 public class DefaultGlobRepository implements GlobRepository, IndexSource {
     private Map<Key, MutableGlob> pendingDeletions = new HashMap<>();
@@ -266,7 +264,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
             glob = pendingDelete;
         }
 
-        checkKeyDoesNotExist(key);
+        checkKeyDoesNotExist(key, glob);
 
         IndexTables indexTables = indexManager.getAssociatedTable(type);
         globs.put(key.getGlobType(), key, glob);
@@ -649,7 +647,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
 
     public void add(Glob glob) {
         Key key = glob.getKey();
-        checkKeyDoesNotExist(key);
+        checkKeyDoesNotExist(key, glob);
         IndexTables indexTables = indexManager.getAssociatedTable(key.getGlobType());
         this.globs.put(key.getGlobType(), key, glob);
         if (indexTables != null) {
@@ -748,9 +746,10 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
         }
     }
 
-    private void checkKeyDoesNotExist(Key key) throws ItemAlreadyExists {
+    private void checkKeyDoesNotExist(Key key, Glob glob) throws ItemAlreadyExists {
         if (globs.containsKey(key.getGlobType(), key)) {
-            throw new ItemAlreadyExists("An object with key " + key + " already exists");
+            throw new ItemAlreadyExists("An object with key " + key + " already exists " +
+                    GlobPrinter.toString(globs.get(key.getGlobType(), key)) + " and " + GlobPrinter.toString(glob));
         }
     }
 

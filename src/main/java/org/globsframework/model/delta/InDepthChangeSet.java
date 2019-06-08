@@ -142,7 +142,7 @@ public class InDepthChangeSet extends DefaultChangeSet {
 
     public void processUpdate(Key key, FieldValuesWithPrevious values) {
         super.processUpdate(key, values);
-        values.safeApplyWithPrevious(new FieldValuesWithPrevious.FunctorWithPrevious() {
+        values.safeApplyWithPreviousButKey(new FieldValuesWithPrevious.FunctorWithPrevious() {
             public void process(Field field, Object value, Object previousValue) throws Exception {
                 propagateChanges(field, value, previousValue);
             }

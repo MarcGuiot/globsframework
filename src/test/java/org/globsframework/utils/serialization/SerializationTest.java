@@ -109,6 +109,8 @@ public class SerializationTest {
         output.writeChangeSet(changeSet);
         outputStream.close();
 
+        changeSet.toString();
+
         ChangeSet readChangeSet = input.readChangeSet(DummyModel.get());
         GlobTestUtils.assertChangesEqual(readChangeSet,
                                          "<create type='dummyObject' id='1' name='name1'/>" +

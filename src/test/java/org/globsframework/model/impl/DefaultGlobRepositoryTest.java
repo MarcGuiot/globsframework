@@ -22,12 +22,12 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
     @Test
     public void testFindUnique() throws Exception {
         init("<dummyObject id='0' name='name'/>" +
-             "<dummyObject id='1' name='name' value='1.1'/>" +
-             "<dummyObject id='2' name='name' value='2.2'/>");
+                "<dummyObject id='1' name='name' value='1.1'/>" +
+                "<dummyObject id='2' name='name' value='2.2'/>");
 
         Glob glob = repository.findUnique(DummyObject.TYPE,
-                                          value(DummyObject.ID, 1),
-                                          value(DummyObject.VALUE, 1.1));
+                value(DummyObject.ID, 1),
+                value(DummyObject.VALUE, 1.1));
 
         assertNotNull(glob);
         assertEquals(1, glob.get(DummyObject.ID).intValue());
@@ -38,19 +38,18 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
         try {
             repository.findUnique(DummyObject.TYPE, value(DummyObject.NAME, "name"));
             fail();
-        }
-        catch (ItemAmbiguity e) {
+        } catch (ItemAmbiguity e) {
         }
     }
 
     @Test
     public void testFindUniqueWithMatcher() throws Exception {
         init("<dummyObject id='0' name='name'/>" +
-             "<dummyObject id='1' name='Name1' value='1.1'/>" +
-             "<dummyObject id='2' name='name' value='2.2'/>");
+                "<dummyObject id='1' name='Name1' value='1.1'/>" +
+                "<dummyObject id='2' name='name' value='2.2'/>");
 
         Glob glob = repository.findUnique(DummyObject.TYPE,
-                                          GlobMatchers.fieldEquals(DummyObject.NAME, "Name1"));
+                GlobMatchers.fieldEquals(DummyObject.NAME, "Name1"));
         assertNotNull(glob);
         assertEquals(1, glob.get(DummyObject.ID).intValue());
         assertEquals(1.1, glob.get(DummyObject.VALUE), 0.01);
@@ -60,8 +59,7 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
         try {
             repository.findUnique(DummyObject.TYPE, GlobMatchers.fieldEquals(DummyObject.NAME, "name"));
             fail();
-        }
-        catch (ItemAmbiguity e) {
+        } catch (ItemAmbiguity e) {
         }
     }
 
@@ -69,13 +67,13 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
     public void testFindWithNullKeyReturnsNull() throws Exception {
         initRepository();
         assertNull(repository.find(null));
-        assertFalse(repository.contains((Key)null));
+        assertFalse(repository.contains((Key) null));
     }
 
     @Test
     public void testGetAll() throws Exception {
         String xmlDescription = "<dummyObject id='1' name='name' value='1.1'/>" +
-                                "<dummyObject2 id='2' label='name2'/>";
+                "<dummyObject2 id='2' label='name2'/>";
         GlobRepository repository = checker.parse(xmlDescription);
         GlobTestUtils.assertEquals(repository, xmlDescription);
     }
@@ -83,13 +81,13 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
     @Test
     public void testGetSorted() throws Exception {
         init("<dummyObject id='1' name='name'/>" +
-             "<dummyObject2 id='4' label='name2'/>" +
-             "<dummyObject2 id='2' label='other'/>" +
-             "<dummyObject2 id='1' label='name2'/>" +
-             "<dummyObject2 id='3' label='name2'/>" +
-             "");
+                "<dummyObject2 id='4' label='name2'/>" +
+                "<dummyObject2 id='2' label='other'/>" +
+                "<dummyObject2 id='1' label='name2'/>" +
+                "<dummyObject2 id='3' label='name2'/>" +
+                "");
         Glob[] result = repository.getSorted(DummyObject2.TYPE, new GlobFieldComparator(DummyObject2.ID),
-                                             GlobMatchers.fieldEquals(DummyObject2.LABEL, "name2"));
+                GlobMatchers.fieldEquals(DummyObject2.LABEL, "name2"));
         Glob firstGlob = repository.get(getKey2(1));
         assertEquals(firstGlob, result[0]);
         Glob lastGlob = repository.get(getKey2(4));
@@ -119,7 +117,7 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
     @Test
     public void testFindTarget() throws Exception {
         init("<dummyObjectWithLinks id='0' targetId1='1' targetId2='2'/>" +
-             "<dummyObjectWithCompositeKey id1='1' id2='2' name='targetName'/>");
+                "<dummyObjectWithCompositeKey id1='1' id2='2' name='targetName'/>");
         Glob source = repository.get(getLinksKey(0));
         Glob target = repository.findLinkTarget(source, DummyObjectWithLinks.COMPOSITE_LINK);
         assertEquals("targetName", target.get(DummyObjectWithCompositeKey.NAME));
@@ -134,21 +132,21 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
     @Test
     public void testFindTargetWithNoResult() throws Exception {
         init("<dummyObjectWithLinks id='0' targetId1='1' targetId2='2'/>" +
-             "<dummyObjectWithCompositeKey id1='99' id2='99' name='targetName'/>");
+                "<dummyObjectWithCompositeKey id1='99' id2='99' name='targetName'/>");
         assertNull(repository.findLinkTarget(repository.get(getLinksKey(0)), DummyObjectWithLinks.COMPOSITE_LINK));
     }
 
     @Test
     public void testFindLinkedToWithLinkField() throws Exception {
         init("<dummyObject id='1' name='obj1'/>" +
-             "<dummyObject id='2' linkName='obj1'/>" +
-             "<dummyObject id='3' linkName='obj1'/>");
+                "<dummyObject id='2' linkName='obj1'/>" +
+                "<dummyObject id='3' linkName='obj1'/>");
 
         Glob glob1 = repository.get(getKey(1));
         GlobTestUtils.assertListEquals(repository.findLinkedTo(glob1, DummyObject.LINK),
-                                       repository,
-                                       "<dummyObject id='2'/>" +
-                                       "<dummyObject id='3'/>");
+                repository,
+                "<dummyObject id='2'/>" +
+                        "<dummyObject id='3'/>");
 
         assertEquals(0, repository.findLinkedTo(repository.get(getKey(2)), DummyObject.LINK).size());
     }
@@ -156,16 +154,16 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
     @Test
     public void testFindLinkedToWithMultiFieldLinks() throws Exception {
         init("<dummyObjectWithCompositeKey id1='1' id2='2' name='targetName'/>" +
-             "<dummyObjectWithLinks id='0' targetId1='1' targetId2='2'/>" +
-             "<dummyObjectWithLinks id='1' targetId1='1' targetId2='2'/>" +
-             "<dummyObjectWithLinks id='2' targetId1='2' targetId2='2'/>"
+                "<dummyObjectWithLinks id='0' targetId1='1' targetId2='2'/>" +
+                "<dummyObjectWithLinks id='1' targetId1='1' targetId2='2'/>" +
+                "<dummyObjectWithLinks id='2' targetId1='2' targetId2='2'/>"
         );
 
         Glob target = repository.get(
-            KeyBuilder
-                .init(DummyObjectWithCompositeKey.ID1, 1)
-                .set(DummyObjectWithCompositeKey.ID2, 2)
-                .get());
+                KeyBuilder
+                        .init(DummyObjectWithCompositeKey.ID1, 1)
+                        .set(DummyObjectWithCompositeKey.ID2, 2)
+                        .get());
 
         Glob source0 = repository.get(KeyBuilder.newKey(DummyObjectWithLinks.TYPE, 0));
         Glob source1 = repository.get(KeyBuilder.newKey(DummyObjectWithLinks.TYPE, 1));
@@ -175,11 +173,11 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
     @Test
     public void testApply() throws Exception {
         init("<dummyObject id='1' name='name'/>" +
-             "<dummyObject2 id='4' label='name2'/>" +
-             "<dummyObject2 id='2' label='other'/>" +
-             "<dummyObject2 id='1' label='name2'/>" +
-             "<dummyObject2 id='3' label='name2'/>" +
-             "");
+                "<dummyObject2 id='4' label='name2'/>" +
+                "<dummyObject2 id='2' label='other'/>" +
+                "<dummyObject2 id='1' label='name2'/>" +
+                "<dummyObject2 id='3' label='name2'/>" +
+                "");
         final GlobList actual = new GlobList();
         GlobMatcher matcher = GlobMatchers.fieldEquals(DummyObject2.LABEL, "name2");
         repository.apply(DummyObject2.TYPE, matcher, new GlobFunctor() {
@@ -195,16 +193,16 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
         initRepository();
 
         FieldValues values = FieldValuesBuilder
-            .init(DummyObject.ID, 1)
-            .set(DummyObject.NAME, "name1")
-            .set(DummyObject.PRESENT, true)
-            .get();
+                .init(DummyObject.ID, 1)
+                .set(DummyObject.NAME, "name1")
+                .set(DummyObject.PRESENT, true)
+                .get();
 
         Glob glob = repository.create(DummyObject.TYPE, values.toArray());
         assertTrue(glob.matches(values));
 
         checker.assertEquals(repository,
-                             "<dummyObject id='1' name='name1' present='true'/>");
+                "<dummyObject id='1' name='name1' present='true'/>");
 
         Key key = KeyBuilder.createFromValues(DummyObject.TYPE, values);
         assertEquals(key, glob.getKey());
@@ -225,11 +223,11 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
         initRepository();
 
         Glob obj1 = repository.findOrCreate(KeyBuilder.newKey(DummyObject.TYPE, 1),
-                                            value(DummyObject.NAME, "name"));
+                value(DummyObject.NAME, "name"));
         checker.assertEquals(repository, "<dummyObject id='1' name='name'/>");
 
         Glob newObj1 = repository.findOrCreate(KeyBuilder.newKey(DummyObject.TYPE, 1),
-                                               value(DummyObject.NAME, "newName-ignored"));
+                value(DummyObject.NAME, "newName-ignored"));
         assertNotNull(newObj1);
         checker.assertEquals(repository, "<dummyObject id='1' name='name'/>");
         assertEquals(obj1.getKey(), newObj1.getKey());
@@ -242,8 +240,7 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
         try {
             createDummyObject(repository, 1);
             fail();
-        }
-        catch (ItemAlreadyExists e) {
+        } catch (ItemAlreadyExists e) {
         }
         changeListener.assertNoChanges();
     }
@@ -253,7 +250,7 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
         initRepository();
 
         repository.create(KeyBuilder.newKey(DummyObject.TYPE, 125),
-                          value(DummyObject.NAME, "name"));
+                value(DummyObject.NAME, "name"));
         checker.assertEquals(repository, "<dummyObject id='125' name='name'/>");
     }
 
@@ -278,28 +275,28 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
         initRepository();
 
         repository.create(DummyObject.TYPE,
-                          value(DummyObject.ID, 1),
-                          value(DummyObject.NAME, "name1"));
+                value(DummyObject.ID, 1),
+                value(DummyObject.NAME, "name1"));
 
         changeListener.assertLastChangesEqual(
-            "<create type='dummyObject' id='1' name='name1'/>"
+                "<create type='dummyObject' id='1' name='name1'/>"
         );
     }
 
     @Test
     public void testCreationAndUpdateHaveNoKeyFieldsInTheFieldValuesParameter() throws Exception {
         init("<dummyObject id='1'/>" +
-             "<dummyObject id='2'/>");
+                "<dummyObject id='2'/>");
 
         repository.addChangeListener(new DefaultChangeSetListener() {
             public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
                 changeSet.safeVisit(new DefaultChangeSetVisitor() {
                     public void visitCreation(Key key, FieldValues values) throws Exception {
-                        values.apply(new NoKeyFieldChecker());
+                        values.apply(new NoKeyFieldChecker().withoutKeyField());
                     }
 
                     public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
-                        values.apply(new NoKeyFieldChecker());
+                        values.apply(new NoKeyFieldChecker().withoutKeyField());
                     }
                 });
             }
@@ -307,16 +304,8 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
 
         repository.update(getKey(2), DummyObject.NAME, "newName");
         repository.create(DummyObject.TYPE,
-                          value(DummyObject.ID, 3),
-                          value(DummyObject.NAME, "name3"));
-    }
-
-    private static class NoKeyFieldChecker implements FieldValues.Functor {
-        public void process(Field field, Object value) throws Exception {
-            if (field.isKeyField()) {
-                fail(field.getName() + " is a key field");
-            }
-        }
+                value(DummyObject.ID, 3),
+                value(DummyObject.NAME, "name3"));
     }
 
     @Test
@@ -331,14 +320,14 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
     @Test
     public void testNoIdGenerationForCompositeKeys() throws Exception {
         checkCreationWithMissingKeyError(DummyObjectWithCompositeKey.TYPE,
-                                         "Field 'id1' missing (should not be NULL) for identifying a Glob of type: dummyObjectWithCompositeKey");
+                "Field 'id1' missing (should not be NULL) for identifying a Glob of type: dummyObjectWithCompositeKey");
     }
 
     @Ignore
     @Test
     public void testNoIdGenerationForNonIntegerKeys() throws Exception {
         checkCreationWithMissingKeyError(DummyObjectWithStringKey.TYPE,
-                                         "Field 'id' missing for identifying a Glob of type: dummyObjectWithStringKey");
+                "Field 'id' missing for identifying a Glob of type: dummyObjectWithStringKey");
     }
 
     private void checkCreationWithMissingKeyError(GlobType type, String message) {
@@ -346,8 +335,7 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
         try {
             repository.create(type);
             fail();
-        }
-        catch (MissingInfo e) {
+        } catch (MissingInfo e) {
             assertEquals(message, e.getMessage());
         }
         changeListener.assertNoChanges();
@@ -361,7 +349,7 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
         checker.assertEquals(repository, "<dummyObject id='0' name='newName'/>");
 
         changeListener.assertLastChangesEqual(
-            "<update type='dummyObject' id='0' name='newName' _name='name'/>"
+                "<update type='dummyObject' id='0' name='newName' _name='name'/>"
         );
     }
 
@@ -369,17 +357,17 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
     public void testUpdateWithSeveralValues() throws Exception {
         init("<dummyObject id='0' name='name'/>");
         repository.update(getKey(0),
-                          value(DummyObject.NAME, "newName"),
-                          value(DummyObject.PRESENT, true),
-                          value(DummyObject.LINK_ID, 7));
+                value(DummyObject.NAME, "newName"),
+                value(DummyObject.PRESENT, true),
+                value(DummyObject.LINK_ID, 7));
         checker.assertEquals(repository,
-                             "<dummyObject id='0' name='newName' present='true' linkId='7'/>");
+                "<dummyObject id='0' name='newName' present='true' linkId='7'/>");
 
         changeListener.assertLastChangesEqual(
-            "<update type='dummyObject' id='0' " +
-            "  name='newName' _name='name' " +
-            "  present='true' _present='(null)'" +
-            "  linkId='7' _linkId='(null)'/>"
+                "<update type='dummyObject' id='0' " +
+                        "  name='newName' _name='name' " +
+                        "  present='true' _present='(null)'" +
+                        "  linkId='7' _linkId='(null)'/>"
         );
     }
 
@@ -389,16 +377,14 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
         try {
             repository.update(getKey(1), DummyObject.NAME, "newName");
             fail();
-        }
-        catch (ItemNotFound e) {
+        } catch (ItemNotFound e) {
             assertEquals("Object 'dummyObject[id=1]' does not exist", e.getMessage());
         }
 
         try {
             repository.update(getKey(0), DummyObject2.LABEL, "newName");
             fail();
-        }
-        catch (InvalidParameter e) {
+        } catch (InvalidParameter e) {
             assertEquals("'dummyObject2.label' is not a field of type 'dummyObject'", e.getMessage());
         }
         changeListener.assertNoChanges();
@@ -425,7 +411,7 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
         checker.assertEquals(repository, "<dummyObject id='0' name='newName3'/>");
 
         changeListener.assertLastChangesEqual(
-            "<update type='dummyObject' id='0' name='newName3' _name='name'/>"
+                "<update type='dummyObject' id='0' name='newName3' _name='name'/>"
         );
     }
 
@@ -439,7 +425,7 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
         checker.assertEquals(repository, "<dummyObject id='0' name='newName'/>");
 
         changeListener.assertLastChangesEqual(
-            "<create type='dummyObject' id='0' name='newName'/>"
+                "<create type='dummyObject' id='0' name='newName'/>"
         );
     }
 
@@ -453,7 +439,7 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
         repository.completeChangeSet();
 
         changeListener.assertLastChangesEqual(
-            "<delete type='dummyObject' id='0' _name='name' _value='1.4'/>"
+                "<delete type='dummyObject' id='0' _name='name' _value='1.4'/>"
         );
     }
 
@@ -468,18 +454,18 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
         checker.assertEquals(repository, "<dummyObject id='0' name='newName'/>");
 
         changeListener.assertLastChangesEqual(
-            "<update type='dummyObject' id='0' name='newName' _name='name' value='(null)' _value='1.4'/>"
+                "<update type='dummyObject' id='0' name='newName' _name='name' value='(null)' _value='1.4'/>"
         );
     }
 
     @Test
     public void testUpdatingALink() throws Exception {
         init("<dummyObject id='1'/>" +
-             "<dummyObject id='2'/>");
+                "<dummyObject id='2'/>");
         repository.setTarget(getKey(1), DummyObject.LINK, getKey(3));
         assertEquals(3, repository.get(getKey(1)).get(DummyObject.LINK_ID).intValue());
         changeListener.assertLastChangesEqual(
-            "<update type='dummyObject' id='1' linkId='3' _linkId='(null)'/>"
+                "<update type='dummyObject' id='1' linkId='3' _linkId='(null)'/>"
         );
         changeListener.reset();
         repository.setTarget(getKey(1), DummyObject.LINK, getKey(3));
@@ -496,12 +482,11 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
     @Test
     public void testUpdateLinkTargetError() throws Exception {
         init("<dummyObject id='1'/>" +
-             "<dummyObject2 id='1'/>");
+                "<dummyObject2 id='1'/>");
         try {
             repository.setTarget(getKey(1), DummyObject.LINK, getKey2(1));
             fail();
-        }
-        catch (InvalidParameter e) {
+        } catch (InvalidParameter e) {
             assertEquals("Key 'dummyObject2[id=1]' is not a valid target for link 'link[dummyObject => dummyObject]'", e.getMessage());
         }
     }
@@ -512,10 +497,9 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
         try {
             repository.setTarget(getKey2(1), DummyObject.LINK, null);
             fail();
-        }
-        catch (InvalidParameter e) {
+        } catch (InvalidParameter e) {
             assertEquals("Type 'dummyObject2' is not a valid source for link  'link[dummyObject => dummyObject]'",
-                         e.getMessage());
+                    e.getMessage());
         }
     }
 
@@ -525,23 +509,23 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
         repository.delete(getKey(1));
         checker.assertEquals(repository, "");
         changeListener.assertLastChangesEqual(
-            "<delete type='dummyObject' id='1' _name='name'/>"
+                "<delete type='dummyObject' id='1' _name='name'/>"
         );
     }
 
     @Test
     public void testDeletionOfAList() throws Exception {
         init("<dummyObject id='1' name='obj1'/>" +
-             "<dummyObject id='2' name='obj2'/>" +
-             "<dummyObject id='3' name='obj3'/>"
+                "<dummyObject id='2' name='obj2'/>" +
+                "<dummyObject id='3' name='obj3'/>"
         );
         Glob glob1 = repository.get(getKey(1));
         Glob glob2 = repository.get(getKey(2));
         repository.delete(new GlobList(glob1, glob2));
         checker.assertEquals(repository, "<dummyObject id='3'/>");
         changeListener.assertLastChangesEqual(
-            "<delete type='dummyObject' id='1' _name='obj1'/>" +
-            "<delete type='dummyObject' id='2' _name='obj2'/>"
+                "<delete type='dummyObject' id='1' _name='obj1'/>" +
+                        "<delete type='dummyObject' id='2' _name='obj2'/>"
         );
 //        checkDummyObjectDisabled(glob1);
 //        checkDummyObjectDisabled(glob2);
@@ -554,6 +538,18 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
         Glob glob = repository.get(key);
         repository.delete(key);
 //        checkDummyObjectDisabled(glob);
+    }
+
+    @Test
+    public void testDeletionErrors() throws Exception {
+        init("<dummyObject id='0' name='name'/>");
+        try {
+            repository.delete(getKey(1));
+            fail();
+        } catch (ItemNotFound e) {
+            assertEquals("Object 'dummyObject[id=1]' does not exist", e.getMessage());
+        }
+        changeListener.assertNoChanges();
     }
 
 //    @Test
@@ -599,56 +595,43 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
 //    }
 
     @Test
-    public void testDeletionErrors() throws Exception {
-        init("<dummyObject id='0' name='name'/>");
-        try {
-            repository.delete(getKey(1));
-            fail();
-        }
-        catch (ItemNotFound e) {
-            assertEquals("Object 'dummyObject[id=1]' does not exist", e.getMessage());
-        }
-        changeListener.assertNoChanges();
-    }
-
-    @Test
     public void testDeleteWithMatcher() throws Exception {
         init(
-            "<dummyObject id='1'/>" +
-            "<dummyObject id='2'/>" +
-            "<dummyObject id='3'/>" +
-            "<dummyObject id='4'/>" +
-            "<dummyObject2 id='1'/>" +
-            "<dummyObjectWithCompositeKey id1='1' id2='2'/>"
+                "<dummyObject id='1'/>" +
+                        "<dummyObject id='2'/>" +
+                        "<dummyObject id='3'/>" +
+                        "<dummyObject id='4'/>" +
+                        "<dummyObject2 id='1'/>" +
+                        "<dummyObjectWithCompositeKey id1='1' id2='2'/>"
         );
         repository.delete(DummyObject.TYPE, GlobMatchers.fieldIn(DummyObject.ID, 1, 3));
         changeListener.assertLastChangesEqual(
-            "<delete type='dummyObject' id='1'/>" +
-            "<delete type='dummyObject' id='3'/>"
+                "<delete type='dummyObject' id='1'/>" +
+                        "<delete type='dummyObject' id='3'/>"
         );
     }
 
     @Test
     public void testDeleteAll() throws Exception {
         init(
-            "<dummyObject id='1'/>" +
-            "<dummyObject id='2'/>" +
-            "<dummyObject2 id='1'/>" +
-            "<dummyObjectWithCompositeKey id1='1' id2='2'/>"
+                "<dummyObject id='1'/>" +
+                        "<dummyObject id='2'/>" +
+                        "<dummyObject2 id='1'/>" +
+                        "<dummyObjectWithCompositeKey id1='1' id2='2'/>"
         );
         repository.deleteAll(DummyObject.TYPE, DummyObjectWithCompositeKey.TYPE);
         changeListener.assertLastChangesEqual(
-            "<delete type='dummyObject' id='2'/>" +
-            "<delete type='dummyObject' id='1'/>" +
-            "<delete type='dummyObjectWithCompositeKey' id1='1' id2='2'/>"
+                "<delete type='dummyObject' id='2'/>" +
+                        "<delete type='dummyObject' id='1'/>" +
+                        "<delete type='dummyObjectWithCompositeKey' id1='1' id2='2'/>"
         );
     }
 
     @Test
     public void testDeleteAndRecreateKeepTheSameInstance() throws Exception {
         init(
-            "<dummyObject id='1' name='value' />" +
-            "<dummyObject id='2'/>");
+                "<dummyObject id='1' name='value' />" +
+                        "<dummyObject id='2'/>");
         Key key1 = KeyBuilder.newKey(DummyObject.TYPE, 1);
         Glob glob1 = repository.get(key1);
         Key key2 = KeyBuilder.newKey(DummyObject.TYPE, 2);
@@ -676,36 +659,36 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
     @Test
     public void testChangeSetIsResetAtEachStep() throws Exception {
         init(
-            "<dummyObject id='1' name='name1'/>" +
-            "<dummyObject id='2' name='name2'/>"
+                "<dummyObject id='1' name='name1'/>" +
+                        "<dummyObject id='2' name='name2'/>"
         );
 
         createDummyObject(repository, 3);
         changeListener.assertLastChangesEqual(
-            "<create type='dummyObject' id='3'/>"
+                "<create type='dummyObject' id='3'/>"
         );
 
         repository.update(getKey(1), DummyObject.NAME, "newName");
         changeListener.assertLastChangesEqual(
-            "<update type='dummyObject' id='1' name='newName' _name='name1'/>"
+                "<update type='dummyObject' id='1' name='newName' _name='name1'/>"
         );
 
         repository.delete(getKey(2));
         changeListener.assertLastChangesEqual(
-            "<delete type='dummyObject' id='2' _name='name2'/>"
+                "<delete type='dummyObject' id='2' _name='name2'/>"
         );
 
         createDummyObject(repository, 4);
         changeListener.assertLastChangesEqual(
-            "<create type='dummyObject' id='4'/>"
+                "<create type='dummyObject' id='4'/>"
         );
     }
 
     @Test
     public void testBulkModifications() throws Exception {
         init(
-            "<dummyObject id='1' name='name1'/>" +
-            "<dummyObject id='2' name='name2'/>"
+                "<dummyObject id='1' name='name1'/>" +
+                        "<dummyObject id='2' name='name2'/>"
         );
 
         repository.startChangeSet();
@@ -715,22 +698,22 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
         changeListener.assertNoChanges();
 
         checker.assertEquals(repository,
-                             "<dummyObject id='1' name='newName'/>" +
-                             "<dummyObject id='3'/>");
+                "<dummyObject id='1' name='newName'/>" +
+                        "<dummyObject id='3'/>");
 
         repository.completeChangeSet();
         changeListener.assertLastChangesEqual(
-            "<create type='dummyObject' id='3'/>" +
-            "<update type='dummyObject' id='1' name='newName' _name='name1'/>" +
-            "<delete type='dummyObject' id='2' _name='name2'/>"
+                "<create type='dummyObject' id='3'/>" +
+                        "<update type='dummyObject' id='1' name='newName' _name='name1'/>" +
+                        "<delete type='dummyObject' id='2' _name='name2'/>"
         );
     }
 
     @Test
     public void testImbricatedBulkModes() throws Exception {
         init(
-            "<dummyObject id='1' name='name1'/>" +
-            "<dummyObject id='2' name='name2'/>"
+                "<dummyObject id='1' name='name1'/>" +
+                        "<dummyObject id='2' name='name2'/>"
         );
 
         repository.startChangeSet();
@@ -743,8 +726,8 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
         repository.delete(getKey(2));
 
         checker.assertEquals(repository,
-                             "<dummyObject id='1' name='newName'/>" +
-                             "<dummyObject id='3'/>");
+                "<dummyObject id='1' name='newName'/>" +
+                        "<dummyObject id='3'/>");
 
         changeListener.assertNoChanges();
 
@@ -756,9 +739,9 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
 
         repository.completeChangeSet();
         changeListener.assertLastChangesEqual(
-            "<create type='dummyObject' id='3'/>" +
-            "<update type='dummyObject' id='1' name='newName' _name='name1'/>" +
-            "<delete type='dummyObject' id='2' _name='name2'/>"
+                "<create type='dummyObject' id='3'/>" +
+                        "<update type='dummyObject' id='1' name='newName' _name='name1'/>" +
+                        "<delete type='dummyObject' id='2' _name='name2'/>"
         );
     }
 
@@ -776,7 +759,7 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
 
                     public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
                         repository.update(key, DummyObject.NAME,
-                                          (values.contains(DummyObject.NAME) ? values.get(DummyObject.NAME) : "null") + "-updated");
+                                (values.contains(DummyObject.NAME) ? values.get(DummyObject.NAME) : "null") + "-updated");
                         createObj2(repository, key, key + " updated");
                     }
 
@@ -788,30 +771,30 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
         });
 
         repository.create(DummyObject.TYPE,
-                          value(DummyObject.ID, 1),
-                          value(DummyObject.NAME, "name1"));
+                value(DummyObject.ID, 1),
+                value(DummyObject.NAME, "name1"));
         changeListener.assertLastChangesEqual(
-            "<create type='dummyObject' id='1' name='name1-created'/>" +
-            "<create type='dummyObject2' id='1' label='dummyObject[id=1] created'/>");
+                "<create type='dummyObject' id='1' name='name1-created'/>" +
+                        "<create type='dummyObject2' id='1' label='dummyObject[id=1] created'/>");
         clearTaggingObjects(repository, changeListener);
 
         repository.startChangeSet();
         repository.create(DummyObject.TYPE,
-                          value(DummyObject.ID, 2),
-                          value(DummyObject.NAME, "name2"));
+                value(DummyObject.ID, 2),
+                value(DummyObject.NAME, "name2"));
         repository.update(getKey(1), DummyObject.VALUE, 1.1);
         repository.completeChangeSet();
         changeListener.assertLastChangesEqual(
-            "<create type='dummyObject' id='2' name='name2-created'/>" +
-            "<create type='dummyObject2' id='1' label='dummyObject[id=1] updated'/>" +
-            "<update type='dummyObject' id='1' name='null-updated' _name='name1-created' value='1.1' _value='(null)'/>" +
-            "<create type='dummyObject2' id='2' label='dummyObject[id=2] created'/>");
+                "<create type='dummyObject' id='2' name='name2-created'/>" +
+                        "<create type='dummyObject2' id='1' label='dummyObject[id=1] updated'/>" +
+                        "<update type='dummyObject' id='1' name='null-updated' _name='name1-created' value='1.1' _value='(null)'/>" +
+                        "<create type='dummyObject2' id='2' label='dummyObject[id=2] created'/>");
         clearTaggingObjects(repository, changeListener);
 
         repository.delete(getKey(1));
         changeListener.assertLastChangesEqual(
-            "<delete type='dummyObject' id='1' _name='null-updated' _value='1.1'/>" +
-            "<create type='dummyObject2' id='1' label='dummyObject[id=1] deleted'/>");
+                "<delete type='dummyObject' id='1' _name='null-updated' _value='1.1'/>" +
+                        "<create type='dummyObject2' id='1' label='dummyObject[id=1] deleted'/>");
     }
 
     @Test
@@ -827,10 +810,10 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
 
         DefaultChangeSet changeSet = new DefaultChangeSet();
         changeSet.processCreation(DummyObject.TYPE,
-                                  FieldValuesBuilder.init()
-                                      .set(DummyObject.ID, 3)
-                                      .set(DummyObject.NAME, "obj3")
-                                      .get());
+                FieldValuesBuilder.init()
+                        .set(DummyObject.ID, 3)
+                        .set(DummyObject.NAME, "obj3")
+                        .get());
         changeSet.processUpdate(getKey(1), DummyObject.NAME, "newObj1", null);
         changeSet.processDeletion(getKey2(2), FieldValues.EMPTY);
 
@@ -840,8 +823,8 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
 
         listener.assertNoChanges();
         checker.assertEquals(repository,
-                             "<dummyObject id='1' name='newObj1'/>" +
-                             "<dummyObject id='3' name='obj3'/>");
+                "<dummyObject id='1' name='newObj1'/>" +
+                        "<dummyObject id='3' name='obj3'/>");
     }
 
     @Test
@@ -853,28 +836,27 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
         try {
             repository.completeChangeSetWithoutTriggers();
             fail();
-        }
-        catch (InvalidState e) {
+        } catch (InvalidState e) {
             assertEquals("This method must be called for the outermost enterBulkDispatchingMode call", e.getMessage());
         }
     }
 
     private void createObj2(GlobRepository repository, Key referenceKey, String text) {
         repository.create(DummyObject2.TYPE,
-                          value(DummyObject2.ID, referenceKey.get(DummyObject.ID)),
-                          value(DummyObject2.LABEL, text));
+                value(DummyObject2.ID, referenceKey.get(DummyObject.ID)),
+                value(DummyObject2.LABEL, text));
     }
 
     @Test
     public void testReset() throws Exception {
         init(
-            "<dummyObject id='1'/>" +
-            "<dummyObject id='2'/>" +
-            "<dummyObject2 id='1'/>"
+                "<dummyObject id='1'/>" +
+                        "<dummyObject id='2'/>" +
+                        "<dummyObject2 id='1'/>"
         );
 
         Glob dummyObject3 =
-            GlobBuilder.init(DummyObject.TYPE).set(DummyObject.ID, 3).get();
+                GlobBuilder.init(DummyObject.TYPE).set(DummyObject.ID, 3).get();
         repository.reset(new GlobList(dummyObject3), DummyObject.TYPE);
 
         changeListener.assertResetListEquals(DummyObject.TYPE);
@@ -887,9 +869,9 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
     @Test
     public void testResetAlsoResetsTypesWhenNoCorrespondingGlobsAreInTheGlobsList() throws Exception {
         init(
-            "<dummyObject id='1'/>" +
-            "<dummyObject id='2'/>" +
-            "<dummyObject2 id='1'/>"
+                "<dummyObject id='1'/>" +
+                        "<dummyObject id='2'/>" +
+                        "<dummyObject2 id='1'/>"
         );
         repository.reset(GlobList.EMPTY, DummyObject.TYPE);
 
@@ -903,31 +885,31 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
     @Test
     public void testResetOnlyReplacesGlobsWithSpecifiedType() throws Exception {
         init(
-            "<dummyObject id='1'/>" +
-            "<dummyObject id='2'/>" +
-            "<dummyObject2 id='1'/>"
+                "<dummyObject id='1'/>" +
+                        "<dummyObject id='2'/>" +
+                        "<dummyObject2 id='1'/>"
         );
         Glob newDummyObject =
-            GlobBuilder.init(DummyObject.TYPE).set(DummyObject.ID, 3).get();
+                GlobBuilder.init(DummyObject.TYPE).set(DummyObject.ID, 3).get();
         Glob newDummyObject2 =
-            GlobBuilder.init(DummyObject2.TYPE).set(DummyObject2.ID, 2).get();
+                GlobBuilder.init(DummyObject2.TYPE).set(DummyObject2.ID, 2).get();
         repository.reset(new GlobList(newDummyObject, newDummyObject2), DummyObject2.TYPE);
 
         changeListener.assertResetListEquals(DummyObject2.TYPE);
         trigger.assertResetListEquals(DummyObject2.TYPE);
 
         checker.assertEquals(repository,
-                             "<dummyObject id='1'/>" +
-                             "<dummyObject id='2'/>" +
-                             "<dummyObject2 id='2'/>");
+                "<dummyObject id='1'/>" +
+                        "<dummyObject id='2'/>" +
+                        "<dummyObject2 id='2'/>");
     }
 
     @Test
     public void testChangesMadeWithinResetEventAreDispatchedAfterTheResetNotification() throws Exception {
         init(
-            "<dummyObject id='1'/>" +
-            "<dummyObject id='2'/>" +
-            "<dummyObject2 id='1'/>"
+                "<dummyObject id='1'/>" +
+                        "<dummyObject id='2'/>" +
+                        "<dummyObject2 id='1'/>"
         );
         final List<String> log = new ArrayList<String>();
         final GlobIdGenerator idGenerator = repository.getIdGenerator();
@@ -957,55 +939,55 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
         });
 
         Glob dummyObject3 =
-            GlobBuilder.init(DummyObject.TYPE).set(DummyObject.ID, 3).get();
+                GlobBuilder.init(DummyObject.TYPE).set(DummyObject.ID, 3).get();
         repository.reset(new GlobList(dummyObject3), DummyObject.TYPE);
 
         TestUtils.assertEquals(Arrays.asList(
-            "trigger.globsReset.begin 100",
-            "trigger.globsReset.end 100",
-            "listener.globsReset",
-            "trigger.globsChanged.begin 101",
-            "trigger.globsChanged.end 101",
-            "listener.globsChanged"
+                "trigger.globsReset.begin 100",
+                "trigger.globsReset.end 100",
+                "listener.globsReset",
+                "trigger.globsChanged.begin 101",
+                "trigger.globsChanged.end 101",
+                "listener.globsChanged"
         ), log);
     }
 
     @Test
     public void testApplyChangeSet() throws Exception {
         init(
-            "<dummyObject id='1' name='obj1'/>" +
-            "<dummyObject2 id='2'/>"
+                "<dummyObject id='1' name='obj1'/>" +
+                        "<dummyObject2 id='2'/>"
         );
 
         DefaultChangeSet changeSet = new DefaultChangeSet();
         changeSet.processCreation(DummyObject.TYPE,
-                                  FieldValuesBuilder.init()
-                                      .set(DummyObject.ID, 3)
-                                      .set(DummyObject.NAME, "obj3")
-                                      .get());
+                FieldValuesBuilder.init()
+                        .set(DummyObject.ID, 3)
+                        .set(DummyObject.NAME, "obj3")
+                        .get());
 
         changeSet.processUpdate(getKey(1), DummyObject.NAME, "newObj1", null);
         changeSet.processDeletion(getKey2(2), FieldValues.EMPTY);
 
         repository.apply(changeSet);
         checker.assertEquals(repository,
-                             "<dummyObject id='1' name='newObj1'/>" +
-                             "<dummyObject id='3' name='obj3'/>");
+                "<dummyObject id='1' name='newObj1'/>" +
+                        "<dummyObject id='3' name='obj3'/>");
     }
 
     @Test
     public void testApplyChangeSetDoesNotChangeTheRepositoryInCaseOfError() throws Exception {
         init(
-            "<dummyObject id='1' name='obj1'/>" +
-            "<dummyObject2 id='2'/>"
+                "<dummyObject id='1' name='obj1'/>" +
+                        "<dummyObject2 id='2'/>"
         );
 
         DefaultChangeSet changeSet = new DefaultChangeSet();
         changeSet.processCreation(DummyObject.TYPE,
-                                  FieldValuesBuilder.init()
-                                      .set(DummyObject.ID, 3)
-                                      .set(DummyObject.NAME, "obj3")
-                                      .get());
+                FieldValuesBuilder.init()
+                        .set(DummyObject.ID, 3)
+                        .set(DummyObject.NAME, "obj3")
+                        .get());
 
         changeSet.processUpdate(getKey(1), DummyObject.NAME, "newObj1", null);
         changeSet.processDeletion(getKey2(2), FieldValues.EMPTY);
@@ -1014,47 +996,47 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
         try {
             repository.apply(changeSet);
             fail();
-        }
-        catch (InvalidParameter invalidParameter) {
+        } catch (InvalidParameter invalidParameter) {
         }
 
         checker.assertEquals(repository,
-                             "<dummyObject id='1' name='obj1'/>" +
-                             "<dummyObject2 id='2'/>");
+                "<dummyObject id='1' name='obj1'/>" +
+                        "<dummyObject2 id='2'/>");
     }
 
     @Test
     public void testApplyChangeSetErrorOnCreate() throws Exception {
         init(
-            "<dummyObject id='1' name='obj1'/>"
+                "<dummyObject id='1' name='obj1'/>"
         );
 
         DefaultChangeSet changeSet = new DefaultChangeSet();
         changeSet.processCreation(DummyObject.TYPE,
-                                  FieldValuesBuilder.init()
-                                      .set(DummyObject.ID, 1)
-                                      .set(DummyObject.NAME, "obj3")
-                                      .get());
+                FieldValuesBuilder.init()
+                        .set(DummyObject.ID, 1)
+                        .set(DummyObject.NAME, "obj3")
+                        .get());
         checkApplyChangeSetError(changeSet,
-                                 "Object dummyObject[id=1] already exists\n" +
-                                 "-- New object values:\n" +
-                                 "name=obj3\n" +
-                                 "-- Existing object:\n" +
-                                 "id=1\n" +
-                                 "name=obj1\n" +
-                                 "value=null\n" +
-                                 "count=null\n" +
-                                 "present=null\n" +
-                                 "date=null\n" +
-                                 "password=null\n" +
-                                 "linkId=null\n" +
-                                 "link2Id=null\n");
+                "Object dummyObject[id=1] already exists\n" +
+                        "-- New object values:\n" +
+                        "id=1\n" +
+                        "name=obj3\n" +
+                        "-- Existing object:\n" +
+                        "id=1\n" +
+                        "name=obj1\n" +
+                        "value=null\n" +
+                        "count=null\n" +
+                        "present=null\n" +
+                        "date=null\n" +
+                        "password=null\n" +
+                        "linkId=null\n" +
+                        "link2Id=null\n");
     }
 
     @Test
     public void testApplyChangeSetErrorOnUpdate() throws Exception {
         init(
-            "<dummyObject id='1' name='obj1'/>"
+                "<dummyObject id='1' name='obj1'/>"
         );
 
         MutableChangeSet changeSet = new DefaultChangeSet();
@@ -1065,7 +1047,7 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
     @Test
     public void testApplyChangeSetErrorOnDelete() throws Exception {
         init(
-            "<dummyObject id='1' name='obj1'/>"
+                "<dummyObject id='1' name='obj1'/>"
         );
 
         MutableChangeSet changeSet = new DefaultChangeSet();
@@ -1076,8 +1058,8 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
     @Test
     public void testChangeSetIsCleanedUpWithReverseOperations() throws Exception {
         init(
-            "<dummyObject id='2' name='name2'/>" +
-            "<dummyObject id='3' name='name3'/>"
+                "<dummyObject id='2' name='name2'/>" +
+                        "<dummyObject id='3' name='name3'/>"
         );
 
         repository.startChangeSet();
@@ -1118,14 +1100,14 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
     @Test
     public void testResetUpdateIndex() throws Exception {
         init("<dummyObjectIndex id='0' uniqueName='name'/>" +
-             "<dummyObjectIndex id='1' uniqueName='name1' value='1.1' value1='1'/>" +
-             "<dummyObjectIndex id='2' uniqueName='name2' value='2.2' value1='2'/>");
+                "<dummyObjectIndex id='1' uniqueName='name1' value='1.1' value1='1'/>" +
+                "<dummyObjectIndex id='2' uniqueName='name2' value='2.2' value1='2'/>");
 
         GlobList listForName1 = repository.findByIndex(DummyObjectIndex.UNIQUE_NAME_INDEX, "name1");
         assertEquals(1, listForName1.size());
         Glob dummyObject3 =
-            GlobBuilder.init(DummyObjectIndex.TYPE).set(DummyObjectIndex.ID, 3)
-                .set(DummyObjectIndex.UNIQUE_NAME, "name3").get();
+                GlobBuilder.init(DummyObjectIndex.TYPE).set(DummyObjectIndex.ID, 3)
+                        .set(DummyObjectIndex.UNIQUE_NAME, "name3").get();
         repository.reset(new GlobList(dummyObject3), DummyObjectIndex.TYPE);
         assertEquals(1, repository.getAll(DummyObjectIndex.TYPE).size());
         GlobList shouldBeEmpty = repository.findByIndex(DummyObjectIndex.UNIQUE_NAME_INDEX, "name1");
@@ -1134,19 +1116,17 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
         assertEquals(1, listForName3.size());
     }
 
-
     private void checkApplyChangeSetError(ChangeSet changeSet, String expectedMessage) {
         try {
             repository.apply(changeSet);
             fail();
-        }
-        catch (InvalidParameter e) {
+        } catch (InvalidParameter e) {
             assertEquals(expectedMessage, e.getMessage());
         }
     }
 
     private void createDummyObject(GlobRepository repository, long nextId) {
-        repository.create(DummyObject.TYPE, value(DummyObject.ID, (int)nextId));
+        repository.create(DummyObject.TYPE, value(DummyObject.ID, (int) nextId));
     }
 
     private void clearTaggingObjects(GlobRepository repository, DummyChangeSetListener listener) {
@@ -1160,7 +1140,7 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
     public void testRound() throws Exception {
         initRepository();
         Glob glob = repository.create(DummyObject2.TYPE, FieldValue.value(DummyObject2.ID, 1),
-                                      FieldValue.value(DummyObject2.VALUE, 1.2343999));
+                FieldValue.value(DummyObject2.VALUE, 1.2343999));
         assertEquals(glob.get(DummyObject2.VALUE), 1.2344, 0.01);
         repository.update(glob.getKey(), DummyObject2.VALUE, 0.12312222);
         assertEquals(glob.get(DummyObject2.VALUE), 0, 1231);
@@ -1168,6 +1148,14 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
         assertEquals(glob.get(DummyObject2.VALUE), -0, 1231);
         repository.update(glob.getKey(), DummyObject2.VALUE, -1.2343999);
         assertEquals(glob.get(DummyObject2.VALUE), -1.2344, 0.01);
+    }
+
+    private static class NoKeyFieldChecker implements FieldValues.Functor {
+        public void process(Field field, Object value) throws Exception {
+            if (field.isKeyField()) {
+                fail(field.getName() + " is a key field");
+            }
+        }
     }
 
 }

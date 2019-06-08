@@ -1,6 +1,7 @@
 package org.globsframework.metamodel.fields;
 
 import org.globsframework.metamodel.Field;
+import org.globsframework.metamodel.fields.impl.FieldValueVisitorButKey;
 import org.globsframework.model.Glob;
 
 import java.math.BigDecimal;
@@ -46,6 +47,9 @@ public interface FieldValueVisitor {
 
     void visitUnionGlobArray(GlobArrayUnionField field, Glob[] value) throws Exception;
 
+    default FieldValueVisitor withoutKey(){
+        return FieldValueVisitorButKey.create(this);
+    }
 
     class AbstractFieldValueVisitor implements FieldValueVisitor {
 

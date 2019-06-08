@@ -384,7 +384,6 @@ public class DefaultChangeSetTest {
         XmlTestUtils.assertEquivalent(expected, writer.toString());
     }
 
-
     @Test
     public void checkPrint() throws Exception {
         MutableChangeSet changeSet = XmlChangeSetParser.parse(DummyModel.get(), new StringReader(

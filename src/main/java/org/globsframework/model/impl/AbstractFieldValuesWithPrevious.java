@@ -248,9 +248,9 @@ public abstract class AbstractFieldValuesWithPrevious implements FieldValuesWith
         }
     }
 
-    public <T extends FunctorWithPrevious> T safeApplyWithPrevious(T functor) {
+    public <T extends FunctorWithPrevious> T safeApplyWithPreviousButKey(T functor) {
         try {
-            return applyWithPrevious(functor);
+            return applyWithPreviousButKey(functor);
         }
         catch (RuntimeException e) {
             throw e;
@@ -260,21 +260,9 @@ public abstract class AbstractFieldValuesWithPrevious implements FieldValuesWith
         }
     }
 
-    public <T extends FieldValues.Functor> T safeApplyOnPrevious(T functor) {
+    public <T extends FieldValueVisitor> T safeAcceptOnPreviousButKey(T functor) {
         try {
-            return applyOnPrevious(functor);
-        }
-        catch (RuntimeException e) {
-            throw e;
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public <T extends FieldValueVisitor> T safeAcceptOnPrevious(T functor) {
-        try {
-            return acceptOnPrevious(functor);
+            return acceptOnPreviousButKey(functor);
         }
         catch (RuntimeException e) {
             throw e;

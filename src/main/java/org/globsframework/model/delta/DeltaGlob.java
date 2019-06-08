@@ -6,7 +6,7 @@ import org.globsframework.model.FieldValues;
 import org.globsframework.model.FieldValuesWithPrevious;
 import org.globsframework.model.Key;
 
-interface DeltaGlob extends FieldValuesWithPrevious {
+public interface DeltaGlob extends FieldValuesWithPrevious {
 
     Key getKey();
 
@@ -15,6 +15,8 @@ interface DeltaGlob extends FieldValuesWithPrevious {
     boolean isSet(Field field);
 
     void setValue(Field field, Object value);
+
+    void setPreviousValue(Field field, Object value);
 
     void setValue(Field field, Object value, Object previousValue);
 

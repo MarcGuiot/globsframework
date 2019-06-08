@@ -152,6 +152,10 @@ public interface FieldValues extends FieldValuesAccessor {
 
     int size();
 
+    default FieldValues withoutKeyField() {
+        return new FieldValuesButKey(this);
+    }
+
     <T extends Functor>
     T apply(T functor) throws Exception;
 
@@ -166,12 +170,12 @@ public interface FieldValues extends FieldValuesAccessor {
 
     FieldValue[] toArray();
 
-    default Glob[] getOrEmpty(GlobArrayUnionField field){
+    default Glob[] getOrEmpty(GlobArrayUnionField field) {
         Glob[] globs = get(field);
         return globs != null ? globs : EMPTYARRAY;
     }
 
-    default Glob[] getOrEmpty(GlobArrayField field){
+    default Glob[] getOrEmpty(GlobArrayField field) {
         Glob[] globs = get(field);
         return globs != null ? globs : EMPTYARRAY;
     }
@@ -242,5 +246,13 @@ public interface FieldValues extends FieldValuesAccessor {
 
     interface Functor {
         void process(Field field, Object value) throws Exception;
+
+        default Functor withoutKeyField() {
+            return (field, value) -> {
+                if (!field.isKeyField()) {
+                    Functor.this.process(field, value);
+                }
+            };
+        }
     }
 }

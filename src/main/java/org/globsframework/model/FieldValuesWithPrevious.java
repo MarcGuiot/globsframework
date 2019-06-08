@@ -71,17 +71,15 @@ public interface FieldValuesWithPrevious extends FieldValues {
 
     Glob[] getPrevious(GlobArrayUnionField field) throws ItemNotFound;
 
-    <T extends FieldValueVisitor> T acceptOnPrevious(T functor) throws Exception;
+    <T extends FieldValueVisitor> T acceptOnPreviousButKey(T functor) throws Exception;
 
-    <T extends FieldValueVisitor> T safeAcceptOnPrevious(T functor);
+    <T extends FieldValueVisitor> T safeAcceptOnPreviousButKey(T functor);
 
-    <T extends FunctorWithPrevious> T applyWithPrevious(T functor) throws Exception;
+    <T extends FunctorWithPrevious> T applyWithPreviousButKey(T functor) throws Exception;
 
-    <T extends FunctorWithPrevious> T safeApplyWithPrevious(T functor);
+    <T extends FunctorWithPrevious> T safeApplyWithPreviousButKey(T functor);
 
-    <T extends FieldValues.Functor> T safeApplyOnPrevious(T functor);
-
-    <T extends FieldValues.Functor> T applyOnPrevious(T functor) throws Exception;
+    <T extends FieldValues.Functor> T applyOnPreviousButKey(T functor) throws Exception;
 
     FieldValues getPreviousValues();
 

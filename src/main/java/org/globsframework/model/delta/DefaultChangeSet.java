@@ -47,7 +47,7 @@ public class DefaultChangeSet implements MutableChangeSet {
 
     public void processUpdate(Key key, FieldValuesWithPrevious values) {
         final DefaultDeltaGlob delta = getGlob(key);
-        values.safeApplyWithPrevious(new FieldValuesWithPrevious.FunctorWithPrevious() {
+        values.safeApplyWithPreviousButKey(new FieldValuesWithPrevious.FunctorWithPrevious() {
             public void process(Field field, Object value, Object previousValue) throws Exception {
                 delta.processUpdate(field, value, previousValue);
                 removeIfUnchanged(delta);
@@ -353,7 +353,7 @@ public class DefaultChangeSet implements MutableChangeSet {
             }
 
             public void visitUpdate(final Key key, FieldValuesWithPrevious values) throws Exception {
-                values.applyWithPrevious(new FieldValuesWithPrevious.FunctorWithPrevious() {
+                values.applyWithPreviousButKey(new FieldValuesWithPrevious.FunctorWithPrevious() {
                     public void process(Field field, Object value, Object previousValue) throws IOException {
                         processUpdate(key, field, value, previousValue);
                     }
@@ -400,13 +400,12 @@ public class DefaultChangeSet implements MutableChangeSet {
         }
 
         public void complete() {
-
         }
 
         public void visitCreation(Key key, FieldValues values) throws Exception {
             writer.write("create :");
             key.safeApplyOnKeyField(this);
-            values.safeApply(this);
+            values.safeApply(this.withoutKeyField());
             writer.write("\n");
         }
 
@@ -415,13 +414,13 @@ public class DefaultChangeSet implements MutableChangeSet {
             writer.write("update :");
             key.safeApplyOnKeyField(this);
             int endOffset = writer.getBuffer().length();
-            values.safeApply(this);
+            values.safeApply(this.withoutKeyField());
             writer.append("\n");
             for (int i = 0; i < endOffset - startOffSet; i++) {
                 writer.write(" ");
             }
             prefix = "_";
-            values.applyOnPrevious(this);
+            values.applyOnPreviousButKey(this);
             writer.write("\n");
             prefix = "";
         }
@@ -429,7 +428,7 @@ public class DefaultChangeSet implements MutableChangeSet {
         public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
             writer.write("delete :");
             key.safeApplyOnKeyField(this);
-            previousValues.safeApply(this);
+            previousValues.safeApply(this.withoutKeyField());
             writer.write("\n");
         }
 

@@ -55,7 +55,7 @@ public class XmlChangeSetVisitor implements ChangeSetVisitor {
         XmlTag tag = changesTag.createChildTag(change);
         tag.addAttribute("type", key.getGlobType().getName());
         dumpFieldValues(tag, key.asFieldValues(), false);
-        dumpFieldValues(tag, values, previousValues);
+        dumpFieldValues(tag, values.withoutKeyField(), previousValues);
         tag.end();
     }
 
@@ -77,7 +77,7 @@ public class XmlChangeSetVisitor implements ChangeSetVisitor {
     }
 
     private void dumpFieldValues(final XmlTag tag, FieldValuesWithPrevious values) throws IOException {
-        values.safeApplyWithPrevious((field, value, previousValue) -> {
+        values.safeApplyWithPreviousButKey((field, value, previousValue) -> {
             if ((value != null) || (previousValue != null)) {
                 tag.addAttribute(field.getName(), converter.toString(field, value));
                 tag.addAttribute("_" + field.getName(), converter.toString(field, previousValue));
