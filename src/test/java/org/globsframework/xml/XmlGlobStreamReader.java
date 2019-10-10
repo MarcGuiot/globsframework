@@ -17,6 +17,8 @@ import org.globsframework.streams.accessors.*;
 import org.xml.sax.Attributes;
 
 import java.io.StringReader;
+import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.*;
 
 public class XmlGlobStreamReader {
@@ -142,6 +144,14 @@ public class XmlGlobStreamReader {
 
             public void visitLong(LongField field) throws Exception {
                 accessor = new XmlLongAccessor(stream, field);
+            }
+
+            public void visitDate(DateField field) throws Exception {
+                accessor = new XmlDateAccessor(stream, field);
+            }
+
+            public void visitDateTime(DateTimeField field) throws Exception {
+                accessor = new XmlDateTimeAccessor(stream, field);
             }
 
             public Accessor getAccessor() {
@@ -287,8 +297,51 @@ public class XmlGlobStreamReader {
                     return getLong();
                 }
             }
+
+            private class XmlDateAccessor implements DateAccessor {
+                private XmlDbStream xmlMoStream;
+                private DateField field;
+
+                public XmlDateAccessor(XmlDbStream xmlMoStream, DateField field) {
+                    this.xmlMoStream = xmlMoStream;
+                    this.field = field;
+                }
+
+                public LocalDate getDate() {
+                    return xmlMoStream.current.get(field);
+                }
+
+                public boolean wasNull() {
+                    return getDate() == null;
+                }
+
+                public Object getObjectValue() {
+                    return getDate();
+                }
+            }
+
+            private class XmlDateTimeAccessor implements DateTimeAccessor {
+                private XmlDbStream xmlMoStream;
+                private DateTimeField field;
+
+                public XmlDateTimeAccessor(XmlDbStream xmlMoStream, DateTimeField field) {
+                    this.xmlMoStream = xmlMoStream;
+                    this.field = field;
+                }
+
+                public ZonedDateTime getDateTime() {
+                    return xmlMoStream.current.get(field);
+                }
+
+                public boolean wasNull() {
+                    return getDateTime() == null;
+                }
+
+                public Object getObjectValue() {
+                    return getDateTime();
+                }
+            }
+
         }
-
     }
-
 }

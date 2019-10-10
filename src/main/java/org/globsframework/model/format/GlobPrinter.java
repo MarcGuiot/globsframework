@@ -26,6 +26,9 @@ public class GlobPrinter {
 
     public static String toString(final FieldValues fieldValues) {
         final StringBuilder builder = new StringBuilder();
+        if (fieldValues == null) {
+            return "NULL";
+        }
         fieldValues.safeApply((field, value) ->
                 builder
                         .append(field.getName())

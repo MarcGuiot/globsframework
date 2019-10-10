@@ -3,6 +3,7 @@ package org.globsframework.metamodel;
 import org.globsframework.metamodel.fields.FieldVisitor;
 import org.globsframework.metamodel.index.Index;
 import org.globsframework.metamodel.properties.PropertyHolder;
+import org.globsframework.model.Glob;
 import org.globsframework.model.GlobFactory;
 import org.globsframework.model.Key;
 import org.globsframework.model.MutableGlob;

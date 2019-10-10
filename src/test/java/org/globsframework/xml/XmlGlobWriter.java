@@ -2,6 +2,8 @@ package org.globsframework.xml;
 
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobLinkModel;
+import org.globsframework.metamodel.annotations.FieldNameAnnotation;
+import org.globsframework.metamodel.annotations.FieldNameAnnotationType;
 import org.globsframework.metamodel.links.Link;
 import org.globsframework.metamodel.links.impl.DefaultDirectSingleLink;
 import org.globsframework.metamodel.utils.EmptyGlobLinkModel;
@@ -117,7 +119,7 @@ public class XmlGlobWriter {
     }
 
     private void writeFieldValue(Writer writer, Field field, Object value) throws IOException {
-        writeAttribute(writer, field.getName(), fieldConverter.toString(field, value));
+        writeAttribute(writer, FieldNameAnnotationType.getName(field), fieldConverter.toString(field, value));
     }
 
     private static void writeAttribute(Writer writer,

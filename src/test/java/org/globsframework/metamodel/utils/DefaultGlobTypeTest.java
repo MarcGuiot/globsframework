@@ -1,13 +1,17 @@
 package org.globsframework.metamodel.utils;
 
 import org.globsframework.metamodel.*;
+import org.globsframework.metamodel.annotations.FieldNameAnnotation;
+import org.globsframework.metamodel.annotations.FieldNameAnnotationType;
 import org.globsframework.metamodel.annotations.KeyField;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.impl.DefaultGlobModel;
+import org.globsframework.metamodel.impl.DefaultGlobType;
 import org.globsframework.metamodel.properties.Property;
 import org.globsframework.utils.Ref;
 import org.globsframework.utils.TestUtils;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
+import org.junit.Assert;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -53,6 +57,15 @@ public class DefaultGlobTypeTest {
     }
 
     @Test
+    public void testFindFieldByAnnotation() {
+        Field qty = GlobTypeUtils.findFieldWithAnnotation(TypeWithAnnotation.TYPE, FieldNameAnnotationType.create("qty"));
+        Assert.assertSame(qty, TypeWithAnnotation.F1);
+
+        Field sku = GlobTypeUtils.findFieldWithAnnotation(TypeWithAnnotation.TYPE, FieldNameAnnotationType.create("ean"));
+        Assert.assertSame(sku, TypeWithAnnotation.F2);
+    }
+
+    @Test
     public void testFieldProperty() throws Exception {
         initGlobType();
         Property<Field, Ref<Integer>> property = globModel.createFieldProperty("field property",
@@ -75,4 +88,21 @@ public class DefaultGlobTypeTest {
         field = globType.getField("field1");
         globModel = new DefaultGlobModel(globType);
     }
+
+
+    public static class TypeWithAnnotation {
+        public static GlobType TYPE;
+
+        @FieldNameAnnotation("qty")
+        public static IntegerField F1;
+
+        @FieldNameAnnotation("ean")
+        public static IntegerField F2;
+
+        static {
+            GlobTypeLoaderFactory.create(TypeWithAnnotation.class)
+            .load();
+        }
+    }
+
 }

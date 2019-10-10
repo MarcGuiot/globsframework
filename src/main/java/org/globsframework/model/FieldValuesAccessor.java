@@ -14,6 +14,8 @@ import java.util.Optional;
 
 public interface FieldValuesAccessor {
 
+    Glob[] EMPTY = new Glob[0];
+
     boolean isNull(Field field) throws ItemNotFound;
 
     Object getValue(Field field) throws ItemNotFound;
