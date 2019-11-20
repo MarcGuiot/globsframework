@@ -16,5 +16,5 @@ public interface Glob extends FieldValues {
 
     FieldValues getValues();
 
-    Glob duplicate();
+    MutableGlob duplicate();
 }

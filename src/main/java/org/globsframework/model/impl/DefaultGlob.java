@@ -3,6 +3,7 @@ package org.globsframework.model.impl;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.FieldValues;
 import org.globsframework.model.Glob;
+import org.globsframework.model.MutableGlob;
 
 public class DefaultGlob extends AbstractDefaultGlob {
 
@@ -19,7 +20,7 @@ public class DefaultGlob extends AbstractDefaultGlob {
         setValues(values);
     }
 
-    public Glob duplicate() {
+    public MutableGlob duplicate() {
         return new DefaultGlob(type, duplicateValues());
     }
 }
