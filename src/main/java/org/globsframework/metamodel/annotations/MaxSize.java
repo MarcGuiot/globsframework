@@ -13,6 +13,8 @@ import java.lang.annotation.Target;
 public @interface MaxSize {
     int value();
 
+    boolean allow_truncate() default false;
+
     GlobType GLOB_TYPE = MaxSizeType.TYPE;
     Key KEY = MaxSizeType.KEY;
 
