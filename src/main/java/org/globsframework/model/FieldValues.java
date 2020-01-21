@@ -8,6 +8,8 @@ import org.globsframework.utils.exceptions.ItemNotFound;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
+import java.util.Optional;
+import java.util.function.Function;
 
 public interface FieldValues extends FieldValuesAccessor {
 
@@ -244,6 +246,14 @@ public interface FieldValues extends FieldValuesAccessor {
         return value;
     }
 
+    default GlobOpt getOpt(GlobField field) {
+        return new GlobOpt(get(field));
+    }
+
+    default GlobOpt getOpt(GlobUnionField field) {
+        return new GlobOpt(get(field));
+    }
+
     interface Functor {
         void process(Field field, Object value) throws Exception;
 
@@ -255,4 +265,325 @@ public interface FieldValues extends FieldValuesAccessor {
             };
         }
     }
+
+    class GlobOpt implements FieldValues {
+        private final Glob glob;
+
+        GlobOpt(Glob glob) {
+            this.glob = glob;
+        }
+
+        public boolean contains(Field field) {
+            if (glob != null) {
+                return glob.contains(field);
+            }
+            else {
+                throw new NullPointerException(field.getFullName());
+            }
+        }
+
+        public int size() {
+            if (glob != null) {
+                return glob.size();
+            }
+            else {
+                throw new NullPointerException();
+            }
+        }
+
+        public <T extends Functor> T apply(T t) throws Exception {
+            if (glob != null) {
+                return glob.apply(t);
+            }
+            else {
+                throw new NullPointerException();
+            }
+        }
+
+        public <T extends Functor> T safeApply(T t) {
+            if (glob != null) {
+                return glob.safeApply(t);
+            }
+            else {
+                throw new NullPointerException();
+            }
+        }
+
+        public <T extends FieldValueVisitor> T accept(T t) throws Exception {
+            if (glob != null) {
+                return glob.accept(t);
+            }
+            else {
+                throw new NullPointerException();
+            }
+        }
+
+        public <T extends FieldValueVisitor> T safeAccept(T t) {
+            if (glob != null) {
+                return glob.safeAccept(t);
+            }
+            else {
+                throw new NullPointerException();
+            }
+        }
+
+        public FieldValue[] toArray() {
+            if (glob != null) {
+                return glob.toArray();
+            }
+            else {
+                throw new NullPointerException("");
+            }
+        }
+
+        public boolean isNull(Field field) throws ItemNotFound {
+            if (glob != null) {
+                return glob.isNull(field);
+            }
+            else {
+                throw new NullPointerException(field.getFullName());
+            }
+        }
+
+        public Object getValue(Field field) throws ItemNotFound {
+            if (glob != null) {
+                return glob.getValue(field);
+            }
+            else {
+                throw new NullPointerException(field.getFullName());
+            }
+        }
+
+        public Double get(DoubleField field) throws ItemNotFound {
+            if (glob != null) {
+                return glob.get(field);
+            }
+            else {
+                throw new NullPointerException(field.getFullName());
+            }
+        }
+
+        public double get(DoubleField field, double v) throws ItemNotFound {
+            if (glob != null) {
+                return glob.get(field, v);
+            }
+            else {
+                throw new NullPointerException(field.getFullName());
+            }
+        }
+
+        public double[] get(DoubleArrayField field) throws ItemNotFound {
+            if (glob != null) {
+                return glob.get(field);
+            }
+            else {
+                throw new NullPointerException(field.getFullName());
+            }
+        }
+
+        public Integer get(IntegerField field) throws ItemNotFound {
+            if (glob != null) {
+                return glob.get(field);
+            }
+            else {
+                throw new NullPointerException(field.getFullName());
+            }
+        }
+
+        public int get(IntegerField field, int i) throws ItemNotFound {
+            if (glob != null) {
+                return glob.get(field, i);
+            }
+            else {
+                throw new NullPointerException(field.getFullName());
+            }
+        }
+
+        public int[] get(IntegerArrayField field) throws ItemNotFound {
+            if (glob != null) {
+                return glob.get(field);
+            }
+            else {
+                throw new NullPointerException(field.getFullName());
+            }
+        }
+
+        public String get(StringField field) throws ItemNotFound {
+            if (glob != null) {
+                return glob.get(field);
+            }
+            else {
+                throw new NullPointerException(field.getFullName());
+            }
+        }
+
+        public String[] get(StringArrayField field) throws ItemNotFound {
+            if (glob != null) {
+                return glob.get(field);
+            }
+            else {
+                throw new NullPointerException(field.getFullName());
+            }
+        }
+
+        public Boolean get(BooleanField field) throws ItemNotFound {
+            if (glob != null) {
+                return glob.get(field);
+            }
+            else {
+                throw new NullPointerException(field.getFullName());
+            }
+        }
+
+        public Boolean get(BooleanField field, boolean b) {
+            if (glob != null) {
+                return glob.get(field, b);
+            }
+            else {
+                throw new NullPointerException(field.getFullName());
+            }
+        }
+
+        public boolean[] get(BooleanArrayField field) {
+            if (glob != null) {
+                return glob.get(field);
+            }
+            else {
+                throw new NullPointerException(field.getFullName());
+            }
+        }
+
+        public boolean isTrue(BooleanField field) throws ItemNotFound {
+            if (glob != null) {
+                return glob.get(field);
+            }
+            else {
+                throw new NullPointerException(field.getFullName());
+            }
+        }
+
+        public Long get(LongField field) throws ItemNotFound {
+            if (glob != null) {
+                return glob.get(field);
+            }
+            else {
+                throw new NullPointerException(field.getFullName());
+            }
+        }
+
+        public long get(LongField field, long l) throws ItemNotFound {
+            if (glob != null) {
+                return glob.get(field, l);
+            }
+            else {
+                throw new NullPointerException(field.getFullName());
+            }
+        }
+
+        public long[] get(LongArrayField field) throws ItemNotFound {
+            if (glob != null) {
+                return glob.get(field);
+            }
+            else {
+                throw new NullPointerException(field.getFullName());
+            }
+
+        }
+
+        public BigDecimal get(BigDecimalField field) throws ItemNotFound {
+            if (glob != null) {
+                return glob.get(field);
+            }
+            else {
+                throw new NullPointerException(field.getFullName());
+            }
+
+        }
+
+        public BigDecimal[] get(BigDecimalArrayField field) throws ItemNotFound {
+            if (glob != null) {
+                return glob.get(field);
+            }
+            else {
+                throw new NullPointerException(field.getFullName());
+            }
+
+        }
+
+        public LocalDate get(DateField field) throws ItemNotFound {
+            if (glob != null) {
+                return glob.get(field);
+            }
+            else {
+                throw new NullPointerException(field.getFullName());
+            }
+        }
+
+        public ZonedDateTime get(DateTimeField field) throws ItemNotFound {
+            if (glob != null) {
+                return glob.get(field);
+            }
+            else {
+                throw new NullPointerException(field.getFullName());
+            }
+        }
+
+        public byte[] get(BlobField blobField) throws ItemNotFound {
+            if (glob != null) {
+                return glob.get(blobField);
+            }
+            else {
+                throw new NullPointerException(blobField.getFullName());
+            }
+        }
+
+        public Glob get(GlobField globField) throws ItemNotFound {
+            if (glob != null) {
+                return glob.get(globField);
+            }
+            else {
+                throw new NullPointerException(globField.getFullName());
+            }
+        }
+
+        public Glob[] get(GlobArrayField globArrayField) throws ItemNotFound {
+            if (glob != null) {
+                return glob.get(globArrayField);
+            }
+            else {
+                throw new NullPointerException(globArrayField.getFullName());
+            }
+        }
+
+        public Glob get(GlobUnionField globUnionField) throws ItemNotFound {
+            if (glob != null) {
+                return glob.get(globUnionField);
+            }
+            else {
+                throw new NullPointerException(globUnionField.getFullName());
+            }
+        }
+
+        public Glob[] get(GlobArrayUnionField globArrayUnionField) throws ItemNotFound {
+            if (glob != null) {
+                return glob.get(globArrayUnionField);
+            }
+            else {
+                throw new NullPointerException(globArrayUnionField.getFullName());
+            }
+        }
+
+        public GlobOpt getOpt(GlobField field) {
+            return new GlobOpt(glob != null ? glob.get(field) : null);
+        }
+
+        public GlobOpt getOpt(GlobUnionField field) {
+            return new GlobOpt(glob != null ? glob.get(field) : null);
+        }
+
+        public <T> Optional<T> map(Function<Glob, T> function) {
+            return Optional.ofNullable(glob).map(function);
+        }
+    }
+
 }
