@@ -30,6 +30,9 @@ class DeltaFieldValuesFromArray extends AbstractFieldValues {
         return value;
     }
 
+    public boolean isSet(Field field) throws ItemNotFound {
+        return values[field.getIndex()] != Unset.VALUE;
+    }
 
     public boolean contains(Field field) {
         if (field.isKeyField()) {

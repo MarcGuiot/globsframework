@@ -3,22 +3,25 @@ package org.globsframework.model.impl;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.FieldValueVisitor;
-import org.globsframework.metamodel.links.Link;
-import org.globsframework.model.*;
-import org.globsframework.utils.exceptions.InvalidParameter;
+import org.globsframework.model.FieldValues;
+import org.globsframework.model.MutableGlob;
 import org.globsframework.utils.exceptions.ItemNotFound;
+
+import java.util.BitSet;
 
 public abstract class AbstractDefaultGlob extends AbstractMutableGlob {
     protected final GlobType type;
+    protected final BitSet isSet;
     protected final Object[] values;
 
     protected AbstractDefaultGlob(GlobType type) {
-        this(type, new Object[type.getFieldCount()]);
+        this(type, new Object[type.getFieldCount()], new BitSet());
     }
 
-    public AbstractDefaultGlob(GlobType type, Object[] values) {
+    public AbstractDefaultGlob(GlobType type, Object[] values, BitSet isSet) {
         this.type = type;
         this.values = values;
+        this.isSet = isSet;
     }
 
     public GlobType getType() {
@@ -45,8 +48,18 @@ public abstract class AbstractDefaultGlob extends AbstractMutableGlob {
     }
 
     public MutableGlob doSet(Field field, Object value) {
-        values[field.getIndex()] = value;
+        int index = field.getIndex();
+        values[index] = value;
+        isSet.set(index);
         return this;
+    }
+
+    public boolean isSet(Field field) throws ItemNotFound {
+        return isSet.get(field.getIndex());
+    }
+
+    public void unset(Field field) {
+        isSet.clear(field.getIndex());
     }
 
     Object[] duplicateValues() {

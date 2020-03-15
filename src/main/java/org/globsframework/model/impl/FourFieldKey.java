@@ -185,4 +185,9 @@ public class FourFieldKey extends AbstractKey {
         }
         return null;
     }
+
+    public boolean isSet(Field field) throws ItemNotFound {
+        return true;
+    }
+
 }

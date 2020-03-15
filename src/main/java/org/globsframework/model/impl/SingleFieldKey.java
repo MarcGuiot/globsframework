@@ -135,4 +135,12 @@ public class SingleFieldKey extends AbstractKey {
     public MutableKey duplicateKey() {
         return new SingleFieldKey(keyField, value);
     }
+
+    /*
+    On considere qu'une clé doit toujours avoir tous ses champs valorisé (au pure a null).
+     */
+    public boolean isSet(Field field) throws ItemNotFound {
+        return true;
+    }
+
 }

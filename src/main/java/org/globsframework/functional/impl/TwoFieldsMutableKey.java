@@ -6,6 +6,7 @@ import org.globsframework.functional.MutableFunctionalKey;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.fields.FieldValueVisitor;
 import org.globsframework.model.FieldValue;
+import org.globsframework.utils.exceptions.ItemNotFound;
 
 public class TwoFieldsMutableKey extends AbstractFieldValue<MutableFunctionalKey>
     implements MutableFunctionalKey, FunctionalKey {
@@ -100,6 +101,10 @@ public class TwoFieldsMutableKey extends AbstractFieldValue<MutableFunctionalKey
         result = 31 * result + (value1 != null ? value1.hashCode() : 0);
         result = 31 * result + (value2 != null ? value2.hashCode() : 0);
         return result;
+    }
+
+    public boolean isSet(Field field) throws ItemNotFound {
+        return true;
     }
 
     public String toString() {

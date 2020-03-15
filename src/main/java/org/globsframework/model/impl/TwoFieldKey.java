@@ -159,4 +159,9 @@ public class TwoFieldKey extends AbstractKey {
         }
         return this;
     }
+
+    public boolean isSet(Field field) throws ItemNotFound {
+        return true;
+    }
+
 }

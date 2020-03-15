@@ -1,9 +1,9 @@
 package org.globsframework.model.impl;
 
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.model.FieldValues;
-import org.globsframework.model.Glob;
 import org.globsframework.model.MutableGlob;
+
+import java.util.BitSet;
 
 public class DefaultGlob extends AbstractDefaultGlob {
 
@@ -11,16 +11,11 @@ public class DefaultGlob extends AbstractDefaultGlob {
         super(type);
     }
 
-    public DefaultGlob(GlobType type, Object[] values) {
-        super(type, values);
-    }
-
-    public DefaultGlob(GlobType type, FieldValues values) {
-        super(type);
-        setValues(values);
+    private DefaultGlob(GlobType type, Object[] values, BitSet bitSet) {
+        super(type, values, bitSet);
     }
 
     public MutableGlob duplicate() {
-        return new DefaultGlob(type, duplicateValues());
+        return new DefaultGlob(type, duplicateValues(), (BitSet) isSet.clone());
     }
 }

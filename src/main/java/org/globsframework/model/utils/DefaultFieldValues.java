@@ -28,6 +28,10 @@ public class DefaultFieldValues extends AbstractMutableFieldValues  {
         }
     }
 
+    public boolean isSet(Field field) throws ItemNotFound {
+        return values.containsKey(field);
+    }
+
     public boolean contains(Field field) {
         return values.containsKey(field);
     }

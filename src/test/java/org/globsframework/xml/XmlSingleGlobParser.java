@@ -22,12 +22,12 @@ public class XmlSingleGlobParser {
                              GlobModel globModel,
                              GlobAdder globAdder) throws Exception {
         GlobType globType = globModel.getType(tagName);
-        DefaultGlob glob = new DefaultGlob(globType);
+        MutableGlob glob = globType.instantiate();
         processFields(glob, xmlAttrs, globType);
         globAdder.add(glob);
     }
 
-    private static void processFields(DefaultGlob glob, Attributes xmlAttrs, GlobType globType) {
+    private static void processFields(MutableGlob glob, Attributes xmlAttrs, GlobType globType) {
         FieldConverter fieldConverter = new FieldConverter();
         int length = xmlAttrs.getLength();
         for (int i = 0; i < length; i++) {
@@ -37,7 +37,7 @@ public class XmlSingleGlobParser {
             if (field == null) {
                 throw new InvalidParameter("Unknown field '" + name + "' for type '" + globType.getName() + "'");
             }
-            glob.setObject(field, fieldConverter.toObject(field, xmlValue));
+            glob.setValue(field, fieldConverter.toObject(field, xmlValue));
         }
     }
 }

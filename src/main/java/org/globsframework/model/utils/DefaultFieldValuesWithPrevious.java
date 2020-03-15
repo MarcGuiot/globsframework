@@ -26,7 +26,6 @@ public class DefaultFieldValuesWithPrevious extends AbstractFieldValuesWithPrevi
         }
     }
 
-
     public MutableFieldValues getNewValues() {
         return new GlobArrayFieldValues(type, values);
     }
@@ -47,6 +46,10 @@ public class DefaultFieldValuesWithPrevious extends AbstractFieldValuesWithPrevi
 
     public void setPreviousValue(Field field, Object previousValue) {
         previousValues[field.getIndex()] = previousValue;
+    }
+
+    public boolean isSet(Field field) throws ItemNotFound {
+        return values[field.getIndex()] != Unset.VALUE;
     }
 
     public boolean contains(Field field) {

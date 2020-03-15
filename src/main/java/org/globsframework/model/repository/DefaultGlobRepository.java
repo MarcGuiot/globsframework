@@ -244,6 +244,10 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
         return create(type, key, globValuesArray);
     }
 
+    public Glob create(GlobType type, FieldValues values) throws MissingInfo, ItemAlreadyExists {
+        return null;
+    }
+
     public Glob create(Key key, FieldValue... values) throws ItemAlreadyExists {
         MutableGlob globValuesArray = completeValues(key.getGlobType(), values);
         for (Field field : key.getGlobType().getKeyFields()) {

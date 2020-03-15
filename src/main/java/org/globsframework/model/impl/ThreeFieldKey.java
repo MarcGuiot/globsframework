@@ -178,4 +178,9 @@ public class ThreeFieldKey extends AbstractKey {
         }
         return this;
     }
+
+    public boolean isSet(Field field) throws ItemNotFound {
+        return true;
+    }
+
 }

@@ -62,6 +62,11 @@ public class FieldValuesButKey implements FieldValues {
         return fieldValues;
     }
 
+    public boolean isSet(Field field) throws ItemNotFound {
+        checkNotAKey(field);
+        return fieldValues.isSet(field);
+    }
+
     public boolean isNull(Field field) throws ItemNotFound {
         checkNotAKey(field);
         return fieldValues.isNull(field);

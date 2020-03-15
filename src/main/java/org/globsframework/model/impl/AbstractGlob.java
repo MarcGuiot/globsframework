@@ -3,10 +3,12 @@ package org.globsframework.model.impl;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.FieldValueVisitor;
+import org.globsframework.metamodel.fields.impl.AbstractField;
 import org.globsframework.model.FieldValue;
 import org.globsframework.model.FieldValues;
 import org.globsframework.model.Glob;
 import org.globsframework.model.Key;
+import org.globsframework.utils.exceptions.ItemNotFound;
 
 import java.util.Objects;
 
@@ -106,6 +108,10 @@ public abstract class AbstractGlob extends AbstractFieldValues implements Glob, 
     public FieldValues asFieldValues() {
         return new AbstractFieldValues() {
             GlobType type = getType();
+
+            public boolean isSet(Field field) throws ItemNotFound {
+                return AbstractGlob.this.isSet(field);
+            }
 
             public boolean contains(Field field) {
                 return field.isKeyField();

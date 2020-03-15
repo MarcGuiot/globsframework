@@ -16,6 +16,8 @@ public interface FieldValuesAccessor {
 
     Glob[] EMPTY = new Glob[0];
 
+    boolean isSet(Field field) throws ItemNotFound;
+
     boolean isNull(Field field) throws ItemNotFound;
 
     Object getValue(Field field) throws ItemNotFound;

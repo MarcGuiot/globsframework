@@ -4,6 +4,7 @@ import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.fields.FieldValueVisitor;
 import org.globsframework.model.FieldValue;
 import org.globsframework.model.impl.AbstractFieldValues;
+import org.globsframework.utils.exceptions.ItemNotFound;
 
 public class ArrayFieldValues extends AbstractFieldValues {
 
@@ -11,6 +12,15 @@ public class ArrayFieldValues extends AbstractFieldValues {
 
     public ArrayFieldValues(FieldValue[] values) {
         this.values = values;
+    }
+
+    public boolean isSet(Field field) throws ItemNotFound {
+        for (FieldValue value : values) {
+            if (value.getField().equals(field)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     protected Object doCheckedGet(Field field) {

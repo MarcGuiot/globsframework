@@ -24,6 +24,10 @@ public class EmptyKey implements Key {
         return type;
     }
 
+    public boolean isSet(Field field) throws ItemNotFound {
+        throw new RuntimeException("Empty key '" + field.getFullName() + " not available");
+    }
+
     public boolean isNull(Field field) throws ItemNotFound {
         throw new RuntimeException("Empty key '" + field.getFullName() + " not available");
     }

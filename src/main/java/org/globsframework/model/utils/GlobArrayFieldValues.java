@@ -7,7 +7,9 @@ import org.globsframework.model.FieldValue;
 import org.globsframework.model.FieldValues;
 import org.globsframework.model.MutableFieldValues;
 import org.globsframework.model.impl.AbstractFieldValues;
+import org.globsframework.utils.Unset;
 import org.globsframework.utils.exceptions.InvalidParameter;
+import org.globsframework.utils.exceptions.ItemNotFound;
 
 import java.util.Arrays;
 
@@ -25,8 +27,13 @@ public class GlobArrayFieldValues extends AbstractMutableFieldValues {
         }
     }
 
+    public boolean isSet(Field field) throws ItemNotFound {
+        return values[field.getIndex()] != Unset.VALUE;
+    }
+
     protected Object doCheckedGet(Field field) {
-        return values[field.getIndex()];
+        Object value = values[field.getIndex()];
+        return value == Unset.VALUE ? null : value;
     }
 
     public boolean contains(Field field) {

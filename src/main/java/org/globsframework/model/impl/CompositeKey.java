@@ -159,4 +159,8 @@ public class CompositeKey extends AbstractKey {
         values[field.getKeyIndex()] = value;
         return this;
     }
+
+    public boolean isSet(Field field) throws ItemNotFound {
+        return true;
+    }
 }

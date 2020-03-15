@@ -7,6 +7,7 @@ import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.fields.FieldValueVisitor;
 import org.globsframework.model.FieldValue;
 import org.globsframework.model.FieldValues;
+import org.globsframework.utils.exceptions.ItemNotFound;
 
 import java.util.Arrays;
 
@@ -109,6 +110,10 @@ public class ManyFieldsMutableKey extends AbstractFieldValue<MutableFunctionalKe
         int result = functionalKeyBuilder.hashCode();
         result = 31 * result + Arrays.hashCode(values);
         return result;
+    }
+
+    public boolean isSet(Field field) throws ItemNotFound {
+        return true;
     }
 
     public String toString() {

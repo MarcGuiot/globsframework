@@ -62,6 +62,10 @@ public class GlobBuilder implements  FieldSetter<GlobBuilder>, FieldValues {
         return builder;
     }
 
+    public boolean isSet(Field field) throws ItemNotFound {
+        return mutableGlob.isSet(field);
+    }
+
     public GlobBuilder set(DoubleField field, Double value) {
         mutableGlob.set(field, value);
         return this;

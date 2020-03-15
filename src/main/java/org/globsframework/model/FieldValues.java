@@ -88,6 +88,10 @@ public interface FieldValues extends FieldValuesAccessor {
             throw new ItemNotFound(field.getName());
         }
 
+        public boolean isSet(Field field) throws ItemNotFound {
+            throw new ItemNotFound(field.getName());
+        }
+
         public boolean isNull(Field field) throws ItemNotFound {
             throw new ItemNotFound(field.getName());
         }
@@ -230,6 +234,22 @@ public interface FieldValues extends FieldValuesAccessor {
         return value;
     }
 
+    default Long getNotNull(LongField field) {
+        Long value = get(field);
+        if (value == null) {
+            throw new NullPointerException(field.getFullName() + " should not be null " + GlobPrinter.toString(this));
+        }
+        return value;
+    }
+
+    default Integer getNotNull(IntegerField field) {
+        Integer value = get(field);
+        if (value == null) {
+            throw new NullPointerException(field.getFullName() + " should not be null " + GlobPrinter.toString(this));
+        }
+        return value;
+    }
+
     default double[] getNotNull(DoubleArrayField field) {
         double[] value = get(field);
         if (value == null) {
@@ -333,6 +353,15 @@ public interface FieldValues extends FieldValuesAccessor {
             }
             else {
                 throw new NullPointerException("");
+            }
+        }
+
+        public boolean isSet(Field field) throws ItemNotFound {
+            if (glob != null) {
+                return glob.isSet(field);
+            }
+            else {
+                throw new NullPointerException(field.getFullName());
             }
         }
 
