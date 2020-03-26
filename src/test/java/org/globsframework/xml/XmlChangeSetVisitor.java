@@ -1,9 +1,7 @@
 package org.globsframework.xml;
 
-import org.globsframework.model.ChangeSetVisitor;
-import org.globsframework.model.FieldValues;
-import org.globsframework.model.FieldValuesWithPrevious;
-import org.globsframework.model.Key;
+import org.globsframework.metamodel.Field;
+import org.globsframework.model.*;
 import org.globsframework.saxstack.writer.PrettyPrintRootXmlTag;
 import org.globsframework.saxstack.writer.RootXmlTag;
 import org.globsframework.saxstack.writer.XmlTag;
@@ -39,45 +37,51 @@ public class XmlChangeSetVisitor implements ChangeSetVisitor {
         }
     }
 
-    public void visitCreation(Key key, FieldValues values) throws Exception {
+    public void visitCreation(Key key, FieldsValueScanner values) throws Exception {
         dumpChanges("create", key, values, false);
     }
 
-    public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
+    public void visitUpdate(Key key, FieldsValueWithPreviousScanner values) throws Exception {
         dumpChanges("update", key, values);
     }
 
-    public void visitDeletion(Key key, FieldValues values) throws Exception {
+    public void visitDeletion(Key key, FieldsValueScanner values) throws Exception {
         dumpChanges("delete", key, values, true);
     }
 
-    private void dumpChanges(String change, Key key, FieldValues values, boolean previousValues) throws IOException {
+    private void dumpChanges(String change, Key key, FieldsValueScanner values, boolean previousValues) throws IOException {
         XmlTag tag = changesTag.createChildTag(change);
         tag.addAttribute("type", key.getGlobType().getName());
-        dumpFieldValues(tag, key.asFieldValues(), false);
-        dumpFieldValues(tag, values.withoutKeyField(), previousValues);
+        dumpFieldValues(tag, key.asFieldValues(), false, false);
+        dumpFieldValues(tag, values, previousValues, true);
         tag.end();
     }
 
-    private void dumpChanges(String change, Key key, FieldValuesWithPrevious values) throws IOException {
+    private void dumpChanges(String change, Key key, FieldsValueWithPreviousScanner values) throws IOException {
         XmlTag tag = changesTag.createChildTag(change);
         tag.addAttribute("type", key.getGlobType().getName());
-        dumpFieldValues(tag, key.asFieldValues(), false);
+        dumpFieldValues(tag, key.asFieldValues(), false, false);
         dumpFieldValues(tag, values);
         tag.end();
     }
 
-    private void dumpFieldValues(final XmlTag tag, FieldValues values, final boolean previousValues) throws IOException {
-        values.safeApply((field, value) -> {
-            if (value != null) {
-                final String name = previousValues ? "_" + field.getName() : field.getName();
-                tag.addAttribute(name, converter.toString(field, value));
+    private void dumpFieldValues(final XmlTag tag, FieldsValueScanner values, final boolean previousValues, boolean withoutKeyfield) throws IOException {
+        FieldValues.Functor functor = new FieldValues.Functor() {
+            public void process(Field field, Object value) throws Exception {
+                if (value != null) {
+                    final String name = previousValues ? "_" + field.getName() : field.getName();
+                    tag.addAttribute(name, converter.toString(field, value));
+                }
             }
-        });
+        };
+        if (withoutKeyfield) {
+            functor = functor.withoutKeyField();
+        }
+        values.safeApply(functor);
     }
 
-    private void dumpFieldValues(final XmlTag tag, FieldValuesWithPrevious values) throws IOException {
-        values.safeApplyWithPreviousButKey((field, value, previousValue) -> {
+    private void dumpFieldValues(final XmlTag tag, FieldsValueWithPreviousScanner values) throws IOException {
+        values.safeApplyWithPrevious((field, value, previousValue) -> {
             if ((value != null) || (previousValue != null)) {
                 tag.addAttribute(field.getName(), converter.toString(field, value));
                 tag.addAttribute("_" + field.getName(), converter.toString(field, previousValue));

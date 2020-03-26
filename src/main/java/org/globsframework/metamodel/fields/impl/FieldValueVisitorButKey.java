@@ -18,7 +18,10 @@ public class FieldValueVisitorButKey implements FieldValueVisitor {
         return fieldValueVisitor;
     }
 
-    public static FieldValueVisitorButKey create(FieldValueVisitor fieldValueVisitor){
+    public static FieldValueVisitor create(FieldValueVisitor fieldValueVisitor){
+        if (fieldValueVisitor instanceof FieldValueVisitorButKey) {
+            return fieldValueVisitor;
+        }
         return new FieldValueVisitorButKey(fieldValueVisitor);
     }
 

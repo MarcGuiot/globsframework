@@ -68,4 +68,8 @@ public interface GlobType extends PropertyHolder<GlobType>, Annotations {
         }
     }
 
+    default boolean hasKeys() {
+        return getKeyFields().length != 0;
+    }
+
 }

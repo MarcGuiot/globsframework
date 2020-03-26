@@ -247,30 +247,35 @@ public class DefaultSerializationOutput implements SerializedOutput, ChangeSetVi
         }
     }
 
-    public void visitCreation(Key key, FieldValues values) {
+    public void visitCreation(Key key, FieldsValueScanner values) {
         writeUtf8String(key.getGlobType().getName());
         writeValues(key.asFieldValues());
         writeByte(1);
-        writeValues(values.withoutKeyField());
+        writeValuesWithoutKey(values);
     }
 
-    public void visitUpdate(Key key, FieldValuesWithPrevious values) {
+    public void visitUpdate(Key key, FieldsValueWithPreviousScanner values) {
         writeUtf8String(key.getGlobType().getName());
         writeValues(key.asFieldValues());
         writeByte(2);
         writeValuesWithPrevious(values);
     }
 
-    public void visitDeletion(Key key, FieldValues values) {
+    public void visitDeletion(Key key, FieldsValueScanner values) {
         writeUtf8String(key.getGlobType().getName());
         writeValues(key.asFieldValues());
         writeByte(3);
-        writeValues(values.withoutKeyField());
+        writeValuesWithoutKey(values);
     }
 
     private void writeValues(FieldValues values) {
         write(values.size());
         values.safeApply(fieldValuesFunctor);
+    }
+
+    private void writeValuesWithoutKey(FieldsValueScanner values) {
+        write(values.size());
+        values.safeApply(fieldValuesFunctor.withoutKeyField());
     }
 
     private class FieldValuesFunctor implements FieldValues.Functor, FieldValueVisitor {
@@ -396,9 +401,9 @@ public class DefaultSerializationOutput implements SerializedOutput, ChangeSetVi
         }
     }
 
-    private void writeValuesWithPrevious(FieldValuesWithPrevious values) {
+    private void writeValuesWithPrevious(FieldsValueWithPreviousScanner values) {
         write(values.size());
-        values.safeApplyWithPreviousButKey(fieldValuesWithPreviousFunctor);
+        values.safeApplyWithPrevious(fieldValuesWithPreviousFunctor);
     }
 
     public class FieldValuesWithPreviousFunctor implements FieldValuesWithPrevious.FunctorWithPrevious, FieldValueVisitor {

@@ -14,8 +14,4 @@ public class DefaultGlob extends AbstractDefaultGlob {
     private DefaultGlob(GlobType type, Object[] values, BitSet bitSet) {
         super(type, values, bitSet);
     }
-
-    public MutableGlob duplicate() {
-        return new DefaultGlob(type, duplicateValues(), (BitSet) isSet.clone());
-    }
 }

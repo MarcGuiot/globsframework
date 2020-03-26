@@ -1,10 +1,7 @@
 package org.globsframework.model.delta;
 
 import org.globsframework.metamodel.Field;
-import org.globsframework.model.ChangeSetVisitor;
-import org.globsframework.model.FieldValues;
-import org.globsframework.model.FieldValuesWithPrevious;
-import org.globsframework.model.Key;
+import org.globsframework.model.*;
 
 public interface DeltaGlob extends FieldValuesWithPrevious {
 
@@ -22,11 +19,11 @@ public interface DeltaGlob extends FieldValuesWithPrevious {
 
     void setValueForUpdate(Field field, Object value);
 
-    void setValues(FieldValues values);
+    void setValues(FieldsValueScanner values);
 
-    void setPreviousValues(FieldValues values);
+    void setPreviousValues(FieldsValueScanner values);
 
-    void mergePreviousValues(FieldValues values);
+    void mergePreviousValues(FieldsValueScanner values);
 
     FieldValues getValues();
 

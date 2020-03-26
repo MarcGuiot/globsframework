@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-public interface FieldValuesWithPrevious extends FieldValues {
+public interface FieldValuesWithPrevious extends FieldValues, FieldsValueWithPreviousScanner {
     Object getValue(Field field) throws ItemNotFound;
 
     Double get(DoubleField field) throws ItemNotFound;
@@ -71,19 +71,30 @@ public interface FieldValuesWithPrevious extends FieldValues {
 
     Glob[] getPrevious(GlobArrayUnionField field) throws ItemNotFound;
 
-    <T extends FieldValueVisitor> T acceptOnPreviousButKey(T functor) throws Exception;
-
-    <T extends FieldValueVisitor> T safeAcceptOnPreviousButKey(T functor);
-
-    <T extends FunctorWithPrevious> T applyWithPreviousButKey(T functor) throws Exception;
-
-    <T extends FunctorWithPrevious> T safeApplyWithPreviousButKey(T functor);
-
-    <T extends FieldValues.Functor> T applyOnPreviousButKey(T functor) throws Exception;
-
     FieldValues getPreviousValues();
 
     interface FunctorWithPrevious {
         void process(Field field, Object value, Object previousValue) throws Exception;
+
+        default FunctorWithPrevious previousWithoutKey() {
+            if (this instanceof WithoutKeyFunctorWithPrevious) {
+                return this;
+            }
+            return new WithoutKeyFunctorWithPrevious(this);
+        }
+
+        class WithoutKeyFunctorWithPrevious implements FunctorWithPrevious {
+            private FunctorWithPrevious functorWithPrevious;
+
+            public WithoutKeyFunctorWithPrevious(FunctorWithPrevious functorWithPrevious) {
+                this.functorWithPrevious = functorWithPrevious;
+            }
+
+            public void process(Field field, Object value, Object previousValue) throws Exception {
+                if (!field.isKeyField()) {
+                    functorWithPrevious.process(field, value, previousValue);
+                }
+            }
+        }
     }
 }

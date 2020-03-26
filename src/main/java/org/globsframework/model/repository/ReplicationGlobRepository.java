@@ -328,7 +328,7 @@ public class ReplicationGlobRepository extends DefaultGlobRepository implements 
             public void complete() {
             }
 
-            public void visitCreation(Key key, FieldValues values) throws Exception {
+            public void visitCreation(Key key, FieldsValueScanner values) throws Exception {
                 if (managedTypes.contains(key.getGlobType())) {
                     localChangeSet.processCreation(key, values);
                 }
@@ -337,7 +337,7 @@ public class ReplicationGlobRepository extends DefaultGlobRepository implements 
                 }
             }
 
-            public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
+            public void visitUpdate(Key key, FieldsValueWithPreviousScanner values) throws Exception {
                 if (managedTypes.contains(key.getGlobType())) {
                     localChangeSet.processUpdate(key, values);
                 }
@@ -346,7 +346,7 @@ public class ReplicationGlobRepository extends DefaultGlobRepository implements 
                 }
             }
 
-            public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
+            public void visitDeletion(Key key, FieldsValueScanner previousValues) throws Exception {
                 if (managedTypes.contains(key.getGlobType())) {
                     localChangeSet.processDeletion(key, previousValues);
                 }

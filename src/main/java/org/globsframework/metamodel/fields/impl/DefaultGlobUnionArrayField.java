@@ -7,12 +7,15 @@ import org.globsframework.model.Glob;
 import org.globsframework.utils.exceptions.InvalidParameter;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-public class DefaultArrayGlobUnionField extends AbstractField implements GlobArrayUnionField {
+public class DefaultGlobUnionArrayField extends AbstractField implements GlobArrayUnionField {
     private Map<String, GlobType> targetTypes;
 
-    public DefaultArrayGlobUnionField(String name, GlobType globType, List<GlobType> targetTypes,
+    public DefaultGlobUnionArrayField(String name, GlobType globType, List<GlobType> targetTypes,
                                       int index, boolean isKeyField, final int keyIndex) {
         super(name, globType, Glob[].class, index, keyIndex, isKeyField, null, DataType.GlobUnionArray);
         this.targetTypes = new HashMap<>();
@@ -111,6 +114,12 @@ public class DefaultArrayGlobUnionField extends AbstractField implements GlobArr
                         isSameGlob(((Glob[]) o1), ((Glob[]) o2));
     }
 
+    public boolean valueOrKeyEqual(Object o1, Object o2) {
+        return (o1 == null) && (o2 == null) ||
+                !((o1 == null) || (o2 == null)) &&
+                        isSameKeyOrGlob(((Glob[]) o1), ((Glob[]) o2));
+    }
+
     public static boolean isSameGlob(Glob[] g1, Glob[] g2) {
         if (g1.length != g2.length) {
             return false;
@@ -122,6 +131,23 @@ public class DefaultArrayGlobUnionField extends AbstractField implements GlobArr
                 return false;
             }
             if (!DefaultGlobField.isSameGlob(gg1.getType(), gg1, gg2)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static boolean isSameKeyOrGlob(Glob[] g1, Glob[] g2) {
+        if (g1.length != g2.length) {
+            return false;
+        }
+        for (int i = 0; i < g1.length; i++) {
+            Glob gg1 = g1[i];
+            Glob gg2 = g2[i];
+            if (gg1.getType() != gg2.getType()) {
+                return false;
+            }
+            if (!DefaultGlobField.isSameKeyOrGlob(gg1.getType(), gg1, gg2)) {
                 return false;
             }
         }

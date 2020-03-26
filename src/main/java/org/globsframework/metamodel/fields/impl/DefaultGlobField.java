@@ -99,6 +99,11 @@ public class DefaultGlobField extends AbstractField implements GlobField {
                 !((o1 == null) || (o2 == null)) && isSameGlob(getType(), (Glob)o1, (Glob)o2);
     }
 
+    public boolean valueOrKeyEqual(Object o1, Object o2) {
+        return (o1 == null) && (o2 == null) ||
+                !((o1 == null) || (o2 == null)) && isSameKeyOrGlob(getType(), (Glob)o1, (Glob)o2);
+    }
+
     public void checkValue(Object object) throws InvalidParameter {
         if ((object != null) && (!(object instanceof Glob))) {
             throw new InvalidParameter("Value '" + object + "' (" + object.getClass().getName()
@@ -109,6 +114,17 @@ public class DefaultGlobField extends AbstractField implements GlobField {
 
     public static boolean isSameGlob(GlobType type, Glob g1, Glob g2) {
         Field[] fields = type.getFields();
+        for (Field field : fields) {
+            if (!field.valueEqual(g1.getValue(field), g2.getValue(field))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static boolean isSameKeyOrGlob(GlobType type, Glob g1, Glob g2) {
+        Field[] keyFields = type.getKeyFields();
+        Field[] fields = keyFields.length == 0 ? type.getFields() : keyFields;
         for (Field field : fields) {
             if (!field.valueEqual(g1.getValue(field), g2.getValue(field))) {
                 return false;

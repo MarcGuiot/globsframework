@@ -118,8 +118,8 @@ public class DefaultChangeSetTest {
     public void testUpdatedFieldsDoNoContainKeys() throws Exception {
         changeSet.processUpdate(key1, DummyObject.VALUE, 1.1, null);
         changeSet.visit(DummyObject.TYPE, new DefaultChangeSetVisitor() {
-            public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
-                assertFalse(values.contains(DummyObject.ID));
+            public void visitUpdate(Key key, FieldsValueWithPreviousScanner values) throws Exception {
+                assertFalse(TestUtils.contains(values, DummyObject.ID));
             }
         });
     }
@@ -274,15 +274,15 @@ public class DefaultChangeSetTest {
         final ChangeSet reverse = changeSet.reverse();
 
         reverse.visit(new ChangeSetVisitor() {
-            public void visitCreation(Key key, FieldValues values) throws Exception {
+            public void visitCreation(Key key, FieldsValueScanner values) throws Exception {
                 changeSet.processCreation(key, values);
             }
 
-            public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
+            public void visitUpdate(Key key, FieldsValueWithPreviousScanner values) throws Exception {
                 changeSet.processUpdate(key, values);
             }
 
-            public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
+            public void visitDeletion(Key key, FieldsValueScanner previousValues) throws Exception {
                 changeSet.processDeletion(key, previousValues);
             }
         });

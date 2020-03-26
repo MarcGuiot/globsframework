@@ -238,18 +238,22 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
     }
 
     public Glob create(GlobType type, FieldValue... values) throws MissingInfo {
-        MutableGlob globValuesArray = completeValues(type, values);
+        MutableGlob globValuesArray = completeValues(type, FieldsValueScanner.from(values));
         addKeyValues(type, globValuesArray);
         Key key = KeyBuilder.createFromValues(type, globValuesArray);
         return create(type, key, globValuesArray);
     }
 
-    public Glob create(GlobType type, FieldValues values) throws MissingInfo, ItemAlreadyExists {
-        return null;
+    public Glob create(Key key, FieldsValueScanner values) throws MissingInfo, ItemAlreadyExists {
+        MutableGlob globValuesArray = completeValues(key.getGlobType(), values);
+        for (Field field : key.getGlobType().getKeyFields()) {
+            globValuesArray.setValue(field, key.getValue(field));
+        }
+        return create(key.getGlobType(), key, globValuesArray);
     }
 
     public Glob create(Key key, FieldValue... values) throws ItemAlreadyExists {
-        MutableGlob globValuesArray = completeValues(key.getGlobType(), values);
+        MutableGlob globValuesArray = completeValues(key.getGlobType(), FieldsValueScanner.from(values));
         for (Field field : key.getGlobType().getKeyFields()) {
             globValuesArray.setValue(field, key.getValue(field));
         }
@@ -282,7 +286,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
         return glob;
     }
 
-    private MutableGlob completeValues(GlobType type, FieldValue[] values) {
+    private MutableGlob completeValues(GlobType type, FieldsValueScanner values) {
         MutableGlob mutableGlob = type.instantiate();
         addDefaultValues(type, mutableGlob);
         copyValues(values, mutableGlob);
@@ -295,7 +299,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
         }
     }
 
-    private void copyValues(FieldValues values, final MutableGlob mutableGlob) {
+    private void copyValues(FieldsValueScanner values, final MutableGlob mutableGlob) {
         values.safeApply(mutableGlob::setValue);
     }
 
@@ -351,6 +355,16 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
             throw new ItemNotFound("Update called for null object");
         }
         update(glob.getKey(), values);
+    }
+
+    public void update(Key key, FieldsValueScanner values) throws MissingInfo, ItemAlreadyExists {
+        final MutableGlob mutableGlob = getGlobForUpdate(key);
+        startChangeSet();
+        try {
+            values.safeApply((field, value) -> doUpdate(mutableGlob, key, field, value));
+        } finally {
+            completeChangeSet();
+        }
     }
 
     public void update(final Key key, FieldValue... values) throws ItemNotFound {
@@ -537,7 +551,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
 
     public void apply(ChangeSet changeSet) throws InvalidParameter {
         changeSet.safeVisit(new ChangeSetVisitor() {
-            public void visitCreation(Key key, FieldValues values) {
+            public void visitCreation(Key key, FieldsValueScanner values) {
                 if (contains(key)) {
                     throw new InvalidParameter("Object " + key + " already exists\n" +
                             "-- New object values:\n" + GlobPrinter.toString(values) +
@@ -546,13 +560,13 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
                 }
             }
 
-            public void visitUpdate(Key key, FieldValuesWithPrevious values) {
+            public void visitUpdate(Key key, FieldsValueWithPreviousScanner values) {
                 if (!contains(key)) {
                     throw new InvalidParameter("Object " + key + " not found - cannot apply update");
                 }
             }
 
-            public void visitDeletion(Key key, FieldValues values) {
+            public void visitDeletion(Key key, FieldsValueScanner values) {
                 if (!contains(key)) {
                     throw new InvalidParameter("Object " + key + " not found - cannot apply deletion");
                 }
@@ -770,15 +784,15 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
 //  }
 
     private class ChangeSetExecutor implements ChangeSetVisitor {
-        public void visitCreation(Key key, FieldValues values) {
-            create(key, values.toArray());
+        public void visitCreation(Key key, FieldsValueScanner values) {
+            create(key, values);
         }
 
-        public void visitUpdate(Key key, FieldValuesWithPrevious values) {
-            update(key, values.toArray());
+        public void visitUpdate(Key key, FieldsValueWithPreviousScanner values) {
+            update(key, values);
         }
 
-        public void visitDeletion(Key key, FieldValues values) {
+        public void visitDeletion(Key key, FieldsValueScanner values) {
             delete(key);
         }
     }

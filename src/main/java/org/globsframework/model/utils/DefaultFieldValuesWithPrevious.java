@@ -5,6 +5,7 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.FieldValueVisitor;
 import org.globsframework.model.FieldValue;
 import org.globsframework.model.FieldValues;
+import org.globsframework.model.FieldsValueWithPreviousScanner;
 import org.globsframework.model.MutableFieldValues;
 import org.globsframework.model.impl.AbstractFieldValuesWithPrevious;
 import org.globsframework.utils.Unset;
@@ -14,6 +15,24 @@ public class DefaultFieldValuesWithPrevious extends AbstractFieldValuesWithPrevi
     private GlobType type;
     private Object[] values;
     private Object[] previousValues;
+
+    public DefaultFieldValuesWithPrevious(FieldsValueWithPreviousScanner fieldsValueWithPreviousScanner) {
+        fieldsValueWithPreviousScanner.safeApplyWithPrevious(new FunctorWithPrevious() {
+            public void process(Field field, Object value, Object previous) throws Exception {
+                if (type == null) {
+                    type = field.getGlobType();
+                    values = new Object[type.getFieldCount()];
+                    previousValues = new Object[type.getFieldCount()];
+                    for (Field f : type.getFields()) {
+                        int index = f.getIndex();
+                        values[index] = Unset.VALUE;
+                        previousValues[index] = Unset.VALUE;
+                    }
+                }
+                setValue(field, value, previous);
+            }
+        });
+    }
 
     public DefaultFieldValuesWithPrevious(GlobType type) {
         this.type = type;
@@ -66,7 +85,7 @@ public class DefaultFieldValuesWithPrevious extends AbstractFieldValuesWithPrevi
         return count;
     }
 
-    public <T extends FieldValueVisitor> T acceptOnPreviousButKey(T functor) throws Exception {
+    public <T extends FieldValueVisitor> T acceptOnPrevious(T functor) throws Exception {
         for (Field field : type.getFields()) {
             int index = field.getIndex();
             if (previousValues[index] != Unset.VALUE) {

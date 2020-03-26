@@ -114,7 +114,7 @@ class DefaultDeltaGlob extends AbstractFieldValuesWithPrevious implements DeltaG
         previousValues[index] = previousValue;
     }
 
-    public void setValues(FieldValues values) {
+    public void setValues(FieldsValueScanner values) {
         values.safeApply(new FieldValues.Functor() {
             public void process(Field field, Object value) throws Exception {
                 setValue(field, value);
@@ -122,7 +122,7 @@ class DefaultDeltaGlob extends AbstractFieldValuesWithPrevious implements DeltaG
         });
     }
 
-    public void setPreviousValues(FieldValues values) {
+    public void setPreviousValues(FieldsValueScanner values) {
         values.safeApply(new FieldValues.Functor() {
             public void process(Field field, Object value) throws Exception {
                 previousValues[field.getIndex()] = value;
@@ -130,7 +130,7 @@ class DefaultDeltaGlob extends AbstractFieldValuesWithPrevious implements DeltaG
         });
     }
 
-    public void mergePreviousValues(FieldValues globValues) {
+    public void mergePreviousValues(FieldsValueScanner globValues) {
         globValues.safeApply(new FieldValues.Functor() {
             public void process(Field field, Object value) throws Exception {
                 final int index = field.getIndex();
@@ -193,7 +193,7 @@ class DefaultDeltaGlob extends AbstractFieldValuesWithPrevious implements DeltaG
         return state;
     }
 
-    public void processCreation(FieldValues values) {
+    public void processCreation(FieldsValueScanner values) {
         state.processCreation(this, values);
     }
 
@@ -201,7 +201,7 @@ class DefaultDeltaGlob extends AbstractFieldValuesWithPrevious implements DeltaG
         state.processUpdate(this, field, value, previousValue);
     }
 
-    public void processDeletion(FieldValues values) {
+    public void processDeletion(FieldsValueScanner values) {
         state.processDeletion(this, values);
     }
 
@@ -227,10 +227,10 @@ class DefaultDeltaGlob extends AbstractFieldValuesWithPrevious implements DeltaG
         return value;
     }
 
-    public <T extends FieldValueVisitor> T acceptOnPreviousButKey(T functor) throws Exception {
+    public <T extends FieldValueVisitor> T acceptOnPrevious(T functor) throws Exception {
         for (Field field : key.getGlobType().getFields()) {
             Object value = previousValues[field.getIndex()];
-            if ((value != Unset.VALUE) && !field.isKeyField()) {
+            if ((value != Unset.VALUE)) {
                 field.visit(functor, value);
             }
         }

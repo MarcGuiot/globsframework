@@ -110,7 +110,16 @@ public class DefaultGlobUnionField extends AbstractField implements GlobUnionFie
 
     public boolean valueEqual(Object o1, Object o2) {
         return (o1 == null) && (o2 == null) ||
-                !((o1 == null) || (o2 == null)) && (o1 instanceof Glob && o2 instanceof Glob) && DefaultGlobField.isSameGlob(((Glob) o1).getType(), (Glob)o1, (Glob)o2);
+                (o1 instanceof Glob && o2 instanceof Glob)
+                        && ((Glob) o1).getType() == ((Glob) o2).getType()
+                        && DefaultGlobField.isSameGlob(((Glob) o1).getType(), (Glob) o1, (Glob) o2);
+    }
+
+    public boolean valueOrKeyEqual(Object o1, Object o2) {
+        return (o1 == null) && (o2 == null) ||
+                (o1 instanceof Glob && o2 instanceof Glob)
+                        && ((Glob) o1).getType() == ((Glob) o2).getType()
+                        && DefaultGlobField.isSameKeyOrGlob(((Glob) o1).getType(), (Glob) o1, (Glob) o2);
     }
 
     public void checkValue(Object object) throws InvalidParameter {

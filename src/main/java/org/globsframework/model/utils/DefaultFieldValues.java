@@ -21,11 +21,12 @@ public class DefaultFieldValues extends AbstractMutableFieldValues  {
     public DefaultFieldValues() {
     }
 
-    public DefaultFieldValues(FieldValues newValues) {
-        FieldValue[] values = newValues.toArray();
-        for (FieldValue fieldValue : values) {
-            this.values.put(fieldValue.getField(), fieldValue.getValue());
-        }
+    public DefaultFieldValues(FieldsValueScanner newValues) {
+        newValues.safeApply(new Functor() {
+            public void process(Field field, Object value) throws Exception {
+                values.put(field, value);
+            }
+        });
     }
 
     public boolean isSet(Field field) throws ItemNotFound {

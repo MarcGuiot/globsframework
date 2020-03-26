@@ -291,11 +291,11 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
         repository.addChangeListener(new DefaultChangeSetListener() {
             public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
                 changeSet.safeVisit(new DefaultChangeSetVisitor() {
-                    public void visitCreation(Key key, FieldValues values) throws Exception {
+                    public void visitCreation(Key key, FieldsValueScanner values) throws Exception {
                         values.apply(new NoKeyFieldChecker().withoutKeyField());
                     }
 
-                    public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
+                    public void visitUpdate(Key key, FieldsValueWithPreviousScanner values) throws Exception {
                         values.apply(new NoKeyFieldChecker().withoutKeyField());
                     }
                 });
@@ -751,19 +751,19 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
         repository.addTrigger(new DefaultChangeSetListener() {
             public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
                 changeSet.safeVisit(DummyObject.TYPE, new ChangeSetVisitor() {
-                    public void visitCreation(Key key, FieldValues values) throws Exception {
-                        String newValue = (values.contains(DummyObject.NAME) ? values.get(DummyObject.NAME) : "null") + "-created";
+                    public void visitCreation(Key key, FieldsValueScanner values) throws Exception {
+                        String newValue = (TestUtils.contains(values, DummyObject.NAME) ? TestUtils.get(values, DummyObject.NAME) : "null") + "-created";
                         repository.update(key, DummyObject.NAME, newValue);
                         createObj2(repository, key, key + " created");
                     }
 
-                    public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
+                    public void visitUpdate(Key key, FieldsValueWithPreviousScanner values) throws Exception {
                         repository.update(key, DummyObject.NAME,
-                                (values.contains(DummyObject.NAME) ? values.get(DummyObject.NAME) : "null") + "-updated");
+                                (TestUtils.contains(values, DummyObject.NAME) ? TestUtils.get(values, DummyObject.NAME) : "null") + "-updated");
                         createObj2(repository, key, key + " updated");
                     }
 
-                    public void visitDeletion(Key key, FieldValues values) throws Exception {
+                    public void visitDeletion(Key key, FieldsValueScanner values) throws Exception {
                         createObj2(repository, key, key + " deleted");
                     }
                 });
@@ -1019,7 +1019,6 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
         checkApplyChangeSetError(changeSet,
                 "Object dummyObject[id=1] already exists\n" +
                         "-- New object values:\n" +
-                        "id=1\n" +
                         "name=obj3\n" +
                         "-- Existing object:\n" +
                         "id=1\n" +

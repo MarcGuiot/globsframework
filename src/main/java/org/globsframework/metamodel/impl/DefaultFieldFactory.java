@@ -4,10 +4,6 @@ import org.globsframework.metamodel.Annotations;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.DefaultFieldValueType;
-import org.globsframework.metamodel.fields.GlobArrayField;
-import org.globsframework.metamodel.fields.GlobArrayUnionField;
-import org.globsframework.metamodel.fields.GlobField;
-import org.globsframework.metamodel.fields.GlobUnionField;
 import org.globsframework.metamodel.fields.impl.*;
 import org.globsframework.metamodel.index.MultiFieldNotUniqueIndex;
 import org.globsframework.metamodel.index.MultiFieldUniqueIndex;
@@ -17,7 +13,6 @@ import org.globsframework.metamodel.index.impl.DefaultMultiFieldNotUniqueIndex;
 import org.globsframework.metamodel.index.impl.DefaultMultiFieldUniqueIndex;
 import org.globsframework.metamodel.index.impl.DefaultNotUniqueIndex;
 import org.globsframework.metamodel.index.impl.DefaultUniqueIndex;
-import org.globsframework.metamodel.utils.MutableGlobType;
 import org.globsframework.model.Glob;
 import org.globsframework.model.Key;
 
@@ -137,8 +132,8 @@ public class DefaultFieldFactory {
         return add(new DefaultGlobUnionField(fieldName, type, types, index, false, 0), false);
     }
 
-    public DefaultArrayGlobUnionField addGlobArrayUnion(String fieldName, List<GlobType> types, int index) {
-        return add(new DefaultArrayGlobUnionField(fieldName, type, types, index, false, 0), false);
+    public DefaultGlobUnionArrayField addGlobArrayUnion(String fieldName, List<GlobType> types, int index) {
+        return add(new DefaultGlobUnionArrayField(fieldName, type, types, index, false, 0), false);
     }
 
 

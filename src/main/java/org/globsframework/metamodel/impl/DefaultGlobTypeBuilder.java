@@ -310,7 +310,7 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
         if (key != null) {
             throw new RuntimeException(fieldName + " of type unionField cannot be a key");
         }
-        DefaultArrayGlobUnionField field = factory.addGlobArrayUnion(fieldName, types, index);
+        DefaultGlobUnionArrayField field = factory.addGlobArrayUnion(fieldName, types, index);
         field.addAnnotations(annotations.streamAnnotations());
         index++;
         return field;

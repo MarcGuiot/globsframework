@@ -1,7 +1,12 @@
 package org.globsframework.utils;
 
 import junit.framework.AssertionFailedError;
+import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
+import org.globsframework.model.FieldValues;
+import org.globsframework.model.FieldValuesWithPrevious;
+import org.globsframework.model.FieldsValueScanner;
+import org.globsframework.model.FieldsValueWithPreviousScanner;
 import org.junit.Assert;
 
 import java.io.File;
@@ -227,4 +232,36 @@ public class TestUtils {
         }
         throw exception;
     }
+
+    public static boolean contains(FieldsValueScanner valueScanner, Field searchField) {
+        return valueScanner.safeApply(new FieldValues.Functor() {
+            boolean contains = false;
+            public void process(Field field, Object value) throws Exception {
+                contains |= field == searchField;
+            }
+        }).contains;
+    }
+
+    public static Object get(FieldsValueScanner valueScanner, Field searchField) {
+        return valueScanner.safeApply(new FieldValues.Functor() {
+            Object value = null;
+            public void process(Field field, Object value) throws Exception {
+                if (field == searchField) {
+                    this.value = value;
+                }
+            }
+        }).value;
+    }
+
+    public static Object getPrevious(FieldsValueWithPreviousScanner valueScanner, Field searchField) {
+        return valueScanner.safeApplyWithPrevious(new FieldValuesWithPrevious.FunctorWithPrevious() {
+            Object value = null;
+            public void process(Field field, Object value, Object previous) throws Exception {
+                if (field == searchField) {
+                    this.value = previous;
+                }
+            }
+        }).value;
+    }
+
 }

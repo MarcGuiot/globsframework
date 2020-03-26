@@ -7,6 +7,7 @@ import org.globsframework.metamodel.links.Link;
 import org.globsframework.metamodel.links.impl.UnInitializedLink;
 import org.globsframework.model.Glob;
 import org.globsframework.model.Key;
+import org.globsframework.model.MutableGlob;
 import org.globsframework.model.utils.GlobBuilder;
 import org.globsframework.utils.ArrayTestUtils;
 import org.globsframework.utils.TestUtils;
@@ -127,7 +128,8 @@ public class GlobTypeLoaderTest {
         assertFalse(AnObject.F.valueEqual(AnObject.glob.get(AnObject.F), new boolean[]{true, true}));
         assertFalse(AnObject.G.valueEqual(AnObject.glob.get(AnObject.G), new String[]{"two", "un"}));
         assertFalse(AnObject.H.valueEqual(AnObject.glob.get(AnObject.H), AnObject.TYPE.instantiate().set(AnObject.ID, 2).set(AnObject.E, new long[]{1, 3, 2})));
-        assertFalse(AnObject.I.valueEqual(AnObject.glob.get(AnObject.I), new Glob[]{AnObject.TYPE.instantiate().set(AnObject.BOOLEAN, false), AnObject.TYPE.instantiate().set(AnObject.G, new String[]{"A", "B"}), AnObject.TYPE.instantiate().set(AnObject.ID, 2)}));
+        assertFalse(AnObject.I.valueEqual(AnObject.glob.get(AnObject.I), new Glob[]{AnObject.TYPE.instantiate().set(AnObject.BOOLEAN, false), AnObject.TYPE.instantiate().set(AnObject.G, new String[]{"A", "B"}),
+                AnObject.TYPE.instantiate().set(AnObject.ID, 2)}));
         assertFalse(AnObject.J.valueEqual(AnObject.glob.get(AnObject.J), AnObjectWithALinkField.TYPE.instantiate().set(AnObjectWithALinkField.ID, 4)));
         assertFalse(AnObject.K.valueEqual(AnObject.glob.get(AnObject.K), new Glob[]{AnObjectWithALinkField.TYPE.instantiate().set(AnObjectWithALinkField.ID, 5),
                 AnObjectWithALinkField.TYPE.instantiate().set(AnObjectWithALinkField.ID, 3),
@@ -593,5 +595,37 @@ public class GlobTypeLoaderTest {
     @Test
     public void testAnObjectWithRequiredLinkField() throws Exception {
         assertTrue(AnObjectWithRequiredLinkField.LINK.isRequired());
+    }
+
+
+    static public class AnObjectWithoutKey{
+        public static GlobType TYPE;
+
+        public static IntegerField A;
+
+        @Target(AnObjectWithoutKey.class)
+        public static GlobField B;
+
+        @Target(AnObject.class)
+        public static GlobField C;
+
+        static {
+            GlobTypeLoaderFactory.create(AnObjectWithoutKey.class).load();
+        }
+    }
+
+    @Test
+    public void testValueOrKeyEquals() {
+        MutableGlob v1 = AnObjectWithoutKey.TYPE.instantiate()
+                .set(AnObjectWithoutKey.A, 1)
+                .set(AnObjectWithoutKey.B, AnObjectWithoutKey.TYPE.instantiate().set(AnObjectWithoutKey.A, 2));
+        Assert.assertTrue(AnObjectWithoutKey.B.valueOrKeyEqual(v1.get(AnObjectWithoutKey.B), AnObjectWithoutKey.TYPE.instantiate().set(AnObjectWithoutKey.A, 2)));
+        Assert.assertFalse(AnObjectWithoutKey.B.valueOrKeyEqual(v1.get(AnObjectWithoutKey.B), AnObjectWithoutKey.TYPE.instantiate().set(AnObjectWithoutKey.A, 3)));
+
+        //same becauase ID are compare.
+        Assert.assertTrue(AnObjectWithoutKey.C
+                .valueOrKeyEqual(AnObject.TYPE.instantiate().set(AnObject.ID, 1).set(AnObject.DOUBLE, 2.2),
+                        AnObject.TYPE.instantiate().set(AnObject.ID, 1).set(AnObject.DOUBLE, 2.3)));
+
     }
 }

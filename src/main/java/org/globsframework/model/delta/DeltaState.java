@@ -2,17 +2,17 @@ package org.globsframework.model.delta;
 
 import org.globsframework.metamodel.Field;
 import org.globsframework.model.ChangeSetVisitor;
-import org.globsframework.model.FieldValues;
+import org.globsframework.model.FieldsValueScanner;
 import org.globsframework.utils.Unset;
 import org.globsframework.utils.exceptions.InvalidParameter;
 import org.globsframework.utils.exceptions.InvalidState;
 
 interface DeltaState {
-    void processCreation(DeltaGlob glob, FieldValues values);
+    void processCreation(DeltaGlob glob, FieldsValueScanner values);
 
     void processUpdate(DeltaGlob glob, Field field, Object value, Object previousValue);
 
-    void processDeletion(DeltaGlob glob, FieldValues values);
+    void processDeletion(DeltaGlob glob, FieldsValueScanner values);
 
     void visit(DeltaGlob glob, ChangeSetVisitor visitor) throws Exception;
 
@@ -24,7 +24,7 @@ interface DeltaState {
     DeltaState DELETED = new DeletedDeltaState();
 
     class UnchangedDeltaState implements DeltaState {
-        public void processCreation(DeltaGlob delta, FieldValues values) {
+        public void processCreation(DeltaGlob delta, FieldsValueScanner values) {
             delta.setState(CREATED);
             delta.setValues(values);
         }
@@ -34,7 +34,7 @@ interface DeltaState {
             delta.setValue(field, value, previousValue);
         }
 
-        public void processDeletion(DeltaGlob delta, FieldValues values) {
+        public void processDeletion(DeltaGlob delta, FieldsValueScanner values) {
             delta.setState(DELETED);
             delta.setPreviousValues(values);
         }
@@ -52,7 +52,7 @@ interface DeltaState {
     }
 
     class CreatedDeltaState implements DeltaState {
-        public void processCreation(DeltaGlob delta, FieldValues values) {
+        public void processCreation(DeltaGlob delta, FieldsValueScanner values) {
             throw new InvalidState("Object " + delta.getKey() + " already exists");
         }
 
@@ -60,12 +60,12 @@ interface DeltaState {
             delta.setValue(field, value);
         }
 
-        public void processDeletion(DeltaGlob delta, FieldValues values) {
+        public void processDeletion(DeltaGlob delta, FieldsValueScanner values) {
             delta.setState(UNCHANGED);
         }
 
         public void visit(DeltaGlob delta, ChangeSetVisitor visitor) throws Exception {
-            visitor.visitCreation(delta.getKey(), delta);
+            visitor.visitCreation(delta.getKey(), delta.withoutKey());
         }
 
         public DeltaState reverse() {
@@ -78,7 +78,7 @@ interface DeltaState {
     }
 
     class UpdatedDeltaState implements DeltaState {
-        public void processCreation(DeltaGlob delta, FieldValues values) {
+        public void processCreation(DeltaGlob delta, FieldsValueScanner values) {
             throw new InvalidState("Object " + delta.getKey() + " already exists");
         }
 
@@ -95,13 +95,13 @@ interface DeltaState {
             }
         }
 
-        public void processDeletion(DeltaGlob delta, FieldValues values) {
+        public void processDeletion(DeltaGlob delta, FieldsValueScanner values) {
             delta.setState(DELETED);
             delta.mergePreviousValues(values);
         }
 
         public void visit(DeltaGlob delta, ChangeSetVisitor visitor) throws Exception {
-            visitor.visitUpdate(delta.getKey(), delta);
+            visitor.visitUpdate(delta.getKey(), delta.withoutKey());
         }
 
         public DeltaState reverse() {
@@ -114,7 +114,7 @@ interface DeltaState {
     }
 
     class DeletedDeltaState implements DeltaState {
-        public void processCreation(DeltaGlob delta, FieldValues values) {
+        public void processCreation(DeltaGlob delta, FieldsValueScanner values) {
             delta.setState(UPDATED);
             delta.setValues(values);
             delta.cleanupChanges();
@@ -124,7 +124,7 @@ interface DeltaState {
             throw new InvalidState("Object " + delta.getKey() + " was deleted and cannot be updated");
         }
 
-        public void processDeletion(DeltaGlob delta, FieldValues values) {
+        public void processDeletion(DeltaGlob delta, FieldsValueScanner values) {
             throw new InvalidState("Object " + delta.getKey() + " was already deleted");
         }
 

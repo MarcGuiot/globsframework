@@ -29,7 +29,7 @@ public class DefaultChangeSet implements MutableChangeSet {
         return new DefaultChangeSet(new LinksMapOfMaps<>());
     }
 
-    public void processCreation(Key key, FieldValues values) {
+    public void processCreation(Key key, FieldsValueScanner values) {
         DefaultDeltaGlob delta = getGlob(key);
         delta.processCreation(values);
         removeIfUnchanged(delta);
@@ -45,17 +45,18 @@ public class DefaultChangeSet implements MutableChangeSet {
         removeIfUnchanged(delta);
     }
 
-    public void processUpdate(Key key, FieldValuesWithPrevious values) {
+    public void processUpdate(Key key, FieldsValueWithPreviousScanner values) {
         final DefaultDeltaGlob delta = getGlob(key);
-        values.safeApplyWithPreviousButKey(new FieldValuesWithPrevious.FunctorWithPrevious() {
+        FieldValuesWithPrevious.FunctorWithPrevious functor = new FieldValuesWithPrevious.FunctorWithPrevious() {
             public void process(Field field, Object value, Object previousValue) throws Exception {
                 delta.processUpdate(field, value, previousValue);
                 removeIfUnchanged(delta);
             }
-        });
+        };
+        values.safeApplyWithPrevious(functor.previousWithoutKey());
     }
 
-    public void processDeletion(Key key, FieldValues values) {
+    public void processDeletion(Key key, FieldsValueScanner values) {
         DefaultDeltaGlob delta = getGlob(key);
         delta.processDeletion(values);
         removeIfUnchanged(delta);
@@ -348,11 +349,11 @@ public class DefaultChangeSet implements MutableChangeSet {
 
     public void merge(ChangeSet other) throws InvalidState {
         other.safeVisit(new ChangeSetVisitor() {
-            public void visitCreation(Key key, FieldValues values) throws Exception {
+            public void visitCreation(Key key, FieldsValueScanner values) throws Exception {
                 processCreation(key, values);
             }
 
-            public void visitUpdate(final Key key, FieldValuesWithPrevious values) throws Exception {
+            public void visitUpdate(final Key key, FieldsValueWithPreviousScanner values) throws Exception {
                 values.applyWithPreviousButKey(new FieldValuesWithPrevious.FunctorWithPrevious() {
                     public void process(Field field, Object value, Object previousValue) throws IOException {
                         processUpdate(key, field, value, previousValue);
@@ -360,7 +361,7 @@ public class DefaultChangeSet implements MutableChangeSet {
                 });
             }
 
-            public void visitDeletion(Key key, FieldValues values) throws Exception {
+            public void visitDeletion(Key key, FieldsValueScanner values) throws Exception {
                 processDeletion(key, values);
             }
         });
@@ -402,14 +403,14 @@ public class DefaultChangeSet implements MutableChangeSet {
         public void complete() {
         }
 
-        public void visitCreation(Key key, FieldValues values) throws Exception {
+        public void visitCreation(Key key, FieldsValueScanner values) throws Exception {
             writer.write("create :");
             key.safeApplyOnKeyField(this);
             values.safeApply(this.withoutKeyField());
             writer.write("\n");
         }
 
-        public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
+        public void visitUpdate(Key key, FieldsValueWithPreviousScanner values) throws Exception {
             int startOffSet = writer.getBuffer().length();
             writer.write("update :");
             key.safeApplyOnKeyField(this);
@@ -425,7 +426,7 @@ public class DefaultChangeSet implements MutableChangeSet {
             prefix = "";
         }
 
-        public void visitDeletion(Key key, FieldValues previousValues) throws Exception {
+        public void visitDeletion(Key key, FieldsValueScanner previousValues) throws Exception {
             writer.write("delete :");
             key.safeApplyOnKeyField(this);
             previousValues.safeApply(this.withoutKeyField());

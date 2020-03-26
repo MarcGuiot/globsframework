@@ -7,10 +7,7 @@ import org.globsframework.metamodel.fields.GlobArrayUnionField;
 import org.globsframework.metamodel.fields.GlobField;
 import org.globsframework.metamodel.fields.GlobUnionField;
 import org.globsframework.metamodel.utils.GlobTypeComparator;
-import org.globsframework.model.FieldValues;
-import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
-import org.globsframework.model.GlobRepository;
+import org.globsframework.model.*;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.TablePrinter;
 
@@ -24,7 +21,7 @@ import static org.globsframework.utils.Utils.sort;
 
 public class GlobPrinter {
 
-    public static String toString(final FieldValues fieldValues) {
+    public static String toString(final FieldsValueScanner fieldValues) {
         final StringBuilder builder = new StringBuilder();
         if (fieldValues == null) {
             return "NULL";
@@ -33,7 +30,7 @@ public class GlobPrinter {
                 builder
                         .append(field.getName())
                         .append("=")
-                        .append(field.toString(fieldValues.getValue(field), ""))
+                        .append(field.toString(value, ""))
                         .append('\n'));
         return builder.toString();
     }

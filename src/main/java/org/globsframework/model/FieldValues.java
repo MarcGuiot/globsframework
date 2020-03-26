@@ -11,7 +11,7 @@ import java.time.ZonedDateTime;
 import java.util.Optional;
 import java.util.function.Function;
 
-public interface FieldValues extends FieldValuesAccessor {
+public interface FieldValues extends FieldValuesAccessor, FieldsValueScanner {
 
     FieldValues EMPTY = new FieldValues() {
         public boolean contains(Field field) {
@@ -161,18 +161,6 @@ public interface FieldValues extends FieldValuesAccessor {
     default FieldValues withoutKeyField() {
         return new FieldValuesButKey(this);
     }
-
-    <T extends Functor>
-    T apply(T functor) throws Exception;
-
-    <T extends Functor>
-    T safeApply(T functor);
-
-    <T extends FieldValueVisitor>
-    T accept(T functor) throws Exception;
-
-    <T extends FieldValueVisitor>
-    T safeAccept(T functor);
 
     FieldValue[] toArray();
 

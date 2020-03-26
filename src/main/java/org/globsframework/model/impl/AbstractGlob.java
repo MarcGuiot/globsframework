@@ -2,14 +2,12 @@ package org.globsframework.model.impl;
 
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.metamodel.fields.FieldValueVisitor;
+import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.fields.impl.AbstractField;
-import org.globsframework.model.FieldValue;
-import org.globsframework.model.FieldValues;
-import org.globsframework.model.Glob;
-import org.globsframework.model.Key;
+import org.globsframework.model.*;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
+import java.util.Arrays;
 import java.util.Objects;
 
 public abstract class AbstractGlob extends AbstractFieldValues implements Glob, Key {
@@ -50,7 +48,7 @@ public abstract class AbstractGlob extends AbstractFieldValues implements Glob, 
             Boolean result = Boolean.TRUE;
 
             public void process(Field field, Object value) {
-                if (!Objects.equals(value, getValue(field))) {
+                if (!field.valueEqual(value, getValue(field))) {
                     result = Boolean.FALSE;
                 }
             }
@@ -59,7 +57,7 @@ public abstract class AbstractGlob extends AbstractFieldValues implements Glob, 
 
     public boolean matches(FieldValue... values) {
         for (FieldValue value : values) {
-            if (!Objects.equals(value.getValue(), getValue(value.getField()))) {
+            if (!value.getField().valueEqual(value.getValue(), getValue(value.getField()))) {
                 return false;
             }
         }
@@ -220,5 +218,106 @@ public abstract class AbstractGlob extends AbstractFieldValues implements Glob, 
             }
         }
         return true;
+    }
+
+    public MutableGlob duplicate() {
+        MutableGlob instantiate = getType().instantiate();
+        for (Field field : getType().getFields()) {
+            if (isSet(field)) {
+                if (isNull(field)) {
+                    instantiate.setValue(field, null);
+                }
+                else {
+                    field.safeVisit(new FieldVisitor() {
+                        public void visitInteger(IntegerField field) throws Exception {
+                            instantiate.set(field, get(field));
+                        }
+
+                        public void visitIntegerArray(IntegerArrayField field) throws Exception {
+                            instantiate.set(field, get(field).clone());
+                        }
+
+                        public void visitDouble(DoubleField field) throws Exception {
+                            instantiate.set(field, get(field));
+                        }
+
+                        public void visitDoubleArray(DoubleArrayField field) throws Exception {
+                            instantiate.set(field, get(field).clone());
+                        }
+
+                        public void visitBigDecimal(BigDecimalField field) throws Exception {
+                            instantiate.set(field, get(field));
+                        }
+
+                        public void visitBigDecimalArray(BigDecimalArrayField field) throws Exception {
+                            instantiate.set(field, get(field).clone());
+                        }
+
+                        public void visitString(StringField field) throws Exception {
+                            instantiate.set(field, get(field));
+                        }
+
+                        public void visitStringArray(StringArrayField field) throws Exception {
+                            instantiate.set(field, get(field).clone());
+                        }
+
+                        public void visitBoolean(BooleanField field) throws Exception {
+                            instantiate.set(field, get(field));
+                        }
+
+                        public void visitBooleanArray(BooleanArrayField field) throws Exception {
+                            instantiate.set(field, get(field).clone());
+                        }
+
+                        public void visitLong(LongField field) throws Exception {
+                            instantiate.set(field, get(field));
+                        }
+
+                        public void visitLongArray(LongArrayField field) throws Exception {
+                            instantiate.set(field, get(field).clone());
+                        }
+
+                        public void visitDate(DateField field) throws Exception {
+                            instantiate.set(field, get(field));
+                        }
+
+                        public void visitDateTime(DateTimeField field) throws Exception {
+                            instantiate.set(field, get(field));
+                        }
+
+                        public void visitBlob(BlobField field) throws Exception {
+                            instantiate.set(field, get(field).clone());
+                        }
+
+                        public void visitGlob(GlobField field) throws Exception {
+                            instantiate.set(field, get(field).duplicate());
+                        }
+
+                        public void visitGlobArray(GlobArrayField field) throws Exception {
+                            Glob[] globs = get(field);
+                            Glob[] duplicate = new Glob[globs.length];
+                            for (int i = 0; i < duplicate.length; i++) {
+                                 duplicate[i] = globs[i].duplicate();
+                            }
+                            instantiate.set(field, duplicate);
+                        }
+
+                        public void visitUnionGlob(GlobUnionField field) throws Exception {
+                            instantiate.set(field, get(field).duplicate());
+                        }
+
+                        public void visitUnionGlobArray(GlobArrayUnionField field) throws Exception {
+                            Glob[] globs = get(field);
+                            Glob[] duplicate = new Glob[globs.length];
+                            for (int i = 0; i < duplicate.length; i++) {
+                                duplicate[i] = globs[i].duplicate();
+                            }
+                            instantiate.set(field, duplicate);
+                        }
+                    });
+                }
+            }
+        }
+        return instantiate;
     }
 }

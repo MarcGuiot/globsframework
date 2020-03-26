@@ -3,6 +3,8 @@ package org.globsframework.xml.tests;
 import org.globsframework.metamodel.DummyModel;
 import org.globsframework.metamodel.DummyObject;
 import org.globsframework.model.*;
+import org.globsframework.model.utils.DefaultFieldValues;
+import org.globsframework.model.utils.DefaultFieldValuesWithPrevious;
 import org.globsframework.utils.exceptions.InvalidParameter;
 import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.xml.XmlChangeSetParser;
@@ -25,7 +27,8 @@ public class XmlChangeSetParserTest {
 
         assertEquals(3, changeSet.getChangeCount(DummyObject.TYPE));
         changeSet.visit(new ChangeSetVisitor() {
-            public void visitCreation(Key key, FieldValues values) throws Exception {
+            public void visitCreation(Key key, FieldsValueScanner valueScanner) throws Exception {
+                DefaultFieldValues values = new DefaultFieldValues(valueScanner);
                 assertEquals(1, key.get(DummyObject.ID).intValue());
                 assertEquals(8, values.size());
                 assertEquals("name1", values.get(DummyObject.NAME));
@@ -34,7 +37,8 @@ public class XmlChangeSetParserTest {
                 assertNull(values.get(DummyObject.DATE));
             }
 
-            public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
+            public void visitUpdate(Key key, FieldsValueWithPreviousScanner valueScanner) throws Exception {
+                DefaultFieldValuesWithPrevious values = new DefaultFieldValuesWithPrevious(valueScanner);
                 assertEquals(2, key.get(DummyObject.ID).intValue());
                 assertEquals(1, values.size());
                 assertEquals("newName", values.get(DummyObject.NAME));
@@ -43,7 +47,8 @@ public class XmlChangeSetParserTest {
                 assertFalse(values.contains(DummyObject.VALUE));
             }
 
-            public void visitDeletion(Key key, FieldValues values) throws Exception {
+            public void visitDeletion(Key key, FieldsValueScanner valueScanner) throws Exception {
+                DefaultFieldValues values = new DefaultFieldValues(valueScanner);
                 assertEquals(3, key.get(DummyObject.ID).intValue());
                 assertEquals(8, values.size());
                 assertEquals("name3", values.get(DummyObject.NAME));

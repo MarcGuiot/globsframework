@@ -45,7 +45,7 @@ public class ChangeSetSequencer {
                                         final MultiMap<GlobType, Change> deletions,
                                         final GlobTypeDependencies dependencies) {
         changeSet.safeVisit(new ChangeSetVisitor() {
-            public void visitCreation(Key key, FieldValues values) throws Exception {
+            public void visitCreation(Key key, FieldsValueScanner values) throws Exception {
                 if (!dependencies.needsPostUpdate(key.getGlobType())) {
                     creations.put(key.getGlobType(), new Change(key, values));
                     return;
@@ -69,22 +69,21 @@ public class ChangeSetSequencer {
                 }
             }
 
-            public void visitUpdate(Key key, FieldValuesWithPrevious values) throws Exception {
+            public void visitUpdate(Key key, FieldsValueWithPreviousScanner values) throws Exception {
                 updates.put(key.getGlobType(), new ChangeWithPrevious(key, values));
             }
 
-            public void visitDeletion(Key key, FieldValues values) throws Exception {
+            public void visitDeletion(Key key, FieldsValueScanner values) throws Exception {
                 deletions.put(key.getGlobType(), new Change(key, values));
             }
         });
     }
 
     private static class Change {
-
         private Key key;
-        private FieldValues values;
+        private FieldsValueScanner values;
 
-        private Change(Key key, FieldValues values) {
+        private Change(Key key, FieldsValueScanner values) {
             this.key = key;
             this.values = values;
         }
@@ -93,7 +92,7 @@ public class ChangeSetSequencer {
             return key;
         }
 
-        public FieldValues getValues() {
+        public FieldsValueScanner getValues() {
             return values;
         }
     }
@@ -101,9 +100,9 @@ public class ChangeSetSequencer {
     private static class ChangeWithPrevious {
 
         private Key key;
-        private FieldValuesWithPrevious values;
+        private FieldsValueWithPreviousScanner values;
 
-        private ChangeWithPrevious(Key key, FieldValuesWithPrevious values) {
+        private ChangeWithPrevious(Key key, FieldsValueWithPreviousScanner values) {
             this.key = key;
             this.values = values;
         }
@@ -112,7 +111,7 @@ public class ChangeSetSequencer {
             return key;
         }
 
-        public FieldValuesWithPrevious getValues() {
+        public FieldsValueWithPreviousScanner getValues() {
             return values;
         }
     }

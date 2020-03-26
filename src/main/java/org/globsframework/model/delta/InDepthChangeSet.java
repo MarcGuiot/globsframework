@@ -2,14 +2,8 @@ package org.globsframework.model.delta;
 
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.metamodel.fields.GlobArrayField;
-import org.globsframework.metamodel.fields.GlobArrayUnionField;
-import org.globsframework.metamodel.fields.GlobField;
-import org.globsframework.metamodel.fields.GlobUnionField;
-import org.globsframework.model.FieldValues;
-import org.globsframework.model.FieldValuesWithPrevious;
-import org.globsframework.model.Glob;
-import org.globsframework.model.Key;
+import org.globsframework.metamodel.fields.*;
+import org.globsframework.model.*;
 
 public class InDepthChangeSet extends DefaultChangeSet {
 
@@ -17,7 +11,7 @@ public class InDepthChangeSet extends DefaultChangeSet {
         return new DefaultDeltaGlob(key);
     }
 
-    public void processCreation(Key key, FieldValues values) {
+    public void processCreation(Key key, FieldsValueScanner values) {
         super.processCreation(key, values);
         process(values, key.getGlobType());
     }
@@ -27,37 +21,30 @@ public class InDepthChangeSet extends DefaultChangeSet {
         process(values, type);
     }
 
-    private void process(FieldValues values, GlobType globType) {
-        Field[] fields = globType.getFields();
-        for (Field field : fields) {
-            if (field instanceof GlobField) {
-                Glob glob = values.get(((GlobField) field));
+    private void process(FieldsValueScanner values, GlobType globType) {
+        values.safeAccept(new FieldValueVisitor.AbstractFieldValueVisitor(){
+            public void visitGlob(GlobField field, Glob value) throws Exception {
+                Glob glob = value;
                 if (glob != null) {
                     DefaultDeltaGlob glob1 = getGlob(glob.getKey());
                     if (!glob1.isModified()) {
                         processCreation(glob1.getKey(), glob);
                     }
                 }
-            } else if (field instanceof GlobUnionField) {
-                Glob glob = values.get(((GlobUnionField) field));
+            }
+
+            public void visitUnionGlob(GlobUnionField field, Glob value) throws Exception {
+                Glob glob = value;
                 if (glob != null) {
                     DefaultDeltaGlob glob1 = getGlob(glob.getKey());
                     if (!glob1.isModified()) {
                         processCreation(glob1.getKey(), glob);
                     }
                 }
-            } else if (field instanceof GlobArrayUnionField) {
-                Glob[] globs = values.get(((GlobArrayUnionField) field));
-                if (globs != null) {
-                    for (Glob glob : globs) {
-                        DefaultDeltaGlob glob1 = getGlob(glob.getKey());
-                        if (!glob1.isModified()) {
-                            processCreation(glob1.getKey(), glob);
-                        }
-                    }
-                }
-            } else if (field instanceof GlobArrayField) {
-                Glob[] globs = values.get(((GlobArrayField) field));
+            }
+
+            public void visitUnionGlobArray(GlobArrayUnionField field, Glob[] value) throws Exception {
+                Glob[] globs = value;
                 if (globs != null) {
                     for (Glob glob : globs) {
                         DefaultDeltaGlob glob1 = getGlob(glob.getKey());
@@ -67,7 +54,19 @@ public class InDepthChangeSet extends DefaultChangeSet {
                     }
                 }
             }
-        }
+
+            public void visitGlobArray(GlobArrayField field, Glob[] value) throws Exception {
+                Glob[] globs = value;
+                if (globs != null) {
+                    for (Glob glob : globs) {
+                        DefaultDeltaGlob glob1 = getGlob(glob.getKey());
+                        if (!glob1.isModified()) {
+                            processCreation(glob1.getKey(), glob);
+                        }
+                    }
+                }
+            }
+        });
     }
 
     public void processUpdate(Key key, Field field, Object newValue, Object previousValue) {
@@ -140,48 +139,40 @@ public class InDepthChangeSet extends DefaultChangeSet {
         }
     }
 
-    public void processUpdate(Key key, FieldValuesWithPrevious values) {
+    public void processUpdate(Key key, FieldsValueWithPreviousScanner values) {
         super.processUpdate(key, values);
-        values.safeApplyWithPreviousButKey(new FieldValuesWithPrevious.FunctorWithPrevious() {
+        values.safeApplyWithPrevious(new FieldValuesWithPrevious.FunctorWithPrevious() {
             public void process(Field field, Object value, Object previousValue) throws Exception {
                 propagateChanges(field, value, previousValue);
             }
         });
     }
 
-    public void processDeletion(Key key, FieldValues values) {
+    public void processDeletion(Key key, FieldsValueScanner values) {
         super.processDeletion(key, values);
+        values.safeAccept(new FieldValueVisitor.AbstractFieldValueVisitor(){
+            public void visitGlob(GlobField field, Glob value) throws Exception {
+                Glob glob = value;
+                if (glob != null) {
+                    DefaultDeltaGlob glob1 = getGlob(glob.getKey());
+                    if (!glob1.isModified()) {
+                        processDeletion(glob1.getKey(), glob);
+                    }
+                }
+            }
 
-        Field[] fields = key.getGlobType().getFields();
-        for (Field field : fields) {
-            if (field instanceof GlobField) {
-                Glob glob = values.get(((GlobField) field));
+            public void visitUnionGlob(GlobUnionField field, Glob value) throws Exception {
+                Glob glob = value;
                 if (glob != null) {
                     DefaultDeltaGlob glob1 = getGlob(glob.getKey());
                     if (!glob1.isModified()) {
                         processDeletion(glob1.getKey(), glob);
                     }
                 }
-            } else if (field instanceof GlobUnionField) {
-                Glob glob = values.get(((GlobUnionField) field));
-                if (glob != null) {
-                    DefaultDeltaGlob glob1 = getGlob(glob.getKey());
-                    if (!glob1.isModified()) {
-                        processDeletion(glob1.getKey(), glob);
-                    }
-                }
-            } else if (field instanceof GlobArrayUnionField) {
-                Glob[] globs = values.get(((GlobArrayUnionField) field));
-                if (globs != null) {
-                    for (Glob glob : globs) {
-                        DefaultDeltaGlob glob1 = getGlob(glob.getKey());
-                        if (!glob1.isModified()) {
-                            processDeletion(glob1.getKey(), glob);
-                        }
-                    }
-                }
-            } else if (field instanceof GlobArrayField) {
-                Glob[] globs = values.get(((GlobArrayField) field));
+            }
+
+            public void visitUnionGlobArray(GlobArrayUnionField field, Glob[] value) throws Exception {
+                Glob[] globs = value;
                 if (globs != null) {
                     for (Glob glob : globs) {
                         DefaultDeltaGlob glob1 = getGlob(glob.getKey());
@@ -191,6 +182,18 @@ public class InDepthChangeSet extends DefaultChangeSet {
                     }
                 }
             }
-        }
+
+            public void visitGlobArray(GlobArrayField field, Glob[] value) throws Exception {
+                Glob[] globs = value;
+                if (globs != null) {
+                    for (Glob glob : globs) {
+                        DefaultDeltaGlob glob1 = getGlob(glob.getKey());
+                        if (!glob1.isModified()) {
+                            processDeletion(glob1.getKey(), glob);
+                        }
+                    }
+                }
+            }
+        });
     }
 }

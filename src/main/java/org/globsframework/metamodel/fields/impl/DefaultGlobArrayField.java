@@ -31,6 +31,18 @@ public class DefaultGlobArrayField extends AbstractField implements GlobArrayFie
         return true;
     }
 
+    public static boolean isSameKeyOrGlob(GlobType type, Glob[] g1, Glob[] g2) {
+        if (g1.length != g2.length) {
+            return false;
+        }
+        for (int i = 0; i < g1.length; i++) {
+            if (!DefaultGlobField.isSameKeyOrGlob(type, g1[i], g2[i])) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public GlobType getType() {
         return targetType;
     }
@@ -107,6 +119,12 @@ public class DefaultGlobArrayField extends AbstractField implements GlobArrayFie
                         isSameGlob(getType(), ((Glob[]) o1), ((Glob[]) o2));
     }
 
+    public boolean valueOrKeyEqual(Object o1, Object o2) {
+        return (o1 == null) && (o2 == null) ||
+                !((o1 == null) || (o2 == null)) &&
+                        isSameKeyOrGlob(getType(), ((Glob[]) o1), ((Glob[]) o2));
+    }
+
     public void checkValue(Object object) throws InvalidParameter {
         if ((object != null) && (!(object instanceof Glob[]))) {
             throw new InvalidParameter("Value '" + object + "' (" + object.getClass().getName()
@@ -119,7 +137,7 @@ public class DefaultGlobArrayField extends AbstractField implements GlobArrayFie
         if (value == null) {
             return "null";
         } else {
-            return DefaultArrayGlobUnionField.toString(offset, ((Glob[]) value));
+            return DefaultGlobUnionArrayField.toString(offset, ((Glob[]) value));
         }
     }
 
