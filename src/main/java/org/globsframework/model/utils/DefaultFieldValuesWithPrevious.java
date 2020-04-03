@@ -95,7 +95,7 @@ public class DefaultFieldValuesWithPrevious extends AbstractFieldValuesWithPrevi
         return functor;
     }
 
-    public <T extends FunctorWithPrevious> T applyWithPreviousButKey(T functor) throws Exception {
+    public <T extends FunctorWithPrevious> T applyWithPrevious(T functor) throws Exception {
         for (Field field : type.getFields()) {
             int index = field.getIndex();
             if (values[index] != Unset.VALUE) {
@@ -105,7 +105,7 @@ public class DefaultFieldValuesWithPrevious extends AbstractFieldValuesWithPrevi
         return functor;
     }
 
-    public <T extends FieldValues.Functor> T applyOnPreviousButKey(T functor) throws Exception {
+    public <T extends FieldValues.Functor> T applyOnPrevious(T functor) throws Exception {
         for (Field field : type.getFields()) {
             int index = field.getIndex();
             if (previousValues[index] != Unset.VALUE) {

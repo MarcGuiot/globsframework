@@ -59,19 +59,6 @@ public class ThreeFieldKey extends AbstractKey {
         return functor;
     }
 
-    public <T extends Functor> T safeApply(T functor) {
-        try {
-            Field[] fields = type.getKeyFields();
-            functor.process(fields[0], value1);
-            functor.process(fields[1], value2);
-            functor.process(fields[2], value3);
-            return functor;
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public int size() {
         return 3;
     }

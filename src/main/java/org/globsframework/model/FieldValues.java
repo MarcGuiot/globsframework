@@ -36,10 +36,6 @@ public interface FieldValues extends FieldValuesAccessor, FieldsValueScanner {
             return functor;
         }
 
-        public <T extends FieldValueVisitor> T safeAccept(T functor) {
-            return functor;
-        }
-
         public Double get(DoubleField field) throws ItemNotFound {
             throw new ItemNotFound(field.getName());
         }
@@ -153,6 +149,8 @@ public interface FieldValues extends FieldValuesAccessor, FieldsValueScanner {
         }
     };
     Glob[] EMPTYARRAY = new Glob[0];
+    long[] EMPTY_LONG_ARRAY = new long[0];
+    String[] EMPTY_STRING_ARRAY = new String[0];
 
     boolean contains(Field field);
 
@@ -163,6 +161,16 @@ public interface FieldValues extends FieldValuesAccessor, FieldsValueScanner {
     }
 
     FieldValue[] toArray();
+
+    default long[] getOrEmpty(LongArrayField field) {
+        long[] d = get(field);
+        return d != null ? d : EMPTY_LONG_ARRAY;
+    }
+
+    default String[] getOrEmpty(StringArrayField field) {
+        String[] d = get(field);
+        return d != null ? d : EMPTY_STRING_ARRAY;
+    }
 
     default Glob[] getOrEmpty(GlobArrayUnionField field) {
         Glob[] globs = get(field);

@@ -278,7 +278,7 @@ class DefaultDeltaGlob extends AbstractFieldValuesWithPrevious implements DeltaG
         return functor;
     }
 
-    public <T extends FunctorWithPrevious> T applyWithPreviousButKey(T functor) throws Exception {
+    public <T extends FunctorWithPrevious> T applyWithPrevious(T functor) throws Exception {
         for (Field field : key.getGlobType().getFields()) {
             final int index = field.getIndex();
             Object value = values[index];
@@ -290,7 +290,7 @@ class DefaultDeltaGlob extends AbstractFieldValuesWithPrevious implements DeltaG
     }
 
     public
-    <T extends FieldValues.Functor> T applyOnPreviousButKey(T functor) throws Exception {
+    <T extends FieldValues.Functor> T applyOnPrevious(T functor) throws Exception {
         for (Field field : key.getGlobType().getFields()) {
             final int index = field.getIndex();
             Object value = previousValues[index];

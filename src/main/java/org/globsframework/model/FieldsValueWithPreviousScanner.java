@@ -1,19 +1,45 @@
 package org.globsframework.model;
 
+import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.fields.FieldValueVisitor;
 
 public interface FieldsValueWithPreviousScanner extends FieldsValueScanner {
     <T extends FieldValueVisitor> T acceptOnPrevious(T functor) throws Exception;
 
-    <T extends FieldValueVisitor> T safeAcceptOnPrevious(T functor);
+    <T extends FieldValuesWithPrevious.FunctorWithPrevious> T applyWithPrevious(T functor) throws Exception;
 
-    <T extends FieldValuesWithPrevious.FunctorWithPrevious> T applyWithPreviousButKey(T functor) throws Exception;
+    <T extends FieldValues.Functor> T applyOnPrevious(T functor) throws Exception;
 
-    <T extends FieldValuesWithPrevious.FunctorWithPrevious> T safeApplyWithPrevious(T functor);
+    default <T extends FieldValues.Functor> T apply(T functor) throws Exception{
+        applyWithPrevious(new FieldValuesWithPrevious.FunctorWithPrevious() {
+            public void process(Field field, Object value, Object previousValue) throws Exception {
+                functor.process(field, value);
+            }
+        });
+        return functor;
+    }
 
-    <T extends FieldValues.Functor> T applyOnPreviousButKey(T functor) throws Exception;
+    default <T extends FieldValuesWithPrevious.FunctorWithPrevious> T safeApplyWithPrevious(T functor) {
+        try {
+            return applyWithPrevious(functor);
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-    default FieldsValueWithPreviousScanner withoutKey(){
+    default <T extends FieldValueVisitor> T safeAcceptOnPrevious(T functor) {
+        try {
+            return acceptOnPrevious(functor);
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    default FieldsValueWithPreviousScanner withoutKey() {
         if (this instanceof WithoutKeyFieldsValueWithPreviousScanner) {
             return this;
         }
@@ -37,8 +63,8 @@ public interface FieldsValueWithPreviousScanner extends FieldsValueScanner {
             return functor;
         }
 
-        public <T extends FieldValuesWithPrevious.FunctorWithPrevious> T applyWithPreviousButKey(T functor) throws Exception {
-            scanner.applyWithPreviousButKey(functor.previousWithoutKey());
+        public <T extends FieldValuesWithPrevious.FunctorWithPrevious> T applyWithPrevious(T functor) throws Exception {
+            scanner.applyWithPrevious(functor.previousWithoutKey());
             return functor;
         }
 
@@ -47,8 +73,8 @@ public interface FieldsValueWithPreviousScanner extends FieldsValueScanner {
             return functor;
         }
 
-        public <T extends FieldValues.Functor> T applyOnPreviousButKey(T functor) throws Exception {
-            scanner.applyOnPreviousButKey(functor.withoutKeyField());
+        public <T extends FieldValues.Functor> T applyOnPrevious(T functor) throws Exception {
+            scanner.applyOnPrevious(functor.withoutKeyField());
             return functor;
         }
 

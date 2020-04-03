@@ -224,53 +224,6 @@ public abstract class AbstractFieldValuesWithPrevious implements FieldValuesWith
         return (Glob[]) doGetPrevious(field);
     }
 
-    public <T extends FieldValueVisitor> T safeAccept(T functor) {
-        try {
-            return accept(functor);
-        }
-        catch (RuntimeException e) {
-            throw e;
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public <T extends FieldValues.Functor> T safeApply(T functor) {
-        try {
-            return apply(functor);
-        }
-        catch (RuntimeException e) {
-            throw e;
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public <T extends FunctorWithPrevious> T safeApplyWithPrevious(T functor) {
-        try {
-            return applyWithPreviousButKey(functor);
-        }
-        catch (RuntimeException e) {
-            throw e;
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public <T extends FieldValueVisitor> T safeAcceptOnPrevious(T functor) {
-        try {
-            return acceptOnPrevious(functor);
-        }
-        catch (RuntimeException e) {
-            throw e;
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
 
 
 }

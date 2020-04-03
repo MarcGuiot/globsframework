@@ -50,17 +50,6 @@ public class SingleFieldKey extends AbstractKey {
         return functor;
     }
 
-    public <T extends FieldValues.Functor>
-    T safeApply(T functor) {
-        try {
-            functor.process(keyField, value);
-            return functor;
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public int size() {
         return 1;
     }

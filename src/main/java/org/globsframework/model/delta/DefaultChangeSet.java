@@ -354,11 +354,12 @@ public class DefaultChangeSet implements MutableChangeSet {
             }
 
             public void visitUpdate(final Key key, FieldsValueWithPreviousScanner values) throws Exception {
-                values.applyWithPreviousButKey(new FieldValuesWithPrevious.FunctorWithPrevious() {
+                FieldValuesWithPrevious.FunctorWithPrevious functor = new FieldValuesWithPrevious.FunctorWithPrevious() {
                     public void process(Field field, Object value, Object previousValue) throws IOException {
                         processUpdate(key, field, value, previousValue);
                     }
-                });
+                };
+                values.applyWithPrevious(functor.previousWithoutKey());
             }
 
             public void visitDeletion(Key key, FieldsValueScanner values) throws Exception {
@@ -421,7 +422,7 @@ public class DefaultChangeSet implements MutableChangeSet {
                 writer.write(" ");
             }
             prefix = "_";
-            values.applyOnPreviousButKey(this);
+            values.applyOnPrevious(this.withoutKeyField());
             writer.write("\n");
             prefix = "";
         }

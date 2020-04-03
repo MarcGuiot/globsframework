@@ -1,42 +1,10 @@
 package org.globsframework.model;
 
 import org.globsframework.metamodel.Field;
-import org.globsframework.metamodel.fields.*;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.ZonedDateTime;
+import org.globsframework.metamodel.fields.FieldValueVisitor;
 
 public interface FieldsValueScanner {
-    <T extends FieldValues.Functor>
-    T apply(T functor) throws Exception;
-
-    <T extends FieldValues.Functor>
-    T safeApply(T functor);
-
-    <T extends FieldValueVisitor>
-    T accept(T functor) throws Exception;
-
-    <T extends FieldValueVisitor>
-    T safeAccept(T functor);
-
-    default FieldsValueScanner withoutKey(){
-        if (this instanceof WithoutKeyFieldsValueScanner) {
-            return this;
-        }
-        return new WithoutKeyFieldsValueScanner(this);
-    }
-
-    default int size() {
-        return safeApply(new FieldValues.Functor() {
-            int count;
-            public void process(Field field, Object value) throws Exception {
-                count++;
-            }
-        }).count;
-    }
-
-    static FieldsValueScanner from(FieldValue[] fieldValues){
+    static FieldsValueScanner from(FieldValue[] fieldValues) {
         return new FieldsValueScanner() {
 
             public <T extends FieldValues.Functor> T apply(T functor) throws Exception {
@@ -46,33 +14,54 @@ public interface FieldsValueScanner {
                 return functor;
             }
 
-            public <T extends FieldValues.Functor> T safeApply(T functor) {
-                try {
-                    return apply(functor);
-                } catch (RuntimeException e) {
-                    throw e;
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }
-
             public <T extends FieldValueVisitor> T accept(T functor) throws Exception {
                 for (FieldValue fieldValue : fieldValues) {
                     fieldValue.getField().safeVisit(functor, fieldValue.getValue());
                 }
                 return functor;
             }
-
-            public <T extends FieldValueVisitor> T safeAccept(T functor) {
-                try {
-                    return accept(functor);
-                } catch (RuntimeException e) {
-                    throw e;
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }
         };
+    }
+
+    <T extends FieldValues.Functor> T apply(T functor) throws Exception;
+
+    default <T extends FieldValues.Functor> T safeApply(T functor) {
+        try {
+            return apply(functor);
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    <T extends FieldValueVisitor> T accept(T functor) throws Exception;
+
+    default <T extends FieldValueVisitor> T safeAccept(T functor) {
+        try {
+            return accept(functor);
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    default FieldsValueScanner withoutKey() {
+        if (this instanceof WithoutKeyFieldsValueScanner) {
+            return this;
+        }
+        return new WithoutKeyFieldsValueScanner(this);
+    }
+
+    default int size() {
+        return safeApply(new FieldValues.Functor() {
+            int count;
+
+            public void process(Field field, Object value) throws Exception {
+                count++;
+            }
+        }).count;
     }
 
     class WithoutKeyFieldsValueScanner implements FieldsValueScanner {

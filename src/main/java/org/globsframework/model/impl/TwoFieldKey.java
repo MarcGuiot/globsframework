@@ -56,15 +56,6 @@ public class TwoFieldKey extends AbstractKey {
         return functor;
     }
 
-    public
-    <T extends Functor> T safeApply(T functor) {
-        try {
-            return apply(functor);
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     public int size() {
         return 2;
