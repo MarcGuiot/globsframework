@@ -1,6 +1,7 @@
 package org.globsframework.utils.collections;
 
 import org.globsframework.utils.Strings;
+import org.globsframework.utils.Utils;
 
 import java.util.*;
 import java.util.function.BiConsumer;
@@ -9,6 +10,13 @@ import java.util.stream.Stream;
 
 public class MultiMap<K, V> {
     private Map<K, List<V>> map = new HashMap<K, List<V>>();
+
+    public MultiMap() {
+    }
+
+    public MultiMap(int size) {
+        map = new HashMap<K, List<V>>(Utils.hashMapOptimalCapacity(size));
+    }
 
     public void put(K key, V value) {
         List<V> values = getOrCreateList(key);
@@ -153,4 +161,19 @@ public class MultiMap<K, V> {
         }
         return result;
     }
+
+  public void replaceAll(K k, List<V> v) {
+    map.put(k, v);
+  }
+
+  public int keySize() {
+    return map.size();
+  }
+
+  public void putAll(MultiMap<K, V> outputDefinitionsToCompute) {
+    for (Map.Entry<K, List<V>> kListEntry : outputDefinitionsToCompute.entries()) {
+      putAll(kListEntry.getKey(), kListEntry.getValue());
+    }
+  }
+
 }

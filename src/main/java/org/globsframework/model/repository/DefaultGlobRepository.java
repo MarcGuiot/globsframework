@@ -25,6 +25,8 @@ import org.globsframework.utils.exceptions.*;
 import java.util.*;
 
 public class DefaultGlobRepository implements GlobRepository, IndexSource {
+    static boolean dump = false;
+    Glob[] tmp = new Glob[10];
     private Map<Key, MutableGlob> pendingDeletions = new HashMap<>();
     private MapOfMaps<GlobType, Key, Glob> globs = new MapOfMaps<>();
     private List<ChangeSetListener> changeListeners = new ArrayList<ChangeSetListener>();
@@ -32,7 +34,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
     private int bulkDispatchingModeLevel;
     private MutableChangeSet changeSetToDispatch = new DefaultChangeSet();
     private GlobIdGenerator idGenerator = GlobIdGenerator.NONE;
-
+    private boolean propagateChanges = true;
     private IndexManager indexManager;
     private List<InvokeAction> actions = new ArrayList<InvokeAction>();
 
@@ -90,6 +92,10 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
             return GlobList.EMPTY;
         }
         return findLinkedTo(target.getKey(), link);
+    }
+
+    public int size() {
+        return globs.size();
     }
 
     public boolean contains(Key key) {
@@ -178,7 +184,6 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
         }
     }
 
-
     public boolean contains(GlobType type) {
         return !globs.values(type).isEmpty();
     }
@@ -208,8 +213,6 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
         }
         return result;
     }
-
-    Glob[] tmp = new Glob[10];
 
     public Glob[] getSorted(GlobType type, Comparator<Glob> comparator, GlobMatcher matcher) {
         int i = 0;
@@ -281,7 +284,36 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
             indexTables.add(glob);
         }
 
-        changeSetToDispatch.processCreation(key, glob);
+        if (propagateChanges) {
+            changeSetToDispatch.processCreation(key, glob);
+        }
+        notifyListeners(true);
+        return glob;
+    }
+
+    public void create(Glob glob) {
+        GlobType type = glob.getType();
+        Field[] keyFields = type.getKeyFields();
+        if (keyFields.length == 1 && glob.getValue(keyFields[0]) == null && keyFields[0] instanceof IntegerField) {
+            IntegerField keyField = (IntegerField) keyFields[0];
+            ((MutableGlob) glob).set(keyField, idGenerator.getNextId(keyField, 1));
+        }
+        checkKeyDoesNotExist(glob.getKey(), glob);
+        addGlobForCreate(type, glob);
+    }
+
+    private Glob addGlobForCreate(GlobType type, Glob glob) {
+        Key key = glob.getKey();
+        IndexTables indexTables = indexManager.getAssociatedTable(type);
+        globs.put(type, key, glob);
+
+        if (indexTables != null) {
+            indexTables.add(glob);
+        }
+
+        if (propagateChanges) {
+            changeSetToDispatch.processCreation(key, glob);
+        }
         notifyListeners(true);
         return glob;
     }
@@ -399,7 +431,9 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
         if (indexTables != null) {
             indexTables.add(newValue, mutableGlob, field, previousValue);
         }
-        changeSetToDispatch.processUpdate(key, field, newValue, previousValue);
+        if (propagateChanges) {
+            changeSetToDispatch.processUpdate(key, field, newValue, previousValue);
+        }
         return true;
     }
 
@@ -449,7 +483,9 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
         }
         disable(glob);
         globs.remove(key.getGlobType(), key);
-        changeSetToDispatch.processDeletion(key, glob);
+        if (propagateChanges) {
+            changeSetToDispatch.processDeletion(key, glob);
+        }
         notifyListeners(true);
     }
 
@@ -463,7 +499,9 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
             }
             disable(glob);
             globs.remove(key.getGlobType(), key);
-            changeSetToDispatch.processDeletion(key, glob);
+            if (propagateChanges) {
+                changeSetToDispatch.processDeletion(key, glob);
+            }
         }
         notifyListeners(true);
     }
@@ -494,7 +532,9 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
             for (Pair<Key, FieldValues> pair : toBeRemoved) {
                 Key key = pair.getFirst();
                 globs.remove(key.getGlobType(), key);
-                changeSetToDispatch.processDeletion(key, pair.getSecond());
+                if (propagateChanges) {
+                    changeSetToDispatch.processDeletion(key, pair.getSecond());
+                }
             }
         } catch (OperationDenied e) {
             exception = e;
@@ -537,7 +577,9 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
             for (Pair<Key, FieldValues> pair : toBeRemoved) {
                 Key key = pair.getFirst();
                 globs.remove(key.getGlobType(), key);
-                changeSetToDispatch.processDeletion(key, pair.getSecond());
+                if (propagateChanges) {
+                    changeSetToDispatch.processDeletion(key, pair.getSecond());
+                }
             }
         } catch (OperationDenied e) {
             exception = e;
@@ -694,12 +736,11 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
         Utils.endRemove();
     }
 
-    static boolean dump = false;
-
     private void notifyListeners(boolean applyTriggers) {
         if (bulkDispatchingModeLevel > 0) {
             return;
         }
+        propagateChanges = true;
         if (!this.changeSetToDispatch.isEmpty()) {
             MutableChangeSet currentChangeSetToDispatch = this.changeSetToDispatch;
 
@@ -771,6 +812,11 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
         }
     }
 
+    public void startChangeSetWithoutChange() {
+        propagateChanges = false;
+        startChangeSet();
+    }
+
 //  public String toString() {
 //    StringWriter writer = new StringWriter();
 //    GlobList globs = getAll();
@@ -821,7 +867,9 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
             if (indexTables != null) {
                 indexTables.add(value, sourceGlob, sourceField, previousValue);
             }
-            changeSetToDispatch.processUpdate(sourceKey, sourceField, value, previousValue);
+            if (propagateChanges) {
+                changeSetToDispatch.processUpdate(sourceKey, sourceField, value, previousValue);
+            }
         }
 
         public boolean hasChange() {

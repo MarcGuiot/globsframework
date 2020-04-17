@@ -96,7 +96,7 @@ public class DefaultGlobModel implements MutableGlobModel {
     public void add(GlobType type) {
         GlobType put = typesByName.put(type.getName(), type);
         if (put != null && put != type) {
-            LOGGER.error(type.getName() + " already registered  : " + type.describe() + " AND " + put.describe());
+            LOGGER.error(type.getName() + " already registered  : " + type.describe() + " AND " + put.describe(), new RuntimeException());
         }
     }
 

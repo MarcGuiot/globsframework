@@ -479,10 +479,17 @@ public class DefaultSerializationInput implements SerializedInput {
     }
 
     public int readNotNullInt() {
-        return ((read() & 0xFF)) +
-                ((read() & 0xFF) << 8) +
-                ((read() & 0xFF) << 16) +
-                ((read() & 0xFF) << 24);
+        int ch1 = read();
+        int ch2 = read();
+        int ch3 = read();
+        int ch4 = read();
+        return toInt(ch1, ch2, ch3, ch4);
+    }
+
+    public static int toInt(int ch1, int ch2, int ch3, int ch4) {
+        if ((ch1 | ch2 | ch3 | ch4) < 0)
+            throw new EOFIOFailure("eof");
+        return ((ch1 << 24) + (ch2 << 16) + (ch3 << 8) + (ch4 << 0x0));
     }
 
     private boolean isNull() {
@@ -526,14 +533,14 @@ public class DefaultSerializationInput implements SerializedInput {
     }
 
     public long readNotNullLong() {
-        return ((read() & 0xFFL)) +
-                ((read() & 0xFFL) << 8) +
-                ((read() & 0xFFL) << 16) +
-                ((read() & 0xFFL) << 24) +
-                ((read() & 0xFFL) << 32) +
-                ((read() & 0xFFL) << 40) +
-                ((read() & 0xFFL) << 48) +
-                ((read() & 0xFFL) << 56);
+        return (((long) read() << 56) +
+                ((long) (read()) << 48) +
+                ((long) (read()) << 40) +
+                ((long) (read()) << 32) +
+                ((long) (read()) << 24) +
+                ((read()) << 16) +
+                ((read()) << 8) +
+                ((read())));
     }
 
     private int read() {

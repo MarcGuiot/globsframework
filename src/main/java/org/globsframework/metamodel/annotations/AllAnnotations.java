@@ -3,7 +3,7 @@ package org.globsframework.metamodel.annotations;
 import org.globsframework.metamodel.GlobModel;
 import org.globsframework.metamodel.impl.DefaultGlobModel;
 
-public class AnnotationModel {
+public class AllAnnotations {
     static final public GlobModel MODEL =
           new DefaultGlobModel(DefaultStringAnnotationType.DESC, AutoIncrementAnnotationType.TYPE,
                 ContainmentLinkAnnotationType.DESC, DefaultBooleanAnnotationType.TYPE,

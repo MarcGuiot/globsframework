@@ -9,21 +9,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public interface FieldValuesWithPrevious extends FieldValues, FieldsValueWithPreviousScanner {
-    Object getValue(Field field) throws ItemNotFound;
-
-    Double get(DoubleField field) throws ItemNotFound;
-
-    Integer get(IntegerField field) throws ItemNotFound;
-
-    String get(StringField field) throws ItemNotFound;
-
-    Boolean get(BooleanField field) throws ItemNotFound;
-
-    Boolean get(BooleanField field, boolean defaultIfNull);
-
-    Long get(LongField field) throws ItemNotFound;
-
-    byte[] get(BlobField field) throws ItemNotFound;
 
     Object getPreviousValue(Field field) throws ItemNotFound;
 

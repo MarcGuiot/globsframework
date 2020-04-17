@@ -48,4 +48,8 @@ public interface SerializedOutput {
     void write(boolean[] values);
 
     void write(BigDecimal[] values);
+
+    default void writeString(String s){
+        writeUtf8String(s);
+    }
 }

@@ -85,6 +85,14 @@ public class GlobRepositoryDecorator implements GlobRepository {
         return getRepository().findLinkedTo(target, link);
     }
 
+    public int size() {
+        return getRepository().size();
+    }
+
+    public void create(Glob glob) {
+        getRepository().create(glob);
+    }
+
     public Glob create(GlobType type, FieldValue... values) throws MissingInfo, ItemAlreadyExists {
         return getRepository().create(type, values);
     }

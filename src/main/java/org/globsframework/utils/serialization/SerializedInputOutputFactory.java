@@ -1,6 +1,9 @@
 package org.globsframework.utils.serialization;
 
+import org.globsframework.utils.LimitedByteArrayInputStream;
+
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -26,4 +29,13 @@ public class SerializedInputOutputFactory {
     public static SerializedInput init(byte[] bytes) {
         return init(new ByteArrayInputStream(bytes));
     }
+
+    public static SerializedOutput initCompressed(OutputStream outputStream) {
+        return new CompressedSerializationOutput(outputStream);
+    }
+
+    public static SerializedInput initCompressedAndIntern(byte[] bytes, int size) {
+        return new CompressedSerializationInput(new LimitedByteArrayInputStream(bytes, size));
+    }
+
 }

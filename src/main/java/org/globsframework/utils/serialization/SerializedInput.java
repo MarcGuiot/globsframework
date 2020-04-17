@@ -49,6 +49,10 @@ public interface SerializedInput {
 
     void close();
 
+    default String readString(){
+        return readUtf8String();
+    }
+
 //  interface FieldExtension {
 //    <T> T read(SerializedInput input);
 //  }

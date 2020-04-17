@@ -57,6 +57,8 @@ public interface ReadOnlyGlobRepository {
 
     GlobList findLinkedTo(Glob target, Link link);
 
+    int size();
+
     interface MultiFieldIndexed {
         GlobList getGlobs();
 

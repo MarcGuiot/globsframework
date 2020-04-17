@@ -11,6 +11,8 @@ import java.util.Collection;
 
 public interface GlobRepository extends ReadOnlyGlobRepository {
 
+    void create(Glob glob);
+
     Glob create(GlobType type, FieldValue... values)
         throws MissingInfo, ItemAlreadyExists;
 

@@ -9,6 +9,16 @@ public class Utils {
     private Utils() {
     }
 
+    private final static double HASHMAP_DEFAULT_LOAD_FACTOR = 0.75;
+
+    public static int hashMapOptimalCapacity(int expectedSize) {
+        return hashMapOptimalCapacity(expectedSize, HASHMAP_DEFAULT_LOAD_FACTOR);
+    }
+
+    public static int hashMapOptimalCapacity(int expectedSize, double loadFactor) {
+        return (int) Math.ceil(expectedSize * (1/loadFactor));
+    }
+
     public static boolean equal(Object o1, Object o2) {
         return Objects.equals(o1, o2); //o1 == null) && (o2 == null) || !((o1 == null) || (o2 == null)) && o1.equals(o2);
     }
@@ -366,5 +376,68 @@ public class Utils {
             return 1;
         }
     }
+
+    public static void doWait(Object o) {
+        try {
+            o.wait();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException("Wait interrupted", e);
+        }
+    }
+
+    public static void doWait(Object o, long timeout) {
+        try {
+            o.wait(timeout);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException("Wait interrupted", e);
+        }
+    }
+
+    public interface Condition {
+        boolean call();
+    }
+
+    public static void doWait(Object o, long timeout, Condition conditionToBeTrue) {
+        try {
+            long endAt = System.currentTimeMillis() + timeout; // on neglige le temps du call()
+            while (timeout > 0)  {
+                synchronized (o) {
+                    if (conditionToBeTrue.call()) {
+                        return;
+                    }
+                    o.wait(timeout);
+                }
+                if (conditionToBeTrue.call()) {
+                    return;
+                }
+                timeout = endAt - System.currentTimeMillis();
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException("Wait interrupted", e);
+        }
+    }
+
+    public static void sleep(int ms) {
+        try {
+            Thread.sleep(ms);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException("sleep interrupted", e);
+        }
+    }
+
+    public static void doJoin(Thread thread) {
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException("join interrupted", e);
+        }
+    }
+
+
 
 }

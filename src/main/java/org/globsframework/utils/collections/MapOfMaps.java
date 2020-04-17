@@ -43,8 +43,16 @@ public class MapOfMaps<KEY1, KEY2, VALUE> {
         return maps.getOrDefault(key1, Collections.emptyMap());
     }
 
+    public Map<KEY2, VALUE> getModifiable(KEY1 key1) {
+        return maps.computeIfAbsent(key1, (KEY1 key11) -> createInnerMap());
+    }
+
     public Iterator<VALUE> iterator() {
         return new MapOfMapIterator();
+    }
+
+    public Set<Map.Entry<KEY1, Map<KEY2, VALUE>>> entry(){
+        return maps.entrySet();
     }
 
     public VALUE remove(KEY1 key1, KEY2 key2) {

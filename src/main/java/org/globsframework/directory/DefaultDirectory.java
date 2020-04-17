@@ -2,11 +2,14 @@ package org.globsframework.directory;
 
 import org.globsframework.utils.exceptions.ItemAlreadyExists;
 import org.globsframework.utils.exceptions.ItemNotFound;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
+import java.util.*;
 
 public class DefaultDirectory implements Directory {
+    private final Logger LOGGER = LoggerFactory.getLogger(DefaultDirectory.class);
+    private List<Cleanable> cleanables = new ArrayList<Cleanable>();
     private LinkedHashMap<Class, Object> services = new LinkedHashMap<Class, Object>();
     private Directory inner;
     private HashMap<Class, Factory> servicesFactory = new HashMap<Class, Factory>();
@@ -59,4 +62,22 @@ public class DefaultDirectory implements Directory {
         }
         services.put(serviceClass, service);
     }
+
+    public void registerCleaner(Cleanable cleanable) {
+        cleanables.add(cleanable);
+    }
+
+    public void clean() {
+        for (ListIterator<Cleanable> iterator = cleanables.listIterator(cleanables.size()); iterator.hasPrevious(); ) {
+            Cleanable o = iterator.previous();
+            try {
+                o.clean(this);
+            } catch (Exception e) {
+                LOGGER.error("Error when cleaning on " + o.getClass(), e);
+            }
+        }
+//    cleanables.clear();
+//    services.clear();
+    }
+
 }

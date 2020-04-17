@@ -16,6 +16,10 @@ public interface Directory {
 
     <T, D extends T> void addFactory(Class<T> serviceClass, Factory<D> factory) throws ItemAlreadyExists;
 
+    void registerCleaner(Cleanable cleanable);
+
+    void clean();
+
     interface Factory<D> {
         D create();
     }

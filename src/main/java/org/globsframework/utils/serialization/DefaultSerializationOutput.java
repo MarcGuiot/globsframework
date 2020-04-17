@@ -101,14 +101,11 @@ public class DefaultSerializationOutput implements SerializedOutput, ChangeSetVi
 
     public void write(int value) {
         try {
-            outputStream.write((byte) (value & 0xFF));
-            value >>= 8;
-            outputStream.write((byte) (value & 0xFF));
-            value >>= 8;
-            outputStream.write((byte) (value & 0xFF));
-            value >>= 8;
-            outputStream.write((byte) (value & 0xFF));
-            value >>= 8;
+            outputStream.write((value >>> 24) & 0xFF);
+            outputStream.write((value >>> 16) & 0xFF);
+            outputStream.write((value >>>  8) & 0xFF);
+            outputStream.write((value >>>  0) & 0xFF);
+//            value >>= 8;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -125,21 +122,14 @@ public class DefaultSerializationOutput implements SerializedOutput, ChangeSetVi
 
     public void write(long value) {
         try {
-            outputStream.write((byte) (value & 0xFF));
-            value >>= 8;
-            outputStream.write((byte) (value & 0xFF));
-            value >>= 8;
-            outputStream.write((byte) (value & 0xFF));
-            value >>= 8;
-            outputStream.write((byte) (value & 0xFF));
-            value >>= 8;
-            outputStream.write((byte) (value & 0xFF));
-            value >>= 8;
-            outputStream.write((byte) (value & 0xFF));
-            value >>= 8;
-            outputStream.write((byte) (value & 0xFF));
-            value >>= 8;
-            outputStream.write((byte) (value & 0xFF));
+            outputStream.write((byte)(value >>> 56));
+            outputStream.write((byte)(value >>> 48));
+            outputStream.write((byte)(value >>> 40));
+            outputStream.write((byte)(value >>> 32));
+            outputStream.write((byte)(value >>> 24));
+            outputStream.write((byte)(value >>> 16));
+            outputStream.write((byte)(value >>>  8));
+            outputStream.write((byte)(value >>>  0));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

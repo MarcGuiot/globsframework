@@ -5,6 +5,7 @@ import org.globsframework.utils.exceptions.ItemNotFound;
 import org.globsframework.utils.exceptions.ResourceAccessFailed;
 
 import java.io.*;
+import java.nio.charset.Charset;
 import java.util.Properties;
 import java.util.Set;
 import java.util.SortedSet;
@@ -127,6 +128,25 @@ public class Files {
 
     public static boolean deleteSubtreeOnly(File directory) {
         return delete(directory, false);
+    }
+
+    public static void copy(InputStream inputStream, OutputStream outputStream) throws IOException {
+        byte[] bytes = new byte[1024];
+        int readed;
+        while ((readed = inputStream.read(bytes)) != -1) {
+            outputStream.write(bytes, 0, readed);
+        }
+        outputStream.close();
+        inputStream.close();
+    }
+
+    public static void copyFileToOutputStream(String filePath, OutputStream outputStream) throws IOException {
+        InputStream inputStream = new BufferedInputStream(new FileInputStream(filePath));
+        byte[] bytes = new byte[1024 * 10];
+        int readed;
+        while ((readed = inputStream.read(bytes)) != -1) {
+            outputStream.write(bytes, 0, readed);
+        }
     }
 
     private static boolean delete(File directory, boolean andRoot) {
@@ -264,5 +284,16 @@ public class Files {
         BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(sourceFile));
         copyStream(inputStream, new BufferedOutputStream(new FileOutputStream(targetFile)));
         inputStream.close();
+    }
+
+    public static String read(InputStream content, Charset charset) throws IOException {
+        InputStreamReader reader = new InputStreamReader(content, charset);
+        StringBuilder stringBuffer = new StringBuilder();
+        char[] tmp = new char[1024];
+        int read;
+        while ((read = reader.read(tmp, 0, tmp.length)) != -1) {
+            stringBuffer.append(tmp, 0, read);
+        }
+        return stringBuffer.toString();
     }
 }

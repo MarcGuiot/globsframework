@@ -26,6 +26,12 @@ public final class Ref<T> {
         return ref != null ? ref.equals(object) : (object == null);
     }
 
+    public T reset() {
+        T tmp = ref;
+        ref = null;
+        return tmp;
+    }
+
     public String toString() {
         return ref != null ? ref.toString() : null;
     }
