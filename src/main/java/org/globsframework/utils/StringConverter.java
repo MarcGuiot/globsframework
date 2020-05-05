@@ -5,7 +5,7 @@ import org.globsframework.metamodel.fields.*;
 import org.globsframework.model.MutableGlob;
 
 public class StringConverter {
-    public static FromStringConverter createConverter(Field field) {
+    public static FromStringConverter createConverter(Field field, String arraySeparator) {
         return field.safeVisit(new FieldVisitor.AbstractWithErrorVisitor() {
                         FromStringConverter fromStringConverter1;
 
@@ -18,7 +18,7 @@ public class StringConverter {
                         }
 
                         public void visitStringArray(StringArrayField field1) throws Exception {
-                            fromStringConverter1 = new ToStringArrayConverter(field1);
+                            fromStringConverter1 = new ToStringArrayConverter(field1, arraySeparator);
                         }
 
                         public void visitLong(LongField field1) throws Exception {
@@ -75,14 +75,30 @@ public class StringConverter {
 
     public static class ToStringArrayConverter implements FromStringConverter {
         final StringArrayField field;
+        private String arraySeparator;
 
-        public ToStringArrayConverter(StringArrayField field) {
+        public ToStringArrayConverter(StringArrayField field, String arraySeparator) {
             this.field = field;
+            this.arraySeparator = arraySeparator;
         }
 
         public void convert(MutableGlob glob, String str) {
             if (str != null) {
-                glob.set(field, str.split(","));
+                String[] data;
+                if (arraySeparator != null) {
+                    data = str.split(arraySeparator);
+                }
+                else {
+                    data = new String[]{str};
+                }
+                String[] actual = glob.getOrEmpty(field);
+                String[] newValue = new String[actual.length + data.length];
+                System.arraycopy(actual, 0, newValue, 0, actual.length);
+                for (int i = 0; i < data.length; i++) {
+                    String d = data[i];
+                    newValue[actual.length + i] = d;
+                }
+                glob.set(field, newValue);
             }
         }
     }

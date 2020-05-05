@@ -12,7 +12,7 @@ public class FieldValuesButKeyTest {
     public void name() {
         FieldValues fieldValues = DummyObject.TYPE.instantiate().set(DummyObject.ID, 3).set(DummyObject.NAME, "toto");
         FieldValues withoutKeyField = fieldValues.withoutKeyField();
-        Assert.assertEquals(fieldValues.size() - DummyObject.TYPE.getKeyFields().length, withoutKeyField.size());
+        Assert.assertEquals(1, withoutKeyField.size());
         FieldValue[] fieldValues1 = withoutKeyField.toArray();
         Assert.assertEquals(withoutKeyField.size(), fieldValues1.length);
 

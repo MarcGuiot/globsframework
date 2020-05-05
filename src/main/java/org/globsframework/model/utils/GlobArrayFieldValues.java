@@ -46,7 +46,10 @@ public class GlobArrayFieldValues extends AbstractMutableFieldValues {
 
     public <T extends FieldValueVisitor> T accept(T functor) throws Exception {
         for (Field field : type.getFields()) {
-            field.visit(functor, values[field.getIndex()]);
+            Object value = values[field.getIndex()];
+            if (value != Unset.VALUE) {
+                field.visit(functor, value);
+            }
         }
         return functor;
     }

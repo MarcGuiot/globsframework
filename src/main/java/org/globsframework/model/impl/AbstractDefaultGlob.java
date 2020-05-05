@@ -30,7 +30,9 @@ public abstract class AbstractDefaultGlob extends AbstractMutableGlob {
 
     public <T extends FieldValueVisitor> T accept(T functor) throws Exception {
         for (Field field : type.getFields()) {
-            field.visit(functor, values[field.getIndex()]);
+            if (isSet(field)) { //  || field.isKeyField()
+                field.visit(functor, values[field.getIndex()]);
+            }
         }
         return functor;
     }
@@ -38,7 +40,9 @@ public abstract class AbstractDefaultGlob extends AbstractMutableGlob {
     public <T extends FieldValues.Functor>
     T apply(T functor) throws Exception {
         for (Field field : type.getFields()) {
-            functor.process(field, values[field.getIndex()]);
+            if (isSet(field)) {  //  || field.isKeyField()
+                functor.process(field, values[field.getIndex()]);
+            }
         }
         return functor;
     }

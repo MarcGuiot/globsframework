@@ -7,7 +7,6 @@ import org.globsframework.model.impl.AbstractFieldValues;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
 public class ArrayFieldValues extends AbstractFieldValues {
-
     private FieldValue[] values;
 
     public ArrayFieldValues(FieldValue[] values) {

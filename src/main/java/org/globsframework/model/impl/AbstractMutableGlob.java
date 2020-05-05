@@ -139,8 +139,10 @@ public abstract class AbstractMutableGlob extends AbstractGlob implements Mutabl
         FieldValue[] array = new FieldValue[getType().getFieldCount()];
         int index = 0;
         for (Field field : getType().getFields()) {
-            array[index] = new FieldValue(field, doGet(field));
-            index++;
+            if (isSet(field)) {
+                array[index] = new FieldValue(field, doGet(field));
+                index++;
+            }
         }
         return array;
     }

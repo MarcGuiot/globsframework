@@ -138,8 +138,10 @@ public abstract class AbstractGlob extends AbstractFieldValues implements Glob, 
                 FieldValue[] arrays = new FieldValue[type.getKeyFields().length];
                 int i = 0;
                 for (Field field : type.getKeyFields()) {
-                    arrays[i] = new FieldValue(field, AbstractGlob.this.doGet(field));
-                    i++;
+                    if (isSet(field)) {
+                        arrays[i] = new FieldValue(field, AbstractGlob.this.doGet(field));
+                        i++;
+                    }
                 }
                 return arrays;
             }

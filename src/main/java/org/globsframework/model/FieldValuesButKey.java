@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
+import java.util.Objects;
 
 public class FieldValuesButKey implements FieldValues {
     private final FieldValues fieldValues;
@@ -56,7 +57,7 @@ public class FieldValuesButKey implements FieldValues {
         FieldValue[] fieldValues = this.fieldValues.toArray();
         for (FieldValue fieldValue : fieldValues) {
             if (fieldValue.getField().isKeyField()) {
-                return Arrays.stream(fieldValues).filter(v -> !v.getField().isKeyField()).toArray(FieldValue[]::new);
+                return Arrays.stream(fieldValues).filter(Objects::nonNull).filter(v -> !v.getField().isKeyField()).toArray(FieldValue[]::new);
             }
         }
         return fieldValues;

@@ -115,7 +115,6 @@ public class DefaultFieldValuesWithPrevious extends AbstractFieldValuesWithPrevi
         return functor;
     }
 
-
     public <T extends FieldValueVisitor> T accept(T functor) throws Exception {
         for (Field field : type.getFields()) {
             int index = field.getIndex();
@@ -141,7 +140,7 @@ public class DefaultFieldValuesWithPrevious extends AbstractFieldValuesWithPrevi
         int resultIndex = 0;
         for (Field field : type.getFields()) {
             int index = field.getIndex();
-            if (values[index] != null) {
+            if (values[index] != Unset.VALUE) { // fix via relecture
                 result[resultIndex++] = new FieldValue(field, values[index]);
             }
         }
