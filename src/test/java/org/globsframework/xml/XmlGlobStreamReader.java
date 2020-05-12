@@ -26,10 +26,6 @@ public class XmlGlobStreamReader {
     private String xml;
     private XmlDbStream xmlMoStream;
 
-    public static DbStream parse(String xml, final GlobModel globModel) {
-        return new XmlGlobStreamReader("<root>" + xml + "</root>", globModel).parse();
-    }
-
     private XmlGlobStreamReader(String xml, final GlobModel globModel) {
         this.xml = xml;
         this.globModel = globModel;
@@ -45,29 +41,8 @@ public class XmlGlobStreamReader {
         xmlMoStream.add(mo);
     }
 
-    class RootProxyNode extends DefaultXmlNode implements XmlSingleGlobParser.GlobAdder {
-
-        public RootProxyNode() {
-        }
-
-        public XmlNode getSubNode(String childName, Attributes xmlAttrs, String uri, String fullName) throws ExceptionHolder {
-            try {
-                if (childName.equals("root")) {
-                    return this;
-                }
-                else {
-                    XmlSingleGlobParser.parse(childName, xmlAttrs, globModel, this);
-                    return this;
-                }
-            }
-            catch (Exception e) {
-                throw new ExceptionHolder(e);
-            }
-        }
-
-        public void add(MutableGlob mo) {
-            XmlGlobStreamReader.this.add(mo);
-        }
+    public static DbStream parse(String xml, final GlobModel globModel) {
+        return new XmlGlobStreamReader("<root>" + xml + "</root>", globModel).parse();
     }
 
     private static class XmlDbStream implements DbStream {
@@ -152,6 +127,10 @@ public class XmlGlobStreamReader {
 
             public void visitDateTime(DateTimeField field) throws Exception {
                 accessor = new XmlDateTimeAccessor(stream, field);
+            }
+
+            public void visitStringArray(StringArrayField field) throws Exception {
+                accessor = new XmlStringArrayAccessor(stream, field);
             }
 
             public Accessor getAccessor() {
@@ -342,6 +321,48 @@ public class XmlGlobStreamReader {
                 }
             }
 
+
+            private class XmlStringArrayAccessor implements StringArrayAccessor {
+                private final XmlDbStream xmlMoStream;
+                private final StringArrayField field;
+
+                public XmlStringArrayAccessor(XmlDbStream xmlMoStream, StringArrayField field) {
+                    this.xmlMoStream = xmlMoStream;
+                    this.field = field;
+                }
+
+                public String[] getString() {
+                    return xmlMoStream.current.get(field);
+                }
+
+                public Object getObjectValue() {
+                    return getString();
+                }
+            }
+        }
+
+    }
+
+    class RootProxyNode extends DefaultXmlNode implements XmlSingleGlobParser.GlobAdder {
+
+        public RootProxyNode() {
+        }
+
+        public XmlNode getSubNode(String childName, Attributes xmlAttrs, String uri, String fullName) throws ExceptionHolder {
+            try {
+                if (childName.equals("root")) {
+                    return this;
+                } else {
+                    XmlSingleGlobParser.parse(childName, xmlAttrs, globModel, this);
+                    return this;
+                }
+            } catch (Exception e) {
+                throw new ExceptionHolder(e);
+            }
+        }
+
+        public void add(MutableGlob mo) {
+            XmlGlobStreamReader.this.add(mo);
         }
     }
 }
