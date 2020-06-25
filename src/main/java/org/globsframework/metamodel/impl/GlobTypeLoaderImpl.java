@@ -430,6 +430,11 @@ public class GlobTypeLoaderImpl implements GlobTypeLoader {
         if (field.getName().length() == 1) {
             return field.getName();
         }
+        for (char c : field.getName().toCharArray()) {
+            if (Character.isLowerCase(c)) {
+                return field.getName();
+            }
+        }
         return Strings.toNiceLowerCase(field.getName());
     }
 
@@ -441,32 +446,36 @@ public class GlobTypeLoaderImpl implements GlobTypeLoader {
         return Link.class.isAssignableFrom(field.getType());
     }
 
-    public void defineUniqueIndex(UniqueIndex index, Field field) {
+    public GlobTypeLoader defineUniqueIndex(UniqueIndex index, Field field) {
         if (index == null) {
             throw new RuntimeException("index is null. Was load call before?");
         }
         ((DefaultUniqueIndex)type.getIndex(index.getName())).setField(field);
+        return this;
     }
 
-    public void defineNonUniqueIndex(NotUniqueIndex index, Field field) {
+    public GlobTypeLoader defineNonUniqueIndex(NotUniqueIndex index, Field field) {
         if (index == null) {
             throw new RuntimeException("index is null. Was load call before?");
         }
         ((DefaultNotUniqueIndex)type.getIndex(index.getName())).setField(field);
+        return this;
     }
 
-    public void defineMultiFieldUniqueIndex(MultiFieldUniqueIndex index, Field... fields) {
+    public GlobTypeLoader defineMultiFieldUniqueIndex(MultiFieldUniqueIndex index, Field... fields) {
         if (index == null) {
             throw new RuntimeException("index is null. Was load call before?");
         }
         ((DefaultMultiFieldUniqueIndex)type.getIndex(index.getName())).setField(fields);
+        return this;
     }
 
-    public void defineMultiFieldNotUniqueIndex(MultiFieldNotUniqueIndex index, Field... fields) {
+    public GlobTypeLoader defineMultiFieldNotUniqueIndex(MultiFieldNotUniqueIndex index, Field... fields) {
         if (index == null) {
             throw new RuntimeException("index is null. Was load call before?");
         }
         ((DefaultMultiFieldNotUniqueIndex)type.getIndex(index.getName())).setField(fields);
+        return this;
     }
 
     public <T> GlobTypeLoader register(Class<T> klass, T t) {

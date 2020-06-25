@@ -10,13 +10,13 @@ public interface GlobTypeLoader {
 
     GlobType getType();
 
-    void defineUniqueIndex(UniqueIndex index, Field field);
+    GlobTypeLoader defineUniqueIndex(UniqueIndex index, Field field);
 
-    void defineNonUniqueIndex(NotUniqueIndex index, Field field);
+    GlobTypeLoader defineNonUniqueIndex(NotUniqueIndex index, Field field);
 
-    void defineMultiFieldUniqueIndex(MultiFieldUniqueIndex index, Field... fields);
+    GlobTypeLoader defineMultiFieldUniqueIndex(MultiFieldUniqueIndex index, Field... fields);
 
-    void defineMultiFieldNotUniqueIndex(MultiFieldNotUniqueIndex index, Field... fields);
+    GlobTypeLoader defineMultiFieldNotUniqueIndex(MultiFieldNotUniqueIndex index, Field... fields);
 
     <T> GlobTypeLoader register(Class<T> klass, T t);
 }

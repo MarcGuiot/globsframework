@@ -4,27 +4,35 @@ import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.model.MutableGlob;
 
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+
 public class StringConverter {
     public static FromStringConverter createConverter(Field field, String arraySeparator) {
         return field.safeVisit(new FieldVisitor.AbstractWithErrorVisitor() {
-                        FromStringConverter fromStringConverter1;
+            FromStringConverter fromStringConverter1;
 
-                        public void visitInteger(IntegerField field1) throws Exception {
-                            fromStringConverter1 = new ToIntegerConverter(field1);
-                        }
+            public void visitInteger(IntegerField field1) throws Exception {
+                fromStringConverter1 = new ToIntegerConverter(field1);
+            }
 
-                        public void visitString(StringField field1) throws Exception {
-                            fromStringConverter1 = new ToStringConverter(field1);
-                        }
+            public void visitLong(LongField field1) throws Exception {
+                fromStringConverter1 = new ToLongConverter(field1);
+            }
 
-                        public void visitStringArray(StringArrayField field1) throws Exception {
-                            fromStringConverter1 = new ToStringArrayConverter(field1, arraySeparator);
-                        }
+            public void visitString(StringField field1) throws Exception {
+                fromStringConverter1 = new ToStringConverter(field1);
+            }
 
-                        public void visitLong(LongField field1) throws Exception {
-                            fromStringConverter1 = new ToLongConverter(field1);
-                        }
-                    }).fromStringConverter1;
+            public void visitStringArray(StringArrayField field1) throws Exception {
+                fromStringConverter1 = new ToStringArrayConverter(field1, arraySeparator);
+            }
+
+            public void visitDateTime(DateTimeField field1) throws Exception {
+                fromStringConverter1 = new ToDateTimeConverter(field1);
+            }
+
+        }).fromStringConverter1;
     }
 
     public interface FromStringConverter {
@@ -59,6 +67,20 @@ public class StringConverter {
         }
     }
 
+    public static class ToDateTimeConverter implements FromStringConverter {
+        private DateTimeField dateTimeField;
+
+        public ToDateTimeConverter(DateTimeField dateTimeField) {
+            this.dateTimeField = dateTimeField;
+        }
+
+        public void convert(MutableGlob glob, String str) {
+            if (str != null) {
+                glob.set(dateTimeField, ZonedDateTime.parse(str));
+            }
+        }
+    }
+
     public static class ToLongConverter implements FromStringConverter {
         final LongField field;
 
@@ -87,8 +109,7 @@ public class StringConverter {
                 String[] data;
                 if (arraySeparator != null) {
                     data = str.split(arraySeparator);
-                }
-                else {
+                } else {
                     data = new String[]{str};
                 }
                 String[] actual = glob.getOrEmpty(field);
