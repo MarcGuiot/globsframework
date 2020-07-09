@@ -26,7 +26,7 @@ public class DummyObjectWithLinks {
     public static Link SIBLING_LINK;
 
     static {
-        GlobTypeLoader loader = GlobTypeLoaderFactory.create(DummyObjectWithLinks.class);
+        GlobTypeLoader loader = GlobTypeLoaderFactory.create(DummyObjectWithLinks.class, true);
         loader.register(MutableGlobLinkModel.LinkRegister.class,
                         (linkModel) -> {
                             COMPOSITE_LINK = linkModel.getLinkBuilder(COMPOSITE_LINK)

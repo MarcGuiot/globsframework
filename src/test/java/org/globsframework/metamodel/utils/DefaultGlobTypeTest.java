@@ -83,7 +83,7 @@ public class DefaultGlobTypeTest {
 
     private void initGlobType() {
         Type.TYPE = null;
-        GlobTypeLoader loader = GlobTypeLoaderFactory.create(Type.class).load();
+        GlobTypeLoader loader = GlobTypeLoaderFactory.create(Type.class, true).load();
         globType = loader.getType();
         field = globType.getField("field1");
         globModel = new DefaultGlobModel(globType);
@@ -100,7 +100,7 @@ public class DefaultGlobTypeTest {
         public static IntegerField F2;
 
         static {
-            GlobTypeLoaderFactory.create(TypeWithAnnotation.class)
+            GlobTypeLoaderFactory.create(TypeWithAnnotation.class, true)
             .load();
         }
     }

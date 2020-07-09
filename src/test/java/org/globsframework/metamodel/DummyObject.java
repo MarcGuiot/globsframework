@@ -36,7 +36,7 @@ public class DummyObject {
     public static NotUniqueIndex DATE_INDEX;
 
     static {
-        GlobTypeLoader loader = GlobTypeLoaderFactory.create(DummyObject.class)
+        GlobTypeLoader loader = GlobTypeLoaderFactory.create(DummyObject.class, true)
             .register(MutableGlobLinkModel.LinkRegister.class,
                       mutableGlobLinkModel -> {
                           LINK = mutableGlobLinkModel.getDirectLinkBuilder(LINK)

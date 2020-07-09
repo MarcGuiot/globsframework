@@ -28,15 +28,17 @@ import java.util.stream.IntStream;
 public class GlobTypeLoaderImpl implements GlobTypeLoader {
     private DefaultGlobType type;
     private DefaultFieldFactory fieldFactory;
+    private boolean toNiceName;
     private String[] modelName;
     private Class<?> targetClass;
     private String name;
     private FieldInitializeProcessorService fieldInitializeProcessorService;
     private Map<Class, Object> registered = new ConcurrentHashMap<>();
 
-    public GlobTypeLoaderImpl(Class<?> targetClass, String[] modelName, String name,
+    public GlobTypeLoaderImpl(Class<?> targetClass, String[] modelName, String name, boolean toNiceName,
                               FieldInitializeProcessorService fieldInitializeProcessorService) {
         this.modelName = modelName;
+        this.toNiceName = toNiceName;
         this.fieldInitializeProcessorService = fieldInitializeProcessorService;
         this.targetClass = targetClass;
         this.name = name;
@@ -427,7 +429,7 @@ public class GlobTypeLoaderImpl implements GlobTypeLoader {
     }
 
     private String getFieldName(java.lang.reflect.Field field) {
-        if (field.getName().length() == 1) {
+        if (field.getName().length() == 1 || !toNiceName) {
             return field.getName();
         }
         for (char c : field.getName().toCharArray()) {

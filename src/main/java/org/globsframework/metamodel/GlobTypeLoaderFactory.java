@@ -21,8 +21,18 @@ public class GlobTypeLoaderFactory {
         build(targetClass).create().load();
     }
 
+    public static void createAndLoad(Class<?> targetClass, boolean toNiceName) {
+        build(targetClass)
+                .withNiceName(toNiceName)
+                .create().load();
+    }
+
     public static GlobTypeLoader create(Class<?> targetClass) {
-        return create(targetClass, (String[]) null, null);
+        return create(targetClass, (String[]) null, null, false);
+    }
+
+    public static GlobTypeLoader create(Class<?> targetClass, boolean toNiceName) {
+        return create(targetClass, (String[]) null, null, toNiceName);
     }
 
     public static FactoryBuilder build(Class<?> targetClass) {
@@ -30,22 +40,26 @@ public class GlobTypeLoaderFactory {
     }
 
     public static GlobTypeLoader create(Class<?> targetClass, String name) {
-        return create(targetClass, (String[]) null, name);
+        return create(targetClass, (String[]) null, name, false);
+    }
+
+    public static GlobTypeLoader create(Class<?> targetClass, String name, boolean toNiceName) {
+        return create(targetClass, (String[]) null, name, toNiceName);
     }
 
     public static GlobTypeLoader create(Class<?> targetClass, String modelName, String name) {
-        return create(targetClass, modelName == null ? null : modelName.split("\\."), name);
+        return create(targetClass, modelName == null ? null : modelName.split("\\."), name, false);
     }
 
-    public static GlobTypeLoader create(Class<?> targetClass, String[] modelName, String name) {
+    public static GlobTypeLoader create(Class<?> targetClass, String[] modelName, String name, boolean toNiceName) {
         initProcessorService();
         FieldInitializeProcessorService service = fieldInitializeProcessorService;
-        return create(targetClass, modelName, name, service);
+        return create(targetClass, modelName, name, toNiceName, service);
     }
 
-    public static GlobTypeLoader create(Class<?> targetClass, String[] modelName, String name,
+    public static GlobTypeLoader create(Class<?> targetClass, String[] modelName, String name, boolean toNiceName,
                                         FieldInitializeProcessorService service) {
-        return new GlobTypeLoaderImpl(targetClass, modelName, name, service);
+        return new GlobTypeLoaderImpl(targetClass, modelName, name, toNiceName,service);
     }
 
     static public FieldInitializeProcessorService getFieldInitializeProcessorService() {
@@ -109,6 +123,8 @@ public class GlobTypeLoaderFactory {
     public interface FactoryBuilder {
         FactoryBuilder withName(String name);
 
+        FactoryBuilder withNiceName(boolean toNiceName);
+
         FactoryBuilder withModel(String name);
 
         GlobTypeLoader create();
@@ -118,6 +134,7 @@ public class GlobTypeLoaderFactory {
         private final Class<?> klass;
         private String name;
         private String[] model;
+        private boolean toNiceName = false;
 
         DefaultFactoryBuilder(Class<?> klass) {
             this.klass = klass;
@@ -128,13 +145,18 @@ public class GlobTypeLoaderFactory {
             return this;
         }
 
+        public FactoryBuilder withNiceName(boolean toNiceName){
+            this.toNiceName = toNiceName;
+            return this;
+        }
+
         public FactoryBuilder withModel(String model) {
             this.model = model.split("\\.");
             return this;
         }
 
         public GlobTypeLoader create() {
-            return GlobTypeLoaderFactory.create(klass, model, name);
+            return GlobTypeLoaderFactory.create(klass, model, name, toNiceName);
         }
     }
 

@@ -20,7 +20,7 @@ public class DummyObjectWithRequiredLink {
     public static Link LINK;
 
     static {
-        GlobTypeLoader loader = GlobTypeLoaderFactory.create(DummyObjectWithRequiredLink.class);
+        GlobTypeLoader loader = GlobTypeLoaderFactory.create(DummyObjectWithRequiredLink.class, true);
         loader.register(MutableGlobLinkModel.LinkRegister.class, mutableGlobLinkModel -> {
             LINK = mutableGlobLinkModel.getDirectLinkBuilder(LINK)
                 .add(TARGET_ID, DummyObject.ID)

@@ -220,7 +220,7 @@ public class GlobTypeLoaderTest {
         public static IntegerField ID2;
 
         static {
-            GlobTypeLoaderFactory.createAndLoad(AnObjectWithACompositeKey.class);
+            GlobTypeLoaderFactory.createAndLoad(AnObjectWithACompositeKey.class, true);
         }
     }
 
@@ -241,7 +241,7 @@ public class GlobTypeLoaderTest {
         public static Link LINK;
 
         static {
-            GlobTypeLoader loader = GlobTypeLoaderFactory.create(AnObjectWithALinkField.class);
+            GlobTypeLoader loader = GlobTypeLoaderFactory.create(AnObjectWithALinkField.class, true);
             loader.register(MutableGlobLinkModel.LinkRegister.class, mutableGlobLinkModel ->
                     LINK = mutableGlobLinkModel.getDirectLinkBuilder(LINK)
                             .add(AnObjectWithALinkField.LINK_ID, AnObject.ID)
@@ -377,7 +377,7 @@ public class GlobTypeLoaderTest {
         public static Link LINK;
 
         static {
-            GlobTypeLoader loader = GlobTypeLoaderFactory.create(AnObjectWithASingleIntegerFieldUsedAsALink.class);
+            GlobTypeLoader loader = GlobTypeLoaderFactory.create(AnObjectWithASingleIntegerFieldUsedAsALink.class, true);
 
             loader.register(MutableGlobLinkModel.LinkRegister.class, mutableGlobLinkModel -> {
                 LINK = mutableGlobLinkModel.getLinkBuilder(LINK)

@@ -151,7 +151,7 @@ public class DefaultGlobModelTest {
         public static Link LINK;
 
         static {
-            GlobTypeLoaderFactory.create(LargeLinkCycleWithRequiredFieldError1.class)
+            GlobTypeLoaderFactory.create(LargeLinkCycleWithRequiredFieldError1.class, true)
                 .register(MutableGlobLinkModel.LinkRegister.class, mutableGlobLinkModel ->
                     LINK = mutableGlobLinkModel.getLinkBuilder(LINK)
                         .add(LINK_ID, LargeLinkCycleWithRequiredFieldError2.ID)
@@ -173,7 +173,7 @@ public class DefaultGlobModelTest {
         public static Link LINK;
 
         static {
-            GlobTypeLoaderFactory.create(LargeLinkCycleWithRequiredFieldError2.class)
+            GlobTypeLoaderFactory.create(LargeLinkCycleWithRequiredFieldError2.class, true)
                 .register(MutableGlobLinkModel.LinkRegister.class, mutableGlobLinkModel ->
                     LINK = mutableGlobLinkModel.getLinkBuilder(LINK)
                         .add(LINK_ID, LargeLinkCycleWithRequiredFieldError3.ID)
@@ -195,7 +195,7 @@ public class DefaultGlobModelTest {
         public static Link LINK;
 
         static {
-            GlobTypeLoaderFactory.create(LargeLinkCycleWithRequiredFieldError3.class)
+            GlobTypeLoaderFactory.create(LargeLinkCycleWithRequiredFieldError3.class, true)
                 .register(MutableGlobLinkModel.LinkRegister.class, mutableGlobLinkModel ->
                     LINK = mutableGlobLinkModel.getLinkBuilder(LINK)
                         .add(LINK_ID, LargeLinkCycleWithRequiredFieldError1.ID)

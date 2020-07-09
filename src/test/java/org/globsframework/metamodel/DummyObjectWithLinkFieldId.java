@@ -17,7 +17,7 @@ public class DummyObjectWithLinkFieldId {
     public static Link LINK;
 
     static {
-        GlobTypeLoader loader = GlobTypeLoaderFactory.create(DummyObjectWithLinkFieldId.class);
+        GlobTypeLoader loader = GlobTypeLoaderFactory.create(DummyObjectWithLinkFieldId.class, true);
         loader.register(MutableGlobLinkModel.LinkRegister.class,
                         (linkModel) ->
                             LINK = linkModel.getDirectLinkBuilder(LINK).add(LINK_ID, DummyObject.ID).publish())

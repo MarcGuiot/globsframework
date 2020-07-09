@@ -30,7 +30,7 @@ public class ChangeSetSequencerTest {
         public static StringField NAME;
 
         static {
-            GlobTypeLoaderFactory.createAndLoad(ObjectWithCompositeKey.class);
+            GlobTypeLoaderFactory.createAndLoad(ObjectWithCompositeKey.class, true);
         }
     }
 
@@ -47,7 +47,7 @@ public class ChangeSetSequencerTest {
         public static Link LINK;
 
         static {
-            GlobTypeLoader loader = GlobTypeLoaderFactory.create(LinkedToObjectWithCompositeKey.class);
+            GlobTypeLoader loader = GlobTypeLoaderFactory.create(LinkedToObjectWithCompositeKey.class, true);
             loader.register(MutableGlobLinkModel.LinkRegister.class, mutableGlobLinkModel -> {
                 LINK = mutableGlobLinkModel.getDirectLinkBuilder(LINK)
                     .add(LinkedToObjectWithCompositeKey.LINK1, ObjectWithCompositeKey.ID1)
@@ -94,7 +94,7 @@ public class ChangeSetSequencerTest {
         public static Link LINK;
 
         static {
-            GlobTypeLoader loader = GlobTypeLoaderFactory.create(ObjectWithSelfReference.class);
+            GlobTypeLoader loader = GlobTypeLoaderFactory.create(ObjectWithSelfReference.class, true);
             loader.register(MutableGlobLinkModel.LinkRegister.class,
                             mutableGlobLinkModel -> LINK =
                                 mutableGlobLinkModel.getDirectLinkBuilder(LINK)
@@ -150,7 +150,7 @@ public class ChangeSetSequencerTest {
         public static Link LINK;
 
         static {
-            GlobTypeLoader loader = GlobTypeLoaderFactory.create(LinkCycle1.class);
+            GlobTypeLoader loader = GlobTypeLoaderFactory.create(LinkCycle1.class, true);
             loader.register(MutableGlobLinkModel.LinkRegister.class, mutableGlobLinkModel ->
                 LINK = mutableGlobLinkModel.getLinkBuilder(LINK)
                     .add(LINK1, LinkCycle2.ID1)
@@ -177,7 +177,7 @@ public class ChangeSetSequencerTest {
         public static Link LINK;
 
         static {
-            GlobTypeLoader loader = GlobTypeLoaderFactory.create(LinkCycle2.class);
+            GlobTypeLoader loader = GlobTypeLoaderFactory.create(LinkCycle2.class, true);
             loader.register(MutableGlobLinkModel.LinkRegister.class, mutableGlobLinkModel ->
                 LINK = mutableGlobLinkModel.getLinkBuilder(LINK)
                     .add(LINK1, LinkCycle1.ID1)
@@ -237,7 +237,7 @@ public class ChangeSetSequencerTest {
         public static Link LINK;
 
         static {
-            GlobTypeLoader loader = GlobTypeLoaderFactory.create(LargeLinkCycle1.class);
+            GlobTypeLoader loader = GlobTypeLoaderFactory.create(LargeLinkCycle1.class, true);
             loader.register(MutableGlobLinkModel.LinkRegister.class, mutableGlobLinkModel ->
                 LINK = mutableGlobLinkModel.getDirectLinkBuilder(LINK)
                     .add(LargeLinkCycle1.LINK_ID, LargeLinkCycle2.ID)
@@ -258,7 +258,7 @@ public class ChangeSetSequencerTest {
         public static Link LINK;
 
         static {
-            GlobTypeLoader loader = GlobTypeLoaderFactory.create(LargeLinkCycle2.class);
+            GlobTypeLoader loader = GlobTypeLoaderFactory.create(LargeLinkCycle2.class, true);
             loader.register(MutableGlobLinkModel.LinkRegister.class, mutableGlobLinkModel ->
                 LINK = mutableGlobLinkModel.getDirectLinkBuilder(LINK)
                     .add(LargeLinkCycle2.LINK_ID, LargeLinkCycle3.ID)
@@ -279,7 +279,7 @@ public class ChangeSetSequencerTest {
         public static Link LINK;
 
         static {
-            GlobTypeLoader loader = GlobTypeLoaderFactory.create(LargeLinkCycle3.class);
+            GlobTypeLoader loader = GlobTypeLoaderFactory.create(LargeLinkCycle3.class, true);
             loader.register(MutableGlobLinkModel.LinkRegister.class, mutableGlobLinkModel ->
                 LINK = mutableGlobLinkModel.getDirectLinkBuilder(LINK)
                     .add(LINK_ID, LargeLinkCycle1.ID).publish());
@@ -314,6 +314,8 @@ public class ChangeSetSequencerTest {
     }
 
     private static class Model {
-        static final GlobModel MODEL = org.globsframework.metamodel.GlobModelBuilder.create(ObjectWithCompositeKey.TYPE, LinkedToObjectWithCompositeKey.TYPE, ObjectWithSelfReference.TYPE, LinkCycle1.TYPE, LinkCycle2.TYPE, LargeLinkCycle1.TYPE, LargeLinkCycle2.TYPE, LargeLinkCycle3.TYPE).get();
+        static final GlobModel MODEL = org.globsframework.metamodel.GlobModelBuilder.create(ObjectWithCompositeKey.TYPE,
+                LinkedToObjectWithCompositeKey.TYPE, ObjectWithSelfReference.TYPE, LinkCycle1.TYPE, LinkCycle2.TYPE, LargeLinkCycle1.TYPE,
+                LargeLinkCycle2.TYPE, LargeLinkCycle3.TYPE).get();
     }
 }

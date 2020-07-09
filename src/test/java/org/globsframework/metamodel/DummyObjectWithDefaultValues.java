@@ -29,6 +29,6 @@ public class DummyObjectWithDefaultValues {
     public static StringField STRING;
 
     static {
-        GlobTypeLoaderFactory.create(DummyObjectWithDefaultValues.class).load();
+        GlobTypeLoaderFactory.create(DummyObjectWithDefaultValues.class, true).load();
     }
 }

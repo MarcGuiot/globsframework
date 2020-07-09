@@ -34,7 +34,7 @@ public class DummyObjectIndex {
 
 
     static {
-        GlobTypeLoader loader = GlobTypeLoaderFactory.create(DummyObjectIndex.class).load();
+        GlobTypeLoader loader = GlobTypeLoaderFactory.create(DummyObjectIndex.class, true).load();
         loader.defineMultiFieldNotUniqueIndex(VALUES_INDEX, VALUE_1, VALUE_2);
         loader.defineMultiFieldUniqueIndex(VALUES_AND_NAME_INDEX, VALUE_1, VALUE_2, NAME);
         loader.defineUniqueIndex(UNIQUE_NAME_INDEX, UNIQUE_NAME);

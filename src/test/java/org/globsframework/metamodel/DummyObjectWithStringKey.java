@@ -10,6 +10,6 @@ public class DummyObjectWithStringKey {
     public static StringField ID;
 
     static {
-        GlobTypeLoaderFactory.create(DummyObjectWithStringKey.class).load();
+        GlobTypeLoaderFactory.create(DummyObjectWithStringKey.class, true).load();
     }
 }

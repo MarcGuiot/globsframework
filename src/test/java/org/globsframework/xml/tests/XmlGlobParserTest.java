@@ -152,7 +152,7 @@ public class XmlGlobParserTest {
         public static Link OBJ2;
 
         static {
-            GlobTypeLoader loader = GlobTypeLoaderFactory.create(AnObjectLinkingToATypeWithNoNamingField.class);
+            GlobTypeLoader loader = GlobTypeLoaderFactory.create(AnObjectLinkingToATypeWithNoNamingField.class, true);
             loader.register(MutableGlobLinkModel.LinkRegister.class,
                             mutableGlobLinkModel ->
                                 OBJ2 = mutableGlobLinkModel.getLinkBuilder(OBJ2)
@@ -216,7 +216,7 @@ public class XmlGlobParserTest {
         public static IntegerField ID;
 
         static {
-            GlobTypeLoaderFactory.createAndLoad(AnObject.class);
+            GlobTypeLoaderFactory.createAndLoad(AnObject.class, true);
         }
     }
 
@@ -236,7 +236,7 @@ public class XmlGlobParserTest {
         public static Link LINK2;
 
         static {
-            GlobTypeLoader loader = GlobTypeLoaderFactory.create(AnObjectWithTwoLinks.class);
+            GlobTypeLoader loader = GlobTypeLoaderFactory.create(AnObjectWithTwoLinks.class, true);
             loader.register(MutableGlobLinkModel.LinkRegister.class,
                             mutableGlobLinkModel ->
                             {

@@ -18,6 +18,6 @@ public class DummyObjectWithCompositeKey {
     public static StringField NAME;
 
     static {
-        GlobTypeLoaderFactory.create(DummyObjectWithCompositeKey.class).load();
+        GlobTypeLoaderFactory.create(DummyObjectWithCompositeKey.class, true).load();
     }
 }
