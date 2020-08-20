@@ -5,7 +5,6 @@ import org.globsframework.metamodel.fields.*;
 import org.globsframework.model.MutableGlob;
 
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 
 public class StringConverter {
     public static FromStringConverter createConverter(Field field, String arraySeparator) {
@@ -32,6 +31,9 @@ public class StringConverter {
                 fromStringConverter1 = new ToDateTimeConverter(field1);
             }
 
+            public void visitBoolean(BooleanField field) throws Exception {
+                fromStringConverter1 = new ToBooleanConverter(field);
+            }
         }).fromStringConverter1;
     }
 
@@ -63,6 +65,20 @@ public class StringConverter {
         public void convert(MutableGlob glob, String str) {
             if (str != null) {
                 glob.set(field, Integer.parseInt(str));
+            }
+        }
+    }
+
+    public static class ToBooleanConverter implements FromStringConverter {
+        private BooleanField field;
+
+        public ToBooleanConverter(BooleanField field) {
+            this.field = field;
+        }
+
+        public void convert(MutableGlob glob, String str) {
+            if (str != null) {
+                glob.set(field, Boolean.valueOf(str));
             }
         }
     }
