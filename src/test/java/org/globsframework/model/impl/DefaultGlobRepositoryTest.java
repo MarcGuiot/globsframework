@@ -9,6 +9,7 @@ import org.globsframework.model.repository.GlobIdGenerator;
 import org.globsframework.model.utils.*;
 import org.globsframework.utils.TestUtils;
 import org.globsframework.utils.exceptions.*;
+import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -454,8 +455,9 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
         checker.assertEquals(repository, "<dummyObject id='0' name='newName'/>");
 
         changeListener.assertLastChangesEqual(
-                "<update type='dummyObject' id='0' name='newName' _name='name' value='(null)' _value='1.4'/>"
+                "<update type='dummyObject' id='0' name='newName' _name='name'/>"
         );
+        Assert.assertEquals(1.4, repository.get(getKey(0)).get(DummyObject.VALUE), 0.001);
     }
 
     @Test
@@ -1022,14 +1024,7 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
                         "name=obj3\n" +
                         "-- Existing object:\n" +
                         "id=1\n" +
-                        "name=obj1\n" +
-                        "value=null\n" +
-                        "count=null\n" +
-                        "present=null\n" +
-                        "date=null\n" +
-                        "password=null\n" +
-                        "linkId=null\n" +
-                        "link2Id=null\n");
+                        "name=obj1\n");
     }
 
     @Test

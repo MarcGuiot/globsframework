@@ -108,7 +108,9 @@ public class ManyFieldsMutableKey extends AbstractFieldValue<MutableFunctionalKe
 
     public int hashCode() {
         int result = functionalKeyBuilder.hashCode();
-        result = 31 * result + Arrays.hashCode(values);
+        for (Object value : values) {
+            result = 31 * result + (value == null ? 0 : value.hashCode());
+        }
         return result;
     }
 

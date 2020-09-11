@@ -283,7 +283,7 @@ class DefaultDeltaGlob extends AbstractFieldValuesWithPrevious implements DeltaG
             final int index = field.getIndex();
             Object value = values[index];
             if ((value != Unset.VALUE) && !field.isKeyField()) {
-                functor.process(field, value, previousValues[index]);
+                functor.process(field, value, (previousValues[index] == Unset.VALUE) ? null : previousValues[index]);
             }
         }
         return functor;

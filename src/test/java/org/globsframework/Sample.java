@@ -24,7 +24,7 @@ public class Sample {
 
         MutableGlob data = type.instantiate();
 
-        StringField stringField = type.getTypedField("string");
+        StringField stringField = type.getField("string").asStringField();
         data.set(stringField, "Hello");
 
         assertEquals("Hello", data.get(stringField));

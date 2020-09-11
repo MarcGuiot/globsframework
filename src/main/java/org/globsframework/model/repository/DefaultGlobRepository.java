@@ -269,7 +269,9 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
             Field[] fields = type.getFields();
             for (Field field : fields) {
                 if (!field.isKeyField()) {
-                    pendingDelete.setValue(field, glob.getValue(field));
+                    if (glob.isSet(field)) {
+                        pendingDelete.setValue(field, glob.getValue(field));
+                    }
                 }
             }
             glob = pendingDelete;
@@ -350,7 +352,10 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
 
     private void addDefaultValues(GlobType type, MutableGlob values) {
         for (Field field : type.getFields()) {
-            values.setValue(field, field.getDefaultValue());
+            Object defaultValue = field.getDefaultValue();
+            if (defaultValue != null) {
+                values.setValue(field, defaultValue);
+            }
         }
     }
 
