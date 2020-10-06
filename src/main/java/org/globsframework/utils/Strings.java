@@ -53,8 +53,7 @@ public class Strings {
             char c = value.charAt(i);
             if (c == '_' || c == ' ') {
                 upperCaseNext = true;
-            }
-            else {
+            } else {
                 builder.append(upperCaseNext ? Character.toUpperCase(c) : Character.toLowerCase(c));
                 upperCaseNext = false;
             }
@@ -77,7 +76,7 @@ public class Strings {
     public static String toString(Map map) {
         List<String> lines = new ArrayList<String>();
         for (Object o : map.entrySet()) {
-            Map.Entry entry = (Map.Entry)o;
+            Map.Entry entry = (Map.Entry) o;
             lines.add("'" + toString(entry.getKey()) + "' = '" + toString(entry.getValue()) + "'");
         }
         Collections.sort(lines);
@@ -168,17 +167,17 @@ public class Strings {
 
     public static String unaccent(String text) {
         return text
-            .replaceAll("[èéêë]", "e")
-            .replaceAll("[ûùü]", "u")
-            .replaceAll("[ïî]", "i")
-            .replaceAll("[àâä]", "a")
-            .replaceAll("[ôö]", "o")
+                .replaceAll("[èéêë]", "e")
+                .replaceAll("[ûùü]", "u")
+                .replaceAll("[ïî]", "i")
+                .replaceAll("[àâä]", "a")
+                .replaceAll("[ôö]", "o")
 
-            .replaceAll("[ÈÉÊË]", "E")
-            .replaceAll("[ÛÙÜ]", "U")
-            .replaceAll("[ÏÎ]", "I")
-            .replaceAll("[ÀÂÄ]", "A")
-            .replaceAll("[ÔÖ]", "O");
+                .replaceAll("[ÈÉÊË]", "E")
+                .replaceAll("[ÛÙÜ]", "U")
+                .replaceAll("[ÏÎ]", "I")
+                .replaceAll("[ÀÂÄ]", "A")
+                .replaceAll("[ÔÖ]", "O");
     }
 
     public static String[] toUpperCase(String[] labels) {
@@ -192,11 +191,11 @@ public class Strings {
 
     public static String trimLines(String input) {
         return input
-            .replaceAll("^[ ]*", "")
-            .replaceAll("[ ]*\n", "\n")
-            .replaceAll("\n[ ]*", "\n")
-            .replaceAll("[ ]*$", "")
-            ;
+                .replaceAll("^[ ]*", "")
+                .replaceAll("[ ]*\n", "\n")
+                .replaceAll("\n[ ]*", "\n")
+                .replaceAll("[ ]*$", "")
+                ;
     }
 
     public static String toYesNo(boolean value) {
@@ -219,8 +218,7 @@ public class Strings {
             char ch = text.charAt(i);
             if (Character.isSpaceChar(ch)) {
                 builder.append(" ");
-            }
-            else {
+            } else {
                 builder.append(ch);
             }
         }

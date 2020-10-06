@@ -10,6 +10,8 @@ import org.globsframework.model.Key;
 import org.globsframework.model.MutableGlob;
 import org.globsframework.utils.Strings;
 
+import java.nio.charset.Charset;
+
 public class MaxSizeType {
     static public GlobType TYPE;
 
@@ -17,6 +19,8 @@ public class MaxSizeType {
     static public IntegerField VALUE;
 
     static public BooleanField ALLOW_TRUNCATE;
+
+    static public StringField CHARSET;
 
     @InitUniqueKey
     static public Key KEY;
@@ -27,24 +31,21 @@ public class MaxSizeType {
                 .load();
     }
 
-    static class StringToLongException extends RuntimeException {
-        public StringToLongException(String value) {
-            super(value);
-        }
-    }
-
     static public String cut(Field field, String value) {
         Glob annotation = field.findAnnotation(KEY);
         if (annotation != null && Strings.isNotEmpty(value)) {
-            if (value.length() > annotation.get(VALUE)) {
+            Charset charsetName = Charset.forName(annotation.get(CHARSET));
+            if (value.getBytes(charsetName).length > annotation.get(VALUE)) {
                 if (annotation.get(ALLOW_TRUNCATE, false)) {
-                    return value.substring(0, annotation.get(VALUE));
-                }
-                else {
+                    String substring = value.substring(0, Math.min(value.length(), annotation.get(VALUE)));
+                    while (substring.getBytes(charsetName).length > annotation.get(VALUE)) {
+                        substring = substring.substring(0, substring.length() - 1);
+                    }
+                    return substring;
+                } else {
                     throw new StringToLongException(field.getFullName() + " => " + value);
                 }
-            }
-            else {
+            } else {
                 return value;
             }
         }
@@ -63,7 +64,8 @@ public class MaxSizeType {
 
     public static Glob create(MaxSize size) {
         return TYPE.instantiate().set(VALUE, size.value())
-                .set(ALLOW_TRUNCATE, size.allow_truncate());
+                .set(ALLOW_TRUNCATE, size.allow_truncate())
+                .set(CHARSET, size.charSet());
     }
 
     public static MutableGlob deepInPlaceTruncate(MutableGlob glob) {
@@ -98,5 +100,11 @@ public class MaxSizeType {
             }
         }
         return glob;
+    }
+
+    static class StringToLongException extends RuntimeException {
+        public StringToLongException(String value) {
+            super(value);
+        }
     }
 }

@@ -110,5 +110,33 @@ public interface Field extends PropertyHolder<Field>, MutableAnnotations<Field> 
         return (DateTimeField) this;
     }
 
+    default GlobArrayField asGlobArrayField(){
+        if (!(this instanceof GlobArrayField)) {
+            throw new RuntimeException(getFullName() + " is not a GlobArrayField but a " + getDataType());
+        }
+        return (GlobArrayField) this;
+    }
+
+    default GlobField asGlobField(){
+        if (!(this instanceof GlobField)) {
+            throw new RuntimeException(getFullName() + " is not a GlobField but a " + getDataType());
+        }
+        return (GlobField) this;
+    }
+
+    default GlobArrayUnionField asGlobArrayUnionField(){
+        if (!(this instanceof GlobArrayUnionField)) {
+            throw new RuntimeException(getFullName() + " is not a GlobArrayUnionField but a " + getDataType());
+        }
+        return (GlobArrayUnionField) this;
+    }
+
+    default GlobUnionField asGlobUnionField(){
+        if (!(this instanceof GlobUnionField)) {
+            throw new RuntimeException(getFullName() + " is not a GlobUnionField but a " + getDataType());
+        }
+        return (GlobUnionField) this;
+    }
+
     String toString(Object value, String offset);
 }

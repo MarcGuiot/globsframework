@@ -15,6 +15,8 @@ public @interface MaxSize {
 
     boolean allow_truncate() default false;
 
+    String charSet() default "UTF-8";
+
     GlobType GLOB_TYPE = MaxSizeType.TYPE;
     Key KEY = MaxSizeType.KEY;
 

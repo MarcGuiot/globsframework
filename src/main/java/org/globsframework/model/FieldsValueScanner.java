@@ -3,6 +3,8 @@ package org.globsframework.model;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.fields.FieldValueVisitor;
 
+import java.util.Optional;
+
 public interface FieldsValueScanner {
     static FieldsValueScanner from(FieldValue[] fieldValues) {
         return new FieldsValueScanner() {
@@ -91,5 +93,18 @@ public interface FieldsValueScanner {
             valueScanner.safeAccept(functor.withoutKey());
             return functor;
         }
+    }
+
+    default Optional<Glob> toGlob(){
+        return Optional.ofNullable(safeApply(new FieldValues.Functor() {
+            MutableGlob glob;
+
+            public void process(Field field, Object value) throws Exception {
+                if (glob == null) {
+                    glob = field.getGlobType().instantiate();
+                }
+                glob.setValue(field, value);
+            }
+        }).glob);
     }
 }
