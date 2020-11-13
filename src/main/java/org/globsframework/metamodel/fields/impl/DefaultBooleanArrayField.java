@@ -87,8 +87,8 @@ public class DefaultBooleanArrayField extends AbstractField implements BooleanAr
         return Arrays.hashCode(((boolean[]) o));
     }
 
-    public String toString(Object value, String offset) {
-        return Arrays.toString(((boolean[]) value));
+    public void toString(StringBuilder buffer, Object value) {
+        buffer.append(Arrays.toString(((boolean[]) value)));
     }
 
 }

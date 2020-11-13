@@ -28,6 +28,10 @@ public interface Annotations {
         }
         return defaultValue;
     }
+    
+    default Optional<Glob> findOptAnnotation(Key key){
+        return Optional.ofNullable(findAnnotation(key));
+    }
 
     default boolean findAnnotation(Key key, Ref<Glob> result) {
         result.set(findAnnotation(key));

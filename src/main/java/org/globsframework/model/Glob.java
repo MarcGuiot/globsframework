@@ -17,4 +17,8 @@ public interface Glob extends FieldValues {
     FieldValues getValues();
 
     MutableGlob duplicate();
+
+    default Key getNewKey() {
+        return KeyBuilder.createFromValues(getType(), this);
+    }
 }

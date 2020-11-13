@@ -1021,10 +1021,10 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
         checkApplyChangeSetError(changeSet,
                 "Object dummyObject[id=1] already exists\n" +
                         "-- New object values:\n" +
-                        "name=obj3\n" +
+                        "\"name\":\"obj3\"" +
                         "-- Existing object:\n" +
-                        "id=1\n" +
-                        "name=obj1\n");
+                        "\"id\":1" +
+                        "\"name\":\"obj1\"");
     }
 
     @Test

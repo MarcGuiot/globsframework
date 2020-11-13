@@ -133,12 +133,27 @@ public class DefaultGlobArrayField extends AbstractField implements GlobArrayFie
         }
     }
 
-    public String toString(Object value, String offset) {
+    public void toString(StringBuilder buffer, Object value) {
         if (value == null) {
-            return "null";
-        } else {
-            return DefaultGlobUnionArrayField.toString(offset, ((Glob[]) value));
+            buffer.append("null");
+        }
+        else {
+            toString(buffer, ((Glob[]) value));
         }
     }
 
+    public static void toString(StringBuilder stringBuilder, Glob[] values) {
+        stringBuilder.append("[");
+        if (values.length != 0) {
+            stringBuilder.append(values[0]);
+
+            for (int i = 1, value1Length = values.length; i < value1Length; i++) {
+                Glob glob = values[i];
+                stringBuilder
+                        .append(", ")
+                        .append(glob);
+            }
+        }
+        stringBuilder.append("]");
+    }
 }

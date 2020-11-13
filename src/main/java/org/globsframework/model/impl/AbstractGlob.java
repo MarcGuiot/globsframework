@@ -3,12 +3,8 @@ package org.globsframework.model.impl;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.*;
-import org.globsframework.metamodel.fields.impl.AbstractField;
 import org.globsframework.model.*;
 import org.globsframework.utils.exceptions.ItemNotFound;
-
-import java.util.Arrays;
-import java.util.Objects;
 
 public abstract class AbstractGlob extends AbstractFieldValues implements Glob, Key {
     protected int hashCode;
@@ -18,29 +14,29 @@ public abstract class AbstractGlob extends AbstractFieldValues implements Glob, 
     abstract public Object doGet(Field field);
 
     public String toString() {
-        StringBuilder buffer = new StringBuilder(getType().getName()).append("[");
+        StringBuilder buffer = new StringBuilder();
+        toString(buffer);
+        return buffer.toString();
+    }
+
+    private void toString(StringBuilder buffer) {
+        buffer.append("{ \"_kind\":\"").append(escapeQuote(getType().getName())).append("\",");
+
         GlobType type = getType();
-        Field[] keyFields = type.getKeyFields();
-        if (keyFields.length != 0) {
-            for (int i = 0; i < keyFields.length; i++) {
-                Field field = keyFields[i];
-                buffer.append(field.getName()).append("=").append(doGet(field));
-                if (i < keyFields.length - 1) {
-                    buffer.append(", ");
-                }
-            }
-        } else {
-            Field[] fields = type.getFields();
-            for (int i = 0; i < fields.length; i++) {
-                Field field = fields[i];
-                buffer.append(field.getName()).append("=").append(field.toString(doGet(field), ""));
-                if (i < fields.length - 1) {
-                    buffer.append(", ");
-                }
+        Field[] fields = type.getFields();
+        for (int i = 0; i < fields.length; i++) {
+            Field field = fields[i];
+            buffer.append("\"").append(escapeQuote(field.getName())).append("\":");
+            field.toString(buffer, doGet(field));
+            if (i < fields.length - 1) {
+                buffer.append(", ");
             }
         }
-        buffer.append("]");
-        return buffer.toString();
+        buffer.append("}");
+    }
+
+    private String escapeQuote(String name) {
+        return name.contains("\"") ? name.replaceAll("\"", "'") : name;
     }
 
     public final boolean matches(FieldValues values) {

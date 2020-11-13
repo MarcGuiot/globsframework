@@ -130,12 +130,4 @@ public class DefaultGlobUnionField extends AbstractField implements GlobUnionFie
         }
     }
 
-    public String toString(Object value, String offset) {
-        if (value == null) {
-            return "null";
-        }
-        else {
-            return DefaultGlobField.toString((Glob) value, offset);
-        }
-    }
 }

@@ -87,8 +87,8 @@ public class DefaultDoubleArrayField extends AbstractField implements DoubleArra
         return Arrays.hashCode(((double[]) o));
     }
 
-    public String toString(Object value, String offset) {
-        return Arrays.toString(((double[]) value));
+    public void toString(StringBuilder buffer, Object value) {
+        buffer.append(Arrays.toString(((double[]) value)));
     }
 
 }

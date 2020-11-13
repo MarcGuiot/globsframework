@@ -133,26 +133,6 @@ public class DefaultGlobField extends AbstractField implements GlobField {
         return true;
     }
 
-    public String toString(Object value, String offset) {
-        if (value == null) {
-            return "null";
-        }
-        else {
-            return toString((Glob) value, offset);
-        }
-    }
-
-    public static String toString(final Glob glob, String offset) {
-        final StringBuilder builder = new StringBuilder();
-        offset += "  ";
-        String finalOffset = offset;
-        builder.append("[\n");
-        glob.safeApply((field, value) ->
-                builder.append(finalOffset).append(field.getName()).append("=")
-                        .append(field.toString(value, finalOffset)).append(('\n')));
-        return builder.deleteCharAt(builder.length() - 1).append("]").toString();
-    }
-
     public Collection<GlobType> getTypes() {
         return Collections.singletonList(getType());
     }

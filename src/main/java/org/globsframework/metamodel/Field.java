@@ -138,5 +138,5 @@ public interface Field extends PropertyHolder<Field>, MutableAnnotations<Field> 
         return (GlobUnionField) this;
     }
 
-    String toString(Object value, String offset);
+    void toString(StringBuilder buffer, Object value);
 }

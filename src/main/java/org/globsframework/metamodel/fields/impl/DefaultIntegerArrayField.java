@@ -85,8 +85,8 @@ public class DefaultIntegerArrayField extends AbstractField implements IntegerAr
         return Arrays.hashCode(((int[]) o));
     }
 
-    public String toString(Object value, String offset) {
-        return Arrays.toString(((int[]) value));
+    public void toString(StringBuilder buffer, Object value) {
+        buffer.append(Arrays.toString(((int[]) value)));
     }
 
 }

@@ -167,4 +167,5 @@ public abstract class AbstractMutableGlob extends AbstractGlob implements Mutabl
     public Key getKey() {
         return this;
     }
+
 }

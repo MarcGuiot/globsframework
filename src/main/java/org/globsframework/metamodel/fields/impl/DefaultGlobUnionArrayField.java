@@ -162,36 +162,17 @@ public class DefaultGlobUnionArrayField extends AbstractField implements GlobArr
         }
     }
 
-    public String toString(Object value, String offset) {
-        if (value == null) {
-            return "null";
-        }
-        else {
-            Glob[] values = (Glob[]) value;
-            return toString(offset, values);
-        }
-    }
+    public static void toString(StringBuilder stringBuilder, Glob[] values) {
+        if (values.length != 0) {
+            stringBuilder.append(values[0]);
 
-    public static String toString(String offset, Glob[] values) {
-        offset += "  ";
-        if (values.length == 0) {
-            return "";
+            for (int i = 1, value1Length = values.length; i < value1Length; i++) {
+                Glob glob = values[i];
+                stringBuilder
+                        .append(", ")
+                        .append(glob);
+            }
+            stringBuilder.append("]");
         }
-        StringBuilder stringBuilder = new StringBuilder().append("[");
-        stringBuilder
-                .append(offset)
-                .append(DefaultGlobField.toString(values[0], offset));
-
-        for (int i = 1, value1Length = values.length; i < value1Length; i++) {
-            Glob glob = values[i];
-            stringBuilder
-                    .append(",\n")
-                    .append(offset)
-                    .append(DefaultGlobField.toString(glob, offset));
-        }
-        stringBuilder
-                .append(offset)
-                .append("]");
-        return stringBuilder.toString();
     }
 }

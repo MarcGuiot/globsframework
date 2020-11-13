@@ -80,4 +80,12 @@ public class DefaultStringField extends AbstractField implements StringField {
             throw new UnexpectedApplicationState("On " + this, e);
         }
     }
+
+    public void toString(StringBuilder buffer, Object value) {
+        buffer.append("\"").append(value != null ? escapeString((String) value) : null).append("\"");
+    }
+
+    private String escapeString(String value) {
+        return value.contains("\"") ? value.replaceAll("\"", "'") : value;
+    }
 }

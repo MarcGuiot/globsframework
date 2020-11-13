@@ -86,8 +86,26 @@ public class DefaultStringArrayField extends AbstractField implements StringArra
         return Arrays.hashCode(((String[]) o));
     }
 
-    public String toString(Object value, String offset) {
-        return Arrays.toString(((String[]) value));
+    public void toString(StringBuilder buffer, Object value) {
+        if (value == null) {
+            buffer.append("null");
+        } else {
+            buffer.append("[");
+            String[] values = (String[]) value;
+            if (values.length > 1) {
+                buffer.append("\"").append(escapeString(values[0])).append("\"");
+            }
+            for (int i = 1; i < values.length; i++) {
+                String s = values[i];
+                buffer.append("\"").append(escapeString(s)).append("\"");
+
+            }
+            buffer.append(Arrays.toString(values));
+        }
+    }
+
+    private String escapeString(String value) {
+        return value.contains("\"") ? value.replaceAll("\"", "'") : value;
     }
 
 }

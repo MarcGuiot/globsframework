@@ -24,14 +24,15 @@ public class GlobPrinter {
     public static String toString(final FieldsValueScanner fieldValues) {
         final StringBuilder builder = new StringBuilder();
         if (fieldValues == null) {
-            return "NULL";
+            return "null";
         }
         fieldValues.safeApply((field, value) ->
-                builder
-                        .append(field.getName())
-                        .append("=")
-                        .append(field.toString(value, ""))
-                        .append('\n'));
+        {
+            builder
+                    .append("\"").append(field.getName())
+                    .append("\":");
+            field.toString(builder, value);
+        });
         return builder.toString();
     }
 
@@ -63,7 +64,7 @@ public class GlobPrinter {
 
     public static void print(Glob glob, Writer writer) {
         PrintWriter printer = new PrintWriter(writer);
-        printer.println("===== " + glob + " ======");
+        printer.println("===== " + glob.getNewKey() + " ======");
 
         List<Object[]> rows = new ArrayList<Object[]>();
         for (Field field : glob.getType().getFields()) {
