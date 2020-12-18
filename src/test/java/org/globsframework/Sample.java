@@ -11,16 +11,16 @@ import static org.junit.Assert.assertEquals;
 
 public class Sample {
 
-    void readme(){
+    void readme() {
         GlobType type = GlobTypeBuilderFactory.create("aType")
-            .addIntegerKey("id")
-            .addStringField("string", NamingFieldAnnotationType.UNIQUE_GLOB)
-            .addIntegerField("int")
-            .addLongField("long")
-            .addDoubleField("double")
-            .addBlobField("blob")
-            .addBooleanField("boolean")
-            .get();
+                .addIntegerKey("id")
+                .addStringField("string", NamingFieldAnnotationType.UNIQUE_GLOB)
+                .addIntegerField("int")
+                .addLongField("long")
+                .addDoubleField("double")
+                .addBlobField("blob")
+                .addBooleanField("boolean")
+                .get();
 
         MutableGlob data = type.instantiate();
 

@@ -1,11 +1,7 @@
 package org.globsframework.model.utils;
 
 import org.globsframework.utils.NanoChrono;
-import org.junit.Assert;
 import org.junit.Test;
-import sun.misc.Unsafe;
-
-import java.util.BitSet;
 
 public class LongBitOperationTest {
 
@@ -68,8 +64,7 @@ public class LongBitOperationTest {
         void set(int index) {
             if (index < 64) {
                 val1 |= 1L << index;
-            }
-            else {
+            } else {
                 val2 |= 1L << index;
             }
             /*
@@ -84,15 +79,10 @@ public class LongBitOperationTest {
             }*/
         }
 
-        private static int wordIndex(int bitIndex) {
-            return bitIndex >> ADDRESS_BITS_PER_WORD;
-        }
-
         void clean(int index) {
             if (index < 64) {
                 val1 &= ~(1L << index);
-            }
-            else {
+            } else {
                 val2 &= ~(1L << index);
             }
         }
@@ -100,10 +90,13 @@ public class LongBitOperationTest {
         boolean isSet(int index) {
             if (index < 64) {
                 return (val1 & (1L << index)) != 0;
-            }
-            else {
+            } else {
                 return (val2 & (1L << index)) != 0;
             }
+        }
+
+        private static int wordIndex(int bitIndex) {
+            return bitIndex >> ADDRESS_BITS_PER_WORD;
         }
     }
 
@@ -131,10 +124,6 @@ public class LongBitOperationTest {
             }
         }
 
-        private static int wordIndex(int bitIndex) {
-            return bitIndex >> ADDRESS_BITS_PER_WORD;
-        }
-
         void clean(int index) {
             switch (wordIndex(index)) {
                 case 0:
@@ -157,6 +146,10 @@ public class LongBitOperationTest {
                 default:
                     throw new RuntimeException("index " + index + " out of bound ");
             }
+        }
+
+        private static int wordIndex(int bitIndex) {
+            return bitIndex >> ADDRESS_BITS_PER_WORD;
         }
     }
 
