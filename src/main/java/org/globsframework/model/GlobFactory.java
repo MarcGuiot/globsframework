@@ -2,10 +2,7 @@ package org.globsframework.model;
 
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.fields.*;
-import org.globsframework.model.globaccessor.get.GlobGetAccessor;
-import org.globsframework.model.globaccessor.get.GlobGetDoubleAccessor;
-import org.globsframework.model.globaccessor.get.GlobGetIntAccessor;
-import org.globsframework.model.globaccessor.get.GlobGetLongAccessor;
+import org.globsframework.model.globaccessor.get.*;
 import org.globsframework.model.globaccessor.set.GlobSetAccessor;
 import org.globsframework.model.globaccessor.set.GlobSetDoubleAccessor;
 import org.globsframework.model.globaccessor.set.GlobSetIntAccessor;
@@ -70,6 +67,10 @@ public interface GlobFactory {
 
     default GlobGetIntAccessor getGetAccessor(IntegerField field) {
         return (GlobGetIntAccessor) getGetValueAccessor(field);
+    }
+
+    default GlobGetStringAccessor getGetAccessor(StringField field) {
+        return (GlobGetStringAccessor) getGetValueAccessor(field);
     }
 
     default GlobGetDoubleAccessor getGetAccessor(DoubleField field) {
