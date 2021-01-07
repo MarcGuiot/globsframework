@@ -5,9 +5,7 @@ import org.globsframework.model.Glob;
 
 import java.util.function.Function;
 
-public interface StringField extends Field, Function<Glob, String>
-{
-
+public interface StringField extends Field, Function<Glob, String> {
     default String apply(Glob glob) {
         return glob.get(this);
     }

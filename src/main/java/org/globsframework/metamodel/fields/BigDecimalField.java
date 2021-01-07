@@ -1,6 +1,13 @@
 package org.globsframework.metamodel.fields;
 
 import org.globsframework.metamodel.Field;
+import org.globsframework.model.Glob;
 
-public interface BigDecimalField extends Field {
+import java.math.BigDecimal;
+import java.util.function.Function;
+
+public interface BigDecimalField extends Field, Function<Glob, BigDecimal> {
+    default BigDecimal apply(Glob glob) {
+        return glob.get(this);
+    }
 }

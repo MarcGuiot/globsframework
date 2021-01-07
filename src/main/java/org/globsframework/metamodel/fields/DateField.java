@@ -1,6 +1,13 @@
 package org.globsframework.metamodel.fields;
 
 import org.globsframework.metamodel.Field;
+import org.globsframework.model.Glob;
 
-public interface DateField extends Field {
+import java.time.LocalDate;
+import java.util.function.Function;
+
+public interface DateField extends Field, Function<Glob, LocalDate> {
+    default LocalDate apply(Glob glob) {
+        return glob.get(this);
+    }
 }
