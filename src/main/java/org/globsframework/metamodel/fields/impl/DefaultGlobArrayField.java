@@ -43,12 +43,12 @@ public class DefaultGlobArrayField extends AbstractField implements GlobArrayFie
         return true;
     }
 
-    public GlobType getType() {
+    public GlobType getTargetType() {
         return targetType;
     }
 
     public Collection<GlobType> getTypes() {
-        return Collections.singletonList(getType());
+        return Collections.singletonList(getTargetType());
     }
 
     public <T extends FieldVisitor> T visit(T visitor) throws Exception {
@@ -116,13 +116,13 @@ public class DefaultGlobArrayField extends AbstractField implements GlobArrayFie
     public boolean valueEqual(Object o1, Object o2) {
         return (o1 == null) && (o2 == null) ||
                 !((o1 == null) || (o2 == null)) &&
-                        isSameGlob(getType(), ((Glob[]) o1), ((Glob[]) o2));
+                        isSameGlob(getTargetType(), ((Glob[]) o1), ((Glob[]) o2));
     }
 
     public boolean valueOrKeyEqual(Object o1, Object o2) {
         return (o1 == null) && (o2 == null) ||
                 !((o1 == null) || (o2 == null)) &&
-                        isSameKeyOrGlob(getType(), ((Glob[]) o1), ((Glob[]) o2));
+                        isSameKeyOrGlob(getTargetType(), ((Glob[]) o1), ((Glob[]) o2));
     }
 
     public void checkValue(Object object) throws InvalidParameter {

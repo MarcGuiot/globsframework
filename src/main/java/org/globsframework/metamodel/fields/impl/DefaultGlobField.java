@@ -20,7 +20,7 @@ public class DefaultGlobField extends AbstractField implements GlobField {
         this.targetType = targetType;
     }
 
-    public GlobType getType() {
+    public GlobType getTargetType() {
         return targetType;
     }
 
@@ -96,12 +96,12 @@ public class DefaultGlobField extends AbstractField implements GlobField {
 
     public boolean valueEqual(Object o1, Object o2) {
         return (o1 == null) && (o2 == null) ||
-                !((o1 == null) || (o2 == null)) && isSameGlob(getType(), (Glob)o1, (Glob)o2);
+                !((o1 == null) || (o2 == null)) && isSameGlob(getTargetType(), (Glob)o1, (Glob)o2);
     }
 
     public boolean valueOrKeyEqual(Object o1, Object o2) {
         return (o1 == null) && (o2 == null) ||
-                !((o1 == null) || (o2 == null)) && isSameKeyOrGlob(getType(), (Glob)o1, (Glob)o2);
+                !((o1 == null) || (o2 == null)) && isSameKeyOrGlob(getTargetType(), (Glob)o1, (Glob)o2);
     }
 
     public void checkValue(Object object) throws InvalidParameter {
@@ -134,6 +134,6 @@ public class DefaultGlobField extends AbstractField implements GlobField {
     }
 
     public Collection<GlobType> getTypes() {
-        return Collections.singletonList(getType());
+        return Collections.singletonList(getTargetType());
     }
 }

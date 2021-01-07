@@ -7,7 +7,7 @@ import org.globsframework.model.Glob;
 import java.util.function.Function;
 
 public interface GlobArrayField extends Field, Function<Glob, Glob[]> {
-    GlobType getType();
+    GlobType getTargetType();
 
     default Glob[] apply(Glob glob) {
         return glob.get(this);

@@ -8,9 +8,9 @@ import java.util.Collection;
 import java.util.function.Function;
 
 public interface GlobUnionField extends Field, Function<Glob, Glob> {
-    Collection<GlobType> getTypes();
+    Collection<GlobType> getTargetTypes();
 
-    GlobType get(String name);
+    GlobType getTargetType(String name);
 
     default Glob apply(Glob glob) {
         return glob.get(this);

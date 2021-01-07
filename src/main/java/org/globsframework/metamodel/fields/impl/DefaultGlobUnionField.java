@@ -22,7 +22,7 @@ public class DefaultGlobUnionField extends AbstractField implements GlobUnionFie
         targetTypes.forEach(this::__add__);
     }
 
-    public Collection<GlobType> getTypes() {
+    public Collection<GlobType> getTargetTypes() {
         return targetTypes.values();
     }
 
@@ -30,7 +30,7 @@ public class DefaultGlobUnionField extends AbstractField implements GlobUnionFie
         this.targetTypes.put(t.getName(), t);
     }
 
-    public GlobType get(String name) {
+    public GlobType getTargetType(String name) {
         GlobType globType = targetTypes.get(name);
         if (globType == null) {
             throw new RuntimeException("Type " + name + " not possible in " + getFullName() + " available " + targetTypes);
