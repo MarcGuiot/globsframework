@@ -191,13 +191,13 @@ public abstract class AbstractGlob extends AbstractFieldValues implements Glob, 
         }
 
         Key otherKey = (Key) o;
-        if (!getType().equals(otherKey.getGlobType())) {
+        if (getType() != otherKey.getGlobType()) {
             return false;
         }
 
         Field[] keyFields = getType().getKeyFields();
         if (keyFields.length == 0) {
-            return o instanceof Glob && reallyEquals((Glob) o);
+            return true; //o instanceof Glob && reallyEquals((Glob) o);
         }
 
         for (Field field : keyFields) {
