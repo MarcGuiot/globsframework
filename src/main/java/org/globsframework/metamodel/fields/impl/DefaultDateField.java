@@ -84,4 +84,8 @@ public class DefaultDateField extends AbstractField implements DateField {
             throw new UnexpectedApplicationState("On " + this, e);
         }
     }
+    public void toString(StringBuilder buffer, Object value) {
+        buffer.append("\"").append(value).append("\"");
+    }
+
 }

@@ -92,15 +92,14 @@ public class DefaultStringArrayField extends AbstractField implements StringArra
         } else {
             buffer.append("[");
             String[] values = (String[]) value;
-            if (values.length > 1) {
+            if (values.length > 0) {
                 buffer.append("\"").append(escapeString(values[0])).append("\"");
+                for (int i = 1; i < values.length; i++) {
+                    String s = values[i];
+                    buffer.append(", ").append("\"").append(escapeString(s)).append("\"");
+                }
             }
-            for (int i = 1; i < values.length; i++) {
-                String s = values[i];
-                buffer.append("\"").append(escapeString(s)).append("\"");
-
-            }
-            buffer.append(Arrays.toString(values));
+            buffer.append("]");
         }
     }
 
