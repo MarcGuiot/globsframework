@@ -246,6 +246,22 @@ public interface FieldValues extends FieldValuesAccessor, FieldsValueScanner {
         return value;
     }
 
+    default ZonedDateTime getNotNull(DateTimeField field) {
+        ZonedDateTime value = get(field);
+        if (value == null) {
+            throw new NullPointerException(field.getFullName() + " should not be null " + GlobPrinter.toString(this));
+        }
+        return value;
+    }
+
+    default LocalDate getNotNull(DateField field) {
+        LocalDate value = get(field);
+        if (value == null) {
+            throw new NullPointerException(field.getFullName() + " should not be null " + GlobPrinter.toString(this));
+        }
+        return value;
+    }
+
     default double[] getNotNull(DoubleArrayField field) {
         double[] value = get(field);
         if (value == null) {

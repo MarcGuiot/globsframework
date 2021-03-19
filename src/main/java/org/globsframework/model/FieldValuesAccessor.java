@@ -2,17 +2,16 @@ package org.globsframework.model;
 
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.fields.*;
-import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.Optional;
 
 
 public interface FieldValuesAccessor {
+
 
     Glob[] EMPTY = new Glob[0];
 
@@ -72,6 +71,16 @@ public interface FieldValuesAccessor {
 
     default String get(StringField field, String valueIfNull) throws ItemNotFound {
         String value = get(field);
+        return value != null ? value : valueIfNull;
+    }
+
+    default ZonedDateTime get(DateTimeField field, ZonedDateTime valueIfNull) throws ItemNotFound {
+        ZonedDateTime value = get(field);
+        return value != null ? value : valueIfNull;
+    }
+
+    default LocalDate get(DateField field, LocalDate valueIfNull) throws ItemNotFound {
+        LocalDate value = get(field);
         return value != null ? value : valueIfNull;
     }
 
