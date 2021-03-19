@@ -31,8 +31,17 @@ public class DefaultSerializationInput implements SerializedInput {
     public Glob readGlob(GlobModel model) {
         GlobType globType = model.getType(readUtf8String());
         MutableGlob mutableGlob = globType.instantiate();
-        InputStreamFieldVisitor fieldVisitorInput = new InputStreamFieldVisitor(model, mutableGlob);
+        InputStreamFieldVisitor fieldVisitorInput = new InputStreamFieldVisitor(mutableGlob);
         for (Field field : globType.getFields()) {
+            field.safeVisit(fieldVisitorInput);
+        }
+        return mutableGlob;
+    }
+
+    public Glob readKnowGlob(GlobType type) {
+        MutableGlob mutableGlob = type.instantiate();
+        InputStreamFieldVisitor fieldVisitorInput = new InputStreamFieldVisitor(mutableGlob);
+        for (Field field : type.getFields()) {
             field.safeVisit(fieldVisitorInput);
         }
         return mutableGlob;
@@ -179,12 +188,12 @@ public class DefaultSerializationInput implements SerializedInput {
 
     static class FieldReader implements FieldVisitor {
         private DefaultSerializationInput input;
-        private GlobModel model;
+//        private GlobModel model;
         private FieldValuesBuilder builder;
 
         public FieldReader(DefaultSerializationInput input, GlobModel model, FieldValuesBuilder builder) {
             this.input = input;
-            this.model = model;
+//            this.model = model;
             this.builder = builder;
         }
 
@@ -234,7 +243,7 @@ public class DefaultSerializationInput implements SerializedInput {
 
         public void visitGlob(GlobField field) throws Exception {
             if (input.readBoolean()) {
-                builder.set(field, input.readGlob(model));
+                builder.set(field, input.readKnowGlob(field.getTargetType()));
             }
         }
 
@@ -244,7 +253,7 @@ public class DefaultSerializationInput implements SerializedInput {
                 Glob[] values = new Glob[len];
                 for (int i = 0; i < values.length; i++) {
                     if (input.readBoolean()) {
-                        values[i] = input.readGlob(model);
+                        values[i] = input.readKnowGlob(field.getTargetType());
                     }
                 }
                 builder.set(field, values);
@@ -253,7 +262,7 @@ public class DefaultSerializationInput implements SerializedInput {
 
         public void visitUnionGlob(GlobUnionField field) {
             if (input.readBoolean()) {
-                builder.set(field, input.readGlob(model));
+                builder.set(field, input.readKnowGlob(field.getTargetType(input.readUtf8String())));
             }
         }
 
@@ -263,7 +272,7 @@ public class DefaultSerializationInput implements SerializedInput {
                 Glob[] values = new Glob[len];
                 for (int i = 0; i < values.length; i++) {
                     if (input.readBoolean()) {
-                        values[i] = input.readGlob(model);
+                        values[i] = input.readKnowGlob(field.getTargetType(input.readUtf8String()));
                     }
                 }
                 builder.set(field, values);
@@ -309,12 +318,10 @@ public class DefaultSerializationInput implements SerializedInput {
 
     static class FieldWithPreviousReader implements FieldVisitor {
         private DefaultSerializationInput input;
-        private GlobModel model;
         private FieldValuesWithPreviousBuilder builder;
 
         public FieldWithPreviousReader(DefaultSerializationInput input, GlobModel model, FieldValuesWithPreviousBuilder builder) {
             this.input = input;
-            this.model = model;
             this.builder = builder;
         }
 
@@ -365,11 +372,11 @@ public class DefaultSerializationInput implements SerializedInput {
         public void visitGlob(GlobField field) throws Exception {
             Glob newValue = null;
             if (input.readBoolean()) {
-                newValue = input.readGlob(model);
+                newValue = input.readKnowGlob(field.getTargetType());
             }
             Glob previousValue = null;
             if (input.readBoolean()) {
-                previousValue = input.readGlob(model);
+                previousValue = input.readKnowGlob(field.getTargetType());
             }
             builder.set(field, newValue, previousValue);
         }
@@ -380,7 +387,7 @@ public class DefaultSerializationInput implements SerializedInput {
             if (lenNewValues >= 0) {
                 newValue = new Glob[lenNewValues];
                 for (int i = 0; i < newValue.length; i++) {
-                    newValue[i] = input.readBoolean() ? input.readGlob(model) : null;
+                    newValue[i] = input.readBoolean() ? input.readKnowGlob(field.getTargetType()) : null;
                 }
             }
 
@@ -389,7 +396,7 @@ public class DefaultSerializationInput implements SerializedInput {
             if (lenPreviousValues >= 0) {
                 previousValue = new Glob[lenPreviousValues];
                 for (int i = 0; i < previousValue.length; i++) {
-                    previousValue[i] = input.readBoolean() ? input.readGlob(model) : null;
+                    previousValue[i] = input.readBoolean() ? input.readKnowGlob(field.getTargetType()) : null;
                 }
             }
             builder.set(field, newValue, previousValue);
@@ -398,11 +405,11 @@ public class DefaultSerializationInput implements SerializedInput {
         public void visitUnionGlob(GlobUnionField field) {
             Glob newValue = null;
             if (input.readBoolean()) {
-                newValue = input.readGlob(model);
+                newValue = input.readKnowGlob(field.getTargetType(input.readUtf8String()));
             }
             Glob previousValue = null;
             if (input.readBoolean()) {
-                previousValue = input.readGlob(model);
+                previousValue = input.readKnowGlob(field.getTargetType(input.readUtf8String()));
             }
             builder.set(field, newValue, previousValue);
         }
@@ -413,7 +420,7 @@ public class DefaultSerializationInput implements SerializedInput {
             if (lenNewValues >= 0) {
                 newValue = new Glob[lenNewValues];
                 for (int i = 0; i < newValue.length; i++) {
-                    newValue[i] = input.readBoolean() ? input.readGlob(model) : null;
+                    newValue[i] = input.readBoolean() ? input.readKnowGlob(field.getTargetType(input.readUtf8String())) : null;
                 }
             }
 
@@ -422,7 +429,7 @@ public class DefaultSerializationInput implements SerializedInput {
             if (lenPreviousValues >= 0) {
                 previousValue = new Glob[lenPreviousValues];
                 for (int i = 0; i < previousValue.length; i++) {
-                    previousValue[i] = input.readBoolean() ? input.readGlob(model) : null;
+                    previousValue[i] = input.readBoolean() ? input.readKnowGlob(field.getTargetType(input.readUtf8String())) : null;
                 }
             }
             builder.set(field, newValue, previousValue);
@@ -450,8 +457,8 @@ public class DefaultSerializationInput implements SerializedInput {
         if (year == Integer.MIN_VALUE) {
             return null;
         }
-        byte month = readByte();
-        byte day = readByte();
+        int month = readNotNullInt();
+        int day = readNotNullInt();
         return LocalDate.of(year, month, day);
     }
 
@@ -460,18 +467,18 @@ public class DefaultSerializationInput implements SerializedInput {
         if (year == Integer.MIN_VALUE) {
             return null;
         }
-        byte month = readByte();
-        byte day = readByte();
-        LocalDate localDate = LocalDate.of(year, month, day);
-        long time = readNotNullLong();
-        LocalTime localTime = LocalTime.ofNanoOfDay(time);
-        String zoneId = readUtf8String();
-        int totalSeconds = readNotNullInt();
-        return ZonedDateTime.of(localDate, localTime, ZoneId.ofOffset(zoneId, ZoneOffset.ofTotalSeconds(totalSeconds)));
+        int month = readNotNullInt();
+        int day = readNotNullInt();
+        int hour = readNotNullInt();
+        int min = readNotNullInt();
+        int second = readNotNullInt();
+        int nano = readNotNullInt();
+        String zone = readUtf8String();
+        return ZonedDateTime.of(LocalDate.of(year, month, day),
+                LocalTime.of(hour, min, second, nano), ZoneId.of(zone));
     }
 
     public Integer readInteger() {
-
         if (isNull()) {
             return null;
         }
@@ -538,8 +545,8 @@ public class DefaultSerializationInput implements SerializedInput {
                 ((long) (read()) << 40) +
                 ((long) (read()) << 32) +
                 ((long) (read()) << 24) +
-                ((read()) << 16) +
-                ((read()) << 8) +
+                ((long) (read()) << 16) +
+                ((long) (read()) << 8) +
                 ((read())));
     }
 
@@ -589,11 +596,9 @@ public class DefaultSerializationInput implements SerializedInput {
     }
 
     private class InputStreamFieldVisitor implements FieldVisitor {
-        private GlobModel model;
         private MutableGlob mutableGlob;
 
-        public InputStreamFieldVisitor(GlobModel model, MutableGlob mutableGlob) {
-            this.model = model;
+        public InputStreamFieldVisitor(MutableGlob mutableGlob) {
             this.mutableGlob = mutableGlob;
         }
 
@@ -643,7 +648,7 @@ public class DefaultSerializationInput implements SerializedInput {
 
         public void visitGlob(GlobField field) {
             if (readBoolean()) {
-                mutableGlob.set(field, readGlob(model));
+                mutableGlob.set(field, readKnowGlob(field.getTargetType()));
             }
         }
 
@@ -653,7 +658,7 @@ public class DefaultSerializationInput implements SerializedInput {
                 Glob[] values = new Glob[len];
                 for (int i = 0; i < values.length; i++) {
                     if (readBoolean()) {
-                        values[i] = readGlob(model);
+                        values[i] = readKnowGlob(field.getTargetType());
                     }
                 }
                 mutableGlob.set(field, values);
@@ -662,7 +667,8 @@ public class DefaultSerializationInput implements SerializedInput {
 
         public void visitUnionGlob(GlobUnionField field) {
             if (readBoolean()) {
-                mutableGlob.set(field, readGlob(model));
+                GlobType globType = field.getTargetType(readUtf8String());
+                mutableGlob.set(field, readKnowGlob(globType));
             }
         }
 
@@ -672,7 +678,7 @@ public class DefaultSerializationInput implements SerializedInput {
                 Glob[] values = new Glob[len];
                 for (int i = 0; i < values.length; i++) {
                     if (readBoolean()) {
-                        values[i] = readGlob(model);
+                        values[i] = readKnowGlob(field.getTargetType(readUtf8String()));
                     }
                 }
                 mutableGlob.set(field, values);

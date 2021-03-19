@@ -1,6 +1,7 @@
 package org.globsframework.utils.serialization;
 
 import org.globsframework.metamodel.GlobModel;
+import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.ChangeSet;
 import org.globsframework.model.Glob;
 
@@ -32,6 +33,8 @@ public interface SerializedInput {
     byte[] readBytes();
 
     Glob readGlob(GlobModel model);
+
+    Glob readKnowGlob(GlobType type);
 
     ChangeSet readChangeSet(GlobModel model);
 

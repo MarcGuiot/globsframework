@@ -18,6 +18,11 @@ class SerializedOutputChecker implements SerializedOutput {
         serializationOutput.writeGlob(glob);
     }
 
+    public void writeKnowGlob(Glob glob) {
+        serializationOutput.writeUtf8String("KnowGlob");
+        serializationOutput.writeKnowGlob(glob);
+    }
+
     public void writeChangeSet(ChangeSet changeSet) {
         serializationOutput.writeUtf8String("ChangeSet");
         serializationOutput.writeChangeSet(changeSet);

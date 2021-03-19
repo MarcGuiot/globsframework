@@ -2,12 +2,15 @@ package org.globsframework.utils.serialization;
 
 import org.globsframework.metamodel.DummyModel;
 import org.globsframework.metamodel.DummyObject;
+import org.globsframework.metamodel.DummyObjectInner;
+import org.globsframework.metamodel.DummyObjectWithInner;
 import org.globsframework.model.*;
 import org.globsframework.model.delta.DefaultChangeSet;
 import org.globsframework.model.delta.MutableChangeSet;
 import org.globsframework.model.utils.GlobBuilder;
 import org.globsframework.utils.ArrayTestUtils;
 import org.globsframework.utils.TestUtils;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -118,7 +121,29 @@ public class SerializationTest {
                                          "<delete type='dummyObject' id='3' _name='name3' _value='3.14'/>");
     }
 
-//  public void testBigWrite() throws Exception {
+    @Test
+    public void withInnerGlob() throws IOException {
+        MutableGlob obj1 = DummyObjectWithInner.TYPE.instantiate()
+                .set(DummyObjectWithInner.ID, 1)
+                .set(DummyObjectWithInner.VALUE, DummyObjectInner.TYPE.instantiate().set(DummyObjectInner.VALUE, 3.14))
+                .set(DummyObjectWithInner.VALUES, new Glob[]{DummyObjectInner.TYPE.instantiate().set(DummyObjectInner.VALUE, 3.14 * 2),
+                        DummyObjectInner.TYPE.instantiate().set(DummyObjectInner.VALUE, 3.14 * 3)})
+                .set(DummyObjectWithInner.VALUE_UNION, DummyObject.TYPE.instantiate().set(DummyObject.VALUE, 3.14))
+                .set(DummyObjectWithInner.VALUES_UNION, new Glob[]{DummyObjectInner.TYPE.instantiate().set(DummyObjectInner.VALUE, 3.14 * 2),
+                        DummyObject.TYPE.instantiate().set(DummyObject.VALUE, 3.14 * 3)});
+
+        output.writeKnowGlob(obj1);
+        outputStream.close();
+
+        Glob newGlob = input.readKnowGlob(DummyObjectWithInner.TYPE);
+        assertNotSame(obj1, newGlob);
+        Assert.assertEquals(newGlob.get(DummyObjectWithInner.VALUE).get(DummyObjectInner.VALUE), 3.14, 0.01);
+        Assert.assertEquals(newGlob.get(DummyObjectWithInner.VALUE_UNION).get(DummyObject.VALUE), 3.14, 0.01);
+        Assert.assertEquals(newGlob.get(DummyObjectWithInner.VALUES_UNION)[0].get(DummyObjectInner.VALUE), 3.14 * 2, 0.01);
+        Assert.assertEquals(newGlob.get(DummyObjectWithInner.VALUES_UNION)[1].get(DummyObject.VALUE), 3.14 * 3, 0.01);
+    }
+
+    //  public void testBigWrite() throws Exception {
 //    for (int i = 0; i < 550000; i++){
 //      output.writeJavaString("blah");
 //      output.writeBoolean(Boolean.TRUE);

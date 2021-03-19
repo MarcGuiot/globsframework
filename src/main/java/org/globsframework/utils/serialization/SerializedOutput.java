@@ -35,6 +35,8 @@ public interface SerializedOutput {
 
     void writeGlob(Glob glob);
 
+    void writeKnowGlob(Glob glob);
+
     void writeChangeSet(ChangeSet changeSet);
 
     void write(int[] values);

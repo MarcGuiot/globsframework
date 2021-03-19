@@ -35,6 +35,13 @@ public class DefaultSerializationOutput implements SerializedOutput, ChangeSetVi
         }
     }
 
+    public void writeKnowGlob(Glob glob) {
+        OutputStreamFieldVisitor visitor = new OutputStreamFieldVisitor(glob);
+        for (Field field : glob.getType().getFields()) {
+            field.safeVisit(visitor);
+        }
+    }
+
     public void writeChangeSet(ChangeSet changeSet) {
         writeInteger(changeSet.getChangeCount());
         changeSet.safeVisit(this);
@@ -335,8 +342,7 @@ public class DefaultSerializationOutput implements SerializedOutput, ChangeSetVi
         }
 
         public void visitGlob(GlobField field, Glob value) {
-            writeUtf8String(value.getType().getName());
-            writeValues(value);
+            writeKnowGlob(value);
         }
 
         public void visitGlobArray(GlobArrayField field, Glob[] value) {
@@ -347,16 +353,14 @@ public class DefaultSerializationOutput implements SerializedOutput, ChangeSetVi
                 for (Glob glob : value) {
                     write(glob != null);
                     if (glob != null) {
-                        writeUtf8String(glob.getType().getName());
-                        writeValues(glob);
+                        writeKnowGlob(glob);
                     }
                 }
             }
         }
 
         public void visitUnionGlob(GlobUnionField field, Glob value) throws Exception {
-            writeUtf8String(value.getType().getName());
-            writeValues(value);
+            writeGlob(value);
         }
 
         public void visitUnionGlobArray(GlobArrayUnionField field, Glob[] value) throws Exception {
@@ -367,8 +371,7 @@ public class DefaultSerializationOutput implements SerializedOutput, ChangeSetVi
                 for (Glob glob : value) {
                     write(glob != null);
                     if (glob != null) {
-                        writeUtf8String(glob.getType().getName());
-                        writeValues(glob);
+                        writeGlob(glob);
                     }
                 }
             }
@@ -459,7 +462,7 @@ public class DefaultSerializationOutput implements SerializedOutput, ChangeSetVi
             boolean isNull = value != null;
             write(isNull);
             if (isNull) {
-                writeGlob(value);
+                writeKnowGlob(value);
             }
         }
 
@@ -470,7 +473,7 @@ public class DefaultSerializationOutput implements SerializedOutput, ChangeSetVi
             else {
                 write(value.length);
                 for (Glob glob : value) {
-                    writeGlob(glob);
+                    writeKnowGlob(glob);
                 }
             }
         }
@@ -568,7 +571,7 @@ public class DefaultSerializationOutput implements SerializedOutput, ChangeSetVi
             Glob glob = this.glob.get(field);
             write(glob != null);
             if (glob != null) {
-                writeGlob(glob);
+                writeKnowGlob(glob);
             }
         }
 
@@ -582,7 +585,7 @@ public class DefaultSerializationOutput implements SerializedOutput, ChangeSetVi
                 for (Glob glob : globs) {
                     write(glob != null);
                     if (glob != null) {
-                        writeGlob(glob);
+                        writeKnowGlob(glob);
                     }
                 }
             }

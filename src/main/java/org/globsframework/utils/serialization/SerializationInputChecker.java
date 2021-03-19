@@ -1,6 +1,7 @@
 package org.globsframework.utils.serialization;
 
 import org.globsframework.metamodel.GlobModel;
+import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.ChangeSet;
 import org.globsframework.model.Glob;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
@@ -22,6 +23,16 @@ public class SerializationInputChecker implements SerializedInput {
         }
         else {
             throw new UnexpectedApplicationState("Glob expected but got " + value);
+        }
+    }
+
+    public Glob readKnowGlob(GlobType type) {
+        String value = serializedInput.readUtf8String();
+        if ("KnowGlob".equals(value)) {
+            return serializedInput.readKnowGlob(type);
+        }
+        else {
+            throw new UnexpectedApplicationState("Known Glob " + type + " expected but got " + value);
         }
     }
 
