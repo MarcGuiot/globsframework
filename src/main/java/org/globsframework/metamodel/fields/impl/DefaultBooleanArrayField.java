@@ -88,7 +88,12 @@ public class DefaultBooleanArrayField extends AbstractField implements BooleanAr
     }
 
     public void toString(StringBuilder buffer, Object value) {
-        buffer.append(Arrays.toString(((boolean[]) value)));
+        if (value == null) {
+            buffer.append("null");
+        }
+        else {
+            buffer.append(Arrays.toString(((boolean[]) value)));
+        }
     }
 
 }

@@ -86,7 +86,12 @@ public class DefaultLongArrayField extends AbstractField implements LongArrayFie
     }
 
     public void toString(StringBuilder buffer, Object value) {
-        buffer.append(Arrays.toString(((long[]) value)));
+        if (value == null) {
+            buffer.append("null");
+        }
+        else {
+            buffer.append(Arrays.toString(((long[]) value)));
+        }
     }
 
 }

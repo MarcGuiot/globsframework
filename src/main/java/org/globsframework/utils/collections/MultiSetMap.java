@@ -123,6 +123,11 @@ public class MultiSetMap<K, V> {
         return !(result == null || result.isEmpty());
     }
 
+    public boolean contains(K key, V v) {
+        Set<V> result = map.get(key);
+        return (result != null &&  result.contains(v));
+    }
+
     public MultiSetMap<K, V> duplicate() {
         MultiSetMap<K, V> result = new MultiSetMap<K, V>();
         for (Map.Entry<K, Set<V>> entry : map.entrySet()) {

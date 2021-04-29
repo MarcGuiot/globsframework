@@ -4,7 +4,6 @@ import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.model.MutableGlob;
 
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
@@ -96,8 +95,7 @@ public class StringConverter {
             if (str != null) {
                 if (str.contains("T")) {
                     glob.set(dateTimeField, ZonedDateTime.parse(str));
-                }
-                else {
+                } else {
                     if (str.length() > 6) {
                         ZoneId zoneId = ZoneId.systemDefault();
                         ZonedDateTime.parse(str);

@@ -92,6 +92,11 @@ public class DefaultBigDecimalArrayField extends AbstractField implements BigDec
     }
 
     public void toString(StringBuilder buffer, Object value) {
-        buffer.append(Arrays.toString(((BigDecimal[]) value)));
+        if (value == null) {
+            buffer.append("null");
+        }
+        else {
+            buffer.append(Arrays.toString(((BigDecimal[]) value)));
+        }
     }
 }

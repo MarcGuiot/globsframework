@@ -9,6 +9,7 @@ import org.globsframework.model.MutableGlob;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public interface GlobType extends PropertyHolder<GlobType>, Annotations {
@@ -69,6 +70,10 @@ public interface GlobType extends PropertyHolder<GlobType>, Annotations {
 
     default boolean hasKeys() {
         return getKeyFields().length != 0;
+    }
+
+    default Optional<Field> findOptField(String name) {
+        return Optional.ofNullable(findField(name));
     }
 
 }

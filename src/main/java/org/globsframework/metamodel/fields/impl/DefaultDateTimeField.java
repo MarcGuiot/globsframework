@@ -87,6 +87,11 @@ public class DefaultDateTimeField extends AbstractField implements DateTimeField
     }
 
     public void toString(StringBuilder buffer, Object value) {
-        buffer.append("\"").append(value).append("\"");
+        if (value == null) {
+            buffer.append("null");
+        }
+        else {
+            buffer.append("\"").append(value).append("\"");
+        }
     }
 }

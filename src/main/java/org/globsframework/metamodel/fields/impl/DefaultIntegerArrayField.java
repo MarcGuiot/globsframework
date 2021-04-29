@@ -86,7 +86,12 @@ public class DefaultIntegerArrayField extends AbstractField implements IntegerAr
     }
 
     public void toString(StringBuilder buffer, Object value) {
-        buffer.append(Arrays.toString(((int[]) value)));
+        if (value == null) {
+            buffer.append("null");
+        }
+        else{
+            buffer.append(Arrays.toString(((int[]) value)));
+        }
     }
 
 }

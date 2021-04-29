@@ -82,7 +82,12 @@ public class DefaultStringField extends AbstractField implements StringField {
     }
 
     public void toString(StringBuilder buffer, Object value) {
-        buffer.append("\"").append(value != null ? escapeString((String) value) : null).append("\"");
+        if (value == null) {
+            buffer.append("null");
+        }
+        else {
+            buffer.append("\"").append(escapeString((String) value)).append("\"");
+        }
     }
 
     private String escapeString(String value) {

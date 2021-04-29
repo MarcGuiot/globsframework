@@ -88,7 +88,12 @@ public class DefaultDoubleArrayField extends AbstractField implements DoubleArra
     }
 
     public void toString(StringBuilder buffer, Object value) {
-        buffer.append(Arrays.toString(((double[]) value)));
+        if (value == null) {
+            buffer.append("null");
+        }
+        else {
+            buffer.append(Arrays.toString(((double[]) value)));
+        }
     }
 
 }

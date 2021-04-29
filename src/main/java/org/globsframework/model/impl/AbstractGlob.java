@@ -26,10 +26,12 @@ public abstract class AbstractGlob extends AbstractFieldValues implements Glob, 
         Field[] fields = type.getFields();
         for (int i = 0; i < fields.length; i++) {
             Field field = fields[i];
-            buffer.append("\"").append(escapeQuote(field.getName())).append("\":");
-            field.toString(buffer, doGet(field));
-            if (i < fields.length - 1) {
-                buffer.append(", ");
+            if (isSet(field)) {
+                buffer.append("\"").append(escapeQuote(field.getName())).append("\":");
+                field.toString(buffer, doGet(field));
+                if (i < fields.length - 1) {
+                    buffer.append(", ");
+                }
             }
         }
         buffer.append("}");
