@@ -10,10 +10,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class DefaultGlobModel implements MutableGlobModel {
     private static Logger LOGGER = LoggerFactory.getLogger(DefaultGlobModel.class);
-    private Map<String, GlobType> typesByName = new HashMap<>();
+    private Map<String, GlobType> typesByName = new ConcurrentHashMap<>();
     private GlobModel innerModel;
     private GlobTypeDependencies dependencies;
     private DefaultMutableGlobLinkModel globLinkModel;

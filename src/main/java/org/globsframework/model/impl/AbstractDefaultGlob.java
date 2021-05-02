@@ -63,6 +63,7 @@ public abstract class AbstractDefaultGlob extends AbstractMutableGlob {
     }
 
     public void unset(Field field) {
+        values[field.getIndex()] = null;
         isSet.clear(field.getIndex());
     }
 

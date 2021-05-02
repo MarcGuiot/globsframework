@@ -52,21 +52,21 @@ public class DefaultSerializationInput implements SerializedInput {
         int count = readInteger();
         for (int i = 0; i < count; i++) {
             GlobType type = model.getType(readUtf8String());
-            Key key = KeyBuilder.createFromValues(type, readValues(model, type));
+            Key key = KeyBuilder.createFromValues(type, readValues(type));
             int state = readByte();
             switch (state) {
                 case 1: {
-                    FieldValues values = readValues(model, type);
+                    FieldValues values = readValues(type);
                     changeSet.processCreation(key, values);
                     break;
                 }
                 case 2: {
-                    FieldValuesWithPrevious values = readValuesWithPrevious(model, type);
+                    FieldValuesWithPrevious values = readValuesWithPrevious(type);
                     changeSet.processUpdate(key, values);
                     break;
                 }
                 case 3: {
-                    FieldValues values = readValues(model, type);
+                    FieldValues values = readValues(type);
                     changeSet.processDeletion(key, values);
                     break;
                 }
@@ -77,9 +77,9 @@ public class DefaultSerializationInput implements SerializedInput {
         return changeSet;
     }
 
-    private FieldValues readValues(GlobModel model, GlobType type) {
+    private FieldValues readValues(GlobType type) {
         FieldValuesBuilder builder = FieldValuesBuilder.init();
-        FieldReader fieldReader = new FieldReader(this, model, builder);
+        FieldReader fieldReader = new FieldReader(this, builder);
         int fieldCount = readNotNullInt();
         while (fieldCount != 0) {
             int fieldIndex = readNotNullInt();
@@ -90,9 +90,9 @@ public class DefaultSerializationInput implements SerializedInput {
         return builder.get();
     }
 
-    private FieldValuesWithPrevious readValuesWithPrevious(GlobModel model, GlobType type) {
+    private FieldValuesWithPrevious readValuesWithPrevious(GlobType type) {
         FieldValuesWithPreviousBuilder builder = FieldValuesWithPreviousBuilder.init(type);
-        FieldWithPreviousReader fieldReader = new FieldWithPreviousReader(this, model, builder);
+        FieldWithPreviousReader fieldReader = new FieldWithPreviousReader(this, builder);
         int fieldCount = readNotNullInt();
         while (fieldCount != 0) {
             int fieldIndex = readNotNullInt();
@@ -188,12 +188,10 @@ public class DefaultSerializationInput implements SerializedInput {
 
     static class FieldReader implements FieldVisitor {
         private DefaultSerializationInput input;
-//        private GlobModel model;
         private FieldValuesBuilder builder;
 
-        public FieldReader(DefaultSerializationInput input, GlobModel model, FieldValuesBuilder builder) {
+        public FieldReader(DefaultSerializationInput input, FieldValuesBuilder builder) {
             this.input = input;
-//            this.model = model;
             this.builder = builder;
         }
 
@@ -320,7 +318,7 @@ public class DefaultSerializationInput implements SerializedInput {
         private DefaultSerializationInput input;
         private FieldValuesWithPreviousBuilder builder;
 
-        public FieldWithPreviousReader(DefaultSerializationInput input, GlobModel model, FieldValuesWithPreviousBuilder builder) {
+        public FieldWithPreviousReader(DefaultSerializationInput input, FieldValuesWithPreviousBuilder builder) {
             this.input = input;
             this.builder = builder;
         }
