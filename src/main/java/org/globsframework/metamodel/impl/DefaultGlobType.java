@@ -22,6 +22,7 @@ import org.globsframework.utils.exceptions.TooManyItems;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -32,6 +33,7 @@ public class DefaultGlobType extends DefaultAnnotations implements MutableGlobTy
     private Field[] fields;
     private Field[] keyFields = new Field[0];
     private GlobFactory globFactory;
+    private Comparator<Key> keyComparator;
     private String[] scope;
     private String name;
     private Map<String, Field> fieldsByName = new HashMap<>();
@@ -171,6 +173,16 @@ public class DefaultGlobType extends DefaultAnnotations implements MutableGlobTy
         }
 
         globFactory = GlobFactoryService.Builder.getBuilderFactory().get(this);
+
+        Comparator<Key> cmp = null;
+        for (Field keyField : keyFields) {
+            if (cmp == null) {
+                cmp = Comparator.comparing(key -> (Comparable) key.getValue(keyField));
+            } else {
+                cmp = cmp.thenComparing(key -> (Comparable)key.getValue(keyField));
+            }
+        }
+        this.keyComparator = cmp;
     }
 
     void addIndex(SingleFieldIndex index) {
@@ -233,6 +245,10 @@ public class DefaultGlobType extends DefaultAnnotations implements MutableGlobTy
             }
         }
         return stringBuilder.toString();
+    }
+
+    public Comparator<Key> sameKeyComparator() {
+        return keyComparator;
     }
 
     private void printAnnotations(StringBuilder stringBuilder, Field field) {
