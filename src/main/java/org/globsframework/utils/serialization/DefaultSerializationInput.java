@@ -286,23 +286,11 @@ public class DefaultSerializationInput implements SerializedInput {
         }
 
         public void visitDate(DateField field) {
-            int year = input.readNotNullInt();
-            int month = input.readNotNullInt();
-            int day = input.readNotNullInt();
-            builder.set(field, LocalDate.of(year, month, day));
+            builder.set(field, input.readDate());
         }
 
         public void visitDateTime(DateTimeField field) {
-            int year = input.readNotNullInt();
-            int month = input.readNotNullInt();
-            int day = input.readNotNullInt();
-            int hour = input.readNotNullInt();
-            int min = input.readNotNullInt();
-            int second = input.readNotNullInt();
-            int nano = input.readNotNullInt();
-            String zone = input.readUtf8String();
-            builder.set(field, ZonedDateTime.of(LocalDate.of(year, month, day),
-                    LocalTime.of(hour, min, second, nano), ZoneId.of(zone)));
+            builder.set(field, input.readDateTime());
         }
     }
 
