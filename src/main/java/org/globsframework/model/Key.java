@@ -1,12 +1,9 @@
 package org.globsframework.model;
 
-import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.FieldValueVisitor;
 
-import java.util.Comparator;
-
-public interface Key extends FieldValuesAccessor, Comparable<Key>{
+public interface Key extends FieldValuesAccessor, Comparable<Key> {
     GlobType getGlobType();
 
     <T extends FieldValues.Functor>

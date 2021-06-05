@@ -14,6 +14,7 @@ public class DummyModel {
         globModel = GlobModelBuilder.create(
             DummyObject.TYPE,
             DummyObject2.TYPE,
+            DummyObjectWithInner.TYPE,
             DummyObjectWithLinks.TYPE,
             DummyObjectWithCompositeKey.TYPE,
             DummyObjectWithStringKey.TYPE,

@@ -342,7 +342,13 @@ public class DefaultSerializationOutput implements SerializedOutput, ChangeSetVi
         }
 
         public void visitGlob(GlobField field, Glob value) {
-            writeKnowGlob(value);
+            if (value != null) {
+                write(true);
+                writeKnowGlob(value);
+            }
+            else {
+                write(false);
+            }
         }
 
         public void visitGlobArray(GlobArrayField field, Glob[] value) {
@@ -360,7 +366,13 @@ public class DefaultSerializationOutput implements SerializedOutput, ChangeSetVi
         }
 
         public void visitUnionGlob(GlobUnionField field, Glob value) throws Exception {
-            writeGlob(value);
+            if (value != null) {
+                write(true);
+                writeGlob(value);
+            }
+            else {
+                write(false);
+            }
         }
 
         public void visitUnionGlobArray(GlobArrayUnionField field, Glob[] value) throws Exception {
@@ -459,9 +471,9 @@ public class DefaultSerializationOutput implements SerializedOutput, ChangeSetVi
         }
 
         public void visitGlob(GlobField field, Glob value) throws Exception {
-            boolean isNull = value != null;
-            write(isNull);
-            if (isNull) {
+            boolean isNotNull = value != null;
+            write(isNotNull);
+            if (isNotNull) {
                 writeKnowGlob(value);
             }
         }
@@ -473,15 +485,19 @@ public class DefaultSerializationOutput implements SerializedOutput, ChangeSetVi
             else {
                 write(value.length);
                 for (Glob glob : value) {
-                    writeKnowGlob(glob);
+                    boolean isNotNull = glob != null;
+                    write(isNotNull);
+                    if (isNotNull) {
+                        writeKnowGlob(glob);
+                    }
                 }
             }
         }
 
         public void visitUnionGlob(GlobUnionField field, Glob value) throws Exception {
-            boolean isNull = value != null;
-            write(isNull);
-            if (isNull) {
+            boolean isNotNull = value != null;
+            write(isNotNull);
+            if (isNotNull) {
                 writeGlob(value);
             }
         }
@@ -493,7 +509,11 @@ public class DefaultSerializationOutput implements SerializedOutput, ChangeSetVi
             else {
                 write(value.length);
                 for (Glob glob : value) {
-                    writeGlob(glob);
+                    boolean isNotNull = glob != null;
+                    write(isNotNull);
+                    if (isNotNull) {
+                        writeGlob(glob);
+                    }
                 }
             }
 

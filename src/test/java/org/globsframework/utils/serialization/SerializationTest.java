@@ -122,6 +122,36 @@ public class SerializationTest {
     }
 
     @Test
+    public void readWriteGlobArray() throws IOException {
+        MutableChangeSet changeSet = new DefaultChangeSet();
+        changeSet.processCreation(KeyBuilder.newKey(DummyObjectWithInner.TYPE, 1),
+                DummyObjectWithInner.TYPE.instantiate()
+                        .set(DummyObjectWithInner.VALUE, DummyObjectInner.TYPE.instantiate().set(DummyObjectInner.VALUE, 3.14))
+                        .set(DummyObjectWithInner.VALUES, new Glob[]{DummyObjectInner.TYPE.instantiate().set(DummyObjectInner.VALUE, 3.14 * 2),
+                                DummyObjectInner.TYPE.instantiate().set(DummyObjectInner.VALUE, 3.14 * 3)})
+                        .set(DummyObjectWithInner.VALUE_UNION, DummyObject.TYPE.instantiate().set(DummyObject.VALUE, 3.14))
+                        .set(DummyObjectWithInner.VALUES_UNION, new Glob[]{DummyObjectInner.TYPE.instantiate().set(DummyObjectInner.VALUE, 3.14 * 2),
+                                DummyObject.TYPE.instantiate().set(DummyObject.VALUE, 3.14 * 3)}));
+
+        changeSet.processUpdate(KeyBuilder.newKey(DummyObjectWithInner.TYPE, 2),
+                DummyObjectWithInner.VALUES, new Glob[]{DummyObjectInner.TYPE.instantiate().set(DummyObjectInner.VALUE, 3.14 * 2),
+                        DummyObjectInner.TYPE.instantiate().set(DummyObjectInner.VALUE, 3.14 * 3)},
+                new Glob[]{DummyObjectInner.TYPE.instantiate().set(DummyObjectInner.VALUE, 3.14 * 1),
+                        DummyObjectInner.TYPE.instantiate().set(DummyObjectInner.VALUE, 3.14 * 2)});
+
+        output.writeChangeSet(changeSet);
+        outputStream.close();
+
+        ChangeSet readChangeSet = input.readChangeSet(DummyModel.get());
+        Assert.assertTrue(readChangeSet.containsUpdates(DummyObjectWithInner.VALUES));
+//        GlobTestUtils.assertChangesEqual(readChangeSet,
+//                "<create type='dummyObject' id='1' name='name1'/>" +
+//                        "<update type='dummyObject' id='2' name='name2' _name='(null)'/>" +
+//                        "<delete type='dummyObject' id='3' _name='name3' _value='3.14'/>");
+
+    }
+
+    @Test
     public void withInnerGlob() throws IOException {
         MutableGlob obj1 = DummyObjectWithInner.TYPE.instantiate()
                 .set(DummyObjectWithInner.ID, 1)
