@@ -119,12 +119,12 @@ public class DefaultFieldFactory {
     }
 
     public DefaultGlobField addGlob(String name, GlobType globType, boolean isKeyField,
-                             int keyIndex, int index) {
+                                    int keyIndex, int index) {
         return add(new DefaultGlobField(name, type, globType, index, isKeyField, keyIndex), isKeyField);
     }
 
-    public DefaultGlobArrayField addGlobArray(String name, GlobType globType,boolean isKeyField,
-                                       int keyIndex, int index) {
+    public DefaultGlobArrayField addGlobArray(String name, GlobType globType, boolean isKeyField,
+                                              int keyIndex, int index) {
         return add(new DefaultGlobArrayField(name, type, globType, index, isKeyField, keyIndex), isKeyField);
     }
 

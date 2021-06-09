@@ -242,7 +242,11 @@ public class GlobTypeLoaderImpl implements GlobTypeLoader {
         for (java.lang.reflect.Field field : aClass.getFields()) {
             if (field.getType().equals(GlobType.class) && Modifier.isStatic(field.getModifiers()) && Modifier.isPublic(field.getModifiers())) {
                 try {
-                    return (GlobType) field.get(null);
+                    GlobType globType = (GlobType) field.get(null);
+                    if (globType == null) {
+                        throw new RuntimeException("GlobType not initiliazed (missing load on GlobTypeLoader?) on " + aClass.getName());
+                    }
+                    return globType;
                 } catch (IllegalAccessException e) {
                     throw new RuntimeException(e);
                 }
