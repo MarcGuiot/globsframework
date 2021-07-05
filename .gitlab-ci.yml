@@ -14,12 +14,12 @@ variables:
 build:
   stage: build
   script:
-    - mvn $MAVEN_CLI_OPTS compile
+    - mvn $MAVEN_CLI_OPTS compile -s ci_settings.xml
 
 test:
   stage: test
   script:
-    - mvn $MAVEN_CLI_OPTS test
+    - mvn $MAVEN_CLI_OPTS test -s ci_settings.xml
 
 deploy:
   stage: deploy
