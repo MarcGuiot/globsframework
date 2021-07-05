@@ -9,7 +9,7 @@
     <repositories>
         <repository>
             <id>gitlab-maven</id>
-            <url>${env.CI_API_V4_URL}/groups/12606202/-/packages/maven</url>
+            <url>https://gitlab.com/api/v4/groups/12606202/-/packages/maven</url>
         </repository>
     </repositories>
     <distributionManagement>
