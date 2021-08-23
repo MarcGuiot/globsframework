@@ -2,7 +2,6 @@ package org.globsframework.xml;
 
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobLinkModel;
-import org.globsframework.metamodel.annotations.FieldNameAnnotation;
 import org.globsframework.metamodel.annotations.FieldNameAnnotationType;
 import org.globsframework.metamodel.links.Link;
 import org.globsframework.metamodel.links.impl.DefaultDirectSingleLink;
@@ -29,27 +28,6 @@ public class XmlGlobWriter {
     private Writer writer;
     private GlobLinkModel globLinkModel;
 
-    public static void write(List<Glob> globs, GlobRepository repository, Writer writer, GlobLinkModel globLinkModel) throws ResourceAccessFailed {
-        XmlGlobWriter xmlWriter = new XmlGlobWriter(globs, repository, writer, globLinkModel);
-        xmlWriter.doWrite();
-    }
-
-    public static void write(List<Glob> globs, GlobRepository repository, Writer writer) throws ResourceAccessFailed {
-        XmlGlobWriter xmlWriter = new XmlGlobWriter(globs, repository, writer, EmptyGlobLinkModel.EMPTY);
-        xmlWriter.doWrite();
-    }
-
-    public static void write(List<Glob> globs, GlobRepository repository, OutputStream stream) throws ResourceAccessFailed {
-        OutputStreamWriter outputStreamWriter = new OutputStreamWriter(stream);
-        write(globs, repository, outputStreamWriter);
-        try {
-            outputStreamWriter.flush();
-        }
-        catch (IOException e) {
-            throw new ResourceAccessFailed(e);
-        }
-    }
-
     private XmlGlobWriter(List<Glob> globs, GlobRepository repository, Writer writer, GlobLinkModel globLinkModel) {
         this.globsToWrite = new GlobList(globs);
         this.repository = repository;
@@ -64,8 +42,7 @@ public class XmlGlobWriter {
                 writeGlob(glob);
             }
             writer.write("</globs>");
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new ResourceAccessFailed(e);
         }
     }
@@ -82,8 +59,7 @@ public class XmlGlobWriter {
         List<Glob> children = getChildren(glob, repository, globLinkModel);
         if (children.isEmpty()) {
             writer.write("/>");
-        }
-        else {
+        } else {
             writer.write(">");
             for (Glob child : children) {
                 writeGlob(child);
@@ -93,19 +69,6 @@ public class XmlGlobWriter {
             writer.write(">");
         }
         writer.write(Strings.LINE_SEPARATOR);
-    }
-
-    private static List<Glob> getChildren(final Glob target, final GlobRepository repository, GlobLinkModel globLinkModel) {
-        Link[] links = globLinkModel.getLinks(target.getType());
-//        Link[] inLinks = target.getType().getInboundLinks();
-        GlobList children = new GlobList();
-        for (Link link : links) {
-            if (link.isContainment()) {
-                GlobList list = repository.findLinkedTo(target, link);
-                children.addAll(list);
-            }
-        }
-        return children;
     }
 
     private void writeFields(Glob glob, Writer writer) throws IOException {
@@ -120,6 +83,39 @@ public class XmlGlobWriter {
 
     private void writeFieldValue(Writer writer, Field field, Object value) throws IOException {
         writeAttribute(writer, FieldNameAnnotationType.getName(field), fieldConverter.toString(field, value));
+    }
+
+    public static void write(List<Glob> globs, GlobRepository repository, Writer writer, GlobLinkModel globLinkModel) throws ResourceAccessFailed {
+        XmlGlobWriter xmlWriter = new XmlGlobWriter(globs, repository, writer, globLinkModel);
+        xmlWriter.doWrite();
+    }
+
+    public static void write(List<Glob> globs, GlobRepository repository, Writer writer) throws ResourceAccessFailed {
+        XmlGlobWriter xmlWriter = new XmlGlobWriter(globs, repository, writer, EmptyGlobLinkModel.EMPTY);
+        xmlWriter.doWrite();
+    }
+
+    public static void write(List<Glob> globs, GlobRepository repository, OutputStream stream) throws ResourceAccessFailed {
+        OutputStreamWriter outputStreamWriter = new OutputStreamWriter(stream);
+        write(globs, repository, outputStreamWriter);
+        try {
+            outputStreamWriter.flush();
+        } catch (IOException e) {
+            throw new ResourceAccessFailed(e);
+        }
+    }
+
+    private static List<Glob> getChildren(final Glob target, final GlobRepository repository, GlobLinkModel globLinkModel) {
+        Link[] links = globLinkModel.getLinks(target.getType());
+//        Link[] inLinks = target.getType().getInboundLinks();
+        GlobList children = new GlobList();
+        for (Link link : links) {
+            if (link.isContainment()) {
+                GlobList list = repository.findLinkedTo(target, link);
+                children.addAll(list);
+            }
+        }
+        return children;
     }
 
     private static void writeAttribute(Writer writer,
@@ -148,8 +144,7 @@ public class XmlGlobWriter {
                 }
                 try {
                     writeAttribute(writer, getLinkName(link, namingField), value);
-                }
-                catch (IOException e) {
+                } catch (IOException e) {
                     throw new ResourceAccessFailed(e);
                 }
             }

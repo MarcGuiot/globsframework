@@ -155,6 +155,9 @@ public class GlobTypeLoaderImpl implements GlobTypeLoader {
 
     private Glob processAnnotation(Annotation annotation) {
         try {
+            if (annotation.annotationType() == Deprecated.class) {
+                return null;
+            }
             if (annotation.annotationType().isAnnotationPresent(NoType.class)) {
                 return null;
             }
