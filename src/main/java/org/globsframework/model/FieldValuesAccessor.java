@@ -88,4 +88,68 @@ public interface FieldValuesAccessor {
         return Optional.ofNullable(get(field));
     }
 
+    default Optional<LocalDate> getOpt(DateField field) {
+        return Optional.ofNullable(get(field));
+    }
+
+    default Optional<ZonedDateTime> getOpt(DateTimeField field) {
+        return Optional.ofNullable(get(field));
+    }
+
+    default Optional<Long> getOpt(LongField field) {
+        return Optional.ofNullable(get(field));
+    }
+
+    default Optional<Integer> getOpt(IntegerField field) {
+        return Optional.ofNullable(get(field));
+    }
+
+    default Optional<Double> getOpt(DoubleField field) {
+        return Optional.ofNullable(get(field));
+    }
+
+    default Optional<Boolean> getOpt(BooleanField field) {
+        return Optional.ofNullable(get(field));
+    }
+
+    default Optional<String[]> getOpt(StringArrayField field) {
+        return Optional.ofNullable(get(field));
+    }
+
+    default Optional<double[]> getOpt(DoubleArrayField field) {
+        return Optional.ofNullable(get(field));
+    }
+
+    default Optional<long[]> getOpt(LongArrayField field) {
+        return Optional.ofNullable(get(field));
+    }
+
+    default Optional<int[]> getOpt(IntegerArrayField field) {
+        return Optional.ofNullable(get(field));
+    }
+
+    default Optional<boolean[]> getOpt(BooleanArrayField field) {
+        return Optional.ofNullable(get(field));
+    }
+
+    default Optional<Glob> getOptional(GlobField field) {
+        return Optional.ofNullable(get(field));
+    }
+
+//    default Optional<Glob> getOpt(GlobField field) {
+//        return Optional.ofNullable(get(field));
+//    }
+//
+//    default Optional<Glob> getOpt(GlobUnionField field) {
+//        return Optional.ofNullable(get(field));
+//    }
+//
+//    default Optional<Glob[]> getOpt(GlobArrayField field) {
+//        return Optional.ofNullable(get(field));
+//    }
+//
+//    default Optional<Glob[]> getOpt(GlobArrayUnionField field) {
+//        return Optional.ofNullable(get(field));
+//    }
+
 }
