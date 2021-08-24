@@ -4,22 +4,33 @@
     <packaging>jar</packaging>
     <artifactId>globs</artifactId>
     <name>Generic Lightweight ObjectS</name>
-    <version>3.0</version>
+    <version>3.1-SNAPSHOT</version>
 
     <repositories>
         <repository>
-            <id>gitlab-maven</id>
-            <url>https://gitlab.com/api/v4/groups/${env.CI_GROUP_ID}/-/packages/maven</url>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/mathieu-chauvet/*</url>
+        </repository>
+        <repository>
+            <id>github-marc</id>
+            <url>https://maven.pkg.github.com/MarcGuiot/*</url>
+        </repository>
+        <repository>
+            <id>central</id>
+            <url>https://repo1.maven.org/maven2</url>
         </repository>
     </repositories>
+
     <distributionManagement>
         <repository>
-            <id>gitlab-maven</id>
-            <url>${CI_API_V4_URL}/projects/${env.CI_PROJECT_ID}/packages/maven</url>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/${env.GITHUB_ACTOR}/${project.artifactId}</url>
         </repository>
         <snapshotRepository>
-            <id>gitlab-maven</id>
-            <url>${CI_API_V4_URL}/projects/${env.CI_PROJECT_ID}/packages/maven</url>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/${env.GITHUB_ACTOR}/${project.artifactId}</url>
         </snapshotRepository>
     </distributionManagement>
 
@@ -97,7 +108,7 @@
         <dependency>
             <groupId>org.globsframework</groupId>
             <artifactId>saxstack</artifactId>
-            <version>2.1</version>
+            <version>2.1-RELEASE</version>
             <scope>test</scope>
         </dependency>
         <!--        <dependency>-->
@@ -136,13 +147,5 @@
             <version>2.13.3</version>
             <scope>test</scope>
         </dependency>
-
-        <!--<dependency>-->
-        <!--<groupId>log4j</groupId>-->
-        <!--<artifactId>log4j</artifactId>-->
-        <!--<version>1.2.14</version>-->
-        <!--</dependency>-->
-
     </dependencies>
-
 </project>
