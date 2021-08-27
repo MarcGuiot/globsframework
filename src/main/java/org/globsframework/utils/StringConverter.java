@@ -39,6 +39,9 @@ public class StringConverter {
             public void visitLongArray(LongArrayField field) throws Exception {
                 fromStringConverter1 = new ToLongArrayConverter(field, arraySeparator);
             }
+            public void visitDouble(DoubleField field) throws Exception {
+                fromStringConverter1 = new ToDoubleConverter(field);
+            }
         }).fromStringConverter1;
     }
 
@@ -119,6 +122,20 @@ public class StringConverter {
         public void convert(MutableGlob glob, String str) {
             if (str != null) {
                 glob.set(field, Long.parseLong(str));
+            }
+        }
+    }
+
+    public static class ToDoubleConverter implements FromStringConverter {
+        final DoubleField field;
+
+        public ToDoubleConverter(DoubleField field) {
+            this.field = field;
+        }
+
+        public void convert(MutableGlob glob, String str) {
+            if (str != null) {
+                glob.set(field, Double.parseDouble(str));
             }
         }
     }
