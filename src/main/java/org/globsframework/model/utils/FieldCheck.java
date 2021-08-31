@@ -58,7 +58,7 @@ public class FieldCheck {
 
     private static void throwFieldError(Field field, GlobType type) {
         throw new InvalidParameter("Field '" + field.getName() + "' is declared for type '" +
-                                   field.getGlobType().describe() + "' and not for '" + type.describe() + "'");
+                                   field.getGlobType().describe() + "'\n but not for \n'" + type.describe() + "'");
     }
 
 }
