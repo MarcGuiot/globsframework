@@ -87,9 +87,9 @@ public class GlobTypeLoaderTest {
                         .set(G, new String[]{"one", "un"})
                         .set(H, AnObject.TYPE.instantiate().set(AnObject.ID, 2).set(AnObject.E, new long[]{1, 2, 3}))
                         .set(I, new Glob[]{AnObject.TYPE.instantiate().set(AnObject.BOOLEAN, true), AnObject.TYPE.instantiate().set(AnObject.G, new String[]{"A", "B"}), AnObject.TYPE.instantiate().set(AnObject.ID, 2)})
-                        .set(J, AnObjectWithALinkField.TYPE.instantiate().set(AnObjectWithALinkField.ID, 2))
-                        .set(K, new Glob[]{AnObjectWithALinkField.TYPE.instantiate().set(AnObjectWithALinkField.ID, 2),
-                                AnObjectWithALinkField.TYPE.instantiate().set(AnObjectWithALinkField.ID, 3),
+                        .set(J, AnObjectWithRequiredLinkField.TYPE.instantiate().set(AnObjectWithRequiredLinkField.ID, 2))
+                        .set(K, new Glob[]{AnObjectWithRequiredLinkField.TYPE.instantiate().set(AnObjectWithRequiredLinkField.ID, 2),
+                                AnObjectWithRequiredLinkField.TYPE.instantiate().set(AnObjectWithRequiredLinkField.ID, 3),
                                 AnObject.TYPE.instantiate().set(AnObject.C, new double[]{3.3, 2.2})})
                         .get();
     }
@@ -114,9 +114,9 @@ public class GlobTypeLoaderTest {
         assertTrue(AnObject.G.valueEqual(AnObject.glob.get(AnObject.G), new String[]{"one", "un"}));
         assertTrue(AnObject.H.valueEqual(AnObject.glob.get(AnObject.H), AnObject.TYPE.instantiate().set(AnObject.ID, 2).set(AnObject.E, new long[]{1, 2, 3})));
         assertTrue(AnObject.I.valueEqual(AnObject.glob.get(AnObject.I), new Glob[]{AnObject.TYPE.instantiate().set(AnObject.BOOLEAN, true), AnObject.TYPE.instantiate().set(AnObject.G, new String[]{"A", "B"}), AnObject.TYPE.instantiate().set(AnObject.ID, 2)}));
-        assertTrue(AnObject.J.valueEqual(AnObject.glob.get(AnObject.J), AnObjectWithALinkField.TYPE.instantiate().set(AnObjectWithALinkField.ID, 2)));
-        assertTrue(AnObject.K.valueEqual(AnObject.glob.get(AnObject.K), new Glob[]{AnObjectWithALinkField.TYPE.instantiate().set(AnObjectWithALinkField.ID, 2),
-                AnObjectWithALinkField.TYPE.instantiate().set(AnObjectWithALinkField.ID, 3),
+        assertTrue(AnObject.J.valueEqual(AnObject.glob.get(AnObject.J), AnObjectWithRequiredLinkField.TYPE.instantiate().set(AnObjectWithRequiredLinkField.ID, 2)));
+        assertTrue(AnObject.K.valueEqual(AnObject.glob.get(AnObject.K), new Glob[]{AnObjectWithRequiredLinkField.TYPE.instantiate().set(AnObjectWithRequiredLinkField.ID, 2),
+                AnObjectWithRequiredLinkField.TYPE.instantiate().set(AnObjectWithRequiredLinkField.ID, 3),
                 AnObject.TYPE.instantiate().set(AnObject.C, new double[]{3.3, 2.2})}));
 
 

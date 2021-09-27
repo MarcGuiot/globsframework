@@ -105,7 +105,7 @@ public class DefaultGlobField extends AbstractField implements GlobField {
     }
 
     public void checkValue(Object object) throws InvalidParameter {
-        if ((object != null) && (!(object instanceof Glob))) {
+        if ((object != null) && ((!(object instanceof Glob)) || ((Glob) object).getType() != getTargetType())) {
             throw new InvalidParameter("Value '" + object + "' (" + object.getClass().getName()
                     + ") is not authorized for field: " + getName() +
                     " (expected Glob)");

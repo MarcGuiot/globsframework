@@ -126,11 +126,20 @@ public class DefaultGlobArrayField extends AbstractField implements GlobArrayFie
     }
 
     public void checkValue(Object object) throws InvalidParameter {
-        if ((object != null) && (!(object instanceof Glob[]))) {
+        if ((object != null) && ((!(object instanceof Glob[])) || !checkType((Glob[]) object))) {
             throw new InvalidParameter("Value '" + object + "' (" + object.getClass().getName()
                     + ") is not authorized for field: " + getName() +
                     " (expected Glob)");
         }
+    }
+
+    public boolean checkType(Glob[] globs) {
+        for (int i = 0; i < globs.length; i++) {
+            if (getTargetType() != globs[i].getType()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public void toString(StringBuilder buffer, Object value) {
