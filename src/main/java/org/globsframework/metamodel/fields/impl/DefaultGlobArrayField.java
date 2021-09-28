@@ -135,7 +135,7 @@ public class DefaultGlobArrayField extends AbstractField implements GlobArrayFie
 
     public boolean checkType(Glob[] globs) {
         for (int i = 0; i < globs.length; i++) {
-            if (getTargetType() != globs[i].getType()) {
+            if (globs[i] != null && getTargetType() != globs[i].getType()) {
                 return false;
             }
         }

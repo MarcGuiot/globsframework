@@ -164,7 +164,7 @@ public class DefaultGlobUnionArrayField extends AbstractField implements GlobArr
 
     public boolean checkType(Glob[] globs) {
         for (int i = 0; i < globs.length; i++) {
-            if (!getTargetTypes().contains(globs[i].getType())) {
+            if (globs[i] != null && !getTargetTypes().contains(globs[i].getType())) {
                 return false;
             }
         }
