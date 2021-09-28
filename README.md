@@ -1,17 +1,17 @@
 # globsframework
 This is a metamodel framework.
 
-The goal of this framwork is to replace beans by an object call a Glob. This Glob is a kind of map. The key to access a field 
-is not a string but an instance of a Field. Theses Fields (for a given 'bean') are contains in an instance of a GlobType. GlobType and Field 
-contains additional information onymone can add.
+The goal of this framwork is to replace beans by an object called a Glob. This Glob is a kind of map. The key to access a field 
+is not a string but an instance of a Field. Theses Fields (for a given 'bean') are encapsulated in an instance of GlobType. GlobType and Field 
+contains additional information anyone can add.
 
-Thank to that we can write generic code (not magic;-) that serialize in XMl/Json/binary,
-that insert in a DB. It help also to map object to other object using some configuration files.
+Thanks to that, we can write generic code (not magic;-) that serialize in XML/Json/binary,
+that insert in a DB. It helps also to map object to other object using some configuration files.
 There is multiple way to create a GlobType.
 
 ## Here an example :
-In these example, we create a GlobType, associate an 'annotation' call NamingField to a field, set and get a value for the given field,
-and retreive the field using the NamngFieldAnnotationType which is also a Glob.
+In these examples, we create a GlobType, associate an 'annotation' called NamingField to a field, set and get a value for the given field,
+and retreive the field using the NamingFieldAnnotationType which is also a Glob.
 
 ```
          GlobType type = GlobTypeBuilderFactory.create("aType")
