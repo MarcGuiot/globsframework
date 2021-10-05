@@ -95,16 +95,18 @@ public interface FieldsValueScanner {
         }
     }
 
-    default Optional<Glob> toGlob(){
-        return Optional.ofNullable(safeApply(new FieldValues.Functor() {
+    default Glob toGlob(Key key) {
+        return safeApply(new FieldValues.Functor() {
             MutableGlob glob;
 
+            {
+                glob = key.getGlobType().instantiate();
+                key.safeApplyOnKeyField(this);
+            }
+
             public void process(Field field, Object value) throws Exception {
-                if (glob == null) {
-                    glob = field.getGlobType().instantiate();
-                }
                 glob.setValue(field, value);
             }
-        }).glob);
+        }).glob;
     }
 }
