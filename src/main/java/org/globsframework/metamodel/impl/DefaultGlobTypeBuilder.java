@@ -266,6 +266,27 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
         return this;
     }
 
+    public GlobTypeBuilder addGlobField(String fieldName, Collection<Glob> globAnnotations, GlobType type) {
+        createGlobField(fieldName, type, globAnnotations);
+        return this;
+    }
+
+
+    public GlobTypeBuilder addGlobArrayField(String fieldName, Collection<Glob> globAnnotations, GlobType type) {
+        createGlobArrayField(fieldName, type, globAnnotations);
+        return this;
+    }
+
+    public GlobTypeBuilder addUnionGlobField(String fieldName, Collection<Glob> globAnnotations, List<GlobType> types) {
+        createGlobUnionField(fieldName, types, globAnnotations);
+        return this;
+    }
+
+    public GlobTypeBuilder addUnionGlobArrayField(String fieldName, Collection<Glob> globAnnotations, List<GlobType> types) {
+        createGlobUnionArrayField(fieldName, types, globAnnotations);
+        return this;
+    }
+
     private DefaultBlobField createBlobField(String fieldName, Collection<Glob> globAnnotations) {
         Annotations annotations = adaptAnnotation(globAnnotations);
         DefaultBlobField field = factory.addBlob(fieldName, index);
@@ -393,6 +414,9 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
     }
 
     public Field declare(String fieldName, DataType dataType, Collection<Glob> annotations) {
+        if (fieldName == null) {
+            throw new RuntimeException("field name can not be null");
+        }
         switch (dataType) {
             case String:
                 return declareStringField(fieldName, annotations);

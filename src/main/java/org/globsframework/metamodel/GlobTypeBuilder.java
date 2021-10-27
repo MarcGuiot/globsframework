@@ -42,6 +42,14 @@ public interface GlobTypeBuilder {
 
     GlobTypeBuilder addBlobField(String fieldName, Collection<Glob> globAnnotations);
 
+    GlobTypeBuilder addGlobField(String fieldName, Collection<Glob> globAnnotations, GlobType type);
+
+    GlobTypeBuilder addGlobArrayField(String fieldName, Collection<Glob> globAnnotations, GlobType type);
+
+    GlobTypeBuilder addUnionGlobField(String fieldName, Collection<Glob> globAnnotations, List<GlobType> types);
+
+    GlobTypeBuilder addUnionGlobArrayField(String fieldName, Collection<Glob> globAnnotations, List<GlobType> types);
+
     StringField declareStringField(String fieldName, Collection<Glob> annotations);
 
     StringArrayField declareStringArrayField(String fieldName, Collection<Glob> globAnnotations);
