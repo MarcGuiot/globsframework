@@ -1,10 +1,8 @@
 package org.globsframework.metamodel.fields;
 
 import org.globsframework.metamodel.Field;
-import org.globsframework.metamodel.fields.impl.DefaultGlobArrayField;
-import org.globsframework.metamodel.fields.impl.DefaultGlobField;
 
-public interface FieldVisitorWithTwoContext<C,D> {
+public interface FieldVisitorWithTwoContext<C, D> {
     void visitInteger(IntegerField field, C ctx1, D ctx2) throws Exception;
 
     void visitIntegerArray(IntegerArrayField field, C ctx1, D ctx2) throws Exception;
@@ -35,11 +33,11 @@ public interface FieldVisitorWithTwoContext<C,D> {
 
     void visitBlob(BlobField field, C ctx1, D ctx2) throws Exception;
 
-    void visitGlob(GlobField field, C ctx1, D ctx2)throws Exception;
+    void visitGlob(GlobField field, C ctx1, D ctx2) throws Exception;
 
     void visitGlobArray(GlobArrayField field, C ctx1, D ctx2) throws Exception;
 
-    void visitUnionGlob(GlobUnionField field, C ctx1, D ctx2)throws Exception;
+    void visitUnionGlob(GlobUnionField field, C ctx1, D ctx2) throws Exception;
 
     void visitUnionGlobArray(GlobArrayUnionField field, C ctx1, D ctx2) throws Exception;
 

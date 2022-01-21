@@ -2,7 +2,6 @@ package org.globsframework.metamodel.fields;
 
 import org.globsframework.metamodel.Field;
 import org.globsframework.model.FieldValuesAccessor;
-import org.globsframework.model.Glob;
 
 import java.math.BigDecimal;
 import java.util.function.Function;

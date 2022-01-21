@@ -47,7 +47,7 @@ public interface FieldValueVisitor {
 
     void visitUnionGlobArray(GlobArrayUnionField field, Glob[] value) throws Exception;
 
-    default FieldValueVisitor withoutKey(){
+    default FieldValueVisitor withoutKey() {
         return FieldValueVisitorButKey.create(this);
     }
 

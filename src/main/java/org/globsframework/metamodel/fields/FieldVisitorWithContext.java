@@ -1,9 +1,6 @@
 package org.globsframework.metamodel.fields;
 
 import org.globsframework.metamodel.Field;
-import org.globsframework.metamodel.fields.impl.DefaultBigDecimalArrayField;
-import org.globsframework.metamodel.fields.impl.DefaultBigDecimalField;
-import org.globsframework.metamodel.fields.impl.DefaultBooleanArrayField;
 
 public interface FieldVisitorWithContext<C> {
     void visitInteger(IntegerField field, C context) throws Exception;
