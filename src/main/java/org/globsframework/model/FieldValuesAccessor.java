@@ -12,12 +12,15 @@ import java.util.Optional;
 
 public interface FieldValuesAccessor {
 
-
     Glob[] EMPTY = new Glob[0];
 
     boolean isSet(Field field) throws ItemNotFound;
 
     boolean isNull(Field field) throws ItemNotFound;
+
+    default boolean isNotNull(Field field) throws ItemNotFound {
+        return !isNull(field);
+    }
 
     Object getValue(Field field) throws ItemNotFound;
 
