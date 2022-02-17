@@ -7,11 +7,9 @@ import org.globsframework.utils.exceptions.ItemNotFound;
 
 import java.util.Collection;
 
-public interface GlobModel extends Iterable<GlobType> {
+public interface GlobModel extends Iterable<GlobType>, GlobTypeResolver {
 
     Collection<GlobType> getAll();
-
-    GlobType getType(String name) throws ItemNotFound;
 
     GlobType findType(String name);
 

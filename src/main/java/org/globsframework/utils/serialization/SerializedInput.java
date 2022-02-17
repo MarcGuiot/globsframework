@@ -10,6 +10,8 @@ import java.time.ZonedDateTime;
 
 public interface SerializedInput {
 
+    BigDecimal readBigDecimal();
+
     ZonedDateTime readDateTime();
 
     Integer readInteger();
@@ -46,7 +48,9 @@ public interface SerializedInput {
 
     boolean[] readBooleanArray();
 
-    BigDecimal[] readBigDecimaleArray();
+    BigDecimal[] readBigDecimalArray();
+
+
 
     String[] readStringArray();
 

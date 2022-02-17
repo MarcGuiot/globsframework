@@ -84,28 +84,12 @@ public class XmlGlobParser {
                 }
                 return repository.findOrCreate(KeyBuilder.createFromValues(globType, builder.get()), builder.toArray());
             }
-            catch (ItemNotFound found) {
+            catch (TypeNotFound | ItemNotFound | ItemAlreadyExists | MissingInfo found) {
                 if (ignoreError) {
                     return null;
                 }
                 else {
                     throw found;
-                }
-            }
-            catch (MissingInfo info) {
-                if (ignoreError) {
-                    return null;
-                }
-                else {
-                    throw info;
-                }
-            }
-            catch (ItemAlreadyExists exists) {
-                if (ignoreError) {
-                    return null;
-                }
-                else {
-                    throw exists;
                 }
             }
         }

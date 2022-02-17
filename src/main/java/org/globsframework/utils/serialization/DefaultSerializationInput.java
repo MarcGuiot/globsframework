@@ -153,7 +153,7 @@ public class DefaultSerializationInput implements SerializedInput {
         return array;
     }
 
-    public BigDecimal[] readBigDecimaleArray() {
+    public BigDecimal[] readBigDecimalArray() {
         int length = readNotNullInt();
         if (length == -1) {
             return null;
@@ -216,7 +216,7 @@ public class DefaultSerializationInput implements SerializedInput {
         }
 
         public void visitBigDecimalArray(BigDecimalArrayField field) {
-            builder.set(field, input.readBigDecimaleArray());
+            builder.set(field, input.readBigDecimalArray());
         }
 
         public void visitString(StringField field) throws Exception {
@@ -294,7 +294,7 @@ public class DefaultSerializationInput implements SerializedInput {
         }
     }
 
-    private BigDecimal readBigDecimal() {
+    public BigDecimal readBigDecimal() {
         String s = readUtf8String();
         if (s == null) {
             return null;
@@ -332,7 +332,7 @@ public class DefaultSerializationInput implements SerializedInput {
         }
 
         public void visitBigDecimalArray(BigDecimalArrayField field) {
-            builder.set(field, input.readBigDecimaleArray(), input.readBigDecimaleArray());
+            builder.set(field, input.readBigDecimalArray(), input.readBigDecimalArray());
         }
 
         public void visitString(StringField field) throws Exception {
@@ -609,7 +609,7 @@ public class DefaultSerializationInput implements SerializedInput {
         }
 
         public void visitBigDecimalArray(BigDecimalArrayField field) {
-            mutableGlob.set(field, readBigDecimaleArray());
+            mutableGlob.set(field, readBigDecimalArray());
         }
 
         public void visitString(StringField field) {

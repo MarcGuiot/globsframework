@@ -4,7 +4,7 @@
     <packaging>jar</packaging>
     <artifactId>globs</artifactId>
     <name>Generic Lightweight ObjectS</name>
-    <version>3.2-SNAPSHOT</version>
+    <version>3.3-SNAPSHOT</version>
 
     <repositories>
         <repository>
@@ -108,7 +108,7 @@
         <dependency>
             <groupId>org.globsframework</groupId>
             <artifactId>saxstack</artifactId>
-            <version>3.2-SNAPSHOT</version>
+            <version>3.3-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
         <!--        <dependency>-->

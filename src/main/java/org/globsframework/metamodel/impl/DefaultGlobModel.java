@@ -30,14 +30,6 @@ public class DefaultGlobModel implements MutableGlobModel {
         this.innerModel = innerModel;
     }
 
-    public GlobType getType(String name) throws ItemNotFound {
-        GlobType globType = findType(name);
-        if (globType == null) {
-            throw new ItemNotFound("No object type found with name: " + name);
-        }
-        return globType;
-    }
-
     public GlobType findType(String name) {
         GlobType globType = typesByName.get(name);
         if (globType != null) {

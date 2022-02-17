@@ -86,10 +86,10 @@ public class SerializationInputChecker implements SerializedInput {
         }
     }
 
-    public BigDecimal[] readBigDecimaleArray() {
+    public BigDecimal[] readBigDecimalArray() {
         String value = serializedInput.readUtf8String();
         if ("BigDecimal[]".equals(value)) {
-            return serializedInput.readBigDecimaleArray();
+            return serializedInput.readBigDecimalArray();
         }
         else {
             throw new UnexpectedApplicationState("BigDecimal array expected but got " + value);
@@ -108,6 +108,16 @@ public class SerializationInputChecker implements SerializedInput {
 
     public void close() {
         serializedInput.close();
+    }
+
+    public BigDecimal readBigDecimal() {
+        String value = serializedInput.readUtf8String();
+        if ("BigDecimal".equals(value)) {
+            return serializedInput.readBigDecimal();
+        }
+        else {
+            throw new UnexpectedApplicationState("bigDecimal expected but got " + value);
+        }
     }
 
     public ZonedDateTime readDateTime() {
