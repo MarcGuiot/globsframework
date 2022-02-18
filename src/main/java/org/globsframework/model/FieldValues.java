@@ -85,7 +85,7 @@ public interface FieldValues extends FieldValuesAccessor, FieldsValueScanner {
         }
 
         public boolean isSet(Field field) throws ItemNotFound {
-            throw new ItemNotFound(field.getName());
+            return false;
         }
 
         public boolean isNull(Field field) throws ItemNotFound {
