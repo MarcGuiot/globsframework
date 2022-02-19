@@ -11,6 +11,8 @@ import org.globsframework.utils.exceptions.ItemNotFound;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class AbstractMutableGlob extends AbstractGlob implements MutableGlob  {
 
@@ -136,15 +138,13 @@ public abstract class AbstractMutableGlob extends AbstractGlob implements Mutabl
     }
 
     public FieldValue[] toArray() {
-        FieldValue[] array = new FieldValue[getType().getFieldCount()];
-        int index = 0;
+        List<FieldValue> fieldValueList = new ArrayList<>();
         for (Field field : getType().getFields()) {
             if (isSet(field)) {
-                array[index] = new FieldValue(field, doGet(field));
-                index++;
+                fieldValueList.add(new FieldValue(field, doGet(field)));
             }
         }
-        return array;
+        return fieldValueList.toArray(FieldValue[]::new);
     }
 
     public Object doCheckedGet(Field field) {
