@@ -8,10 +8,6 @@
 
     <repositories>
         <repository>
-            <id>github</id>
-            <url>https://maven.pkg.github.com/mathieu-chauvet/*</url>
-        </repository>
-        <repository>
             <id>github-marc</id>
             <url>https://maven.pkg.github.com/MarcGuiot/*</url>
         </repository>
