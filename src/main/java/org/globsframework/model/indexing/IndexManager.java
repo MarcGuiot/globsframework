@@ -19,7 +19,6 @@ public class IndexManager {
     private Map<GlobType, IndexTables> globTypeToIndex = new HashMap<GlobType, IndexTables>();
     private Map<SingleFieldIndex, IndexedTable> indexAssociationTableMap = new HashMap<SingleFieldIndex, IndexedTable>();
     private Map<MultiFieldIndex, GlobRepository.MultiFieldIndexed> multiFieldIndexTableMap = new HashMap<MultiFieldIndex, GlobRepository.MultiFieldIndexed>();
-
     private IndexSource indexSource;
 
     public IndexManager(IndexSource indexSource) {
@@ -111,9 +110,7 @@ public class IndexManager {
             Field field = index.getField();
             updateFieldToIndexTables(field, indexedTable);
             updateGlobTypeToIndexTables(field.getGlobType(), indexedTable);
-            for (Glob glob : indexSource.getGlobs(field.getGlobType())) {
-                indexedTable.add(glob);
-            }
+            indexSource.getGlobs(field.getGlobType(), indexedTable::add);
             indexAssociationTableMap.put(index, indexedTable);
         }
 
@@ -175,9 +172,7 @@ public class IndexManager {
         public GlobRepository.MultiFieldIndexed getIndexed() {
             Field field = multiFieldIndexed.getField();
             GlobType globType = field.getGlobType();
-            for (Glob glob : indexSource.getGlobs(globType)) {
-                rootIndex.add(glob);
-            }
+            indexSource.getGlobs(globType, rootIndex::add);
             return rootIndex;
         }
 

@@ -23,6 +23,7 @@ import org.globsframework.utils.collections.Pair;
 import org.globsframework.utils.exceptions.*;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 public class DefaultGlobRepository implements GlobRepository, IndexSource {
     static boolean dump = false;
@@ -47,8 +48,8 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
         this.idGenerator = idGenerator;
     }
 
-    public Iterable<Glob> getGlobs(GlobType globType) {
-        return globs.values(globType);
+    public void getGlobs(GlobType globType, Consumer<Glob> consume) {
+        globs.values(globType).forEach(consume);
     }
 
     public GlobList getAll(GlobType... types) {
