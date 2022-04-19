@@ -13,6 +13,9 @@ public class DummyObjectWithDefaultValues {
     @DefaultInteger(7)
     public static IntegerField INTEGER;
 
+    @DefaultBigDecimal("1.61803398875")
+    public static BigDecimalField BIG_DECIMAL;
+
     @DefaultLong(5l)
     public static LongField LONG;
 
