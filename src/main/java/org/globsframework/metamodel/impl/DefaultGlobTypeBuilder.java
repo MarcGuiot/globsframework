@@ -11,6 +11,7 @@ import org.globsframework.metamodel.type.DataType;
 import org.globsframework.metamodel.utils.MutableAnnotations;
 import org.globsframework.model.Glob;
 
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
 
@@ -172,7 +173,8 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
     private DefaultBigDecimalField createBigDecimalField(String fieldName, Collection<Glob> globAnnotations) {
         MutableAnnotations annotations = adaptAnnotation(globAnnotations);
         Glob key = annotations.findAnnotation(KeyAnnotationType.UNIQUE_KEY);
-        DefaultBigDecimalField bigDecimalField = factory.addBigDecimal(fieldName, key != null, getKeyId(key), index);
+        BigDecimal defaultValue = annotations.getValueOrDefault(DefaultBigDecimalAnnotationType.UNIQUE_KEY, DefaultBigDecimalAnnotationType.DEFAULT_VALUE, null);
+        DefaultBigDecimalField bigDecimalField = factory.addBigDecimal(fieldName, key != null, getKeyId(key), index, defaultValue);
         bigDecimalField.addAnnotations(annotations.streamAnnotations());
         index++;
         return bigDecimalField;
