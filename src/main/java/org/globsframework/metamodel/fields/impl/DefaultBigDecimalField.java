@@ -8,7 +8,7 @@ import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 import java.math.BigDecimal;
 
 public class DefaultBigDecimalField extends AbstractField implements BigDecimalField {
-    public DefaultBigDecimalField(String name, GlobType globType, int index, boolean isKeyField, int keyIndex, Long defaultValue) {
+    public DefaultBigDecimalField(String name, GlobType globType, int index, boolean isKeyField, int keyIndex, BigDecimal defaultValue) {
         super(name, globType, BigDecimal.class, index, keyIndex, isKeyField, defaultValue, DataType.BigDecimal);
     }
 

@@ -16,6 +16,7 @@ import org.globsframework.metamodel.index.impl.DefaultUniqueIndex;
 import org.globsframework.model.Glob;
 import org.globsframework.model.Key;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class DefaultFieldFactory {
@@ -92,8 +93,9 @@ public class DefaultFieldFactory {
 
     public DefaultBigDecimalField addBigDecimal(String name,
                                                 boolean isKeyField,
-                                                int keyIndex, int index) {
-        return add(new DefaultBigDecimalField(name, type, index, isKeyField, keyIndex, null), false);
+                                                int keyIndex, int index,
+                                                BigDecimal defaultValue) {
+        return add(new DefaultBigDecimalField(name, type, index, isKeyField, keyIndex, defaultValue), false);
     }
 
     public DefaultBigDecimalArrayField addBigDecimalArray(String name,

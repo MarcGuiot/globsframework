@@ -96,6 +96,13 @@ public interface Field extends PropertyHolder<Field>, MutableAnnotations<Field> 
         return (LongField) this;
     }
 
+    default BigDecimalField asBigDecimalField() {
+        if (!(this instanceof BigDecimalField)) {
+            throw new RuntimeException(getFullName() + " is not a BigDecimalField but a " + getDataType());
+        }
+        return (BigDecimalField) this;
+    }
+
     default DateField asDateField() {
         if (!(this instanceof DateField)) {
             throw new RuntimeException(getFullName() + " is not a DateField but a " + getDataType());

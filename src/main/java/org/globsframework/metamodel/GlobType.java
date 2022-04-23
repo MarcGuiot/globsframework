@@ -1,6 +1,8 @@
 package org.globsframework.metamodel;
 
 import org.globsframework.metamodel.fields.FieldVisitor;
+import org.globsframework.metamodel.fields.FieldVisitorWithContext;
+import org.globsframework.metamodel.impl.DefaultValuesFieldVisitor;
 import org.globsframework.metamodel.index.Index;
 import org.globsframework.metamodel.properties.PropertyHolder;
 import org.globsframework.model.GlobFactory;
@@ -8,6 +10,7 @@ import org.globsframework.model.Key;
 import org.globsframework.model.MutableGlob;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Optional;
@@ -55,6 +58,26 @@ public interface GlobType extends PropertyHolder<GlobType>, Annotations {
 
     default MutableGlob instantiate() {
         return getGlobFactory().create();
+    }
+
+    default MutableGlob instantiateWithDefaults() {
+        MutableGlob glob = getGlobFactory().create();
+        FieldVisitorWithContext<MutableGlob> visitor = new DefaultValuesFieldVisitor();
+            Arrays.stream(this.getFields()).forEach(field -> {
+                try {
+                    switch (field.getDataType()) {
+                        case Boolean -> visitor.visitBoolean(field.asBooleanField(), glob);
+                        case Double -> visitor.visitDouble(field.asDoubleField(), glob);
+                        case Integer -> visitor.visitInteger(field.asIntegerField(), glob);
+                        case Long -> visitor.visitLong(field.asLongField(), glob);
+                        case String -> visitor.visitString(field.asStringField(), glob);
+                        case BigDecimal -> visitor.visitBigDecimal(field.asBigDecimalField(), glob);
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            });
+        return glob;
     }
 
     default <T extends FieldVisitor> T accept(T visitor) throws Exception {

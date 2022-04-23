@@ -20,6 +20,7 @@ import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Modifier;
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -309,7 +310,10 @@ public class GlobTypeLoaderImpl implements GlobTypeLoader {
             return fieldFactory.addDateTime(name, isKeyField, keyIndex, index);
         }
         else if (BigDecimalField.class.isAssignableFrom(fieldClass)) {
-            return fieldFactory.addBigDecimal(name, isKeyField, keyIndex, index);
+            DefaultBigDecimal defaultBigDecimal = field.getAnnotation(DefaultBigDecimal.class);
+            return fieldFactory.addBigDecimal(name, isKeyField, keyIndex, index,
+                    defaultBigDecimal != null ? new BigDecimal(defaultBigDecimal.value()) : null
+            );
         }
         else if (BigDecimalArrayField.class.isAssignableFrom(fieldClass)) {
             return fieldFactory.addBigDecimalArray(name, isKeyField, keyIndex, index);
