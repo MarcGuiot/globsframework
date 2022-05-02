@@ -63,20 +63,7 @@ public interface GlobType extends PropertyHolder<GlobType>, Annotations {
     default MutableGlob instantiateWithDefaults() {
         MutableGlob glob = getGlobFactory().create();
         FieldVisitorWithContext<MutableGlob> visitor = new DefaultValuesFieldVisitor();
-            Arrays.stream(this.getFields()).forEach(field -> {
-                try {
-                    switch (field.getDataType()) {
-                        case Boolean -> visitor.visitBoolean(field.asBooleanField(), glob);
-                        case Double -> visitor.visitDouble(field.asDoubleField(), glob);
-                        case Integer -> visitor.visitInteger(field.asIntegerField(), glob);
-                        case Long -> visitor.visitLong(field.asLongField(), glob);
-                        case String -> visitor.visitString(field.asStringField(), glob);
-                        case BigDecimal -> visitor.visitBigDecimal(field.asBigDecimalField(), glob);
-                    }
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            });
+        streamFields().forEach(field -> field.safeVisit(visitor, glob));
         return glob;
     }
 
