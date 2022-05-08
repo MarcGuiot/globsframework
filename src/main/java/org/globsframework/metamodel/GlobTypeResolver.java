@@ -41,6 +41,8 @@ public interface GlobTypeResolver {
         throw new TypeNotFound(name);
     };
 
+    GlobTypeResolver NULL = name -> null;
+
     static GlobTypeResolver from(GlobType type) {
         return name -> type.getName().equals(name) ? type : null;
     }

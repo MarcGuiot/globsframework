@@ -87,6 +87,11 @@ public interface FieldValuesAccessor {
         return value != null ? value : valueIfNull;
     }
 
+    default BigDecimal get(BigDecimalField field, BigDecimal valueIfNull) throws ItemNotFound {
+        BigDecimal bigDecimal = get(field);
+        return bigDecimal != null ? bigDecimal : valueIfNull;
+    }
+
     default Optional<String> getOpt(StringField field) {
         return Optional.ofNullable(get(field));
     }
@@ -132,6 +137,10 @@ public interface FieldValuesAccessor {
     }
 
     default Optional<boolean[]> getOpt(BooleanArrayField field) {
+        return Optional.ofNullable(get(field));
+    }
+
+    default Optional<BigDecimal> getOpt(BigDecimalField field) {
         return Optional.ofNullable(get(field));
     }
 
