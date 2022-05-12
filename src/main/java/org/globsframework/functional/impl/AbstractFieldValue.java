@@ -143,7 +143,7 @@ public abstract class AbstractFieldValue<T extends FieldSetter> implements Field
         return (Boolean) doGet(field);
     }
 
-    public Boolean get(BooleanField booleanField, boolean valueIfNull) {
+    public boolean get(BooleanField booleanField, boolean valueIfNull) {
         Boolean realValue = get(booleanField);
         return realValue != null ? realValue : valueIfNull;
     }

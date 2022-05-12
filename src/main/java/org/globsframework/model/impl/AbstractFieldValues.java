@@ -60,9 +60,9 @@ public abstract class AbstractFieldValues implements FieldValues {
         return (byte[])doCheckedGet(field);
     }
 
-    public Boolean get(BooleanField field, boolean defaultIfNull) {
+    public boolean get(BooleanField field, boolean defaultIfNull) {
         Object value = doCheckedGet(field);
-        return value == null ? Boolean.valueOf(defaultIfNull) : (Boolean)value;
+        return value == null ? Boolean.valueOf(defaultIfNull) : (boolean)value;
     }
 
     public Long get(LongField field) {

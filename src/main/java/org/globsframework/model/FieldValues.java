@@ -72,7 +72,7 @@ public interface FieldValues extends FieldValuesAccessor, FieldsValueScanner {
             throw new ItemNotFound(field.getName());
         }
 
-        public Boolean get(BooleanField field, boolean defaultIfNull) {
+        public boolean get(BooleanField field, boolean defaultIfNull) {
             throw new ItemNotFound(field.getName());
         }
 
@@ -476,7 +476,7 @@ public interface FieldValues extends FieldValuesAccessor, FieldsValueScanner {
             }
         }
 
-        public Boolean get(BooleanField field, boolean b) {
+        public boolean get(BooleanField field, boolean b) {
             if (glob != null) {
                 return glob.get(field, b);
             }

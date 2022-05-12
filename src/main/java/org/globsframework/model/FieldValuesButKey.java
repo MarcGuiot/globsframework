@@ -129,7 +129,7 @@ public class FieldValuesButKey implements FieldValues {
         return fieldValues.get(field);
     }
 
-    public Boolean get(BooleanField field, boolean defaultIfNull) {
+    public boolean get(BooleanField field, boolean defaultIfNull) {
         checkNotAKey(field);
         return fieldValues.get(field, defaultIfNull);
     }

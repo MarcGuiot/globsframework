@@ -18,9 +18,9 @@ public class TablePrinterTest {
         table.setHeader("t1", "t2", "t3");
         table.addRow("Value 1", 22.0, "Item 3");
         table.addRow(1.1111, "v2", "33");
-        assertEquals("| t1      | t2    | t3     |\n" +
-                     "| 1.11    | v2    | 33     |\n" +
-                     "| Value 1 | 22.00 | Item 3 |\n",
+        assertEquals("| t1      | t2    | t3     |" + Strings.LINE_SEPARATOR +
+                     "| 1.11    | v2    | 33     |" + Strings.LINE_SEPARATOR +
+                     "| Value 1 | 22.00 | Item 3 |" + Strings.LINE_SEPARATOR,
                      table.toString());
     }
 
@@ -28,7 +28,7 @@ public class TablePrinterTest {
     public void testNoHeader() throws Exception {
         TablePrinter table = new TablePrinter(true);
         table.addRow("Value 1", 22.0, "Item 3");
-        assertEquals("| Value 1 | 22.00 | Item 3 |\n",
+        assertEquals("| Value 1 | 22.00 | Item 3 |" + Strings.LINE_SEPARATOR,
                      table.toString());
     }
 

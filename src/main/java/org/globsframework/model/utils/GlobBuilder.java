@@ -250,7 +250,7 @@ public class GlobBuilder implements  FieldSetter<GlobBuilder>, FieldValues {
         return mutableGlob.get(field);
     }
 
-    public Boolean get(BooleanField field, boolean defaultIfNull) {
+    public boolean get(BooleanField field, boolean defaultIfNull) {
         return mutableGlob.get(field, defaultIfNull);
     }
 
