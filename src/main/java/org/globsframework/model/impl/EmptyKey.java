@@ -72,7 +72,7 @@ public class EmptyKey implements Key {
         throw new RuntimeException("Empty key '" + field.getFullName() + " not available");
     }
 
-    public Boolean get(BooleanField field, boolean defaultIfNull) {
+    public boolean get(BooleanField field, boolean defaultIfNull) {
         throw new RuntimeException("Empty key '" + field.getFullName() + " not available");
     }
 

@@ -6,6 +6,7 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.GlobRepositoryBuilder;
+import org.globsframework.utils.Strings;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -114,16 +115,16 @@ public class GlobPrinterTest {
         glob.getKey();
 
         checkOutput(glob,
-                    "===== dummyObject[id=1] ======\n" +
-                    "| Field    | Value |\n" +
-                    "| count    |       |\n" +
-                    "| date     |       |\n" +
-                    "| id       | 1     |\n" +
-                    "| link2Id  |       |\n" +
-                    "| linkId   | 2     |\n" +
-                    "| name     | obj1  |\n" +
-                    "| password |       |\n" +
-                    "| present  |       |\n" +
+                    "===== dummyObject[id=1] ======" + Strings.LINE_SEPARATOR +
+                    "| Field    | Value |" + Strings.LINE_SEPARATOR +
+                    "| count    |       |" + Strings.LINE_SEPARATOR +
+                    "| date     |       |" + Strings.LINE_SEPARATOR +
+                    "| id       | 1     |" + Strings.LINE_SEPARATOR +
+                    "| link2Id  |       |" + Strings.LINE_SEPARATOR +
+                    "| linkId   | 2     |" + Strings.LINE_SEPARATOR +
+                    "| name     | obj1  |" + Strings.LINE_SEPARATOR +
+                    "| password |       |" + Strings.LINE_SEPARATOR +
+                    "| present  |       |" + Strings.LINE_SEPARATOR +
                     "| value    |       |");
     }
 

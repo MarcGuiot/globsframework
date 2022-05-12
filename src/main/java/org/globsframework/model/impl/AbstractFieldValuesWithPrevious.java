@@ -2,7 +2,6 @@ package org.globsframework.model.impl;
 
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.fields.*;
-import org.globsframework.model.FieldValues;
 import org.globsframework.model.FieldValuesWithPrevious;
 import org.globsframework.model.Glob;
 import org.globsframework.utils.exceptions.ItemNotFound;
@@ -54,8 +53,8 @@ public abstract class AbstractFieldValuesWithPrevious implements FieldValuesWith
         return (Boolean)doGet(field);
     }
 
-    public Boolean get(BooleanField field, boolean defaultIfNull) {
-        return (Boolean)doGet(field);
+    public boolean get(BooleanField field, boolean defaultIfNull) {
+        return (boolean)doGet(field);
     }
 
     public double[] get(DoubleArrayField field) throws ItemNotFound {

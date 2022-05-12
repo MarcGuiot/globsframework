@@ -42,7 +42,7 @@ public interface FieldValuesAccessor {
 
     Boolean get(BooleanField field) throws ItemNotFound;
 
-    Boolean get(BooleanField field, boolean defaultIfNull);
+    boolean get(BooleanField field, boolean defaultIfNull);
 
     boolean[] get(BooleanArrayField field);
 
