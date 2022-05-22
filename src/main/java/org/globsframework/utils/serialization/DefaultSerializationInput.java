@@ -22,6 +22,7 @@ public class DefaultSerializationInput implements SerializedInput {
     public static final String ORG_GLOBSFRAMWORK_SERIALIZATION_MAX_LEN = "org.globsframwork.serialization.max.len";
     public static final int MAX_SIZE_FOR_BYTES = Integer.getInteger(ORG_GLOBSFRAMWORK_SERIALIZATION_MAX_LEN, 512 * 1024);
     private InputStream inputStream;
+    private final InputStreamFieldVisitor fieldVisitorInput = new InputStreamFieldVisitor();
     public int count;
 
     public DefaultSerializationInput(InputStream inputStream) {
@@ -31,18 +32,16 @@ public class DefaultSerializationInput implements SerializedInput {
     public Glob readGlob(GlobModel model) {
         GlobType globType = model.getType(readUtf8String());
         MutableGlob mutableGlob = globType.instantiate();
-        InputStreamFieldVisitor fieldVisitorInput = new InputStreamFieldVisitor(mutableGlob);
         for (Field field : globType.getFields()) {
-            field.safeVisit(fieldVisitorInput);
+            field.safeVisit(fieldVisitorInput, mutableGlob);
         }
         return mutableGlob;
     }
 
     public Glob readKnowGlob(GlobType type) {
         MutableGlob mutableGlob = type.instantiate();
-        InputStreamFieldVisitor fieldVisitorInput = new InputStreamFieldVisitor(mutableGlob);
         for (Field field : type.getFields()) {
-            field.safeVisit(fieldVisitorInput);
+            field.safeVisit(fieldVisitorInput, mutableGlob);
         }
         return mutableGlob;
     }
@@ -581,64 +580,59 @@ public class DefaultSerializationInput implements SerializedInput {
         }
     }
 
-    private class InputStreamFieldVisitor implements FieldVisitor {
-        private MutableGlob mutableGlob;
+    private class InputStreamFieldVisitor implements FieldVisitorWithContext<MutableGlob> {
 
-        public InputStreamFieldVisitor(MutableGlob mutableGlob) {
-            this.mutableGlob = mutableGlob;
-        }
-
-        public void visitInteger(IntegerField field) {
+        public void visitInteger(IntegerField field, MutableGlob mutableGlob) {
             mutableGlob.set(field, readInteger());
         }
 
-        public void visitIntegerArray(IntegerArrayField field) {
+        public void visitIntegerArray(IntegerArrayField field, MutableGlob mutableGlob) {
             mutableGlob.set(field, readIntArray());
         }
 
-        public void visitDouble(DoubleField field) {
+        public void visitDouble(DoubleField field, MutableGlob mutableGlob) {
             mutableGlob.set(field, readDouble());
         }
 
-        public void visitDoubleArray(DoubleArrayField field) {
+        public void visitDoubleArray(DoubleArrayField field, MutableGlob mutableGlob) {
             mutableGlob.set(field, readDoubleArray());
         }
 
-        public void visitBigDecimal(BigDecimalField field) {
+        public void visitBigDecimal(BigDecimalField field, MutableGlob mutableGlob) {
             mutableGlob.set(field, readBigDecimal());
         }
 
-        public void visitBigDecimalArray(BigDecimalArrayField field) {
+        public void visitBigDecimalArray(BigDecimalArrayField field, MutableGlob mutableGlob) {
             mutableGlob.set(field, readBigDecimalArray());
         }
 
-        public void visitString(StringField field) {
+        public void visitString(StringField field, MutableGlob mutableGlob) {
             mutableGlob.set(field, readUtf8String());
         }
 
-        public void visitStringArray(StringArrayField field) {
+        public void visitStringArray(StringArrayField field, MutableGlob mutableGlob) {
             mutableGlob.set(field, readStringArray());
         }
 
-        public void visitBoolean(BooleanField field) {
+        public void visitBoolean(BooleanField field, MutableGlob mutableGlob) {
             mutableGlob.set(field, readBoolean());
         }
 
-        public void visitBooleanArray(BooleanArrayField field) {
+        public void visitBooleanArray(BooleanArrayField field, MutableGlob mutableGlob) {
             mutableGlob.set(field, readBooleanArray());
         }
 
-        public void visitBlob(BlobField field) {
+        public void visitBlob(BlobField field, MutableGlob mutableGlob) {
             mutableGlob.set(field, readBytes());
         }
 
-        public void visitGlob(GlobField field) {
+        public void visitGlob(GlobField field, MutableGlob mutableGlob) {
             if (readBoolean()) {
                 mutableGlob.set(field, readKnowGlob(field.getTargetType()));
             }
         }
 
-        public void visitGlobArray(GlobArrayField field) {
+        public void visitGlobArray(GlobArrayField field, MutableGlob mutableGlob) {
             int len = readNotNullInt();
             if (len >= 0) {
                 Glob[] values = new Glob[len];
@@ -651,14 +645,14 @@ public class DefaultSerializationInput implements SerializedInput {
             }
         }
 
-        public void visitUnionGlob(GlobUnionField field) {
+        public void visitUnionGlob(GlobUnionField field, MutableGlob mutableGlob) {
             if (readBoolean()) {
                 GlobType globType = field.getTargetType(readUtf8String());
                 mutableGlob.set(field, readKnowGlob(globType));
             }
         }
 
-        public void visitUnionGlobArray(GlobArrayUnionField field) {
+        public void visitUnionGlobArray(GlobArrayUnionField field, MutableGlob mutableGlob) {
             int len = readNotNullInt();
             if (len >= 0) {
                 Glob[] values = new Glob[len];
@@ -671,25 +665,20 @@ public class DefaultSerializationInput implements SerializedInput {
             }
         }
 
-        public void visitLong(LongField field) {
+        public void visitLong(LongField field, MutableGlob mutableGlob) {
             mutableGlob.set(field, readLong());
         }
 
-        public void visitLongArray(LongArrayField field) {
+        public void visitLongArray(LongArrayField field, MutableGlob mutableGlob) {
             mutableGlob.set(field, readLongArray());
         }
 
-        public void visitDate(DateField field) {
+        public void visitDate(DateField field, MutableGlob mutableGlob) {
             mutableGlob.set(field, readDate());
         }
 
-        public void visitDateTime(DateTimeField field) {
+        public void visitDateTime(DateTimeField field, MutableGlob mutableGlob) {
             mutableGlob.set(field, readDateTime());
         }
-
-        public Glob getValue() {
-            return mutableGlob;
-        }
-
     }
 }

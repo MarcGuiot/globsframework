@@ -10,8 +10,12 @@ public class YANBuffereInputStream extends InputStream {
     private InputStream inputStream;
 
     public YANBuffereInputStream(InputStream inputStream) {
+        this(inputStream, 8 * 1024);
+    }
+
+    public YANBuffereInputStream(InputStream inputStream, int size) {
         this.inputStream = inputStream;
-        buffer = new byte[8 * 1024];
+        buffer = new byte[size];
         currentPos = 0;
         count = 0;
     }
