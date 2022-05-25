@@ -170,6 +170,14 @@ public class DefaultGlobUnionArrayField extends AbstractField implements GlobArr
         }
         return true;
     }
+    public void toString(StringBuilder buffer, Object value) {
+        if (value == null) {
+            buffer.append("null");
+        }
+        else {
+            toString(buffer, ((Glob[]) value));
+        }
+    }
 
     public static void toString(StringBuilder stringBuilder, Glob[] values) {
         if (values.length != 0) {
