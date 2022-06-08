@@ -6,6 +6,8 @@ import org.globsframework.model.FieldValue;
 import org.globsframework.model.impl.AbstractFieldValues;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
+import java.util.Arrays;
+
 public class ArrayFieldValues extends AbstractFieldValues {
     private FieldValue[] values;
 
@@ -60,5 +62,9 @@ public class ArrayFieldValues extends AbstractFieldValues {
 
     public FieldValue[] toArray() {
         return values;
+    }
+
+    public String toString() {
+        return Arrays.toString(values);
     }
 }

@@ -147,6 +147,11 @@ public interface FieldValues extends FieldValuesAccessor, FieldsValueScanner {
         public FieldValue[] toArray() {
             return new FieldValue[0];
         }
+
+        public String toString(){
+            return "";
+        }
+
     };
     Glob[] EMPTYARRAY = new Glob[0];
     long[] EMPTY_LONG_ARRAY = new long[0];

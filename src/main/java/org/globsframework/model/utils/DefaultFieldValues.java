@@ -1,21 +1,18 @@
 package org.globsframework.model.utils;
 
 import org.globsframework.metamodel.Field;
-import org.globsframework.metamodel.fields.*;
-import org.globsframework.model.*;
-import org.globsframework.model.impl.AbstractFieldValues;
+import org.globsframework.metamodel.fields.FieldValueVisitor;
+import org.globsframework.model.FieldValue;
+import org.globsframework.model.FieldValues;
+import org.globsframework.model.FieldsValueScanner;
 import org.globsframework.utils.exceptions.InvalidParameter;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-public class DefaultFieldValues extends AbstractMutableFieldValues  {
+public class DefaultFieldValues extends AbstractMutableFieldValues {
     private Map<Field, Object> values = new HashMap<Field, Object>();
 
     public DefaultFieldValues() {
@@ -94,7 +91,7 @@ public class DefaultFieldValues extends AbstractMutableFieldValues  {
             return false;
         }
 
-        final DefaultFieldValues that = (DefaultFieldValues)o;
+        final DefaultFieldValues that = (DefaultFieldValues) o;
 
         if (values != null ? !values.equals(that.values) : that.values != null) {
             return false;
@@ -116,4 +113,5 @@ public class DefaultFieldValues extends AbstractMutableFieldValues  {
         }
         return array;
     }
+
 }
