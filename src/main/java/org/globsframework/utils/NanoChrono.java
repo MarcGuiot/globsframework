@@ -15,6 +15,13 @@ public class NanoChrono {
         start = System.nanoTime();
     }
 
+    public double getAndResetElapsedTimeInMS() {
+        long tmp = System.nanoTime();
+        double current = ((int) ((tmp - start) / 1000.)) / 1000.;
+        start = tmp;
+        return current;
+    }
+
     public double getElapsedTimeInMS() {
         return ((int) ((System.nanoTime() - start) / 1000.)) / 1000.;
     }
