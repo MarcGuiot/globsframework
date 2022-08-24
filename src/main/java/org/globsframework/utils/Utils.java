@@ -399,21 +399,22 @@ public class Utils {
         boolean call();
     }
 
-    public static void doWait(Object o, long timeout, Condition conditionToBeTrue) {
+    public static boolean doWait(Object o, long timeout, Condition conditionToBeTrue) {
         try {
             long endAt = System.currentTimeMillis() + timeout; // on neglige le temps du call()
             while (timeout > 0)  {
                 synchronized (o) {
                     if (conditionToBeTrue.call()) {
-                        return;
+                        return true;
                     }
                     o.wait(timeout);
                 }
                 if (conditionToBeTrue.call()) {
-                    return;
+                    return true;
                 }
                 timeout = endAt - System.currentTimeMillis();
             }
+            return false;
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new RuntimeException("Wait interrupted", e);
