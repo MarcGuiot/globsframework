@@ -15,6 +15,7 @@ public class FieldNameAnnotationType {
 
     public static StringField NAME;
 
+    @InitUniqueKey
     public static Key UNIQUE_KEY;
 
     public static Glob create(FieldNameAnnotation nameAnnotation) {

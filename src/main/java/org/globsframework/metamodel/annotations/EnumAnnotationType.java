@@ -15,6 +15,7 @@ public class EnumAnnotationType {
 
     public static StringArrayField NAME;
 
+    @InitUniqueKey
     public static Key UNIQUE_KEY;
 
     static {
