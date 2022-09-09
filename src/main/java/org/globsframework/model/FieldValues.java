@@ -153,8 +153,12 @@ public interface FieldValues extends FieldValuesAccessor, FieldsValueScanner {
         }
 
     };
-    Glob[] EMPTYARRAY = new Glob[0];
+    Glob[] EMPTY_GLOB_ARRAY = new Glob[0];
+    boolean[] EMPTY_BOOLEAN_ARRAY = new boolean[0];
+    int[] EMPTY_INTEGER_ARRAY = new int[0];
     long[] EMPTY_LONG_ARRAY = new long[0];
+    double[] EMPTY_DOUBLE_ARRAY = new double[0];
+    BigDecimal[] BIG_DECIMAL_GLOB_ARRAY = new BigDecimal[0];
     String[] EMPTY_STRING_ARRAY = new String[0];
 
     boolean contains(Field field);
@@ -167,9 +171,29 @@ public interface FieldValues extends FieldValuesAccessor, FieldsValueScanner {
 
     FieldValue[] toArray();
 
+    default boolean[] getOrEmpty(BooleanArrayField field) {
+        boolean[] d = get(field);
+        return d != null ? d : EMPTY_BOOLEAN_ARRAY;
+    }
+
+    default int[] getOrEmpty(IntegerArrayField field) {
+        int[] d = get(field);
+        return d != null ? d : EMPTY_INTEGER_ARRAY;
+    }
+
     default long[] getOrEmpty(LongArrayField field) {
         long[] d = get(field);
         return d != null ? d : EMPTY_LONG_ARRAY;
+    }
+
+    default double[] getOrEmpty(DoubleArrayField field) {
+        double[] d = get(field);
+        return d != null ? d : EMPTY_DOUBLE_ARRAY;
+    }
+
+    default BigDecimal[] getOrEmpty(BigDecimalArrayField field) {
+        BigDecimal[] globs = get(field);
+        return globs != null ? globs : BIG_DECIMAL_GLOB_ARRAY;
     }
 
     default String[] getOrEmpty(StringArrayField field) {
@@ -179,12 +203,12 @@ public interface FieldValues extends FieldValuesAccessor, FieldsValueScanner {
 
     default Glob[] getOrEmpty(GlobArrayUnionField field) {
         Glob[] globs = get(field);
-        return globs != null ? globs : EMPTYARRAY;
+        return globs != null ? globs : EMPTY_GLOB_ARRAY;
     }
 
     default Glob[] getOrEmpty(GlobArrayField field) {
         Glob[] globs = get(field);
-        return globs != null ? globs : EMPTYARRAY;
+        return globs != null ? globs : EMPTY_GLOB_ARRAY;
     }
 
     default String getNotNull(StringField field) {
