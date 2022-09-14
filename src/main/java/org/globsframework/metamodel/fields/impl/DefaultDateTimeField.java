@@ -86,6 +86,20 @@ public class DefaultDateTimeField extends AbstractField implements DateTimeField
         }
     }
 
+    public <T extends FieldValueVisitorWithContext<Context>, Context> T safeVisitValue(T visitor, Object value, Context context) {
+        try {
+            visitor.visitDateTime(this, (ZonedDateTime)value, context);
+            return visitor;
+        }
+        catch (RuntimeException e) {
+            throw new RuntimeException("On " + this, e);
+        }
+        catch (Exception e) {
+            throw new UnexpectedApplicationState("On " + this, e);
+        }
+    }
+
+
     public void toString(StringBuilder buffer, Object value) {
         if (value == null) {
             buffer.append("null");

@@ -83,6 +83,20 @@ public class DefaultBigDecimalArrayField extends AbstractField implements BigDec
         }
     }
 
+    public <T extends FieldValueVisitorWithContext<Context>, Context> T safeVisitValue(T visitor, Object value, Context context) {
+        try {
+            visitor.visitBigDecimalArray(this, (BigDecimal[])value, context);
+            return visitor;
+        }
+        catch (RuntimeException e) {
+            throw new RuntimeException("On " + this, e);
+        }
+        catch (Exception e) {
+            throw new UnexpectedApplicationState("On " + this, e);
+        }
+    }
+
+
     public boolean valueEqual(Object o1, Object o2) {
         return Arrays.equals(((BigDecimal[])o1), ((BigDecimal[])o2));
     }

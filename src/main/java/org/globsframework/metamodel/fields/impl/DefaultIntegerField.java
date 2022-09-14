@@ -82,4 +82,17 @@ public class DefaultIntegerField extends AbstractField implements IntegerField {
             throw new UnexpectedApplicationState("On " + this, e);
         }
     }
+    public <T extends FieldValueVisitorWithContext<Context>, Context> T safeVisitValue(T visitor, Object value, Context context) {
+        try {
+            visitor.visitInteger(this, (Integer)value, context);
+            return visitor;
+        }
+        catch (RuntimeException e) {
+            throw new RuntimeException("On " + this, e);
+        }
+        catch (Exception e) {
+            throw new UnexpectedApplicationState("On " + this, e);
+        }
+    }
+
 }

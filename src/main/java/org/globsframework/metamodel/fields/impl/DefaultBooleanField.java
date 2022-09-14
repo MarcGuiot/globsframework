@@ -74,4 +74,18 @@ public class DefaultBooleanField extends AbstractField implements BooleanField {
             throw new UnexpectedApplicationState(e);
         }
     }
+
+    public <T extends FieldValueVisitorWithContext<Context>, Context> T safeVisitValue(T visitor, Object value, Context context) {
+        try {
+            visitor.visitBoolean(this, (Boolean) value, context);
+            return visitor;
+        }
+        catch (RuntimeException e) {
+            throw new RuntimeException("On " + this, e);
+        }
+        catch (Exception e) {
+            throw new UnexpectedApplicationState("On " + this, e);
+        }
+    }
+
 }

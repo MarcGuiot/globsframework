@@ -82,6 +82,19 @@ public class DefaultDoubleField extends AbstractField implements DoubleField {
         }
     }
 
+    public <T extends FieldValueVisitorWithContext<Context>, Context> T safeVisitValue(T visitor, Object value, Context context) {
+        try {
+            visitor.visitDouble(this, (Double)value, context);
+            return visitor;
+        }
+        catch (RuntimeException e) {
+            throw new RuntimeException("On " + this, e);
+        }
+        catch (Exception e) {
+            throw new UnexpectedApplicationState("On " + this, e);
+        }
+    }
+
     public boolean valueEqual(Object o1, Object o2) {
         return (o1 == null) && (o2 == null) ||
                 !((o1 == null) || (o2 == null)) &&

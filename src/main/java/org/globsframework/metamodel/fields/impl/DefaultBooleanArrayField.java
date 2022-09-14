@@ -95,5 +95,17 @@ public class DefaultBooleanArrayField extends AbstractField implements BooleanAr
             buffer.append(Arrays.toString(((boolean[]) value)));
         }
     }
+    public <T extends FieldValueVisitorWithContext<Context>, Context> T safeVisitValue(T visitor, Object value, Context context) {
+        try {
+            visitor.visitBooleanArray(this, (boolean[]) value, context);
+            return visitor;
+        }
+        catch (RuntimeException e) {
+            throw new RuntimeException("On " + this, e);
+        }
+        catch (Exception e) {
+            throw new UnexpectedApplicationState("On " + this, e);
+        }
+    }
 
 }

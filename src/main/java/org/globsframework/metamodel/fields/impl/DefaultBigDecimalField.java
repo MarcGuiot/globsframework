@@ -84,4 +84,17 @@ public class DefaultBigDecimalField extends AbstractField implements BigDecimalF
             throw new UnexpectedApplicationState("On " + this, e);
         }
     }
+    public <T extends FieldValueVisitorWithContext<Context>, Context> T safeVisitValue(T visitor, Object value, Context context) {
+        try {
+            visitor.visitBigDecimal(this, (BigDecimal)value, context);
+            return visitor;
+        }
+        catch (RuntimeException e) {
+            throw new RuntimeException("On " + this, e);
+        }
+        catch (Exception e) {
+            throw new UnexpectedApplicationState("On " + this, e);
+        }
+    }
+
 }

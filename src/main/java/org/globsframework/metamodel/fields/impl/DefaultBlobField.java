@@ -86,6 +86,20 @@ public class DefaultBlobField extends AbstractField implements BlobField {
         }
     }
 
+    public <T extends FieldValueVisitorWithContext<Context>, Context> T safeVisitValue(T visitor, Object value, Context context) {
+        try {
+            visitor.visitBlob(this, (byte[])value, context);
+            return visitor;
+        }
+        catch (RuntimeException e) {
+            throw new RuntimeException("On " + this, e);
+        }
+        catch (Exception e) {
+            throw new UnexpectedApplicationState("On " + this, e);
+        }
+    }
+
+
     public boolean valueEqual(Object o1, Object o2) {
         return Arrays.equals(((byte[])o1), (byte[])o2);
     }

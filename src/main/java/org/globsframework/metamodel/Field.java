@@ -4,6 +4,8 @@ import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.properties.PropertyHolder;
 import org.globsframework.metamodel.type.DataType;
 import org.globsframework.metamodel.utils.MutableAnnotations;
+import org.globsframework.model.FieldValuesAccessor;
+import org.globsframework.model.Glob;
 import org.globsframework.utils.exceptions.InvalidParameter;
 
 public interface Field extends PropertyHolder<Field>, MutableAnnotations<Field> {
@@ -39,6 +41,12 @@ public interface Field extends PropertyHolder<Field>, MutableAnnotations<Field> 
     void visit(FieldValueVisitor visitor, Object value) throws Exception;
 
     void safeVisit(FieldValueVisitor visitor, Object value);
+
+    <T extends FieldValueVisitorWithContext<Context>, Context> T safeVisitValue(T visitor, Object value, Context context);
+
+    default <T extends FieldValueVisitorWithContext<Context>, Context> T safeVisitValue(T visitor, FieldValuesAccessor value, Context context){
+        return safeVisitValue(visitor, value.getValue(this), context);
+    }
 
     DataType getDataType();
 
