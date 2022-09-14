@@ -262,6 +262,18 @@ public class Utils {
         return result;
     }
 
+    public static String[] append(String[] array1, String... array2) {
+        String[] result = new String[array1.length + array2.length];
+        int index = 0;
+        for (String st1 : array1) {
+            result[index++] = st1;
+        }
+        for (String st2 : array2) {
+            result[index++] = st2;
+        }
+        return result;
+    }
+
     public static double sum(Double[] values) {
         double result = 0;
         for (Double value : values) {
