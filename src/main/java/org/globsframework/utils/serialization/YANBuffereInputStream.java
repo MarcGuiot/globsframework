@@ -50,4 +50,8 @@ public class YANBuffereInputStream extends InputStream {
         }
         return read(b, off, len);
     }
+
+    public void close() throws IOException {
+        inputStream.close();
+    }
 }
