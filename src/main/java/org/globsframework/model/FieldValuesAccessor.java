@@ -152,20 +152,12 @@ public interface FieldValuesAccessor {
         return Optional.ofNullable(get(field));
     }
 
-//    default Optional<Glob> getOpt(GlobField field) {
-//        return Optional.ofNullable(get(field));
-//    }
-//
-//    default Optional<Glob> getOpt(GlobUnionField field) {
-//        return Optional.ofNullable(get(field));
-//    }
-//
-//    default Optional<Glob[]> getOpt(GlobArrayField field) {
-//        return Optional.ofNullable(get(field));
-//    }
-//
-//    default Optional<Glob[]> getOpt(GlobArrayUnionField field) {
-//        return Optional.ofNullable(get(field));
-//    }
+    default Optional<Glob[]> getOptional(GlobArrayField field) {
+        return Optional.ofNullable(get(field));
+    }
+
+    default Optional<Glob[]> getOptional(GlobArrayUnionField field) {
+        return Optional.ofNullable(get(field));
+    }
 
 }
