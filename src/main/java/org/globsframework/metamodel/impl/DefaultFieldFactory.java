@@ -17,7 +17,7 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.Key;
 
 import java.math.BigDecimal;
-import java.util.List;
+import java.util.Collection;
 
 public class DefaultFieldFactory {
     private DefaultGlobType type;
@@ -130,11 +130,11 @@ public class DefaultFieldFactory {
         return add(new DefaultGlobArrayField(name, type, globType, index, isKeyField, keyIndex), isKeyField);
     }
 
-    public DefaultGlobUnionField addGlobUnion(String fieldName, List<GlobType> types, int index) {
+    public DefaultGlobUnionField addGlobUnion(String fieldName, Collection<GlobType> types, int index) {
         return add(new DefaultGlobUnionField(fieldName, type, types, index, false, 0), false);
     }
 
-    public DefaultGlobUnionArrayField addGlobArrayUnion(String fieldName, List<GlobType> types, int index) {
+    public DefaultGlobUnionArrayField addGlobArrayUnion(String fieldName, Collection<GlobType> types, int index) {
         return add(new DefaultGlobUnionArrayField(fieldName, type, types, index, false, 0), false);
     }
 

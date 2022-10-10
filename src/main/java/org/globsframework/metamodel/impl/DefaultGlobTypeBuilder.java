@@ -315,7 +315,7 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
         return field;
     }
 
-    private GlobUnionField createGlobUnionField(String fieldName, List<GlobType> types, Collection<Glob> globAnnotations) {
+    private GlobUnionField createGlobUnionField(String fieldName, Collection<GlobType> types, Collection<Glob> globAnnotations) {
         MutableAnnotations annotations = adaptAnnotation(globAnnotations);
         Glob key = annotations.findAnnotation(KeyAnnotationType.UNIQUE_KEY);
         if (key != null) {
@@ -327,7 +327,7 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
         return field;
     }
 
-    private GlobArrayUnionField createGlobUnionArrayField(String fieldName, List<GlobType> types, Collection<Glob> globAnnotations) {
+    private GlobArrayUnionField createGlobUnionArrayField(String fieldName, Collection<GlobType> types, Collection<Glob> globAnnotations) {
         MutableAnnotations annotations = adaptAnnotation(globAnnotations);
         Glob key = annotations.findAnnotation(KeyAnnotationType.UNIQUE_KEY);
         if (key != null) {
@@ -407,11 +407,11 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
         return createGlobArrayField(fieldName, globType, annotations);
     }
 
-    public GlobUnionField declareGlobUnionField(String fieldName, List<GlobType> types, Collection<Glob> annotations) {
+    public GlobUnionField declareGlobUnionField(String fieldName, Collection<GlobType> types, Collection<Glob> annotations) {
         return createGlobUnionField(fieldName, types, annotations);
     }
 
-    public GlobArrayUnionField declareGlobUnionArrayField(String fieldName, List<GlobType> types, Collection<Glob> annotations) {
+    public GlobArrayUnionField declareGlobUnionArrayField(String fieldName, Collection<GlobType> types, Collection<Glob> annotations) {
         return createGlobUnionArrayField(fieldName, types, annotations);
     }
 

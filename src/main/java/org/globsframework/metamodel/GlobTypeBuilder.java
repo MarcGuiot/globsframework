@@ -84,9 +84,9 @@ public interface GlobTypeBuilder {
 
     GlobArrayField declareGlobArrayField(String fieldName, GlobType globType, Collection<Glob> annotations);
 
-    GlobUnionField declareGlobUnionField(String fieldName, List<GlobType> types, Collection<Glob> annotations);
+    GlobUnionField declareGlobUnionField(String fieldName, Collection<GlobType> types, Collection<Glob> annotations);
 
-    GlobArrayUnionField declareGlobUnionArrayField(String fieldName, List<GlobType> types, Collection<Glob> annotations);
+    GlobArrayUnionField declareGlobUnionArrayField(String fieldName, Collection<GlobType> types, Collection<Glob> annotations);
 
     Field declare(String fieldName, DataType dataType, Collection<Glob> annotations);
 
