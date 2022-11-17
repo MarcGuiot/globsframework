@@ -5,6 +5,7 @@ import org.globsframework.metamodel.fields.*;
 import org.globsframework.utils.exceptions.InvalidParameter;
 
 import java.text.*;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Locale;
 
@@ -112,6 +113,32 @@ public class FieldConverter {
 
         public void visitString(StringField field) throws Exception {
             value = stringValue;
+        }
+
+        public void visitStringArray(StringArrayField field) throws Exception {
+            if (stringValue != null) {
+                if (stringValue.isEmpty()) {
+                    value = new String[0];
+                } else {
+                    value = stringValue.split(",");
+                }
+            } else {
+                value = null;
+            }
+        }
+
+        public void visitLongArray(LongArrayField field) throws Exception {
+            if (stringValue != null) {
+                if (stringValue.isEmpty()) {
+                    value = new long[0];
+                } else {
+                    value = Arrays.stream(stringValue.split(","))
+                            .mapToLong(Long::parseLong)
+                            .toArray();
+                }
+            } else {
+                value = null;
+            }
         }
 
         public void visitDouble(DoubleField field) throws Exception {

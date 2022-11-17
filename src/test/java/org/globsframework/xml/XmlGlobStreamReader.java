@@ -133,6 +133,10 @@ public class XmlGlobStreamReader {
                 accessor = new XmlStringArrayAccessor(stream, field);
             }
 
+            public void visitLongArray(LongArrayField field) throws Exception {
+                accessor = new XmlLongArrayAccessor(stream, field);
+            }
+
             public Accessor getAccessor() {
                 return accessor;
             }
@@ -321,7 +325,6 @@ public class XmlGlobStreamReader {
                 }
             }
 
-
             private class XmlStringArrayAccessor implements StringArrayAccessor {
                 private final XmlDbStream xmlMoStream;
                 private final StringArrayField field;
@@ -337,6 +340,24 @@ public class XmlGlobStreamReader {
 
                 public Object getObjectValue() {
                     return getString();
+                }
+            }
+
+            private class XmlLongArrayAccessor implements LongArrayAccessor {
+                private final XmlDbStream xmlMoStream;
+                private final LongArrayField field;
+
+                public XmlLongArrayAccessor(XmlDbStream xmlMoStream, LongArrayField field) {
+                    this.xmlMoStream = xmlMoStream;
+                    this.field = field;
+                }
+
+                public long[] getValues() {
+                    return xmlMoStream.current.get(field);
+                }
+
+                public Object getObjectValue() {
+                    return getValues();
                 }
             }
         }
