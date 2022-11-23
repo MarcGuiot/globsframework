@@ -42,6 +42,36 @@ public class GlobList extends ArrayList<Glob> {
         }
     }
 
+    public boolean matches(List<Glob> other) {
+        return matches(this, other);
+    }
+
+    public static boolean matches(List<Glob> globs1, List<Glob> globs2) {
+        if (globs1 == globs2) {
+            return true;
+        } else if (globs1 == null || globs2 == null || globs2.size() != globs1.size()) {
+            return false;
+        }
+
+        List<Glob> globs2Copy = new ArrayList<>(globs2);
+        for (Glob glob1 : globs1) {
+            int index = -1;
+            for (int i = 0; i < globs2Copy.size(); i++) {
+                if (glob1.matches(globs2Copy.get(i))) {
+                    index = i;
+                    break;
+                }
+            }
+            if (index == -1) {
+                return false;
+            }
+
+            globs2Copy.remove(index);
+        }
+
+        return true;
+    }
+
     public void addNotNull(Glob... globs) {
         for (Glob glob : globs) {
             if (glob != null) {
