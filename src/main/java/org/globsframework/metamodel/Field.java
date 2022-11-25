@@ -5,7 +5,6 @@ import org.globsframework.metamodel.properties.PropertyHolder;
 import org.globsframework.metamodel.type.DataType;
 import org.globsframework.metamodel.utils.MutableAnnotations;
 import org.globsframework.model.FieldValuesAccessor;
-import org.globsframework.model.Glob;
 import org.globsframework.utils.exceptions.InvalidParameter;
 
 public interface Field extends PropertyHolder<Field>, MutableAnnotations<Field> {
@@ -151,6 +150,48 @@ public interface Field extends PropertyHolder<Field>, MutableAnnotations<Field> 
             throw new RuntimeException(getFullName() + " is not a GlobUnionField but a " + getDataType());
         }
         return (GlobUnionField) this;
+    }
+
+    default StringArrayField asStringArrayField() {
+        if (!(this instanceof StringArrayField)) {
+            throw new RuntimeException(getFullName() + " is not a StringArrayField but a " + getDataType());
+        }
+        return (StringArrayField) this;
+    }
+
+    default BooleanArrayField asBooleanArrayField() {
+        if (!(this instanceof BooleanArrayField)) {
+            throw new RuntimeException(getFullName() + " is not a BooleanArrayField but a " + getDataType());
+        }
+        return (BooleanArrayField) this;
+    }
+
+    default IntegerArrayField asIntegerArrayField() {
+        if (!(this instanceof IntegerArrayField)) {
+            throw new RuntimeException(getFullName() + " is not a IntegerArrayField but a " + getDataType());
+        }
+        return (IntegerArrayField) this;
+    }
+
+    default LongArrayField asLongArrayField() {
+        if (!(this instanceof LongArrayField)) {
+            throw new RuntimeException(getFullName() + " is not a LongArrayField but a " + getDataType());
+        }
+        return (LongArrayField) this;
+    }
+
+    default DoubleArrayField asDoubleArrayField() {
+        if (!(this instanceof DoubleArrayField)) {
+            throw new RuntimeException(getFullName() + " is not a DoubleArrayField but a " + getDataType());
+        }
+        return (DoubleArrayField) this;
+    }
+
+    default BigDecimalArrayField asBigDecimalArrayField() {
+        if (!(this instanceof BigDecimalArrayField)) {
+            throw new RuntimeException(getFullName() + " is not a BigDecimalArrayField but a " + getDataType());
+        }
+        return (BigDecimalArrayField) this;
     }
 
     void toString(StringBuilder buffer, Object value);
