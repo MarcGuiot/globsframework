@@ -144,6 +144,10 @@ public interface FieldValuesAccessor {
         return Optional.ofNullable(get(field));
     }
 
+    default Optional<Object> getOptValue(Field field) {
+        return Optional.ofNullable(getValue(field));
+    }
+
     default Optional<Glob> getOptional(GlobField field) {
         return Optional.ofNullable(get(field));
     }
