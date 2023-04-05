@@ -32,7 +32,12 @@ public class GlobPrinter {
                     .append("\"").append(field.getName())
                     .append("\":");
             field.toString(builder, value);
+            builder.append(",");
         });
+        final int length = builder.length();
+        if (length > 0 && builder.charAt(length - 1) == ',') {
+            builder.deleteCharAt(length - 1);
+        }
         return builder.toString();
     }
 
