@@ -1023,7 +1023,7 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
                         "-- New object values:\n" +
                         "\"name\":\"obj3\"" +
                         "-- Existing object:\n" +
-                        "\"id\":1" +
+                        "\"id\":1," +
                         "\"name\":\"obj1\"");
     }
 
