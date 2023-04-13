@@ -5,6 +5,7 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.GlobTypeLoader;
 import org.globsframework.metamodel.GlobTypeLoaderFactory;
 import org.globsframework.metamodel.fields.*;
+import org.globsframework.model.FieldValuesAccessor;
 import org.globsframework.model.Glob;
 import org.globsframework.model.Key;
 import org.globsframework.model.MutableGlob;
@@ -29,6 +30,12 @@ public class MaxSizeType {
         GlobTypeLoader loader = GlobTypeLoaderFactory.create(MaxSizeType.class);
         loader.register(GlobCreateFromAnnotation.class, annotation -> create((MaxSize) annotation))
                 .load();
+    }
+
+    static public String cut(Field field, FieldValuesAccessor value) {
+        return value.getOpt(field.asStringField())
+                .map(s -> cut(field, s))
+                .orElse(null);
     }
 
     static public String cut(Field field, String value) {
