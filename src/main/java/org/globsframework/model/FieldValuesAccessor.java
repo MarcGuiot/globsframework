@@ -77,6 +77,11 @@ public interface FieldValuesAccessor {
         return value != null ? value : valueIfNull;
     }
 
+    default String getOrDefault(StringField field, String valueIfEmpty) throws ItemNotFound {
+        String value = get(field);
+        return value != null && value.length() != 0 ? value : valueIfEmpty;
+    }
+
     default ZonedDateTime get(DateTimeField field, ZonedDateTime valueIfNull) throws ItemNotFound {
         ZonedDateTime value = get(field);
         return value != null ? value : valueIfNull;
