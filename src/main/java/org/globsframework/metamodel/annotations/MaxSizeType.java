@@ -40,7 +40,7 @@ public class MaxSizeType {
 
     static public String cut(Field field, String value) {
         Glob annotation = field.findAnnotation(KEY);
-        if (annotation != null && Strings.isNotEmpty(value)) {
+        if (annotation != null && Strings.isNotEmpty(value) && annotation.get(VALUE) > 0) {
             Charset charsetName = Charset.forName(annotation.get(CHARSET));
             if (value.getBytes(charsetName).length > annotation.get(VALUE)) {
                 if (annotation.get(ALLOW_TRUNCATE, false)) {
