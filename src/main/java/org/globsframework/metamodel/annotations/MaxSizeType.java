@@ -23,8 +23,6 @@ public class MaxSizeType {
 
     static public StringField CHARSET;
 
-    static public BooleanField USE_TEXT;
-
     @InitUniqueKey
     static public Key KEY;
 
@@ -74,7 +72,6 @@ public class MaxSizeType {
     public static Glob create(MaxSize size) {
         return TYPE.instantiate().set(VALUE, size.value())
                 .set(ALLOW_TRUNCATE, size.allow_truncate())
-                .set(USE_TEXT, size.asText())
                 .set(CHARSET, size.charSet());
     }
 

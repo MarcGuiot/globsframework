@@ -17,9 +17,8 @@ public @interface MaxSize {
 
     String charSet() default "UTF-8";
 
-    boolean asText() default false;
-
     GlobType GLOB_TYPE = MaxSizeType.TYPE;
+
     Key KEY = MaxSizeType.KEY;
 
 }
