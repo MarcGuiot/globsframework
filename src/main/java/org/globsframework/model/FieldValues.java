@@ -219,6 +219,17 @@ public interface FieldValues extends FieldValuesAccessor, FieldsValueScanner {
         return value;
     }
 
+    default String getNotEmpty(StringField field) {
+        String value = get(field);
+        if (value == null) {
+            throw new NullPointerException(field.getFullName() + " should not be null " + GlobPrinter.toString(this));
+        }
+        if (value.length() == 0) {
+            throw new RuntimeException(field.getFullName() + " should not be empty " + GlobPrinter.toString(this));
+        }
+        return value;
+    }
+
     default Glob[] getNotNull(GlobArrayUnionField field) {
         Glob[] value = get(field);
         if (value == null) {
