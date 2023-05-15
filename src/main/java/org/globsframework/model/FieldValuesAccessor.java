@@ -2,6 +2,7 @@ package org.globsframework.model;
 
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.fields.*;
+import org.globsframework.utils.Strings;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
 import java.math.BigDecimal;
@@ -99,6 +100,11 @@ public interface FieldValuesAccessor {
 
     default Optional<String> getOpt(StringField field) {
         return Optional.ofNullable(get(field));
+    }
+
+    default Optional<String> getOptNotEmpty(StringField field) {
+        final String value = get(field);
+        return Strings.isNullOrEmpty(value) ? Optional.empty() : Optional.of(value);
     }
 
     default Optional<LocalDate> getOpt(DateField field) {
