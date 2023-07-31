@@ -40,7 +40,7 @@ public class ArrayContainer<T extends Comparable, D> implements Container<T, D> 
             elements[index + 1] = value;
             return this;
         } else {
-            SortedMap<T, D> tmp = new TemporaryTreeSet<T,D>(this); //to use the fact that the array is already sorded. treemp only use entryset.iterator()
+            SortedMap<T, D> tmp = new TemporaryTreeSet<T,D>(this); //to use the fact that the array is already sorded. treemap only use entryset.iterator()
             TreeMap<T, D> map = new TreeMap<T, D>(tmp);
             map.put(key, value);
             return new MapContainer<T, D>(map);

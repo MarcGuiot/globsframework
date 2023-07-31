@@ -181,6 +181,11 @@ public interface FieldValues extends FieldValuesAccessor, FieldsValueScanner {
         return d != null ? d : EMPTY_INTEGER_ARRAY;
     }
 
+    default int[] getOrDefault(IntegerArrayField field, int[] defaultValues) {
+        int[] d = get(field);
+        return d != null ? d : defaultValues;
+    }
+
     default long[] getOrEmpty(LongArrayField field) {
         long[] d = get(field);
         return d != null ? d : EMPTY_LONG_ARRAY;
