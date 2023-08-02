@@ -12,6 +12,8 @@ public class DummyObjectWithInner {
     @KeyField
     public static IntegerField ID;
 
+    public static BlobField byteArrayData;
+
     @Target(value = DummyObjectInner.class)
     public static GlobField VALUE;
 
@@ -23,6 +25,7 @@ public class DummyObjectWithInner {
 
     @Targets({ DummyObjectInner.class, DummyObject.class})
     public static GlobArrayUnionField VALUES_UNION;
+
 
     static {
         GlobTypeLoaderFactory.create(DummyObjectWithInner.class).load();

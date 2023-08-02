@@ -15,6 +15,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
@@ -25,21 +26,25 @@ public class SerializationTest {
     protected InputStream inputStream;
     protected SerializedInput input;
     private int currentDate;
+    private File file;
 
     @Before
     public void setUp() throws Exception {
-        File file = TestUtils.getFileName(this, "sample.dat");
+        file = TestUtils.getFileName(this, "sample.dat");
 //    String fileName = "/tmp/output.bin";
         file.getParentFile().mkdirs();
 
         outputStream = new BufferedOutputStream(new FileOutputStream(file));
         output = new SerializedOutputChecker(new DefaultSerializationOutput(outputStream));
+    }
 
-//    inputStream = new FileInputStream(fileName);
+    private void initInputStream(File file) throws IOException {
+        //    inputStream = new FileInputStream(fileName);
 //    inputStream = new BufferedInputStream(new FileInputStream(fileName));
-        inputStream = new YANBuffereInputStream(new FileInputStream(file));
-        input = new SerializationInputChecker(new DefaultSerializationInput(inputStream));
-
+        final FileInputStream stream = new FileInputStream(file);
+        inputStream = new YANBuffereInputStream(stream);
+//        input = new SerializationInputChecker(new DefaultSerializationInput(inputStream));
+        input =  new SerializationInputChecker(new ByteBufferSerializationInput(stream.readAllBytes()));
     }
 
     @Test
@@ -50,6 +55,8 @@ public class SerializationTest {
         output.write(false);
         output.write(new int[]{3, 5, 9});
         outputStream.close();
+
+        initInputStream(file);
 
         assertEquals(3, input.readNotNullInt());
         assertEquals(33L, input.readNotNullLong());
@@ -69,6 +76,7 @@ public class SerializationTest {
         output.writeLong(666L);
         outputStream.close();
 
+        initInputStream(file);
         assertEquals("blah", input.readUtf8String());
         assertEquals(Boolean.TRUE, input.readBoolean());
         assertEquals(6.33, input.readDouble(), 0.001);
@@ -85,6 +93,7 @@ public class SerializationTest {
         output.writeUtf8String("end");
         outputStream.close();
 
+        initInputStream(file);
         Glob newGlob = input.readGlob(DummyModel.get());
         assertNotSame(glob, newGlob);
 
@@ -112,6 +121,7 @@ public class SerializationTest {
         output.writeChangeSet(changeSet);
         outputStream.close();
 
+        initInputStream(file);
         changeSet.toString();
 
         ChangeSet readChangeSet = input.readChangeSet(DummyModel.get());
@@ -141,6 +151,7 @@ public class SerializationTest {
 
         output.writeChangeSet(changeSet);
         outputStream.close();
+        initInputStream(file);
 
         ChangeSet readChangeSet = input.readChangeSet(DummyModel.get());
         Assert.assertTrue(readChangeSet.containsUpdates(DummyObjectWithInner.VALUES));
@@ -155,6 +166,7 @@ public class SerializationTest {
     public void withInnerGlob() throws IOException {
         MutableGlob obj1 = DummyObjectWithInner.TYPE.instantiate()
                 .set(DummyObjectWithInner.ID, 1)
+                .set(DummyObjectWithInner.byteArrayData, "Some Data".getBytes(StandardCharsets.UTF_8))
                 .set(DummyObjectWithInner.VALUE, DummyObjectInner.TYPE.instantiate().set(DummyObjectInner.VALUE, 3.14))
                 .set(DummyObjectWithInner.VALUES, new Glob[]{DummyObjectInner.TYPE.instantiate().set(DummyObjectInner.VALUE, 3.14 * 2),
                         DummyObjectInner.TYPE.instantiate().set(DummyObjectInner.VALUE, 3.14 * 3)})
@@ -164,9 +176,11 @@ public class SerializationTest {
 
         output.writeKnowGlob(obj1);
         outputStream.close();
+        initInputStream(file);
 
         Glob newGlob = input.readKnowGlob(DummyObjectWithInner.TYPE);
         assertNotSame(obj1, newGlob);
+        Assert.assertEquals("Some Data", new String(newGlob.get(DummyObjectWithInner.byteArrayData)));
         Assert.assertEquals(newGlob.get(DummyObjectWithInner.VALUE).get(DummyObjectInner.VALUE), 3.14, 0.01);
         Assert.assertEquals(newGlob.get(DummyObjectWithInner.VALUE_UNION).get(DummyObject.VALUE), 3.14, 0.01);
         Assert.assertEquals(newGlob.get(DummyObjectWithInner.VALUES_UNION)[0].get(DummyObjectInner.VALUE), 3.14 * 2, 0.01);
