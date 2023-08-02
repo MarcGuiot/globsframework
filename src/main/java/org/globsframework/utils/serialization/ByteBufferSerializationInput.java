@@ -20,10 +20,19 @@ import java.util.Arrays;
 public class ByteBufferSerializationInput implements SerializedInput {
     private final InputStreamFieldVisitor fieldVisitorInput = new InputStreamFieldVisitor();
     private final byte[] data;
-    public int count;
+    private int count;
 
     public ByteBufferSerializationInput(byte[] data) {
         this.data = data;
+    }
+
+    public ByteBufferSerializationInput(byte[] data, int offset) {
+        this.data = data;
+        count = offset;
+    }
+
+    public int position() {
+        return count;
     }
 
     public Glob readGlob(GlobModel model) {
