@@ -5,7 +5,7 @@ import org.globsframework.model.GlobFactory;
 import org.globsframework.model.GlobFactoryService;
 
 public class DefaultGlobFactoryService implements GlobFactoryService {
-    public GlobFactory get(GlobType type) {
+    public GlobFactory getFactory(GlobType type) {
         return new DefaultGlobFactory(type);
     }
 }

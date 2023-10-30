@@ -172,7 +172,7 @@ public class DefaultGlobType extends DefaultAnnotations implements MutableGlobTy
             throw new RuntimeException("Bug unconstitency between key count " + keyFieldCount + " and key id " + keySet);
         }
 
-        globFactory = GlobFactoryService.Builder.getBuilderFactory().get(this);
+        globFactory = GlobFactoryService.Builder.getBuilderFactory().getFactory(this);
 
         Comparator<Key> cmp = null;
         for (Field keyField : keyFields) {

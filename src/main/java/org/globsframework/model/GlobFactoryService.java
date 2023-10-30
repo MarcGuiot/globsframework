@@ -5,7 +5,7 @@ import org.globsframework.metamodel.impl.DefaultGlobFactoryService;
 
 public interface GlobFactoryService {
 
-    GlobFactory get(GlobType type);
+    GlobFactory getFactory(GlobType type);
 
     class Builder {
         static private GlobFactoryService builderFactory =
@@ -29,9 +29,9 @@ public interface GlobFactoryService {
             }
         }
 
-        public GlobFactory get(GlobType type) {
-            GlobFactory globFactory = specialized.get(type);
-            return globFactory != null ? globFactory : globFactoryService.get(type);
+        public GlobFactory getFactory(GlobType type) {
+            GlobFactory globFactory = specialized.getFactory(type);
+            return globFactory != null ? globFactory : globFactoryService.getFactory(type);
         }
     }
 }
