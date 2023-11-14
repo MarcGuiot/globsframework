@@ -31,10 +31,10 @@ The advantage is that GlobsFramework is open source, very small, without depende
 
 ## history
 The idea came from telecom industry where many model were built using GDMO (https://en.wikipedia.org/wiki/Guidelines_for_the_Definition_of_Managed_Objects).
-This model was read are used to generate code (for DB, UI, BER Asn1 encoding, etc). These generated object was called Managed Objects (MO).
+This model was read and used to generate code (for DB, UI, BER Asn1 encoding, etc). These generated object was called Managed Objects (MO).
 At Nortel, Xml was used to describe this Managed Object (MO). We represent this in a ManageObjectType and the associated MO (a bean in fact) was...a ManagedObject.
 
-These generic model was used to generate code, but not as a bean but to generate the definition of the bean.
+These generic model was used to generate code, but not as a bean but to generate the definition of the bean and for some part, loaded dynamically.
 
 Regis Medina and I rewrote a second version for a private financial company we work for. And we wrote an open source third version 
 for our own project (BudgetView https://web.archive.org/web/20181229134134/http://www.mybudgetview.com/, https://github.com/MarcGuiot/budgetview)
