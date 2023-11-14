@@ -3,14 +3,14 @@ This is a metamodel framework.
 
 The goal of this framework is to replace beans by an object called a Glob. This Glob is a kind of map. The key to access a field 
 is not a string but an instance of a Field. Theses Fields (for a given 'bean') are encapsulated in an instance of a GlobType. GlobType and Field 
-contains additional information called annotation (like java annotation but there Globs, of course ;-) ).
+contains additional information called annotation (like java annotation but as Globs, of course ;-) ).
 
 Given a Glob, it's GlobType is known. The GlobType give access to the fields. A real field can be visited using the visitor pattern.
 Real fields are IntegerField and IntegerArrayField, DoubleField, GlobField, UnionField, etc.
 A glob keep the fact that a field is set or not. By default accessing an unset field return null. 
 
 Thanks to that, we can write generic code (not magic;-) that serialize in XML/Json/binary,
-that insert in a DB, and many more.
+that insert in a DB, compare them self, and many more.
 
 Most of the code that use introspection to achieve there work can be replaced by using GlobType. As a GlobType 
 expose a way to access field, and that the field have a known type, the written code is fully control.
@@ -21,13 +21,25 @@ of the many way to access and use a class compared to a Glob. And it is more nat
 So, if GlobsFramework is useful everywhere input/output is used, it is also great inside our own code.
 Here are some usage example :
 * Any code that must control flow of data, of the configuration, etc.
-* Any code that is configurable using user input.
+* Any code that is configured using user input.
 * If you want generic way to filter or transform data.
 
 A JavaScript (TS) version exist, it allow the dynamic creation of screen to create configuration in React. But the code is not open. 
 
 It's main drawback is the fact that it mixed badly with beans.
-The advantage is that GlobsFramework is open source, very small, without dependency (only slf4j for logging) and so, is easy to maintain.
+The advantage is that GlobsFramework is open source, very small, without dependency (only slf4j for logging) and is easy to maintain.
+
+## history
+The idea came from telecom industry where many model were built using GDMO (https://en.wikipedia.org/wiki/Guidelines_for_the_Definition_of_Managed_Objects).
+This model was read are used to generate code (for DB, UI, BER Asn1 encoding, etc). These generated object was called Managed Objects (MO).
+At Nortel, Xml was used to describe this Managed Object (MO). We represent this in a ManageObjectType and the associated MO (a bean in fact) was...a ManagedObject.
+
+These generic model was used to generate code, but not as a bean but to generate the definition of the bean.
+
+Regis Medina and I rewrote a second version for a private financial company we work for. And we wrote an open source third version 
+for our own project (BudgetView https://web.archive.org/web/20181229134134/http://www.mybudgetview.com/, https://github.com/MarcGuiot/budgetview)
+
+These version is used in few company we worked for.
 
 ## exemple of a db query
 
@@ -43,10 +55,7 @@ sqlConnection.getQueryBuilder(DummyObject.TYPE,
 
 ## components
 
-We create a public version of Globs for https://github.com/MarcGuiot/budgetview. 
-This project pass away but the framework (or a private version of it) is used in 3 company.
-
-Globs components :
+Today's Globs components :
 
 * To access a database : https://github.com/MarcGuiot/globs-db
 * To read/write json : https://github.com/MarcGuiot/globs-gson
@@ -67,6 +76,26 @@ public interface GlobType {
     Field getField(String name) throws ItemNotFound;
     ...
 ```
+
+A Field interface
+```
+public interface Field {
+   GlobType getGlobType()
+   String getName();
+   <T extends FieldVisitor> T visit(T visitor) throws Exception;
+   ...
+}
+
+public interface StringField extends Field {
+};
+
+...
+public interface GlobField extends Field {
+  GlobType getTargetType();
+};
+...
+```
+
 
 A Glob interface:
 ```
