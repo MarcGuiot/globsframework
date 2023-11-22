@@ -206,6 +206,34 @@ public interface FieldValues extends FieldValuesAccessor, FieldsValueScanner {
         return d != null ? d : EMPTY_STRING_ARRAY;
     }
 
+    default NullableOptional<String[]> getNullableOrEmptyOpt(StringArrayField field) {
+        return new NullableOptional<>(isSet(field), getOrEmpty(field));
+    }
+
+    default NullableOptional<int[]> getNullableOrEmptyOpt(IntegerArrayField field) {
+        return new NullableOptional<>(isSet(field), getOrEmpty(field));
+    }
+
+    default NullableOptional<double[]> getNullableOrEmptyOpt(DoubleArrayField field) {
+        return new NullableOptional<>(isSet(field), getOrEmpty(field));
+    }
+
+    default NullableOptional<long[]> getNullableOrEmptyOpt(LongArrayField field) {
+        return new NullableOptional<>(isSet(field), getOrEmpty(field));
+    }
+
+    default NullableOptional<boolean[]> getNullableOrEmptyOpt(BooleanArrayField field) {
+        return new NullableOptional<>(isSet(field), getOrEmpty(field));
+    }
+
+    default NullableOptional<BigDecimal[]> getNullableOrEmptyOpt(BigDecimalArrayField field) {
+        return new NullableOptional<>(isSet(field), getOrEmpty(field));
+    }
+
+    default NullableOptional<Glob[]> getNullableOrEmptyOpt(GlobArrayField field) {
+        return new NullableOptional<>(isSet(field), getOrEmpty(field));
+    }
+
     default Glob[] getOrEmpty(GlobArrayUnionField field) {
         Glob[] globs = get(field);
         return globs != null ? globs : EMPTY_GLOB_ARRAY;

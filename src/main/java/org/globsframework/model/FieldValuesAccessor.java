@@ -98,6 +98,70 @@ public interface FieldValuesAccessor {
         return bigDecimal != null ? bigDecimal : valueIfNull;
     }
 
+    default NullableOptional<String> getNullableOpt(StringField field) {
+        return new NullableOptional<>(isSet(field), get(field));
+    }
+
+    default NullableOptional<String[]> getNullableOpt(StringArrayField field) {
+        return new NullableOptional<>(isSet(field), get(field));
+    }
+
+    default NullableOptional<Integer> getNullableOpt(IntegerField field) {
+        return new NullableOptional<>(isSet(field), get(field));
+    }
+
+    default NullableOptional<int[]> getNullableOpt(IntegerArrayField field) {
+        return new NullableOptional<>(isSet(field), get(field));
+    }
+
+    default NullableOptional<Long> getNullableOpt(LongField field) {
+        return new NullableOptional<>(isSet(field), get(field));
+    }
+
+    default NullableOptional<long[]> getNullableOpt(LongArrayField field) {
+        return new NullableOptional<>(isSet(field), get(field));
+    }
+
+    default NullableOptional<Double> getNullableOpt(DoubleField field) {
+        return new NullableOptional<>(isSet(field), get(field));
+    }
+
+    default NullableOptional<double[]> getNullableOpt(DoubleArrayField field) {
+        return new NullableOptional<>(isSet(field), get(field));
+    }
+
+    default NullableOptional<BigDecimal> getNullableOpt(BigDecimalField field) {
+        return new NullableOptional<>(isSet(field), get(field));
+    }
+
+    default NullableOptional<BigDecimal[]> getNullableOpt(BigDecimalArrayField field) {
+        return new NullableOptional<>(isSet(field), get(field));
+    }
+
+    default NullableOptional<LocalDate> getNullableOpt(DateField field) {
+        return new NullableOptional<>(isSet(field), get(field));
+    }
+
+    default NullableOptional<ZonedDateTime> getNullableOpt(DateTimeField field) {
+        return new NullableOptional<>(isSet(field), get(field));
+    }
+
+    default NullableOptional<Boolean> getNullableOpt(BooleanField field) {
+        return new NullableOptional<>(isSet(field), get(field));
+    }
+
+    default NullableOptional<boolean[]> getNullableOpt(BooleanArrayField field) {
+        return new NullableOptional<>(isSet(field), get(field));
+    }
+
+    default NullableOptional<Glob> getNullableOpt(GlobField field) {
+        return new NullableOptional<>(isSet(field), get(field));
+    }
+
+    default NullableOptional<Glob[]> getNullableOpt(GlobArrayField field) {
+        return new NullableOptional<>(isSet(field), get(field));
+    }
+
     default Optional<String> getOpt(StringField field) {
         return Optional.ofNullable(get(field));
     }
@@ -152,6 +216,10 @@ public interface FieldValuesAccessor {
     }
 
     default Optional<BigDecimal> getOpt(BigDecimalField field) {
+        return Optional.ofNullable(get(field));
+    }
+
+    default Optional<BigDecimal[]> getOpt(BigDecimalArrayField field) {
         return Optional.ofNullable(get(field));
     }
 
