@@ -15,7 +15,7 @@ public abstract class AbstractDefaultGlob extends AbstractMutableGlob {
     protected final Object[] values;
 
     protected AbstractDefaultGlob(GlobType type) {
-        this(type, new Object[type.getFieldCount()], new BitSet());
+        this(type, new Object[type.getFieldCount()], new BitSet(type.getFieldCount()));
     }
 
     public AbstractDefaultGlob(GlobType type, Object[] values, BitSet isSet) {

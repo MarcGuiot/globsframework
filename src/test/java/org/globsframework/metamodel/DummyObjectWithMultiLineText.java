@@ -11,7 +11,7 @@ public class DummyObjectWithMultiLineText {
     @KeyField
     public static IntegerField ID;
 
-    @MultiLineText
+    @MultiLineText()
     public static StringField COMMENT;
 
     static {

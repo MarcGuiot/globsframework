@@ -12,7 +12,7 @@ public class AllAnnotations {
                     DefaultStringAnnotationType.DESC, DoublePrecisionAnnotationType.DESC,
                     FieldNameAnnotationType.TYPE, KeyAnnotationType.TYPE,
                     EnumAnnotationType.TYPE,
-                    LinkModelNameAnnotationType.TYPE, MaxSizeType.TYPE,
+                    LinkModelNameAnnotationType.TYPE, MaxSizeType.TYPE, MultiLineTextType.TYPE,
                     IgnoredAnnotationType.TYPE,
                     CommentType.TYPE,
                     NamingFieldAnnotationType.TYPE, RequiredAnnotationType.TYPE,
