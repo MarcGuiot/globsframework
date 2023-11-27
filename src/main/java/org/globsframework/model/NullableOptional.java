@@ -34,6 +34,15 @@ public record NullableOptional<T>(boolean isSet, T value) {
         }
     }
 
+    public <U> Optional<U> map(Function<? super T, ? extends U> mapper) {
+        Objects.requireNonNull(mapper);
+        if (isSet && value != null) {
+            return Optional.ofNullable(mapper.apply(value));
+        } else {
+            return Optional.empty();
+        }
+    }
+
     public <U> NullableOptional<U> flatMapIfSet(Function<? super T, ? extends NullableOptional<? extends U>> mapper) {
         Objects.requireNonNull(mapper);
         if (isSet) {

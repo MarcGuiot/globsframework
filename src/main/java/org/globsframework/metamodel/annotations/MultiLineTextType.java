@@ -12,9 +12,9 @@ import java.lang.annotation.Annotation;
 public class MultiLineTextType {
     public static GlobType TYPE;
 
-    public static StringField MIME_TYPE;
+    public static StringField mimeType;
 
-    public static IntegerField MAX_SIZE;
+    public static IntegerField maxSize;
 
     @InitUniqueKey
     public static Key UNIQUE_KEY;
@@ -27,8 +27,8 @@ public class MultiLineTextType {
 
     private static Glob create(Annotation annotation) {
         return TYPE.instantiate()
-                .set(MIME_TYPE, ((MultiLineText)annotation).mimeType())
-                .set(MAX_SIZE, ((MultiLineText)annotation).maxSize())
+                .set(mimeType, ((MultiLineText)annotation).mimeType())
+                .set(maxSize, ((MultiLineText)annotation).maxSize())
                 ;
     }
 }
