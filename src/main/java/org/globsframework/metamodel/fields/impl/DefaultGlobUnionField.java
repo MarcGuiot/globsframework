@@ -10,6 +10,7 @@ import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class DefaultGlobUnionField extends AbstractField implements GlobUnionField {
     private Map<String, GlobType> targetTypes;
@@ -17,7 +18,7 @@ public class DefaultGlobUnionField extends AbstractField implements GlobUnionFie
     public DefaultGlobUnionField(String name, GlobType globType, Collection<GlobType> targetTypes,
                                  int index, boolean isKeyField, final int keyIndex) {
         super(name, globType, Glob.class, index, keyIndex, isKeyField, null, DataType.GlobUnion);
-        this.targetTypes = new HashMap<>();
+        this.targetTypes = new ConcurrentHashMap<>();
         targetTypes.forEach(this::__add__);
     }
 
