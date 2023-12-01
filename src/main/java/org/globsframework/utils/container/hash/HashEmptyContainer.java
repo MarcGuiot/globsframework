@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.Iterator;
 
 class HashEmptyContainer<T, D> implements HashContainer<T, D> {
-    static public HashEmptyContainer INSTANCE = new HashEmptyContainer();
 
     public D get(T key) {
         return null;

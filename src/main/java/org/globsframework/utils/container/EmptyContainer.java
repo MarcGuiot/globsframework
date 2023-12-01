@@ -3,7 +3,6 @@ package org.globsframework.utils.container;
 import java.util.Iterator;
 
 class EmptyContainer<T extends Comparable, D> implements Container<T, D> {
-    static public EmptyContainer INSTANCE = new EmptyContainer();
     static final EmptyIterator ITERATOR = new EmptyIterator();
 
     public D get(T key) {

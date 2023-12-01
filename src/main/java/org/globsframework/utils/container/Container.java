@@ -3,7 +3,11 @@ package org.globsframework.utils.container;
 import java.util.Iterator;
 
 public interface Container<T extends Comparable, D> {
-    Container EMPTY_INSTANCE = new EmptyContainer();
+    Container EMPTY_INSTANCE = new EmptyContainer<>();
+
+    static <T extends Comparable<?>, D> Container<T, D> empty(){
+        return EMPTY_INSTANCE;
+    }
 
     D get(T key);
 

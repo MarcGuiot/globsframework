@@ -3,7 +3,11 @@ package org.globsframework.utils.container.hash;
 import java.util.Iterator;
 
 public interface HashContainer<T, D> {
-    HashContainer EMPTY_INSTANCE = new HashEmptyContainer();
+    HashContainer EMPTY_INSTANCE = new HashEmptyContainer<>();
+
+    static <T, D> HashContainer<T, D> empty(){
+        return EMPTY_INSTANCE;
+    }
 
     D get(T key);
 
