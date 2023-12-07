@@ -4,7 +4,7 @@ import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.model.MutableGlob;
 
-import java.time.ZoneId;
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
 
 public class StringConverter {
@@ -30,6 +30,10 @@ public class StringConverter {
 
             public void visitDateTime(DateTimeField field1) throws Exception {
                 fromStringConverter1 = new ToDateTimeConverter(field1);
+            }
+
+            public void visitDate(DateField field1) throws Exception {
+                fromStringConverter1 = new ToDateConverter(field1);
             }
 
             public void visitBoolean(BooleanField field) throws Exception {
@@ -103,14 +107,25 @@ public class StringConverter {
                 if (str.contains("T")) {
                     glob.set(dateTimeField, ZonedDateTime.parse(str));
                 } else {
-                    if (str.length() > 6) {
-                        ZoneId zoneId = ZoneId.systemDefault();
-                        ZonedDateTime.parse(str);
-                    }
+                    throw new RuntimeException("Missing zone in " + str);
                 }
             }
         }
     }
+
+    public static class ToDateConverter implements FromStringConverter {
+        private DateField dateField;
+
+        public ToDateConverter(DateField dateField) {
+            this.dateField = dateField;
+        }
+
+        public void convert(MutableGlob glob, String str) {
+            if (str != null) {
+                    glob.set(dateField, LocalDate.parse(str));
+                }
+            }
+        }
 
     public static class ToLongConverter implements FromStringConverter {
         final LongField field;

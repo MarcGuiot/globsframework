@@ -17,11 +17,11 @@ public class Strings {
     }
 
     public static boolean isNotEmpty(String text) {
-        return (text != null) && (text.length() != 0);
+        return (text != null) && (!text.isEmpty());
     }
 
     public static boolean isNullOrEmpty(String text) {
-        return (text == null) || (text.length() == 0);
+        return (text == null) || (text.isEmpty());
     }
 
     public static String toString(Throwable exception) {
