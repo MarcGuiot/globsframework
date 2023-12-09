@@ -107,8 +107,12 @@ public interface Glob {
     Double get(DoubleField field) throws ItemNotFound;
     double get(DoubleField field, double valueIfNull) throws ItemNotFound;
     Optional<Double> getOpt(DoubleField field);
+    Integer getValue(IntegerField field) throws ItemNotFound;
     ...
-
+    Glob get(GlobField field) throws ItemNotFound;
+    ...
+    Glob[] get(GlobArrayField field) throws ItemNotFound;
+    ...
 ```
 
 A mutable Glob :
@@ -123,52 +127,62 @@ To create a GlobType (used in the json deserialization of a GlobType for exemple
 In these example, we create a GlobType, associate an 'annotation' called NamingField to a field, set and get a value for the given field,
 and retreive the field using the NamingFieldAnnotationType which is also a Glob.
 
+
 ```
-         GlobType type = GlobTypeBuilderFactory.create("aType")
-            .addIntegerKey("id")
-            .addStringField("string", NamingFieldAnnotationType.UNIQUE_GLOB)
-            .addIntegerField("int")
-            .addLongField("long")
-            .addDoubleField("double")
-            .addBlobField("blob")
-            .addBooleanField("boolean")
+         GlobType type = GlobTypeBuilderFactory.create("product")
+            .addLongField("id")
+            .addStringField("title", NamingFieldAnnotationType.INSTANCE)
+            .addStringField("handle")
+            .addDoubleField("price")
+            .addBooleanField("published")
             .get();
 
         MutableGlob data = type.instantiate();
 
-        StringField stringField = type.getTypedField("string");
-        data.set(stringField, "Hello");
+        StringField titleField = type.getTypedField("title");
+        data.set(titleField, "XPhone");
 
-        assertEquals("Hello", data.get(stringField));
+        assertEquals("XPhone", data.get(titleField));
 
         Field namingField = data.getType().findFieldWithAnnotation(NamingFieldAnnotationType.UNIQUE_KEY);
-        assertEquals("Hello", data.getValue(namingField));
+        assertEquals("XPhone", data.getValue(namingField));
 ```
 
 ## static way when the type is known
 ```
-public static class AType {
+public static class ProductType {
    public static GlobType TYPE;
    
    public static LongField id;
 
-   public static StringField name;
+   public static StringField title;
    
-   public static IntegerField age;
+   public static DoubleField price;
+   
+   public static BooleanField published;
    
    static {
-      GlobTypeLoaderFactory.init(AType.class).load();
+      GlobTypeLoaderFactory.init(ProductType.class, "Product").load();
    }
 }
 
-Glob data = AType.TYPE.instance();
+MutableGlob data = ProductType.TYPE.instance();
+data.set(ProductType.id, 43235)
+    .set(ProductType.title, "XPhone")
+    .set(ProductType.price, 1599.);
+
 ...
 
 ```
 
 With the static initialisation we have the best of two world.
 
-The dynamic part for generic code : Glob g = GSonUtils.decode("{'name': 'Tom'}", AType.TYPE);
+The dynamic part for generic code : 
+```
+Glob g = GSonUtils.decode("{'id': 43235, 'title': 'XPhone'}", ProductType.TYPE);
+```
 
-The static part when you know the attribut you want : String name = g.get(AType.name)
-
+The static part when you know the attribut you want : 
+```
+String title = g.get(ProductType.title)
+```
