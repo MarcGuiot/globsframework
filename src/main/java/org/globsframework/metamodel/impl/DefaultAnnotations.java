@@ -10,13 +10,13 @@ import org.globsframework.utils.exceptions.ItemNotFound;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
 public class DefaultAnnotations<T extends MutableAnnotations> implements MutableAnnotations<T> {
     static private final Logger LOGGER = LoggerFactory.getLogger(DefaultAnnotations.class);
-    volatile private Map<Key, Glob> annotations = new HashMap<>();
+    volatile private Map<Key, Glob> annotations = new LinkedHashMap<>();
 
     public DefaultAnnotations() {
     }
@@ -36,7 +36,7 @@ public class DefaultAnnotations<T extends MutableAnnotations> implements Mutable
     public T addAnnotation(Glob glob) {
         if (glob != null) {
             synchronized (this) {
-                Map<Key, Glob> tmp = new HashMap<>(annotations);
+                Map<Key, Glob> tmp = new LinkedHashMap<>(annotations);
                 Glob old = tmp.put(glob.getKey(), glob);
                 if (old != null && old != glob) {
                     LOGGER.warn(GlobPrinter.toString(glob) + " has replaced " + GlobPrinter.toString(old));
@@ -49,7 +49,7 @@ public class DefaultAnnotations<T extends MutableAnnotations> implements Mutable
 
     public T addAnnotations(Stream<Glob> globs) {
         synchronized (this) {
-            Map<Key, Glob> tmp = new HashMap<>(annotations);
+            Map<Key, Glob> tmp = new LinkedHashMap<>(annotations);
             globs.forEach(glob -> {
                 Glob old = tmp.put(glob.getKey(), glob);
                 if (old != null && old != glob) {
