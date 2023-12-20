@@ -14,7 +14,7 @@ public interface GlobTypeResolver {
     GlobType findType(String name);
 
     default Optional<GlobType> find(String name) {
-        return Optional.of(findType(name));
+        return Optional.ofNullable(findType(name));
     }
 
     default GlobType getType(String name) throws ItemNotFound {
