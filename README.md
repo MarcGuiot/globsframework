@@ -83,6 +83,7 @@ public interface Field {
    GlobType getGlobType()
    String getName();
    <T extends FieldVisitor> T visit(T visitor) throws Exception;
+   MutableGlob instantiate();
    ...
 }
 
