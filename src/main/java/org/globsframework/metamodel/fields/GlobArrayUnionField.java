@@ -7,6 +7,7 @@ import org.globsframework.model.Glob;
 
 import java.util.Collection;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 public interface GlobArrayUnionField extends Field, Function<FieldValuesAccessor, Glob[]> {
     Collection<GlobType> getTargetTypes();
@@ -15,6 +16,10 @@ public interface GlobArrayUnionField extends Field, Function<FieldValuesAccessor
 
     default Glob[] apply(FieldValuesAccessor glob) {
         return glob.get(this);
+    }
+
+    default Stream<Glob> stream(FieldValuesAccessor fieldValuesAccessor){
+        return fieldValuesAccessor.stream(this);
     }
 
     /*
