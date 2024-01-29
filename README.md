@@ -2,7 +2,7 @@
 This is a metamodel framework.
 
 The goal of this framework is to replace beans by an object called a Glob. This Glob is a kind of map. The key to access a field 
-is not a string but an instance of a Field. Theses Fields (for a given 'bean') are encapsulated in an instance of a GlobType. GlobType and Field 
+is not a string but an instance of a Field. Theses Fields (for a given 'bean') are group in an instance of a GlobType. GlobType and Field 
 contains additional information called annotation (like java annotation but as Globs, of course ;-) ).
 
 Given a Glob, it's GlobType is known. The GlobType give access to the fields. A real field can be visited using the visitor pattern.
@@ -32,12 +32,10 @@ The advantage is that GlobsFramework is open source, very small, without depende
 ## history
 The idea came from telecom industry where many model were built using GDMO (https://en.wikipedia.org/wiki/Guidelines_for_the_Definition_of_Managed_Objects).
 This model was read and used to generate code (for DB, UI, BER Asn1 encoding, etc). These generated object was called Managed Objects (MO).
-At Nortel, Xml was used to describe this Managed Object (MO). We represent this in a ManageObjectType and the associated MO (a bean in fact) was...a ManagedObject.
+At Nortel, Xml was used to describe this Managed Object (MO). At the beginning, this generic model was used to generate code, but soon it has been used directly in the code.
 
-These generic model was used to generate code, but not as a bean but to generate the definition of the bean and for some part, loaded dynamically.
-
-Regis Medina and I rewrote a second version for a private financial company we work for. And we wrote an open source third version 
-for our own project (BudgetView https://web.archive.org/web/20181229134134/http://www.mybudgetview.com/, https://github.com/MarcGuiot/budgetview)
+Regis Medina and I rewrote a second version for a private financial company we work for (it was in 2006 and the framework is still used)
+Later, we wrote an open source third version for our own project (BudgetView https://web.archive.org/web/20181229134134/http://www.mybudgetview.com/, https://github.com/MarcGuiot/budgetview)
 
 These version is used in few company we worked for.
 
@@ -189,4 +187,5 @@ Glob g = GSonUtils.decode("{'id': 43235, 'title': 'XPhone'}", ProductType.TYPE);
 The static part when you know the attribut you want : 
 ```
 String title = g.get(ProductType.title)
+assertEquals("XPhone", title);
 ```
