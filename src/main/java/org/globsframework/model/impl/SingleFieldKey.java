@@ -31,7 +31,7 @@ public class SingleFieldKey extends AbstractKey {
         this(getKeyField(type), value);
     }
 
-    private static Field getKeyField(GlobType type) throws InvalidParameter {
+    public static Field getKeyField(GlobType type) throws InvalidParameter {
         Field[] keyFields = type.getKeyFields();
         if (keyFields.length != 1) {
             throw new InvalidParameter("Cannot use a single field key for type " + type + " - " +

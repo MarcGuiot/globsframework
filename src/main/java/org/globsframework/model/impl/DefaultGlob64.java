@@ -3,27 +3,24 @@ package org.globsframework.model.impl;
 import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 
-import java.util.BitSet;
-
-public class DefaultGlob extends AbstractDefaultGlob {
+public class DefaultGlob64 extends AbstractDefaultGlob {
     protected int hashCode;
-    protected final BitSet isSet;
+    private long set;
 
-    public DefaultGlob(GlobType type) {
+    public DefaultGlob64(GlobType type) {
         super(type);
-        isSet = new BitSet(type.getFieldCount());
     }
 
     public void setSetAt(int index) {
-        isSet.set(index);
+        set |= (1L << index);
     }
 
     public boolean isSetAt(int index) {
-        return isSet.get(index);
+        return (set & (1L << index)) != 0;
     }
 
     public void clearSetAt(int index) {
-        isSet.clear(index);
+        set &= ~(1L << index);
     }
 
     public int hashCode() {

@@ -59,10 +59,13 @@ public class KeyBuilder implements FieldSetter<KeyBuilder> {
     }
 
     public static Key newKey(GlobType type, Object value) throws InvalidParameter {
-        return new SingleFieldKey(type, value);
+        return newKey(SingleFieldKey.getKeyField(type), value);
     }
 
     public static Key newKey(Field field, Object value) throws InvalidParameter {
+        if (field instanceof LongField) {
+            return new LongKeyField(field, (Long) value);
+        }
         return new SingleFieldKey(field, value);
     }
 
@@ -212,7 +215,10 @@ public class KeyBuilder implements FieldSetter<KeyBuilder> {
             throw new MissingInfo("Field '" + field.getName() +
                     "' missing for identifying a Glob of type: " + type.getName());
         }
-        return newKey(type, value);
+        if (field instanceof LongField) {
+            return new LongKeyField(field, (Long) value);
+        }
+        return new SingleFieldKey(field, value);
     }
 
     private static Key createKey(GlobType type, FieldValueGetter getter) throws MissingInfo {

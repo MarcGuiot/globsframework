@@ -11,12 +11,14 @@ import org.globsframework.model.globaccessor.get.impl.*;
 import org.globsframework.model.globaccessor.set.GlobSetAccessor;
 import org.globsframework.model.globaccessor.set.impl.*;
 import org.globsframework.model.impl.DefaultGlob;
+import org.globsframework.model.impl.DefaultGlob128;
+import org.globsframework.model.impl.DefaultGlob64;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 
-class DefaultGlobFactory implements GlobFactory {
+public class DefaultGlobFactory implements GlobFactory {
     private final GlobType type;
     private final GlobGetAccessor getAccessor[];
     private final GlobSetAccessor setAccessor[];
@@ -33,6 +35,12 @@ class DefaultGlobFactory implements GlobFactory {
     }
 
     public MutableGlob create() {
+        if (type.getFieldCount() <= 64) {
+            return new DefaultGlob64(type);
+        }
+        if (type.getFieldCount() <= 128) {
+            return new DefaultGlob128(type);
+        }
         return new DefaultGlob(type);
     }
 

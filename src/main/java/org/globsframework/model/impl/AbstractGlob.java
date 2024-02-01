@@ -7,7 +7,6 @@ import org.globsframework.model.*;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
 public abstract class AbstractGlob extends AbstractFieldValues implements Glob, Key {
-    protected int hashCode;
 
     public abstract GlobType getType();
 
@@ -161,22 +160,6 @@ public abstract class AbstractGlob extends AbstractFieldValues implements Glob, 
 
     public GlobType getGlobType() {
         return getType();
-    }
-
-    public int hashCode() {
-        if (hashCode != 0) {
-            return hashCode;
-        }
-        int hashCode = getType().hashCode();
-        for (Field keyField : getType().getKeyFields()) {
-            Object value = getValue(keyField);
-            hashCode = 31 * hashCode + (value != null ? keyField.valueHash(value) : 0);
-        }
-        if (hashCode == 0) {
-            hashCode = 31;
-        }
-        this.hashCode = hashCode;
-        return hashCode;
     }
 
     public boolean equals(Object o) {

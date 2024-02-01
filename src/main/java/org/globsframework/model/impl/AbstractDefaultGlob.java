@@ -11,17 +11,15 @@ import java.util.BitSet;
 
 public abstract class AbstractDefaultGlob extends AbstractMutableGlob {
     protected final GlobType type;
-    protected final BitSet isSet;
     protected final Object[] values;
 
     protected AbstractDefaultGlob(GlobType type) {
-        this(type, new Object[type.getFieldCount()], new BitSet(type.getFieldCount()));
+        this(type, new Object[type.getFieldCount()]);
     }
 
-    public AbstractDefaultGlob(GlobType type, Object[] values, BitSet isSet) {
+    public AbstractDefaultGlob(GlobType type, Object[] values) {
         this.type = type;
         this.values = values;
-        this.isSet = isSet;
     }
 
     public GlobType getType() {
@@ -54,23 +52,24 @@ public abstract class AbstractDefaultGlob extends AbstractMutableGlob {
     public MutableGlob doSet(Field field, Object value) {
         int index = field.getIndex();
         values[index] = value;
-        isSet.set(index);
+        setSetAt(index);
         return this;
     }
 
     public boolean isSet(Field field) throws ItemNotFound {
-        return isSet.get(field.getIndex());
+        final int index = field.getIndex();
+        return isSetAt(index);
     }
+
+    abstract public void setSetAt(int index);
+
+    abstract public boolean isSetAt(int index);
+
+    abstract public void clearSetAt(int index);
 
     public MutableGlob unset(Field field) {
         values[field.getIndex()] = null;
-        isSet.clear(field.getIndex());
+        clearSetAt(field.getIndex());
         return this;
-    }
-
-    Object[] duplicateValues() {
-        Object[] newValues = new Object[values.length];
-        System.arraycopy(values, 0, newValues, 0, values.length);
-        return newValues;
     }
 }
