@@ -10,6 +10,7 @@ import org.globsframework.utils.exceptions.ItemNotFound;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -154,13 +155,15 @@ public abstract class AbstractMutableGlob extends AbstractGlob implements Mutabl
 
     public MutableGlob setObject(Field field, Object value){
         if (FieldCheck.CheckGlob.shouldCheck) {
-            if (hashCode != 0 && field.isKeyField()) {
+            if (isHashComputed() && field.isKeyField()) {
                 throw new RuntimeException(field.getFullName() + " is a key value and the hashCode is already computed.");
             }
             FieldCheck.check(field, getType(), value);
         }
         return doSet(field, value);
     }
+
+    abstract public boolean isHashComputed();
 
     abstract public MutableGlob doSet(Field field, Object value);
 

@@ -11,7 +11,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 import java.util.Date;
 
@@ -176,11 +178,7 @@ public class DefaultSerializationOutput implements SerializedOutput, ChangeSetVi
         if (value == null) {
             writeBytes(null);
         } else {
-            try {
-                writeBytes(value.getBytes("UTF-8"));
-            } catch (UnsupportedEncodingException e) {
-                throw new InvalidFormat(e);
-            }
+            writeBytes(value.getBytes(StandardCharsets.UTF_8));
         }
     }
 
