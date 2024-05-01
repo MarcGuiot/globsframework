@@ -56,14 +56,14 @@ sqlConnection.getQueryBuilder(DummyObject.TYPE,
 Today's Globs components :
 
 * To access a database : https://github.com/MarcGuiot/globs-db
-* To read/write json : https://github.com/MarcGuiot/globs-gson
+* To read/write json : https://github.com/MarcGuiot/globs-gson (depend on google gson)
 * to read/write xml : https://github.com/MarcGuiot/globs-xml (depends on https://github.com/MarcGuiot/saxstack)
-* to parse command line argument : https://github.com/MarcGuiot/globs-commandline
-* to read/write csv or similar format : https://github.com/MarcGuiot/csvExport (depends on apache csv)
-* a binary serializer (in the idea of protocol buffer) : https://github.com/MarcGuiot/globs-bin-serialisation
-* for http request using glob (produce an openApi json ) and a Glob api on etcd : https://github.com/MarcGuiot/globs-http (depends on apache http components)
-* to produce a view on data inside a glob or any where in it's child : https://github.com/MarcGuiot/globs-view
-* to implement a graphql api : https://github.com/MarcGuiot/globs-graphql (no dependency except antlr graphql.g4, do not response to query on schema, I use graphql-java for that.)
+* to parse command line arguments : https://github.com/MarcGuiot/globs-commandline
+* to read/write csv or similar format : https://github.com/MarcGuiot/csvExport (depend on apache csv)
+* a binary serializer (a kind of TLV (Type Length Value) like protocol buffer) : https://github.com/MarcGuiot/globs-bin-serialisation
+* for http request using glob for params url, body, header (generate an openApi json) and a service using etcd but with globs : https://github.com/MarcGuiot/globs-http (depends on apache http components and jetcd)
+* to produce a view based on breakdown and output using data inside a glob or any where in it's child : https://github.com/MarcGuiot/globs-view
+* to implement a graphql api : https://github.com/MarcGuiot/globs-graphql (no dependency except antlr graphql.g4, do not response to query on schema : I use graphql-java for that.)
 
 
 A GlobType interface:
