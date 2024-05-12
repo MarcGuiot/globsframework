@@ -1,43 +1,24 @@
 # GlobsFramework
-This is a metamodel framework.
+GlobsFramework is a metamodel framework designed to replace beans with a concept called a Glob. A Glob is essentially a map-like object where field access keys are instances of a Field, rather than simple strings. These Fields, specific to a given 'bean', are grouped within a GlobType, each containing additional information referred to as annotations (akin to Java annotations, but in the form of a Globs ).
 
-The goal of this framework is to replace beans by an object called a Glob. This Glob is a kind of map. The key to access a field 
-is not a string but an instance of a Field. Theses Fields (for a given 'bean') are group in an instance of a GlobType. GlobType and Field 
-contains additional information called annotation (like java annotation but as Globs, of course ;-) ).
+When working with a Glob, its associated GlobType is known, providing access to its fields. Real fields, such as IntegerField, IntegerArrayField, DoubleField, GlobField, UnionField, and others, can be visited using the visitor pattern. A Glob also retains information about whether a field has been set or not, with unset fields defaulting to null upon access.
 
-Given a Glob, it's GlobType is known. The GlobType give access to the fields. A real field can be visited using the visitor pattern.
-Real fields are IntegerField and IntegerArrayField, DoubleField, GlobField, UnionField, etc.
-A glob keep the fact that a field is set or not. By default accessing an unset field return null. 
+This framework enables writing generic code for serialization into XML/JSON/binary formats, database insertion, self-comparison, and more, without relying on introspection. By utilizing GlobType to expose field access and known field types, the written code gains full control. GlobsFramework treats GlobType as a pure data model, distinct from classes used for encapsulating data (records). This simplifies writing code for tasks like serialization, database access, etc., as it offers a straightforward interface compared to the complexities of class access via introspection.
 
-Thanks to that, we can write generic code (not magic;-) that serialize in XML/Json/binary,
-that insert in a DB, compare them self, and many more.
+Thus, while GlobsFramework finds utility in scenarios involving input/output operations, it also significantly enhances code clarity and maintainability within applications where you manipulate data genericaly. Here are some typical use cases:
 
-Most of the code that use introspection to achieve there work can be replaced by using GlobType. As a GlobType 
-expose a way to access field, and that the field have a known type, the written code is fully control.
-Actually, a GlobType is a model for data and only data. In java we use classes to encapsulate data (records now), it is easy to understand that
-code that depends on data like serialisation, db access, etc is really easier to write with Globs as we don't have the complexity 
-of the many way to access and use a class compared to a Glob. And it is more natural writing code using an interface then using introspection!
+* Managing data flow and configuration control in code.
+* Handling user-input configurations.
+* Implementing generic data filtering or transformation.
 
-So, if GlobsFramework is useful everywhere input/output is used, it is also great inside our own code.
-Here are some usage example :
-* Any code that must control flow of data, of the configuration, etc.
-* Any code that is configured using user input.
-* If you want generic way to filter or transform data.
+Additionally, there exists a JavaScript (TypeScript) version enabling dynamic screen creation for React configurations, albeit with closed source code.
 
-A JavaScript (TS) version exist, it allow the dynamic creation of screen to create configuration in React. But the code is not open. 
-
-It's main drawback is the fact that it mixed badly with beans.
-The advantage is that GlobsFramework is open source, very small, without dependency (only slf4j for logging) and is easy to maintain.
+The main drawback of GlobsFramework is its limited compatibility with beans. However, its advantages include being open-source, lightweight, dependency-free (except for slf4j for logging), and easy to maintain.
 
 ## history
-The idea came from telecom industry where many model were built using GDMO (https://en.wikipedia.org/wiki/Guidelines_for_the_Definition_of_Managed_Objects).
-This model was read and used to generate code (for DB, UI, BER Asn1 encoding, etc). These generated object was called Managed Objects (MO).
-At Nortel, Xml was used to describe this Managed Object (MO). At the beginning, this generic model was used to generate code, but soon it has been used directly in the code.
 
-Regis Medina and I rewrote a second version for a private financial company we work for (it was in 2006 and the framework is still used)
-Later, we wrote an open source third version for our own project (BudgetView https://web.archive.org/web/20181229134134/http://www.mybudgetview.com/, https://github.com/MarcGuiot/budgetview)
-
-These version is used in few company we worked for.
+The inspiration for GlobsFramework stems from the telecom industry's reliance on GDMO (https://en.wikipedia.org/wiki/Guidelines_for_the_Definition_of_Managed_Objects) models, which were initially used to generate code for various purposes like databases, UI, and ASN1 encoding. Over time, this generic model evolved into direct use within codebases, with XML serving as the description format for Managed Objects (MO). The framework's genesis occurred during a rewrite for a private financial company in 2006 by Regis Medina and Marc Guiot, and it continues to be actively used today. Subsequently, an open-source version was developed for the BudgetView project (https://web.archive.org/web/20181229134134/http://www.mybudgetview.com/, https://github.com/MarcGuiot/budgetview).
+It is used in other company for aggregation of data and in an e-Commerce back-end.
 
 ## exemple of a db query
 
