@@ -158,7 +158,7 @@ data.set(ProductType.id, 43235)
 
 ```
 
-With the static initialisation we have the best of two world.
+By leveraging both dynamic and static initialization, GlobsFramework offers flexibility and ease of use across various scenarios.
 
 The dynamic part for generic code : 
 ```
@@ -170,3 +170,4 @@ The static part when you know the attribut you want :
 String title = g.get(ProductType.title)
 assertEquals("XPhone", title);
 ```
+
