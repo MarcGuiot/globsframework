@@ -1,17 +1,13 @@
 package org.globsframework.metamodel.fields.impl;
 
-import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.RequiredAnnotationType;
 import org.globsframework.metamodel.impl.DefaultAnnotations;
-import org.globsframework.metamodel.properties.impl.AbstractDelegatePropertyHolder;
 import org.globsframework.metamodel.type.DataType;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.exceptions.InvalidParameter;
 
-import java.util.Objects;
-
-abstract public class AbstractField extends DefaultAnnotations<Field> implements Field, AbstractDelegatePropertyHolder<Field> {
+abstract public class AbstractField extends DefaultAnnotations {
     private final int index;
     private final int keyIndex;
     private final GlobType globType;
@@ -19,7 +15,6 @@ abstract public class AbstractField extends DefaultAnnotations<Field> implements
     private final Class valueClass;
     private final Object defaultValue;
     private final DataType dataType;
-    private volatile Object[] properties = new Object[]{NULL_OBJECT, NULL_OBJECT};
     private final boolean keyField;
 
     protected AbstractField(String name, GlobType globType,
@@ -74,8 +69,8 @@ abstract public class AbstractField extends DefaultAnnotations<Field> implements
     public void checkValue(Object object) throws InvalidParameter {
         if ((object != null) && (!valueClass.equals(object.getClass()))) {
             throw new InvalidParameter("Value '" + object + "' (" + object.getClass().getName()
-                                       + ") is not authorized for field: " + getName() +
-                                       " (expected " + valueClass.getName() + ")");
+                    + ") is not authorized for field: " + getName() +
+                    " (expected " + valueClass.getName() + ")");
         }
     }
 
@@ -103,18 +98,6 @@ abstract public class AbstractField extends DefaultAnnotations<Field> implements
         return o.hashCode();
     }
 
-    final public Object[] getProperties() {
-        return properties;
-    }
-
-    final public void setProperties(Object[] properties) {
-        this.properties = properties;
-    }
-
-    final public Field getValueOwner() {
-        return this;
-    }
-
     public void toString(StringBuilder buffer, Object value) {
         buffer.append(value);
     }
@@ -127,7 +110,7 @@ abstract public class AbstractField extends DefaultAnnotations<Field> implements
             return false;
         }
 
-        AbstractField other = (AbstractField)o;
+        AbstractField other = (AbstractField) o;
         return globType.equals(other.globType) && name.equals(other.name);
     }
 

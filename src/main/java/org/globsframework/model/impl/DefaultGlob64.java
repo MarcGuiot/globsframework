@@ -1,6 +1,6 @@
 package org.globsframework.model.impl;
 
-import org.globsframework.metamodel.Field;
+import org.globsframework.metamodel.fields.Field;
 import org.globsframework.metamodel.GlobType;
 
 public class DefaultGlob64 extends AbstractDefaultGlob {

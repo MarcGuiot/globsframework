@@ -3,6 +3,7 @@ package org.globsframework.utils;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 import org.globsframework.metamodel.*;
+import org.globsframework.metamodel.fields.Field;
 import org.globsframework.model.Glob;
 
 import java.util.Collection;

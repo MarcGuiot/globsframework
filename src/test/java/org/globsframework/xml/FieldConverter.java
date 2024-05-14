@@ -1,6 +1,6 @@
 package org.globsframework.xml;
 
-import org.globsframework.metamodel.Field;
+import org.globsframework.metamodel.fields.Field;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.utils.exceptions.InvalidParameter;
 

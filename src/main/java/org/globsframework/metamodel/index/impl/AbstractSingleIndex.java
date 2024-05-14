@@ -1,8 +1,7 @@
 package org.globsframework.metamodel.index.impl;
 
-import org.globsframework.metamodel.Field;
+import org.globsframework.metamodel.fields.Field;
 import org.globsframework.metamodel.index.SingleFieldIndex;
-import org.globsframework.metamodel.index.UniqueIndex;
 
 import java.util.stream.Stream;
 

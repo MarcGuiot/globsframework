@@ -1,5 +1,6 @@
 package org.globsframework.metamodel;
 
+import org.globsframework.metamodel.fields.Field;
 import org.globsframework.metamodel.index.MultiFieldNotUniqueIndex;
 import org.globsframework.metamodel.index.MultiFieldUniqueIndex;
 import org.globsframework.metamodel.index.NotUniqueIndex;

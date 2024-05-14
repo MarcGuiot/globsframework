@@ -1,6 +1,6 @@
 package org.globsframework.model.utils;
 
-import org.globsframework.metamodel.Field;
+import org.globsframework.metamodel.fields.Field;
 import org.globsframework.model.Glob;
 import org.globsframework.utils.Utils;
 

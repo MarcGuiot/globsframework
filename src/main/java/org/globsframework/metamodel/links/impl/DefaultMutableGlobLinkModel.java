@@ -3,6 +3,7 @@ package org.globsframework.metamodel.links.impl;
 import org.globsframework.metamodel.*;
 import org.globsframework.metamodel.annotations.FieldNameAnnotationType;
 import org.globsframework.metamodel.annotations.LinkModelNameAnnotationType;
+import org.globsframework.metamodel.fields.Field;
 import org.globsframework.metamodel.impl.DefaultAnnotations;
 import org.globsframework.metamodel.links.DirectLink;
 import org.globsframework.metamodel.links.FieldMappingFunction;

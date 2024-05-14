@@ -1,6 +1,6 @@
 package org.globsframework.model.repository;
 
-import org.globsframework.metamodel.Field;
+import org.globsframework.metamodel.fields.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.IntegerField;
 import org.globsframework.metamodel.index.MultiFieldIndex;

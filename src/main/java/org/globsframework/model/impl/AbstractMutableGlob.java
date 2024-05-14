@@ -1,6 +1,6 @@
 package org.globsframework.model.impl;
 
-import org.globsframework.metamodel.Field;
+import org.globsframework.metamodel.fields.Field;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.links.Link;
 import org.globsframework.model.*;
@@ -10,7 +10,6 @@ import org.globsframework.utils.exceptions.ItemNotFound;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;

@@ -1,19 +1,16 @@
 package org.globsframework.utils.serialization;
 
-import org.globsframework.metamodel.Field;
+import org.globsframework.metamodel.fields.Field;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.model.*;
 import org.globsframework.utils.exceptions.InvalidData;
-import org.globsframework.utils.exceptions.InvalidFormat;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
-import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 import java.util.Date;
 

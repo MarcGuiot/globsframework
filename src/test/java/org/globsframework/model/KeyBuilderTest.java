@@ -3,12 +3,11 @@ package org.globsframework.model;
 import org.globsframework.metamodel.DummyObject;
 import org.globsframework.metamodel.DummyObject2;
 import org.globsframework.metamodel.DummyObjectWithCompositeKey;
-import org.globsframework.metamodel.Field;
+import org.globsframework.metamodel.fields.Field;
 import org.globsframework.model.impl.CompositeKey;
 import org.globsframework.model.impl.SingleFieldKey;
 import org.globsframework.model.utils.FieldValueGetter;
 import org.globsframework.utils.exceptions.InvalidParameter;
-import org.globsframework.utils.exceptions.ItemNotFound;
 import org.junit.Test;
 
 import java.util.HashMap;

@@ -1,7 +1,7 @@
 package org.globsframework.utils;
 
 import junit.framework.AssertionFailedError;
-import org.globsframework.metamodel.Field;
+import org.globsframework.metamodel.fields.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.FieldValues;
 import org.globsframework.model.FieldValuesWithPrevious;

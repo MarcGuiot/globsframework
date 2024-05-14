@@ -1,6 +1,6 @@
 package org.globsframework.model.indexing.indices;
 
-import org.globsframework.metamodel.Field;
+import org.globsframework.metamodel.fields.Field;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobList;
 import org.globsframework.model.format.GlobPrinter;
