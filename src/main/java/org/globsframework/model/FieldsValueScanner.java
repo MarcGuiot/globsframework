@@ -1,9 +1,7 @@
 package org.globsframework.model;
 
-import org.globsframework.metamodel.Field;
+import org.globsframework.metamodel.fields.Field;
 import org.globsframework.metamodel.fields.FieldValueVisitor;
-
-import java.util.Optional;
 
 public interface FieldsValueScanner {
     static FieldsValueScanner from(FieldValue[] fieldValues) {

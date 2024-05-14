@@ -1,6 +1,6 @@
 package org.globsframework.metamodel.annotations;
 
-import org.globsframework.metamodel.Field;
+import org.globsframework.metamodel.fields.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.StringField;
 import org.globsframework.metamodel.impl.DefaultFieldFactory;

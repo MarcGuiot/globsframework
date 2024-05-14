@@ -1,6 +1,6 @@
 package org.globsframework.model;
 
-import org.globsframework.metamodel.Field;
+import org.globsframework.metamodel.fields.Field;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.model.globaccessor.get.*;
 import org.globsframework.model.globaccessor.set.GlobSetAccessor;

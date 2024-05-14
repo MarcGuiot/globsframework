@@ -1,13 +1,11 @@
 package org.globsframework.model.impl;
 
-import org.globsframework.metamodel.Field;
+import org.globsframework.metamodel.fields.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.FieldValueVisitor;
 import org.globsframework.model.FieldValues;
 import org.globsframework.model.MutableGlob;
 import org.globsframework.utils.exceptions.ItemNotFound;
-
-import java.util.BitSet;
 
 public abstract class AbstractDefaultGlob extends AbstractMutableGlob {
     protected final GlobType type;

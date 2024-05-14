@@ -1,13 +1,14 @@
-package org.globsframework.metamodel;
+package org.globsframework.metamodel.fields;
 
-import org.globsframework.metamodel.fields.*;
-import org.globsframework.metamodel.properties.PropertyHolder;
+import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.type.DataType;
 import org.globsframework.metamodel.utils.MutableAnnotations;
 import org.globsframework.model.FieldValuesAccessor;
 import org.globsframework.utils.exceptions.InvalidParameter;
 
-public interface Field extends PropertyHolder<Field>, MutableAnnotations<Field> {
+public sealed interface Field extends MutableAnnotations
+        permits BooleanField, IntegerField, LongField, StringField, DoubleField, BlobField, BigDecimalField, DateField, DateTimeField, GlobField, GlobUnionField,
+        BooleanArrayField, IntegerArrayField, LongArrayField, StringArrayField, DoubleArrayField, BigDecimalArrayField, GlobArrayField, GlobArrayUnionField {
 
     String getName();
 
@@ -29,7 +30,7 @@ public interface Field extends PropertyHolder<Field>, MutableAnnotations<Field> 
 
     <T extends FieldVisitor> T safeVisit(T visitor);
 
-    <T extends FieldVisitorWithContext<C>, C> T visit(T visitor, C context)  throws Exception;
+    <T extends FieldVisitorWithContext<C>, C> T visit(T visitor, C context) throws Exception;
 
     <T extends FieldVisitorWithContext<C>, C> T safeVisit(T visitor, C context);
 
@@ -43,7 +44,7 @@ public interface Field extends PropertyHolder<Field>, MutableAnnotations<Field> 
 
     <T extends FieldValueVisitorWithContext<Context>, Context> T safeVisitValue(T visitor, Object value, Context context);
 
-    default <T extends FieldValueVisitorWithContext<Context>, Context> T safeVisitValue(T visitor, FieldValuesAccessor value, Context context){
+    default <T extends FieldValueVisitorWithContext<Context>, Context> T safeVisitValue(T visitor, FieldValuesAccessor value, Context context) {
         return safeVisitValue(visitor, value.getValue(this), context);
     }
 
@@ -124,28 +125,28 @@ public interface Field extends PropertyHolder<Field>, MutableAnnotations<Field> 
         return (DateTimeField) this;
     }
 
-    default GlobArrayField asGlobArrayField(){
+    default GlobArrayField asGlobArrayField() {
         if (!(this instanceof GlobArrayField)) {
             throw new RuntimeException(getFullName() + " is not a GlobArrayField but a " + getDataType());
         }
         return (GlobArrayField) this;
     }
 
-    default GlobField asGlobField(){
+    default GlobField asGlobField() {
         if (!(this instanceof GlobField)) {
             throw new RuntimeException(getFullName() + " is not a GlobField but a " + getDataType());
         }
         return (GlobField) this;
     }
 
-    default GlobArrayUnionField asGlobArrayUnionField(){
+    default GlobArrayUnionField asGlobArrayUnionField() {
         if (!(this instanceof GlobArrayUnionField)) {
             throw new RuntimeException(getFullName() + " is not a GlobArrayUnionField but a " + getDataType());
         }
         return (GlobArrayUnionField) this;
     }
 
-    default GlobUnionField asGlobUnionField(){
+    default GlobUnionField asGlobUnionField() {
         if (!(this instanceof GlobUnionField)) {
             throw new RuntimeException(getFullName() + " is not a GlobUnionField but a " + getDataType());
         }

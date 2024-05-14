@@ -1,22 +1,22 @@
 package org.globsframework.metamodel;
 
+import org.globsframework.metamodel.fields.Field;
 import org.globsframework.metamodel.fields.FieldVisitor;
 import org.globsframework.metamodel.fields.FieldVisitorWithContext;
 import org.globsframework.metamodel.impl.DefaultValuesFieldVisitor;
 import org.globsframework.metamodel.index.Index;
-import org.globsframework.metamodel.properties.PropertyHolder;
+import org.globsframework.metamodel.utils.MutableAnnotations;
 import org.globsframework.model.GlobFactory;
 import org.globsframework.model.Key;
 import org.globsframework.model.MutableGlob;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-public interface GlobType extends PropertyHolder<GlobType>, Annotations {
+public interface GlobType extends MutableAnnotations {
 
     String getName();
 

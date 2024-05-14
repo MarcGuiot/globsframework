@@ -1,6 +1,6 @@
 package org.globsframework.model;
 
-import org.globsframework.metamodel.Field;
+import org.globsframework.metamodel.fields.Field;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.model.impl.AbstractFieldValues;
 import org.globsframework.model.utils.FieldCheck;

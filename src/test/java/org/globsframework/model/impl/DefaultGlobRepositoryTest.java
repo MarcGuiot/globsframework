@@ -1,6 +1,7 @@
 package org.globsframework.model.impl;
 
 import org.globsframework.metamodel.*;
+import org.globsframework.metamodel.fields.Field;
 import org.globsframework.model.*;
 import org.globsframework.model.delta.DefaultChangeSet;
 import org.globsframework.model.delta.MutableChangeSet;

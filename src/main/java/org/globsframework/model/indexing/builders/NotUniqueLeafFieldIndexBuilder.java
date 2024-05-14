@@ -1,6 +1,6 @@
 package org.globsframework.model.indexing.builders;
 
-import org.globsframework.metamodel.Field;
+import org.globsframework.metamodel.fields.Field;
 import org.globsframework.model.indexing.indices.NotUniqueLeafLevelIndex;
 import org.globsframework.model.indexing.indices.UpdatableMultiFieldIndex;
 

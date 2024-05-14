@@ -1,10 +1,9 @@
 package org.globsframework.xml;
 
-import org.globsframework.metamodel.Field;
+import org.globsframework.metamodel.fields.Field;
 import org.globsframework.metamodel.GlobModel;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.MutableGlob;
-import org.globsframework.model.impl.DefaultGlob;
 import org.globsframework.utils.exceptions.InvalidParameter;
 import org.xml.sax.Attributes;
 

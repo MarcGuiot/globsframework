@@ -3,7 +3,7 @@ package org.globsframework.functional.impl;
 import org.globsframework.functional.FunctionalKey;
 import org.globsframework.functional.FunctionalKeyBuilder;
 import org.globsframework.functional.MutableFunctionalKey;
-import org.globsframework.metamodel.Field;
+import org.globsframework.metamodel.fields.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.FieldValues;
 

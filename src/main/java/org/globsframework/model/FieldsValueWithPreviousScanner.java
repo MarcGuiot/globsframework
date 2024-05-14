@@ -1,6 +1,6 @@
 package org.globsframework.model;
 
-import org.globsframework.metamodel.Field;
+import org.globsframework.metamodel.fields.Field;
 import org.globsframework.metamodel.fields.FieldValueVisitor;
 
 public interface FieldsValueWithPreviousScanner extends FieldsValueScanner {

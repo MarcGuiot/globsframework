@@ -1,6 +1,6 @@
 package org.globsframework.model.delta;
 
-import org.globsframework.metamodel.Field;
+import org.globsframework.metamodel.fields.Field;
 import org.globsframework.model.ChangeSetVisitor;
 import org.globsframework.model.FieldsValueScanner;
 import org.globsframework.utils.Unset;

@@ -1,6 +1,5 @@
 package org.globsframework.metamodel.fields;
 
-import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.FieldValuesAccessor;
 import org.globsframework.model.Glob;
@@ -9,7 +8,7 @@ import java.util.Collection;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-public interface GlobArrayUnionField extends Field, Function<FieldValuesAccessor, Glob[]> {
+public non-sealed interface GlobArrayUnionField extends Field, Function<FieldValuesAccessor, Glob[]> {
     Collection<GlobType> getTargetTypes();
 
     GlobType getTargetType(String name);

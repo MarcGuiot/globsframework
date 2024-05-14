@@ -1,7 +1,7 @@
 package org.globsframework.metamodel.impl;
 
 import org.globsframework.metamodel.Annotations;
-import org.globsframework.metamodel.Field;
+import org.globsframework.metamodel.fields.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.DefaultFieldValueType;
 import org.globsframework.metamodel.fields.impl.*;
@@ -139,7 +139,7 @@ public class DefaultFieldFactory {
     }
 
 
-    private <T extends AbstractField> T add(T field, boolean isKeyField) {
+    private <T extends Field> T add(T field, boolean isKeyField) {
         type.addField(field);
         if (isKeyField) {
             type.addKey(field);

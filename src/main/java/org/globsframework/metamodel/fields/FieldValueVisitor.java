@@ -1,6 +1,5 @@
 package org.globsframework.metamodel.fields;
 
-import org.globsframework.metamodel.Field;
 import org.globsframework.metamodel.fields.impl.FieldValueVisitorButKey;
 import org.globsframework.model.Glob;
 
