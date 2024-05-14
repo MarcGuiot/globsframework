@@ -1,6 +1,6 @@
 package org.globsframework.model.utils;
 
-import org.globsframework.metamodel.Field;
+import org.globsframework.metamodel.fields.Field;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.links.FieldMappingFunction;
 import org.globsframework.metamodel.links.Link;

@@ -6,7 +6,7 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.Key;
 
 // introduce typeded link => containmentLink, 1->1, 1->N, M->N, ... hierarchical.
-public interface Link extends MutableAnnotations<Link> {
+public interface Link extends MutableAnnotations {
 
     GlobType getSourceType();
 

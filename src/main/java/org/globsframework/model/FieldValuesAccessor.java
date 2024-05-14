@@ -1,8 +1,7 @@
 package org.globsframework.model;
 
-import org.globsframework.metamodel.Field;
+import org.globsframework.metamodel.fields.Field;
 import org.globsframework.metamodel.fields.*;
-import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.utils.Strings;
 import org.globsframework.utils.exceptions.ItemNotFound;
 

@@ -4,7 +4,7 @@ import org.globsframework.functional.FunctionalKeyBuilder;
 import org.globsframework.functional.FunctionalKeyBuilderFactory;
 import org.globsframework.metamodel.DummyObject;
 import org.globsframework.metamodel.DummyObject2;
-import org.globsframework.metamodel.Field;
+import org.globsframework.metamodel.fields.Field;
 import org.globsframework.model.Glob;
 import org.junit.Assert;
 import org.junit.Test;

@@ -1,7 +1,5 @@
 package org.globsframework.metamodel.fields;
 
-import org.globsframework.metamodel.Field;
-
 public interface FieldVisitor {
     void visitInteger(IntegerField field) throws Exception;
 

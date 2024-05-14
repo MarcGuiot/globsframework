@@ -1,7 +1,7 @@
 package org.globsframework.metamodel.links.impl;
 
 import org.globsframework.metamodel.Annotations;
-import org.globsframework.metamodel.Field;
+import org.globsframework.metamodel.fields.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.MutableGlobLinkModel;
 import org.globsframework.metamodel.impl.DefaultAnnotations;
@@ -14,8 +14,8 @@ import org.globsframework.utils.exceptions.InvalidParameter;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class DefaultLinkBuilder<T extends MutableGlobLinkModel.LinkBuilder>
-    extends DefaultAnnotations<T> implements MutableGlobLinkModel.LinkBuilder<T>, MutableAnnotations<T> {
+public abstract class DefaultLinkBuilder<T extends MutableGlobLinkModel.LinkBuilder> extends DefaultAnnotations
+        implements MutableGlobLinkModel.LinkBuilder<T>, MutableAnnotations {
     private final String modelName;
     private final String name;
     private final List<Pair<Field, Field>> mappings = new ArrayList<>();

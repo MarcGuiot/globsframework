@@ -102,7 +102,7 @@ public class GlobTypeLoaderTest {
         assertEquals(1.1, AnObject.glob.get(AnObject.DOUBLE), 0.00001);
         assertEquals(Boolean.FALSE, AnObject.glob.get(AnObject.BOOLEAN));
         assertFalse(AnObject.glob.isTrue(AnObject.BOOLEAN));
-        assertEquals(new Long(15), AnObject.glob.get(AnObject.LONG));
+        assertEquals(Long.valueOf(15), AnObject.glob.get(AnObject.LONG));
         assertEquals(TestUtils.SAMPLE_BYTE_ARRAY, AnObject.glob.get(AnObject.BLOB));
 
         assertTrue(AnObject.A.valueEqual(AnObject.glob.get(AnObject.A), BigDecimal.valueOf(3.3)));

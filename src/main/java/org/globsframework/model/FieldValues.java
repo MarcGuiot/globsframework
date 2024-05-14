@@ -1,15 +1,12 @@
 package org.globsframework.model;
 
-import org.globsframework.metamodel.Field;
+import org.globsframework.metamodel.fields.Field;
 import org.globsframework.metamodel.fields.*;
-import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
-import java.util.Optional;
-import java.util.function.Function;
 
 public interface FieldValues extends FieldValuesAccessor, FieldsValueScanner {
 

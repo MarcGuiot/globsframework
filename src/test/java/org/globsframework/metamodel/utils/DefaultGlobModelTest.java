@@ -28,18 +28,6 @@ public class DefaultGlobModelTest {
         assertEquals(DummyObject2.TYPE, model.getType(DummyObject2.TYPE.getName()));
     }
 
-    @Test
-    public void testPropertyIdAllocationIsDelegatedToTheInnerModel() throws Exception {
-
-        assertEquals(0, inner.createFieldProperty("prop1", null).getId());
-        assertEquals(1, inner.createFieldProperty("prop2", null).getId());
-        assertEquals(2, model.createFieldProperty("prop3", null).getId());
-
-        assertEquals(0, inner.createGlobTypeProperty("prop1", null).getId());
-        assertEquals(1, inner.createGlobTypeProperty("prop2", null).getId());
-        assertEquals(2, model.createGlobTypeProperty("prop3", null).getId());
-    }
-
     public static class LargeLinkCycle1 {
         public static GlobType TYPE;
 

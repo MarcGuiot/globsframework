@@ -1,6 +1,6 @@
 package org.globsframework.streams;
 
-import org.globsframework.metamodel.Field;
+import org.globsframework.metamodel.fields.Field;
 import org.globsframework.streams.accessors.Accessor;
 
 import java.util.Collection;

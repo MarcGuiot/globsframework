@@ -1,5 +1,6 @@
 package org.globsframework.metamodel;
 
+import org.globsframework.metamodel.fields.Field;
 import org.globsframework.metamodel.links.DirectLink;
 import org.globsframework.metamodel.links.Link;
 import org.globsframework.metamodel.utils.MutableAnnotations;
@@ -44,7 +45,7 @@ public interface MutableGlobLinkModel extends GlobLinkModel {
         DirectLink publish();
     }
 
-    interface LinkBuilder<T extends LinkBuilder> extends MutableAnnotations<T> {
+    interface LinkBuilder<T extends LinkBuilder> extends MutableAnnotations {
 
         T add(Field sourceField, Field targetField);
 

@@ -14,7 +14,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
-public class DefaultAnnotations<T extends MutableAnnotations> implements MutableAnnotations<T> {
+public class DefaultAnnotations implements MutableAnnotations {
     static private final Logger LOGGER = LoggerFactory.getLogger(DefaultAnnotations.class);
     volatile private Map<Key, Glob> annotations = new LinkedHashMap<>();
 
@@ -33,7 +33,7 @@ public class DefaultAnnotations<T extends MutableAnnotations> implements Mutable
                 );
     }
 
-    public T addAnnotation(Glob glob) {
+    public MutableAnnotations addAnnotation(Glob glob) {
         if (glob != null) {
             synchronized (this) {
                 Map<Key, Glob> tmp = new LinkedHashMap<>(annotations);
@@ -44,10 +44,10 @@ public class DefaultAnnotations<T extends MutableAnnotations> implements Mutable
                 annotations = tmp;
             }
         }
-        return (T) this;
+        return this;
     }
 
-    public T addAnnotations(Stream<Glob> globs) {
+    public MutableAnnotations addAnnotations(Stream<Glob> globs) {
         synchronized (this) {
             Map<Key, Glob> tmp = new LinkedHashMap<>(annotations);
             globs.forEach(glob -> {
@@ -59,7 +59,7 @@ public class DefaultAnnotations<T extends MutableAnnotations> implements Mutable
 
             annotations = tmp;
         }
-        return (T) this;
+        return this;
     }
 
     public Stream<Glob> streamAnnotations() {
