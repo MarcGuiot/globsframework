@@ -5,9 +5,9 @@ import org.globsframework.model.Glob;
 
 import java.util.stream.Stream;
 
-public interface MutableAnnotations<T extends MutableAnnotations> extends Annotations {
+public interface MutableAnnotations extends Annotations {
 
-    T addAnnotation(Glob glob);
+    MutableAnnotations addAnnotation(Glob glob);
 
-    T addAnnotations(Stream<Glob> globs);
+    MutableAnnotations addAnnotations(Stream<Glob> globs);
 }

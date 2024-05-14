@@ -1,6 +1,6 @@
 package org.globsframework.xml;
 
-import org.globsframework.metamodel.Field;
+import org.globsframework.metamodel.fields.Field;
 import org.globsframework.model.*;
 import org.globsframework.saxstack.writer.PrettyPrintRootXmlTag;
 import org.globsframework.saxstack.writer.RootXmlTag;

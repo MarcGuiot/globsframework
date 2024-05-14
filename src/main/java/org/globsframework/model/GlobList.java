@@ -1,6 +1,6 @@
 package org.globsframework.model;
 
-import org.globsframework.metamodel.Field;
+import org.globsframework.metamodel.fields.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.BooleanField;
 import org.globsframework.metamodel.fields.DoubleField;
@@ -371,24 +371,6 @@ public class GlobList extends ArrayList<Glob> {
             }
         }
         return types;
-    }
-
-    public Optional<Glob> getFirst() {
-        if (isEmpty()){
-            return Optional.empty();
-        }
-        return Optional.ofNullable(get(0));
-    }
-
-    public Glob getLast() {
-        if (isEmpty()) {
-            return null;
-        }
-        return get(size() - 1);
-    }
-
-    public Glob getSingle() {
-        return size() == 1 ? get(0) : null;
     }
 
     public GlobList getAll(GlobType type) {

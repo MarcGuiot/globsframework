@@ -1,6 +1,6 @@
 package org.globsframework.model.delta;
 
-import org.globsframework.metamodel.Field;
+import org.globsframework.metamodel.fields.Field;
 import org.globsframework.model.*;
 
 public interface DeltaGlob extends FieldValuesWithPrevious {

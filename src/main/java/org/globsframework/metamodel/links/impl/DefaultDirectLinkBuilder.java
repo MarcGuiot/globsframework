@@ -2,6 +2,7 @@ package org.globsframework.metamodel.links.impl;
 
 import org.globsframework.metamodel.Annotations;
 import org.globsframework.metamodel.MutableGlobLinkModel;
+import org.globsframework.metamodel.fields.Field;
 import org.globsframework.metamodel.links.DirectLink;
 
 class DefaultDirectLinkBuilder extends DefaultLinkBuilder<MutableGlobLinkModel.DirectLinkBuilder> implements MutableGlobLinkModel.DirectLinkBuilder {
@@ -18,7 +19,7 @@ class DefaultDirectLinkBuilder extends DefaultLinkBuilder<MutableGlobLinkModel.D
         return link;
     }
 
-    MutableGlobLinkModel.DirectLinkBuilder getT() {
+    DefaultDirectLinkBuilder getT() {
         return this;
     }
 }

@@ -1,5 +1,6 @@
 package org.globsframework.metamodel;
 
+import org.globsframework.metamodel.fields.Field;
 import org.globsframework.metamodel.impl.DefaultAnnotations;
 import org.globsframework.model.Glob;
 import org.globsframework.model.Key;

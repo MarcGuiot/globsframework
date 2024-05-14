@@ -1,7 +1,7 @@
 package org.globsframework.model.impl;
 
 import org.globsframework.metamodel.DummyObjectIndex;
-import org.globsframework.metamodel.Field;
+import org.globsframework.metamodel.fields.Field;
 import org.globsframework.model.*;
 import org.globsframework.model.repository.LocalGlobRepository;
 import org.globsframework.model.repository.LocalGlobRepositoryBuilder;
@@ -142,7 +142,7 @@ public class DefaultGlobRepositoryIndexingTest extends DefaultGlobRepositoryTest
         localGlobRepository.startChangeSet();
         localGlobRepository.delete(localGlobRepository.findByIndex(DummyObjectIndex.UNIQUE_NAME_INDEX, "e"));
         localGlobRepository.delete(localGlobRepository.findByIndex(DummyObjectIndex.UNIQUE_NAME_INDEX, "b"));
-        Key a = localGlobRepository.findByIndex(DummyObjectIndex.UNIQUE_NAME_INDEX, "a").getFirst().get().getKey();
+        Key a = localGlobRepository.findByIndex(DummyObjectIndex.UNIQUE_NAME_INDEX, "a").getFirst().getKey();
         localGlobRepository.update(a,
                                    FieldValue.value(DummyObjectIndex.UNIQUE_NAME, "b"));
         localGlobRepository.create(DummyObjectIndex.TYPE, FieldValue.value(DummyObjectIndex.UNIQUE_NAME, "a"),

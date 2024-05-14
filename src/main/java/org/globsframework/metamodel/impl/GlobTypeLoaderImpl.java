@@ -66,7 +66,7 @@ public class GlobTypeLoaderImpl implements GlobTypeLoader {
         for (java.lang.reflect.Field classField : targetClass.getFields()) {
             List<FieldInitializeProcessor> processor = fieldInitializeProcessorService.get(classField);
             if (processor != null && !processor.isEmpty()) {
-                DefaultAnnotations<Field> annotations = new DefaultAnnotations<>();
+                DefaultAnnotations annotations = new DefaultAnnotations();
                 processFieldAnnotations(classField, annotations);
                 annotations.addAnnotation(FieldNameAnnotationType.create(getFieldName(classField)));
                 applyProcessor(targetClass, classField, processor, annotations);
@@ -86,7 +86,7 @@ public class GlobTypeLoaderImpl implements GlobTypeLoader {
     }
 
     private void applyProcessor(Class<?> targetClass, java.lang.reflect.Field classField, List<FieldInitializeProcessor> processor,
-                                DefaultAnnotations<Field> annotations) {
+                                MutableAnnotations annotations) {
         for (FieldInitializeProcessor fieldInitializeProcessor : processor) {
             Object value = fieldInitializeProcessor.getValue(type, annotations, classField.getAnnotations());
             if (value instanceof MutableAnnotations) {
@@ -145,7 +145,7 @@ public class GlobTypeLoaderImpl implements GlobTypeLoader {
         GlobTypeLoaderImpl.setClassField(classField, type, targetClass);
     }
 
-    private void processFieldAnnotations(java.lang.reflect.Field field, MutableAnnotations<Field> annotations) {
+    private void processFieldAnnotations(java.lang.reflect.Field field, MutableAnnotations annotations) {
         for (Annotation annotation : field.getAnnotations()) {
             Glob globAnnotation = processAnnotation(annotation);
             if (globAnnotation != null) {
@@ -419,7 +419,7 @@ public class GlobTypeLoaderImpl implements GlobTypeLoader {
                                     " with value " + valueDescription, e);
     }
 
-    GlobTypeLoader addField(AbstractField field) throws ItemAlreadyExists {
+    GlobTypeLoader addField(Field field) throws ItemAlreadyExists {
         if (type.hasField(field.getName())) {
             throw new ItemAlreadyExists("Field " + field.getName() +
                                         " declared twice for type " + type.getName());

@@ -1,13 +1,10 @@
 package org.globsframework.metamodel.impl;
 
-import org.globsframework.metamodel.Field;
-import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.KeyAnnotationType;
-import org.globsframework.metamodel.fields.impl.AbstractField;
+import org.globsframework.metamodel.fields.Field;
 import org.globsframework.metamodel.index.Index;
 import org.globsframework.metamodel.index.MultiFieldIndex;
 import org.globsframework.metamodel.index.SingleFieldIndex;
-import org.globsframework.metamodel.properties.impl.AbstractDelegatePropertyHolder;
 import org.globsframework.metamodel.utils.MutableAnnotations;
 import org.globsframework.metamodel.utils.MutableGlobType;
 import org.globsframework.model.Glob;
@@ -22,13 +19,11 @@ import org.globsframework.utils.exceptions.TooManyItems;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-public class DefaultGlobType extends DefaultAnnotations implements MutableGlobType, MutableAnnotations,
-                                                                   AbstractDelegatePropertyHolder<GlobType> {
+public class DefaultGlobType extends DefaultAnnotations implements MutableGlobType, MutableAnnotations {
     public static final String[] EMPTY_SCOPE = new String[0];
     private Field[] fields;
     private Field[] keyFields = new Field[0];
@@ -39,7 +34,6 @@ public class DefaultGlobType extends DefaultAnnotations implements MutableGlobTy
     private Map<String, Field> fieldsByName = new HashMap<>();
     private Map<String, Index> indices = new HashMap<>(2, 1);
     private Map<Class, Object> registered = new ConcurrentHashMap<>();
-    private volatile Object properties[] = new Object[]{NULL_OBJECT, NULL_OBJECT};
 
     public DefaultGlobType(String name) {
         this(null, name);
@@ -63,7 +57,7 @@ public class DefaultGlobType extends DefaultAnnotations implements MutableGlobTy
     }
 
     public <T extends Field> T getTypedField(String name) throws ItemNotFound {
-        return (T)getField(name);
+        return (T) getField(name);
     }
 
     public boolean hasField(String name) {
@@ -91,10 +85,10 @@ public class DefaultGlobType extends DefaultAnnotations implements MutableGlobTy
     }
 
 
-    public void addField(AbstractField field) {
+    public void addField(Field field) {
         if (hasField(field.getName())) {
             throw new ItemAlreadyExists("Field " + field.getName() +
-                                        " declared twice for type " + getName());
+                    " declared twice for type " + getName());
         }
         if (field.getIndex() != fieldsByName.size()) {
             throw new InvalidState(field + " should be at index " + field.getIndex() + " but is at" + fieldsByName.size());
@@ -179,7 +173,7 @@ public class DefaultGlobType extends DefaultAnnotations implements MutableGlobTy
             if (cmp == null) {
                 cmp = Comparator.comparing(key -> (Comparable) key.getValue(keyField));
             } else {
-                cmp = cmp.thenComparing(key -> (Comparable)key.getValue(keyField));
+                cmp = cmp.thenComparing(key -> (Comparable) key.getValue(keyField));
             }
         }
         this.keyComparator = cmp;
@@ -210,23 +204,11 @@ public class DefaultGlobType extends DefaultAnnotations implements MutableGlobTy
     }
 
     public <T> T getRegistered(Class<T> klass) {
-        return (T)registered.get(klass);
+        return (T) registered.get(klass);
     }
 
     public <T> T getRegistered(Class<T> klass, T NULL) {
         return (T) registered.getOrDefault(klass, NULL);
-    }
-
-    final public Object[] getProperties() {
-        return properties;
-    }
-
-    final public void setProperties(Object[] properties) {
-        this.properties = properties;
-    }
-
-    final public GlobType getValueOwner() {
-        return this;
     }
 
     public String describe() {
