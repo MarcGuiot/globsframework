@@ -4,10 +4,10 @@ import org.globsframework.metamodel.fields.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobFunctor;
-import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.utils.exceptions.*;
 
 import java.util.Collection;
+import java.util.function.Predicate;
 
 public class StrictGlobRepository extends GlobRepositoryDecorator {
     private ExceptionHandler exceptionHandler;
@@ -17,7 +17,7 @@ public class StrictGlobRepository extends GlobRepositoryDecorator {
         this.exceptionHandler = exceptionHandler;
     }
 
-    public void apply(GlobType type, GlobMatcher matcher, GlobFunctor callback) throws Exception {
+    public void apply(GlobType type, Predicate<Glob> matcher, GlobFunctor callback) throws Exception {
         try {
             super.apply(type, matcher, callback);
         } catch (Throwable e) {
@@ -81,9 +81,9 @@ public class StrictGlobRepository extends GlobRepositoryDecorator {
         }
     }
 
-    public void delete(GlobList list) throws OperationDenied {
+    public void deleteGlobs(Collection<Glob> list) throws OperationDenied {
         try {
-            super.delete(list);
+            super.deleteGlobs(list);
         } catch (Throwable e) {
             exceptionHandler.onException(e);
             throw new RuntimeException(e);
@@ -126,7 +126,7 @@ public class StrictGlobRepository extends GlobRepositoryDecorator {
         }
     }
 
-    public void reset(GlobList newGlobs, GlobType... changedTypes) {
+    public void reset(Collection<Glob> newGlobs, GlobType... changedTypes) {
         try {
             super.reset(newGlobs, changedTypes);
         } catch (Throwable e) {

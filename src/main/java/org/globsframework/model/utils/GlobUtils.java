@@ -116,9 +116,9 @@ public class GlobUtils {
         }
     }
 
-    public static GlobList getUniqueTargets(GlobList from, Link link, GlobRepository repository) {
-        GlobList result = new GlobList();
-        Set<Glob> added = new HashSet<Glob>();
+    public static List<Glob> getUniqueTargets(Collection<Glob> from, Link link, GlobRepository repository) {
+        List<Glob> result = new ArrayList<>();
+        Set<Glob> added = new HashSet<>();
         for (Glob glob : from) {
             Glob target = repository.findLinkTarget(glob, link);
             if (target != null && added.add(target)) {
@@ -144,8 +144,8 @@ public class GlobUtils {
         repository.update(to.getKey(), fieldValues);
     }
 
-    public static GlobList getAll(Set<Key> keys, GlobRepository repository) {
-        GlobList result = new GlobList();
+    public static List<Glob> getAll(Set<Key> keys, GlobRepository repository) {
+        List<Glob> result = new ArrayList<>();
         for (Key key : keys) {
             result.add(repository.get(key));
         }
@@ -162,7 +162,7 @@ public class GlobUtils {
 
     private static Object NULL = new Object();
 
-    public static <T> void diff(List<T> from, List<T> to, DiffFunctor<T> functor) {
+    public static <T> void diff(Collection<T> from, Collection<T> to, DiffFunctor<T> functor) {
         Object[] fromArray = from.toArray(new Object[from.size() + to.size()]);
         for (int i1 = from.size(); i1 < fromArray.length; i1++) {
             fromArray[i1] = NULL;

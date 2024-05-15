@@ -6,12 +6,13 @@ import org.globsframework.metamodel.index.MultiFieldIndex;
 import org.globsframework.metamodel.index.SingleFieldIndex;
 import org.globsframework.metamodel.links.Link;
 import org.globsframework.model.utils.GlobFunctor;
-import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.utils.exceptions.ItemAmbiguity;
 import org.globsframework.utils.exceptions.ItemNotFound;
 
 import java.util.Comparator;
+import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 
 public interface ReadOnlyGlobRepository {
 
@@ -21,31 +22,31 @@ public interface ReadOnlyGlobRepository {
 
     boolean contains(GlobType type);
 
-    boolean contains(GlobType type, GlobMatcher matcher);
+    boolean contains(GlobType type, Predicate<Glob> matcher);
 
     Glob find(Key key);
 
     Glob get(Key key) throws ItemNotFound;
 
-    GlobList getAll(GlobType... type);
+    List<Glob> getAll(GlobType... type);
 
-    GlobList getAll(GlobType type, GlobMatcher matcher);
+    List<Glob> getAll(GlobType type, Predicate<Glob> matcher);
 
-    void apply(GlobType type, GlobMatcher matcher, GlobFunctor callback) throws Exception;
+    void apply(GlobType type, Predicate<Glob> matcher, GlobFunctor callback) throws Exception;
 
-    void safeApply(GlobType type, GlobMatcher matcher, GlobFunctor callback);
+    void safeApply(GlobType type, Predicate<Glob> matcher, GlobFunctor callback);
 
     void safeApply(GlobFunctor callback);
 
     Glob findUnique(GlobType type, FieldValue... values)
-        throws ItemAmbiguity;
+            throws ItemAmbiguity;
 
-    Glob findUnique(GlobType type, GlobMatcher matcher)
-        throws ItemAmbiguity;
+    Glob findUnique(GlobType type, Predicate<Glob> matcher)
+            throws ItemAmbiguity;
 
-    Glob[] getSorted(GlobType type, Comparator<Glob> comparator, GlobMatcher matcher);
+    Glob[] getSorted(GlobType type, Comparator<Glob> comparator, Predicate<Glob> matcher);
 
-    GlobList findByIndex(SingleFieldIndex index, Object value);
+    List<Glob> findByIndex(SingleFieldIndex index, Object value);
 
     MultiFieldIndexed findByIndex(MultiFieldIndex uniqueIndex, Field field, Object value);
 
@@ -53,18 +54,18 @@ public interface ReadOnlyGlobRepository {
 
     Glob findLinkTarget(Glob source, Link link);
 
-    GlobList findLinkedTo(Key target, Link link);
+    List<Glob> findLinkedTo(Key target, Link link);
 
-    GlobList findLinkedTo(Glob target, Link link);
+    List<Glob> findLinkedTo(Glob target, Link link);
 
     int size();
 
     interface MultiFieldIndexed {
-        GlobList getGlobs();
+        List<Glob> getGlobs();
 
 //        Stream<Glob> streamByIndex(Object value);
 
-        GlobList findByIndex(Object value);
+        List<Glob> findByIndex(Object value);
 
         MultiFieldIndexed findByIndex(Field field, Object value);
 

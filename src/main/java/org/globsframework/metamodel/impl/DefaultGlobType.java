@@ -23,17 +23,18 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-public class DefaultGlobType extends DefaultAnnotations implements MutableGlobType, MutableAnnotations {
+public class DefaultGlobType extends DefaultAnnotations
+        implements MutableGlobType, MutableAnnotations {
     public static final String[] EMPTY_SCOPE = new String[0];
     private Field[] fields;
     private Field[] keyFields = new Field[0];
     private GlobFactory globFactory;
     private Comparator<Key> keyComparator;
     private String[] scope;
-    private String name;
-    private Map<String, Field> fieldsByName = new HashMap<>();
-    private Map<String, Index> indices = new HashMap<>(2, 1);
-    private Map<Class, Object> registered = new ConcurrentHashMap<>();
+    private final String name;
+    private final Map<String, Field> fieldsByName = new HashMap<>();
+    private final Map<String, Index> indices = new HashMap<>(2, 1);
+    private final Map<Class<?>, Object> registered = new ConcurrentHashMap<>();
 
     public DefaultGlobType(String name) {
         this(null, name);

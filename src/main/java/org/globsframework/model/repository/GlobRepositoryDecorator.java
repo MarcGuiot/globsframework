@@ -2,17 +2,18 @@ package org.globsframework.model.repository;
 
 import org.globsframework.metamodel.fields.Field;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.metamodel.index.SingleFieldIndex;
 import org.globsframework.metamodel.index.MultiFieldIndex;
+import org.globsframework.metamodel.index.SingleFieldIndex;
 import org.globsframework.metamodel.links.Link;
 import org.globsframework.model.*;
 import org.globsframework.model.utils.GlobFunctor;
-import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.utils.exceptions.*;
 
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 
 public class GlobRepositoryDecorator implements GlobRepository {
     protected GlobRepository repository;
@@ -33,11 +34,11 @@ public class GlobRepositoryDecorator implements GlobRepository {
         return getRepository().findUnique(type, values);
     }
 
-    public GlobList getAll(GlobType... type) {
+    public List<Glob> getAll(GlobType... type) {
         return getRepository().getAll(type);
     }
 
-    public GlobList getAll(GlobType type, GlobMatcher matcher) {
+    public List<Glob> getAll(GlobType type, Predicate<Glob> matcher) {
         return getRepository().getAll(type, matcher);
     }
 
@@ -45,23 +46,23 @@ public class GlobRepositoryDecorator implements GlobRepository {
         getRepository().safeApply(callback);
     }
 
-    public void apply(GlobType type, GlobMatcher matcher, GlobFunctor callback) throws Exception {
+    public void apply(GlobType type, Predicate<Glob> matcher, GlobFunctor callback) throws Exception {
         getRepository().apply(type, matcher, callback);
     }
 
-    public void safeApply(GlobType type, GlobMatcher matcher, GlobFunctor callback) {
+    public void safeApply(GlobType type, Predicate<Glob> matcher, GlobFunctor callback) {
         getRepository().safeApply(type, matcher, callback);
     }
 
-    public Glob findUnique(GlobType type, GlobMatcher matcher) throws ItemAmbiguity {
+    public Glob findUnique(GlobType type, Predicate<Glob> matcher) throws ItemAmbiguity {
         return getRepository().findUnique(type, matcher);
     }
 
-    public Glob[] getSorted(GlobType type, Comparator<Glob> comparator, GlobMatcher matcher) {
+    public Glob[] getSorted(GlobType type, Comparator<Glob> comparator, Predicate<Glob> matcher) {
         return getRepository().getSorted(type, comparator, matcher);
     }
 
-    public GlobList findByIndex(SingleFieldIndex index, Object value) {
+    public List<Glob> findByIndex(SingleFieldIndex index, Object value) {
         return getRepository().findByIndex(index, value);
     }
 
@@ -77,11 +78,11 @@ public class GlobRepositoryDecorator implements GlobRepository {
         return getRepository().findLinkTarget(source, link);
     }
 
-    public GlobList findLinkedTo(Key target, Link link) {
+    public List<Glob> findLinkedTo(Key target, Link link) {
         return getRepository().findLinkedTo(target, link);
     }
 
-    public GlobList findLinkedTo(Glob target, Link link) {
+    public List<Glob> findLinkedTo(Glob target, Link link) {
         return getRepository().findLinkedTo(target, link);
     }
 
@@ -113,7 +114,7 @@ public class GlobRepositoryDecorator implements GlobRepository {
         return getRepository().contains(type);
     }
 
-    public boolean contains(GlobType type, GlobMatcher matcher) {
+    public boolean contains(GlobType type, Predicate<Glob> matcher) {
         return getRepository().contains(type, matcher);
     }
 
@@ -149,11 +150,11 @@ public class GlobRepositoryDecorator implements GlobRepository {
         getRepository().delete(keys);
     }
 
-    public void delete(GlobList list) throws OperationDenied {
-        getRepository().delete(list);
+    public void deleteGlobs(Collection<Glob> list) throws OperationDenied {
+        getRepository().deleteGlobs(list);
     }
 
-    public void delete(GlobType type, GlobMatcher matcher) throws OperationDenied {
+    public void delete(GlobType type, Predicate<Glob> matcher) throws OperationDenied {
         getRepository().delete(type, matcher);
     }
 
@@ -197,7 +198,7 @@ public class GlobRepositoryDecorator implements GlobRepository {
         getRepository().completeChangeSetWithoutTriggers();
     }
 
-    public void reset(GlobList newGlobs, GlobType... changedTypes) {
+    public void reset(Collection<Glob> newGlobs, GlobType... changedTypes) {
         getRepository().reset(newGlobs, changedTypes);
     }
 

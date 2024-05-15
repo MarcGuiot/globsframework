@@ -2,13 +2,14 @@ package org.globsframework.model.indexing.indices;
 
 import org.globsframework.metamodel.fields.Field;
 import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.indexing.NullIndex;
 import org.globsframework.model.indexing.builders.MultiFieldIndexBuilder;
 import org.globsframework.model.utils.GlobFunctor;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MiddleLevelIndex implements UpdatableMultiFieldIndex, GlobRepository.MultiFieldIndexed {
@@ -33,8 +34,7 @@ public class MiddleLevelIndex implements UpdatableMultiFieldIndex, GlobRepositor
                 downLevels.put(newValue, newIndexed);
             }
             newIndexed.add(field, newValue, oldValue, glob);
-        }
-        else {
+        } else {
             Object value = glob.getValue(multiFieldIndexBuilder.getField());
             UpdatableMultiFieldIndex index = downLevels.get(value);
             if (index == null) {
@@ -53,8 +53,7 @@ public class MiddleLevelIndex implements UpdatableMultiFieldIndex, GlobRepositor
                     downLevels.remove(value);
                 }
             }
-        }
-        else {
+        } else {
             Object currentValue = glob.getValue(multiFieldIndexBuilder.getField());
             UpdatableMultiFieldIndex updatableMultiFieldIndex = downLevels.get(currentValue);
             if (updatableMultiFieldIndex != null) {
@@ -66,8 +65,8 @@ public class MiddleLevelIndex implements UpdatableMultiFieldIndex, GlobRepositor
         return downLevels.isEmpty();
     }
 
-    public GlobList getGlobs() {
-        GlobList globs = new GlobList();
+    public List<Glob> getGlobs() {
+        List<Glob> globs = new ArrayList<>();
         for (GlobRepository.MultiFieldIndexed multiFieldIndexed : downLevels.values()) {
             globs.addAll(multiFieldIndexed.getGlobs());
         }
@@ -80,12 +79,12 @@ public class MiddleLevelIndex implements UpdatableMultiFieldIndex, GlobRepositor
         }
     }
 
-    public GlobList findByIndex(Object value) {
+    public List<Glob> findByIndex(Object value) {
         GlobRepository.MultiFieldIndexed multiFieldIndexed = downLevels.get(value);
         if (multiFieldIndexed != null) {
             return multiFieldIndexed.getGlobs();
         }
-        return new GlobList();
+        return new ArrayList<>();
     }
 
     public boolean remove(Glob glob) {
@@ -107,8 +106,7 @@ public class MiddleLevelIndex implements UpdatableMultiFieldIndex, GlobRepositor
         GlobRepository.MultiFieldIndexed multiFieldIndexed = downLevels.get(value);
         if (multiFieldIndexed != null) {
             return multiFieldIndexed;
-        }
-        else {
+        } else {
             return NullIndex.INSTANCE;
         }
     }

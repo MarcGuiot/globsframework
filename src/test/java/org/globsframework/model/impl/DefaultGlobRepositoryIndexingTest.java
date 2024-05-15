@@ -11,7 +11,9 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.globsframework.model.FieldValue.value;
 import static org.junit.Assert.assertEquals;
@@ -140,9 +142,9 @@ public class DefaultGlobRepositoryIndexingTest extends DefaultGlobRepositoryTest
         LocalGlobRepository localGlobRepository = LocalGlobRepositoryBuilder
             .init(repository).copy(DummyObjectIndex.TYPE).get();
         localGlobRepository.startChangeSet();
-        localGlobRepository.delete(localGlobRepository.findByIndex(DummyObjectIndex.UNIQUE_NAME_INDEX, "e"));
-        localGlobRepository.delete(localGlobRepository.findByIndex(DummyObjectIndex.UNIQUE_NAME_INDEX, "b"));
-        Key a = localGlobRepository.findByIndex(DummyObjectIndex.UNIQUE_NAME_INDEX, "a").getFirst().getKey();
+        localGlobRepository.deleteGlobs(localGlobRepository.findByIndex(DummyObjectIndex.UNIQUE_NAME_INDEX, "e"));
+        localGlobRepository.deleteGlobs(localGlobRepository.findByIndex(DummyObjectIndex.UNIQUE_NAME_INDEX, "b"));
+        Key a = localGlobRepository.findByIndex(DummyObjectIndex.UNIQUE_NAME_INDEX, "a").get(0).getKey();
         localGlobRepository.update(a,
                                    FieldValue.value(DummyObjectIndex.UNIQUE_NAME, "b"));
         localGlobRepository.create(DummyObjectIndex.TYPE, FieldValue.value(DummyObjectIndex.UNIQUE_NAME, "a"),
@@ -206,9 +208,11 @@ public class DefaultGlobRepositoryIndexingTest extends DefaultGlobRepositoryTest
         }
 
         private void checkIds(GlobRepository.MultiFieldIndexed result) {
-            GlobList globs = result.getGlobs();
+            List<Glob> globs = result.getGlobs();
             assertEquals(ids.size(), globs.size());
-            TestUtils.assertSetEquals(ids, globs.getValueSet(DummyObjectIndex.ID));
+            TestUtils.assertSetEquals(ids, globs.stream()
+                    .map(DummyObjectIndex.ID)
+                    .collect(Collectors.toSet()));
         }
     }
 
@@ -245,9 +249,9 @@ public class DefaultGlobRepositoryIndexingTest extends DefaultGlobRepositoryTest
         }
 
         private void checkIds(GlobRepository.MultiFieldIndexed result) {
-            GlobList globs = result.getGlobs();
+            Collection<Glob> globs = result.getGlobs();
             assertEquals(ids.size(), globs.size());
-            TestUtils.assertSetEquals(ids, globs.getValueSet(DummyObjectIndex.ID));
+            TestUtils.assertSetEquals(ids, globs.stream().map(DummyObjectIndex.ID).collect(Collectors.toSet()));
             final List<Integer> actual = new ArrayList<Integer>();
             result.saveApply(new GlobFunctor() {
                 public void run(Glob glob, GlobRepository repository) throws Exception {
@@ -275,15 +279,15 @@ public class DefaultGlobRepositoryIndexingTest extends DefaultGlobRepositoryTest
     }
 
     private List<Integer> findIDByDateIndex(int value) {
-        List<Integer> val = new ArrayList<Integer>();
-        GlobList globByDateIndex = findGlobByDateIndex(value);
+        List<Integer> val = new ArrayList<>();
+        Collection<Glob> globByDateIndex = findGlobByDateIndex(value);
         for (Glob glob : globByDateIndex) {
             val.add(glob.get(DummyObjectIndex.ID));
         }
         return val;
     }
 
-    private GlobList findGlobByDateIndex(int value) {
+    private Collection<Glob> findGlobByDateIndex(int value) {
         return repository.findByIndex(DummyObjectIndex.DATE_INDEX, value);
     }
 

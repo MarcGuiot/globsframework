@@ -2,14 +2,15 @@ package org.globsframework.model.indexing;
 
 import org.globsframework.metamodel.fields.Field;
 import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
+
+import java.util.List;
 
 public interface IndexedTable {
     void add(Glob glob);
 
     void add(Field field, Object newValue, Object oldValue, Glob glob);
 
-    GlobList findByIndex(Object value);
+    List<Glob> findByIndex(Object value);
 
     boolean remove(Field field, Object value, Glob glob);
 

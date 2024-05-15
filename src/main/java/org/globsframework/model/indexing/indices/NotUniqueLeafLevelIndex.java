@@ -2,26 +2,24 @@ package org.globsframework.model.indexing.indices;
 
 import org.globsframework.metamodel.fields.Field;
 import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Stream;
 
 public class NotUniqueLeafLevelIndex implements UpdatableMultiFieldIndex, GlobRepository.MultiFieldIndexed {
-    private Map<Object, GlobList> indexedGlob = new HashMap<Object, GlobList>();
+    private Map<Object, List<Glob>> indexedGlob = new HashMap<>();
     private Field field;
 
     public NotUniqueLeafLevelIndex(Field field) {
         this.field = field;
     }
 
-    public GlobList getGlobs() {
-        GlobList globs = new GlobList();
-        for (GlobList glob : indexedGlob.values()) {
+    public List<Glob> getGlobs() {
+        List<Glob> globs = new ArrayList<>();
+        for (List<Glob> glob : indexedGlob.values()) {
             globs.addAll(glob);
         }
         return globs;
@@ -29,7 +27,7 @@ public class NotUniqueLeafLevelIndex implements UpdatableMultiFieldIndex, GlobRe
 
     public void saveApply(GlobFunctor functor, GlobRepository repository) {
         try {
-            for (GlobList globList : indexedGlob.values()) {
+            for (Collection<Glob> globList : indexedGlob.values()) {
                 for (Glob glob : globList) {
                     functor.run(glob, repository);
                 }
@@ -41,23 +39,23 @@ public class NotUniqueLeafLevelIndex implements UpdatableMultiFieldIndex, GlobRe
     }
 
     public Stream<Glob> streamByIndex(Object value) {
-        GlobList globs = indexedGlob.get(value);
+        Collection<Glob> globs = indexedGlob.get(value);
         return globs == null ? Stream.empty() : globs.stream();
     }
 
-    public GlobList findByIndex(Object value) {
-        GlobList glob = indexedGlob.get(value);
-        if (glob == null) {
-            return new GlobList(); // do not use empty as the caller can modify the list
+    public List<Glob> findByIndex(Object value) {
+        List<Glob> globs = indexedGlob.get(value);
+        if (globs == null) {
+            return new ArrayList<>();
         }
         else {
-            return new GlobList(glob);
+            return new ArrayList<>(globs);
         }
     }
 
     public boolean remove(Glob glob) {
         Object value = glob.getValue(this.field);
-        GlobList globList = indexedGlob.get(value);
+        List<Glob> globList = indexedGlob.get(value);
         if (globList != null) {
             globList.remove(glob);
             if (globList.isEmpty()) {
@@ -73,7 +71,7 @@ public class NotUniqueLeafLevelIndex implements UpdatableMultiFieldIndex, GlobRe
 
     public GlobRepository.MultiFieldIndexed findByIndex(Field field, final Object value) {
         return new GlobRepository.MultiFieldIndexed() {
-            public GlobList getGlobs() {
+            public List<Glob> getGlobs() {
                 return NotUniqueLeafLevelIndex.this.findByIndex(value);
             }
 
@@ -83,7 +81,7 @@ public class NotUniqueLeafLevelIndex implements UpdatableMultiFieldIndex, GlobRe
 
             public void saveApply(GlobFunctor functor, GlobRepository repository) {
                 try {
-                    GlobList globs = indexedGlob.get(value);
+                    List<Glob> globs = indexedGlob.get(value);
                     if (globs == null) {
                         return;
                     }
@@ -96,8 +94,8 @@ public class NotUniqueLeafLevelIndex implements UpdatableMultiFieldIndex, GlobRe
                 }
             }
 
-            public GlobList findByIndex(Object value) {
-                return new GlobList();
+            public List<Glob> findByIndex(Object value) {
+                return new ArrayList<>();
             }
 
             public GlobRepository.MultiFieldIndexed findByIndex(Field field, Object value) {
@@ -108,7 +106,7 @@ public class NotUniqueLeafLevelIndex implements UpdatableMultiFieldIndex, GlobRe
 
     public void add(Field field, Object newValue, Object oldValue, Glob glob) {
         if (field == this.field) {
-            GlobList oldGlobList = indexedGlob.get(oldValue);
+            List<Glob> oldGlobList = indexedGlob.get(oldValue);
             if (oldGlobList != null) {
                 oldGlobList.remove(glob);
                 if (oldGlobList.isEmpty()) {
@@ -121,7 +119,7 @@ public class NotUniqueLeafLevelIndex implements UpdatableMultiFieldIndex, GlobRe
 
     public boolean remove(Field field, Object value, Glob glob) {
         if (this.field == field) {
-            GlobList oldGlob = indexedGlob.get(value);
+            List<Glob> oldGlob = indexedGlob.get(value);
             if (oldGlob != null) {
                 oldGlob.remove(glob);
                 if (oldGlob.isEmpty()) {
@@ -131,7 +129,7 @@ public class NotUniqueLeafLevelIndex implements UpdatableMultiFieldIndex, GlobRe
         }
         else {
             Object oldValue = glob.getValue(this.field);
-            GlobList oldGlob = indexedGlob.get(oldValue);
+            List<Glob> oldGlob = indexedGlob.get(oldValue);
             if (oldGlob != null) {
                 oldGlob.remove(glob);
                 if (oldGlob.isEmpty()) {
@@ -144,11 +142,7 @@ public class NotUniqueLeafLevelIndex implements UpdatableMultiFieldIndex, GlobRe
 
     public void add(Glob glob) {
         Object value = glob.getValue(field);
-        GlobList globList = indexedGlob.get(value);
-        if (globList == null) {
-            globList = new GlobList();
-            indexedGlob.put(value, globList);
-        }
+        List<Glob> globList = indexedGlob.computeIfAbsent(value, k -> new ArrayList<>());
         globList.add(glob);
     }
 }

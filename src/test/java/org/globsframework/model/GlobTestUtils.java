@@ -12,6 +12,7 @@ import org.globsframework.xml.tests.XmlTestUtils;
 
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.Collection;
 import java.util.List;
 
 import static org.globsframework.xml.tests.XmlTestUtils.assertEquivalent;
@@ -34,13 +35,13 @@ public class GlobTestUtils {
                          XmlComparisonMode.EXPECTED_ATTRIBUTES_ONLY);
     }
 
-    public static void assertListEquals(GlobList globs,
+    public static void assertListEquals(Collection<Glob> globs,
                                         GlobRepository repository,
                                         String expectedOutput) {
         assertListEquals(globs, repository, expectedOutput, XmlComparisonMode.EXPECTED_ATTRIBUTES_ONLY);
     }
 
-    public static void assertListEquals(GlobList globs,
+    public static void assertListEquals(Collection<Glob> globs,
                                         GlobRepository repository,
                                         String expectedOutput,
                                         XmlComparisonMode comparisonMode) {

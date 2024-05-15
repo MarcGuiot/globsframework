@@ -2,7 +2,6 @@ package org.globsframework.model.repository;
 
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 
 import java.util.ArrayList;
@@ -13,7 +12,7 @@ public class LocalGlobRepositoryBuilder {
     private GlobRepository reference;
     private DefaultGlobRepository temporary;
     private List<GlobType> globTypes = new ArrayList<GlobType>();
-    private GlobList globs = new GlobList();
+    private List<Glob> globs = new ArrayList<>();
 
     public static LocalGlobRepositoryBuilder init(GlobRepository reference) {
         return new LocalGlobRepositoryBuilder(reference);
@@ -34,7 +33,7 @@ public class LocalGlobRepositoryBuilder {
         return this;
     }
 
-    public LocalGlobRepositoryBuilder copy(GlobList list) {
+    public LocalGlobRepositoryBuilder copy(List<Glob> list) {
         globs.addAll(list);
         for (Glob glob : list) {
             doCopy(glob);
