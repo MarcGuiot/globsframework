@@ -1,11 +1,11 @@
 package org.globsframework.model.utils;
 
 import org.globsframework.model.Glob;
-import org.globsframework.model.GlobRepository;
+
+import java.util.function.Predicate;
 
 /**
  * @see GlobMatchers
  */
-public interface GlobMatcher {
-    boolean matches(Glob item, GlobRepository repository);
+public interface GlobMatcher extends Predicate<Glob> {
 }

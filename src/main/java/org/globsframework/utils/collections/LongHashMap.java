@@ -762,7 +762,7 @@ public class LongHashMap<V> implements Cloneable, Serializable {
          * @see Iterator#next()
          */
         public Long next() {
-            return new Long(nextEntry().getKey());
+            return Long.valueOf(nextEntry().getKey());
         }
     }
 

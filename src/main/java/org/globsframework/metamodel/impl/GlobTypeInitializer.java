@@ -3,6 +3,7 @@ package org.globsframework.metamodel.impl;
 import org.globsframework.metamodel.GlobType;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 
 public class GlobTypeInitializer {
@@ -38,9 +39,9 @@ public class GlobTypeInitializer {
             name = null;
         }
 
-        GlobType init(GlobTypeAccessor globTypeAccessor) throws IllegalAccessException, InstantiationException {
+        GlobType init(GlobTypeAccessor globTypeAccessor) throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
             GlobType globType = globTypeAccessor.get(name);
-            T globTypeInstance = globTypeClass.newInstance();
+            T globTypeInstance = globTypeClass.getDeclaredConstructor().newInstance();
             for (FieldInit<T> fieldInit : fieldInits) {
                 fieldInit.init(globTypeInstance, globType);
             }

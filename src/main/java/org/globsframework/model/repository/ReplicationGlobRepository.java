@@ -2,19 +2,19 @@ package org.globsframework.model.repository;
 
 import org.globsframework.metamodel.fields.Field;
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.metamodel.index.SingleFieldIndex;
 import org.globsframework.metamodel.index.MultiFieldIndex;
+import org.globsframework.metamodel.index.SingleFieldIndex;
 import org.globsframework.metamodel.links.Link;
 import org.globsframework.model.*;
 import org.globsframework.model.delta.DefaultChangeSet;
 import org.globsframework.model.utils.ChangeVisitor;
 import org.globsframework.model.utils.GlobFunctor;
-import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.collections.MultiMap;
 import org.globsframework.utils.exceptions.*;
 
 import java.util.*;
+import java.util.function.Predicate;
 
 public class ReplicationGlobRepository extends DefaultGlobRepository implements GlobRepository {
     private Set<GlobType> managedTypes = new HashSet<>();
@@ -47,19 +47,13 @@ public class ReplicationGlobRepository extends DefaultGlobRepository implements 
     }
 
 
-    protected void finalize() throws Throwable {
-        super.finalize();
-        originalRepository.removeChangeListener(forwardChangeSetListener);
-    }
-
     public Glob find(Key key) {
         if (key == null) {
             return null;
         }
         if (managedTypes.contains(key.getGlobType())) {
             return super.find(key);
-        }
-        else {
+        } else {
             return originalRepository.find(key);
         }
     }
@@ -67,8 +61,7 @@ public class ReplicationGlobRepository extends DefaultGlobRepository implements 
     public Glob get(Key key) throws ItemNotFound {
         if (managedTypes.contains(key.getGlobType())) {
             return super.get(key);
-        }
-        else {
+        } else {
             return originalRepository.get(key);
         }
     }
@@ -76,35 +69,30 @@ public class ReplicationGlobRepository extends DefaultGlobRepository implements 
     public Glob findUnique(GlobType type, FieldValue... values) throws ItemAmbiguity {
         if (managedTypes.contains(type)) {
             return super.findUnique(type, values);
-        }
-        else {
+        } else {
             return originalRepository.findUnique(type, values);
         }
     }
 
-    public GlobList getAll(GlobType... type) {
-        GlobList globs = super.getAll(type);
+    public List<Glob> getAll(GlobType... type) {
+        List<Glob> globs = super.getAll(type);
         globs.addAll(originalRepository.getAll(type));
         return globs;
     }
 
-    public GlobList getAll(GlobType type, final GlobMatcher matcher) {
-        GlobMatcher globMatcher = new DecoratedGlobMatcher(matcher);
+    public List<Glob> getAll(GlobType type, final Predicate<Glob> matcher) {
         if (managedTypes.contains(type)) {
-            return super.getAll(type, globMatcher);
-        }
-        else {
-            return originalRepository.getAll(type, globMatcher);
+            return super.getAll(type, matcher);
+        } else {
+            return originalRepository.getAll(type, matcher);
         }
     }
 
-    public void apply(GlobType type, GlobMatcher matcher, GlobFunctor callback) throws Exception {
-        GlobMatcher globMatcher = new DecoratedGlobMatcher(matcher);
+    public void apply(GlobType type, Predicate<Glob> matcher, GlobFunctor callback) throws Exception {
         if (managedTypes.contains(type)) {
-            super.apply(type, globMatcher, callback);
-        }
-        else {
-            originalRepository.apply(type, globMatcher, callback);
+            super.apply(type, matcher, callback);
+        } else {
+            originalRepository.apply(type, matcher, callback);
         }
     }
 
@@ -116,49 +104,42 @@ public class ReplicationGlobRepository extends DefaultGlobRepository implements 
         });
         originalRepository.safeApply(new GlobFunctor() {
             public void run(Glob glob, GlobRepository repository) throws Exception {
-                if (!managedTypes.contains(glob.getType())){
+                if (!managedTypes.contains(glob.getType())) {
                     callback.run(glob, ReplicationGlobRepository.this);
                 }
             }
         });
     }
 
-    public void safeApply(GlobType type, GlobMatcher matcher, GlobFunctor callback) {
-        GlobMatcher globMatcher = new DecoratedGlobMatcher(matcher);
+    public void safeApply(GlobType type, Predicate<Glob> matcher, GlobFunctor callback) {
         if (managedTypes.contains(type)) {
-            super.safeApply(type, globMatcher, callback);
-        }
-        else {
-            originalRepository.safeApply(type, globMatcher, callback);
+            super.safeApply(type, matcher, callback);
+        } else {
+            originalRepository.safeApply(type, matcher, callback);
         }
     }
 
-    public Glob findUnique(GlobType type, GlobMatcher matcher) throws ItemAmbiguity {
-        GlobMatcher globMatcher = new DecoratedGlobMatcher(matcher);
+    public Glob findUnique(GlobType type, Predicate<Glob> matcher) throws ItemAmbiguity {
         if (managedTypes.contains(type)) {
-            return super.findUnique(type, globMatcher);
-        }
-        else {
-            return originalRepository.findUnique(type, globMatcher);
+            return super.findUnique(type, matcher);
+        } else {
+            return originalRepository.findUnique(type, matcher);
         }
     }
 
-    public Glob[] getSorted(GlobType type, Comparator<Glob> comparator, GlobMatcher matcher) {
-        GlobMatcher globMatcher = new DecoratedGlobMatcher(matcher);
+    public Glob[] getSorted(GlobType type, Comparator<Glob> comparator, Predicate<Glob> matcher) {
 
         if (managedTypes.contains(type)) {
-            return super.getSorted(type, comparator, globMatcher);
-        }
-        else {
-            return originalRepository.getSorted(type, comparator, globMatcher);
+            return super.getSorted(type, comparator, matcher);
+        } else {
+            return originalRepository.getSorted(type, comparator, matcher);
         }
     }
 
-    public GlobList findByIndex(SingleFieldIndex index, Object value) {
+    public List<Glob> findByIndex(SingleFieldIndex index, Object value) {
         if (managedTypes.contains(index.getField().getGlobType())) {
             return super.findByIndex(index, value);
-        }
-        else {
+        } else {
             return originalRepository.findByIndex(index, value);
         }
     }
@@ -166,8 +147,7 @@ public class ReplicationGlobRepository extends DefaultGlobRepository implements 
     public MultiFieldIndexed findByIndex(MultiFieldIndex multiFieldIndex, Field field, Object value) {
         if (managedTypes.contains(field.getGlobType())) {
             return super.findByIndex(multiFieldIndex, field, value);
-        }
-        else {
+        } else {
             return originalRepository.findByIndex(multiFieldIndex, field, value);
         }
     }
@@ -182,26 +162,23 @@ public class ReplicationGlobRepository extends DefaultGlobRepository implements 
     public Glob findLinkTarget(Glob source, Link link) {
         if (managedTypes.contains(link.getTargetType())) {
             return super.findLinkTarget(source, link);
-        }
-        else {
+        } else {
             return originalRepository.findLinkTarget(source, link);
         }
     }
 
-    public GlobList findLinkedTo(Key target, Link link) {
+    public List<Glob> findLinkedTo(Key target, Link link) {
         if (managedTypes.contains(link.getSourceType())) {
             return super.findLinkedTo(target, link);
-        }
-        else {
+        } else {
             return originalRepository.findLinkedTo(target, link);
         }
     }
 
-    public GlobList findLinkedTo(Glob target, Link link) {
+    public List<Glob> findLinkedTo(Glob target, Link link) {
         if (managedTypes.contains(link.getSourceType())) {
             return super.findLinkedTo(target, link);
-        }
-        else {
+        } else {
             return originalRepository.findLinkedTo(target, link);
         }
     }
@@ -209,8 +186,7 @@ public class ReplicationGlobRepository extends DefaultGlobRepository implements 
     public Glob create(GlobType type, FieldValue... values) throws MissingInfo, ItemAlreadyExists {
         if (managedTypes.contains(type)) {
             return super.create(type, values);
-        }
-        else {
+        } else {
             return originalRepository.create(type, values);
         }
     }
@@ -218,8 +194,7 @@ public class ReplicationGlobRepository extends DefaultGlobRepository implements 
     public Glob create(Key key, FieldValue... values) throws ItemAlreadyExists {
         if (managedTypes.contains(key.getGlobType())) {
             return super.create(key, values);
-        }
-        else {
+        } else {
             return originalRepository.create(key, values);
         }
     }
@@ -227,8 +202,7 @@ public class ReplicationGlobRepository extends DefaultGlobRepository implements 
     public Glob findOrCreate(Key key, FieldValue... valuesForCreate) throws MissingInfo {
         if (managedTypes.contains(key.getGlobType())) {
             return super.findOrCreate(key, valuesForCreate);
-        }
-        else {
+        } else {
             return originalRepository.findOrCreate(key, valuesForCreate);
         }
     }
@@ -237,17 +211,14 @@ public class ReplicationGlobRepository extends DefaultGlobRepository implements 
         return super.contains(type) || originalRepository.contains(type);
     }
 
-    public boolean contains(GlobType type, GlobMatcher matcher) {
-        GlobMatcher globMatcher = new DecoratedGlobMatcher(matcher);
-
-        return super.contains(type, globMatcher) || originalRepository.contains(type, globMatcher);
+    public boolean contains(GlobType type, Predicate<Glob> matcher) {
+        return super.contains(type, matcher) || originalRepository.contains(type, matcher);
     }
 
     public void update(Key key, Field field, Object newValue) throws ItemNotFound {
         if (managedTypes.contains(key.getGlobType())) {
             super.update(key, field, newValue);
-        }
-        else {
+        } else {
             originalRepository.update(key, field, newValue);
         }
     }
@@ -255,8 +226,7 @@ public class ReplicationGlobRepository extends DefaultGlobRepository implements 
     public void update(Key key, FieldValue... values) {
         if (managedTypes.contains(key.getGlobType())) {
             super.update(key, values);
-        }
-        else {
+        } else {
             originalRepository.update(key, values);
         }
     }
@@ -264,8 +234,7 @@ public class ReplicationGlobRepository extends DefaultGlobRepository implements 
     public void setTarget(Key source, Link link, Key target) throws ItemNotFound {
         if (managedTypes.contains(source.getGlobType())) {
             super.setTarget(source, link, target);
-        }
-        else {
+        } else {
             originalRepository.setTarget(source, link, target);
         }
     }
@@ -273,8 +242,7 @@ public class ReplicationGlobRepository extends DefaultGlobRepository implements 
     public void delete(Key key) throws ItemNotFound, OperationDenied {
         if (managedTypes.contains(key.getGlobType())) {
             super.delete(key);
-        }
-        else {
+        } else {
             originalRepository.delete(key);
         }
     }
@@ -287,35 +255,25 @@ public class ReplicationGlobRepository extends DefaultGlobRepository implements 
         for (GlobType type : map.keySet()) {
             if (managedTypes.contains(type)) {
                 super.delete(map.get(type));
-            }
-            else {
+            } else {
                 originalRepository.delete(map.get(type));
             }
         }
     }
 
-    public void delete(GlobList list) throws OperationDenied {
-        GlobList localDelete = list.filter(new GlobMatcher() {
-            public boolean matches(Glob item, GlobRepository repository) {
-                return managedTypes.contains(item.getType());
-            }
-        }, this);
-        super.delete(localDelete);
-        GlobList remoteDelete = list.filter(new GlobMatcher() {
-            public boolean matches(Glob item, GlobRepository repository) {
-                return !managedTypes.contains(item.getType());
-            }
-        }, originalRepository);
-
-        originalRepository.delete(remoteDelete);
+    public void deleteGlobs(Collection<Glob> list) throws OperationDenied {
+        List<Glob> localDelete = list.stream()
+                .filter(glob -> managedTypes.contains(glob.getType())).toList();
+        super.deleteGlobs(localDelete);
+        List<Glob> remoteDelete = list.stream().filter(glob -> !managedTypes.contains(glob.getType())).toList();
+        originalRepository.deleteGlobs(remoteDelete);
     }
 
     public void deleteAll(GlobType... types) throws OperationDenied {
         for (GlobType type : types) {
             if (this.managedTypes.contains(type)) {
                 super.deleteAll(type);
-            }
-            else {
+            } else {
                 originalRepository.deleteAll(types);
             }
         }
@@ -331,8 +289,7 @@ public class ReplicationGlobRepository extends DefaultGlobRepository implements 
             public void visitCreation(Key key, FieldsValueScanner values) throws Exception {
                 if (managedTypes.contains(key.getGlobType())) {
                     localChangeSet.processCreation(key, values);
-                }
-                else {
+                } else {
                     remoteChangeSet.processCreation(key, values);
                 }
             }
@@ -340,8 +297,7 @@ public class ReplicationGlobRepository extends DefaultGlobRepository implements 
             public void visitUpdate(Key key, FieldsValueWithPreviousScanner values) throws Exception {
                 if (managedTypes.contains(key.getGlobType())) {
                     localChangeSet.processUpdate(key, values);
-                }
-                else {
+                } else {
                     remoteChangeSet.processUpdate(key, values);
                 }
             }
@@ -349,8 +305,7 @@ public class ReplicationGlobRepository extends DefaultGlobRepository implements 
             public void visitDeletion(Key key, FieldsValueScanner previousValues) throws Exception {
                 if (managedTypes.contains(key.getGlobType())) {
                     localChangeSet.processDeletion(key, previousValues);
-                }
-                else {
+                } else {
                     remoteChangeSet.processDeletion(key, previousValues);
                 }
             }
@@ -393,44 +348,42 @@ public class ReplicationGlobRepository extends DefaultGlobRepository implements 
 //    orgRepository.removeChangeListener(listener);
     }
 
-    public void reset(GlobList newGlobs, GlobType... changedTypes) {
-        GlobList localList = new GlobList();
-        GlobList remoteList = new GlobList();
+    public void reset(Collection<Glob> newGlobs, GlobType... changedTypes) {
+        List<Glob> localList = new ArrayList<>();
+        List<Glob> remoteList = new ArrayList<>();
         for (Glob glob : newGlobs) {
             if (managedTypes.contains(glob.getType())) {
                 localList.add(glob);
-            }
-            else {
+            } else {
                 remoteList.add(glob);
             }
         }
-        List<GlobType> localTypes = new ArrayList<GlobType>();
-        List<GlobType> remoteTypes = new ArrayList<GlobType>();
+        List<GlobType> localTypes = new ArrayList<>();
+        List<GlobType> remoteTypes = new ArrayList<>();
         for (GlobType type : changedTypes) {
             if (managedTypes.contains(type)) {
                 localTypes.add(type);
-            }
-            else {
+            } else {
                 remoteTypes.add(type);
             }
         }
-        super.reset(localList, localTypes.toArray(new GlobType[localTypes.size()]));
-        originalRepository.reset(remoteList, remoteTypes.toArray(new GlobType[remoteTypes.size()]));
+        super.reset(localList, localTypes.toArray(new GlobType[0]));
+        originalRepository.reset(remoteList, remoteTypes.toArray(new GlobType[0]));
     }
 
     public GlobIdGenerator getIdGenerator() {
         return super.getIdGenerator();
     }
 
-    private class DecoratedGlobMatcher implements GlobMatcher {
-        private final GlobMatcher matcher;
+    private class DecoratedGlobMatcher implements Predicate<Glob> {
+        private final Predicate<Glob> matcher;
 
-        public DecoratedGlobMatcher(GlobMatcher matcher) {
+        public DecoratedGlobMatcher(Predicate<Glob> matcher) {
             this.matcher = matcher;
         }
 
-        public boolean matches(Glob item, GlobRepository repository) {
-            return matcher.matches(item, ReplicationGlobRepository.this);
+        public boolean test(Glob item) {
+            return matcher.test(item);
         }
     }
 
@@ -450,8 +403,7 @@ public class ReplicationGlobRepository extends DefaultGlobRepository implements 
                 for (ChangeSetListener listener : this.repository.listeners) {
                     listener.globsChanged(changeSet, this.repository);
                 }
-            }
-            finally {
+            } finally {
                 this.repository.completeChangeSet();
             }
         }
@@ -465,8 +417,7 @@ public class ReplicationGlobRepository extends DefaultGlobRepository implements 
                 for (ChangeSetListener listener : this.repository.listeners) {
                     listener.globsReset(this.repository, changedTypes);
                 }
-            }
-            finally {
+            } finally {
                 this.repository.completeChangeSet();
             }
         }

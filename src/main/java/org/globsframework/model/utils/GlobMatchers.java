@@ -4,6 +4,7 @@ import org.globsframework.metamodel.fields.Field;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.links.FieldMappingFunction;
 import org.globsframework.metamodel.links.Link;
+import org.globsframework.model.FieldValuesAccessor;
 import org.globsframework.model.Glob;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.Key;
@@ -14,11 +15,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Predicate;
 
 public class GlobMatchers {
 
-    public static GlobMatcher ALL = new GlobMatcher() {
-        public boolean matches(Glob item, GlobRepository repository) {
+    public static Predicate<Glob> ALL = new Predicate<Glob>() {
+        public boolean test(Glob item) {
             return true;
         }
 
@@ -27,8 +29,8 @@ public class GlobMatchers {
         }
     };
 
-    public static GlobMatcher NONE = new GlobMatcher() {
-        public boolean matches(Glob item, GlobRepository repository) {
+    public static Predicate<Glob> NONE = new Predicate<Glob>() {
+        public boolean test(Glob item) {
             return false;
         }
 
@@ -37,16 +39,13 @@ public class GlobMatchers {
         }
     };
 
-    public static GlobMatcher fieldEquals(IntegerField field, Integer value) {
+    public static Predicate<Glob> fieldEquals(IntegerField field, Integer value) {
         return fieldEqualsObject(field, value);
     }
 
-    public static GlobMatcher fieldIn(final IntegerField field, final Integer... values) {
-        if (values.length == 0) {
-            return GlobMatchers.NONE;
-        }
-        return new GlobMatcher() {
-            public boolean matches(Glob item, GlobRepository repository) {
+    public static Predicate<Glob> fieldIn(final IntegerField field, final Integer... values) {
+        return new Predicate<Glob>() {
+            public boolean test(Glob item) {
                 Integer fieldValue = item.get(field);
                 for (Integer value : values) {
                     if (Utils.equal(fieldValue, value)) {
@@ -62,13 +61,13 @@ public class GlobMatchers {
         };
     }
 
-    public static GlobMatcher fieldEquals(StringField field, String value) {
+    public static Predicate<Glob> fieldEquals(StringField field, String value) {
         return fieldEqualsObject(field, value);
     }
 
-    public static GlobMatcher fieldEqualsIgnoreCase(final StringField field, final String value) {
-        return new GlobMatcher() {
-            public boolean matches(Glob glob, GlobRepository repository) {
+    public static Predicate<Glob> fieldEqualsIgnoreCase(final StringField field, final String value) {
+        return new Predicate<Glob>() {
+            public boolean test(Glob glob) {
                 return Utils.equalIgnoreCase(glob.get(field), value);
             }
 
@@ -78,21 +77,21 @@ public class GlobMatchers {
         };
     }
 
-    public static GlobMatcher fieldEquals(DoubleField field, Double value) {
+    public static Predicate<Glob> fieldEquals(DoubleField field, Double value) {
         return fieldEqualsObject(field, value);
     }
 
-    public static GlobMatcher fieldEquals(BlobField field, byte[] value) {
+    public static Predicate<Glob> fieldEquals(BlobField field, byte[] value) {
         return fieldEqualsObject(field, value);
     }
 
-    public static GlobMatcher isTrue(BooleanField field) {
+    public static Predicate<Glob> isTrue(BooleanField field) {
         return fieldEqualsObject(field, true);
     }
 
-    public static GlobMatcher isNotTrue(final BooleanField field) {
-        return new GlobMatcher() {
-            public boolean matches(Glob item, GlobRepository repository) {
+    public static Predicate<Glob> isNotTrue(final BooleanField field) {
+        return new Predicate<Glob>() {
+            public boolean test(Glob item) {
                 Boolean value = item.get(field);
                 return value == null || value == false;
             }
@@ -103,29 +102,29 @@ public class GlobMatchers {
         };
     }
 
-    public static GlobMatcher isFalse(BooleanField field) {
+    public static Predicate<Glob> isFalse(BooleanField field) {
         return fieldEqualsObject(field, false);
     }
 
-    public static GlobMatcher fieldEquals(BooleanField field, Boolean value) {
+    public static Predicate<Glob> fieldEquals(BooleanField field, Boolean value) {
         return fieldEqualsObject(field, value);
     }
 
-    public static GlobMatcher fieldEquals(LongField field, Long value) {
+    public static Predicate<Glob> fieldEquals(LongField field, Long value) {
         return fieldEqualsObject(field, value);
     }
 
-    public static GlobMatcher fieldEqualsObject(Field field, Object value) {
+    public static Predicate<Glob> fieldEqualsObject(Field field, Object value) {
         return new SingleFieldMatcher(field, value);
     }
 
-    public static GlobMatcher fieldContainsIgnoreCaseAndAccents(final StringField field, final String value) {
+    public static Predicate<Glob> fieldContainsIgnoreCaseAndAccents(final StringField field, final String value) {
         if (Strings.isNullOrEmpty(value)) {
             return ALL;
         }
         final String rawValue = normalize(value);
-        return new GlobMatcher() {
-            public boolean matches(Glob item, GlobRepository repository) {
+        return new Predicate<Glob>() {
+            public boolean test(Glob item) {
                 String actual = item.get(field);
                 return actual != null && normalize(actual).contains(rawValue);
             }
@@ -140,11 +139,11 @@ public class GlobMatchers {
         return Strings.unaccent(value.toLowerCase());
     }
 
-    public static GlobMatcher contained(Field field, Object... values) {
+    public static Predicate<Glob> contained(Field field, Object... values) {
         return contained(field, Arrays.asList(values));
     }
 
-    public static GlobMatcher contained(Field field, Collection values) {
+    public static Predicate<Glob> contained(Field field, Collection values) {
         if ((values == null) || values.isEmpty()) {
             return NONE;
         }
@@ -158,12 +157,12 @@ public class GlobMatchers {
      * Accepts all Globs who are linked to a given Glob.
      */
 
-    public static GlobMatcher linkedTo(Glob target, final Link link) {
+    public static Predicate<Glob> linkedTo(Glob target, final Link link) {
         if (target == null) {
             return NONE;
         }
         return link.apply(new FieldMappingFunction() {
-            GlobMatcher matcher = ALL;
+            Predicate<Glob> matcher = ALL;
 
             public void process(Field sourceField, Field targetField) {
                 matcher = and(matcher, fieldEqualsObject(sourceField, target.getValue(targetField)));
@@ -171,10 +170,10 @@ public class GlobMatchers {
         }).matcher;
     }
 
-    public static GlobMatcher linkTargetFieldEquals(final Link link, final Field targetField,
-                                                    final Object targetFieldValue) {
-        return new GlobMatcher() {
-            public boolean matches(Glob item, GlobRepository repository) {
+    public static Predicate<Glob> linkTargetFieldEquals(final Link link, final Field targetField,
+                                                    final Object targetFieldValue, GlobRepository repository) {
+        return new Predicate<Glob>() {
+            public boolean test(Glob item) {
                 final Glob target = repository.findLinkTarget(item, link);
                 if (target == null) {
                     return false;
@@ -189,11 +188,11 @@ public class GlobMatchers {
         };
     }
 
-    public static GlobMatcher linkedTo(final Link link, final GlobMatcher linkedObjectMatcher) {
-        return new GlobMatcher() {
-            public boolean matches(Glob item, GlobRepository repository) {
+    public static Predicate<Glob> linkedTo(final Link link, final Predicate<Glob> linkedObjectMatcher, GlobRepository repository) {
+        return new Predicate<Glob>() {
+            public boolean test(Glob item) {
                 Glob target = repository.findLinkTarget(item, link);
-                return (target != null) && linkedObjectMatcher.matches(target, repository);
+                return (target != null) && linkedObjectMatcher.test(target);
             }
 
             public String toString() {
@@ -203,9 +202,9 @@ public class GlobMatchers {
     }
 
 
-    public static GlobMatcher isNull(final Field field) {
-        return new GlobMatcher() {
-            public boolean matches(Glob glob, GlobRepository repository) {
+    public static Predicate<Glob> isNull(final Field field) {
+        return new Predicate<Glob>() {
+            public boolean test(Glob glob) {
                 return glob.getValue(field) == null;
             }
 
@@ -215,9 +214,9 @@ public class GlobMatchers {
         };
     }
 
-    public static GlobMatcher isNotNull(final Field field) {
-        return new GlobMatcher() {
-            public boolean matches(Glob item, GlobRepository repository) {
+    public static Predicate<Glob> isNotNull(final Field field) {
+        return new Predicate<Glob>() {
+            public boolean test(Glob item) {
                 return item.getValue(field) != null;
             }
 
@@ -227,9 +226,9 @@ public class GlobMatchers {
         };
     }
 
-    public static GlobMatcher isNullOrEmpty(final StringField field) {
-        return new GlobMatcher() {
-            public boolean matches(Glob item, GlobRepository repository) {
+    public static Predicate<Glob> isNullOrEmpty(final StringField field) {
+        return new Predicate<Glob>() {
+            public boolean test(Glob item) {
                 return Strings.isNullOrEmpty(item.get(field));
             }
 
@@ -239,9 +238,9 @@ public class GlobMatchers {
         };
     }
 
-    public static GlobMatcher isNotEmpty(final StringField field) {
-        return new GlobMatcher() {
-            public boolean matches(Glob item, GlobRepository repository) {
+    public static Predicate<Glob> isNotEmpty(final StringField field) {
+        return new Predicate<Glob>() {
+            public boolean test(Glob item) {
                 return Strings.isNotEmpty(item.get(field));
             }
 
@@ -251,19 +250,19 @@ public class GlobMatchers {
         };
     }
 
-    public static GlobMatcher and(List<GlobMatcher> matchers) {
-        GlobMatcher[] array = matchers.toArray(new GlobMatcher[matchers.size()]);
+    public static Predicate<Glob> and(List<Predicate<Glob>> matchers) {
+        Predicate<Glob>[] array = matchers.toArray(Predicate[]::new);
         return and(array);
     }
 
-    public static GlobMatcher and(final GlobMatcher... matchers) {
-        for (GlobMatcher matcher : matchers) {
+    public static Predicate<Glob> and(final Predicate<Glob>... matchers) {
+        for (Predicate<Glob> matcher : matchers) {
             if (NONE.equals(matcher)) {
                 return NONE;
             }
         }
-        List<GlobMatcher> significantMatchers = new ArrayList<GlobMatcher>();
-        for (GlobMatcher matcher : matchers) {
+        List<Predicate<Glob>> significantMatchers = new ArrayList<Predicate<Glob>>();
+        for (Predicate<Glob> matcher : matchers) {
             if ((matcher != null) && (matcher != ALL)) {
                 significantMatchers.add(matcher);
             }
@@ -274,10 +273,10 @@ public class GlobMatchers {
         if (significantMatchers.size() == 1) {
             return significantMatchers.get(0);
         }
-        return new GlobMatcher() {
-            public boolean matches(Glob item, GlobRepository repository) {
-                for (GlobMatcher matcher : matchers) {
-                    if (matcher != null && !matcher.matches(item, repository)) {
+        return new Predicate<Glob>() {
+            public boolean test(Glob item) {
+                for (Predicate<Glob> matcher : matchers) {
+                    if (matcher != null && !matcher.test(item)) {
                         return false;
                     }
                 }
@@ -287,7 +286,7 @@ public class GlobMatchers {
             public String toString() {
                 StringBuilder builder = new StringBuilder();
                 builder.append("and {\n");
-                for (GlobMatcher matcher : matchers) {
+                for (Predicate<Glob> matcher : matchers) {
                     builder.append(matcher).append('\n');
                 }
                 builder.append("}");
@@ -296,9 +295,9 @@ public class GlobMatchers {
         };
     }
 
-    public static GlobMatcher or(final GlobMatcher... matchers) {
-        List<GlobMatcher> significantMatchers = new ArrayList<GlobMatcher>();
-        for (GlobMatcher matcher : matchers) {
+    public static Predicate<Glob> or(final Predicate<Glob>... matchers) {
+        List<Predicate<Glob>> significantMatchers = new ArrayList<Predicate<Glob>>();
+        for (Predicate<Glob> matcher : matchers) {
             if ((matcher != null) && matcher.equals(ALL)) {
                 return ALL;
             }
@@ -312,10 +311,10 @@ public class GlobMatchers {
         if (significantMatchers.size() == 1) {
             return significantMatchers.get(0);
         }
-        return new GlobMatcher() {
-            public boolean matches(Glob glob, GlobRepository repository) {
-                for (GlobMatcher matcher : matchers) {
-                    if (matcher.matches(glob, repository)) {
+        return new Predicate<Glob>() {
+            public boolean test(Glob glob) {
+                for (Predicate<Glob> matcher : matchers) {
+                    if (matcher.test(glob)) {
                         return true;
                     }
                 }
@@ -325,7 +324,7 @@ public class GlobMatchers {
             public String toString() {
                 StringBuilder builder = new StringBuilder();
                 builder.append("or {\n");
-                for (GlobMatcher matcher : matchers) {
+                for (Predicate<Glob> matcher : matchers) {
                     builder.append(matcher).append('\n');
                 }
                 builder.append("}");
@@ -334,10 +333,10 @@ public class GlobMatchers {
         };
     }
 
-    public static GlobMatcher not(final GlobMatcher matcher) {
-        return new GlobMatcher() {
-            public boolean matches(Glob glob, GlobRepository repository) {
-                return !matcher.matches(glob, repository);
+    public static Predicate<Glob> not(final Predicate<Glob> matcher) {
+        return new Predicate<Glob>() {
+            public boolean test(Glob glob) {
+                return !matcher.test(glob);
             }
 
             public String toString() {
@@ -346,9 +345,9 @@ public class GlobMatchers {
         };
     }
 
-    public static GlobMatcher keyEquals(final Key key) {
-        return new GlobMatcher() {
-            public boolean matches(Glob item, GlobRepository repository) {
+    public static Predicate<Glob> keyEquals(final Key key) {
+        return new Predicate<Glob>() {
+            public boolean test(Glob item) {
                 return key.equals(item.getKey());
             }
 
@@ -358,9 +357,9 @@ public class GlobMatchers {
         };
     }
 
-    public static GlobMatcher keyIn(final Collection<Key> keys) {
-        return new GlobMatcher() {
-            public boolean matches(Glob item, GlobRepository repository) {
+    public static Predicate<Glob> keyIn(final Collection<Key> keys) {
+        return new Predicate<Glob>() {
+            public boolean test(Glob item) {
                 return keys.contains(item.getKey());
             }
 
@@ -371,9 +370,9 @@ public class GlobMatchers {
     }
 
 
-    public static GlobMatcher fieldIn(final IntegerField field, final Collection<Integer> values) {
-        return new GlobMatcher() {
-            public boolean matches(Glob item, GlobRepository repository) {
+    public static Predicate<Glob> fieldIn(final IntegerField field, final Collection<Integer> values) {
+        return new Predicate<Glob>() {
+            public boolean test(Glob item) {
                 Integer value = item.get(field);
                 return value != null && values.contains(value);
             }
@@ -384,9 +383,9 @@ public class GlobMatchers {
         };
     }
 
-    public static GlobMatcher fieldGreaterOrEqual(final IntegerField field, final int value) {
-        return new GlobMatcher() {
-            public boolean matches(Glob item, GlobRepository repository) {
+    public static Predicate<Glob> fieldGreaterOrEqual(final IntegerField field, final int value) {
+        return new Predicate<Glob>() {
+            public boolean test(Glob item) {
                 return item.get(field) >= value;
             }
 
@@ -396,9 +395,9 @@ public class GlobMatchers {
         };
     }
 
-    public static GlobMatcher fieldStrictlyGreaterThan(final IntegerField field, final int value) {
-        return new GlobMatcher() {
-            public boolean matches(Glob item, GlobRepository repository) {
+    public static Predicate<Glob> fieldStrictlyGreaterThan(final IntegerField field, final int value) {
+        return new Predicate<Glob>() {
+            public boolean test(Glob item) {
                 return item.get(field) > value;
             }
 
@@ -408,9 +407,9 @@ public class GlobMatchers {
         };
     }
 
-    public static GlobMatcher fieldStrictlyLessThan(final IntegerField field, final int value) {
-        return new GlobMatcher() {
-            public boolean matches(Glob item, GlobRepository repository) {
+    public static Predicate<Glob> fieldStrictlyLessThan(final IntegerField field, final int value) {
+        return new Predicate<Glob>() {
+            public boolean test(Glob item) {
                 return item.get(field) < value;
             }
 
@@ -420,9 +419,9 @@ public class GlobMatchers {
         };
     }
 
-    public static GlobMatcher fieldLessOrEqual(final IntegerField field, final int value) {
-        return new GlobMatcher() {
-            public boolean matches(Glob item, GlobRepository repository) {
+    public static Predicate<Glob> fieldLessOrEqual(final IntegerField field, final int value) {
+        return new Predicate<Glob>() {
+            public boolean test(Glob item) {
                 return item.get(field) <= value;
             }
 
@@ -432,9 +431,9 @@ public class GlobMatchers {
         };
     }
 
-    public static GlobMatcher fieldContained(final Field field, final Collection values) {
-        return new GlobMatcher() {
-            public boolean matches(Glob item, GlobRepository repository) {
+    public static Predicate<Glob> fieldContained(final Field field, final Collection values) {
+        return new Predicate<Glob>() {
+            public boolean test(Glob item) {
                 return values.contains(item.getValue(field));
             }
 
@@ -446,7 +445,7 @@ public class GlobMatchers {
     }
 
 
-    private static class SingleFieldMatcher implements GlobMatcher {
+    private static class SingleFieldMatcher implements Predicate<Glob> {
         private Field field;
         private Object value;
 
@@ -455,7 +454,7 @@ public class GlobMatchers {
             this.value = value;
         }
 
-        public boolean matches(Glob glob, GlobRepository repository) {
+        public boolean test(Glob glob) {
             return Utils.equal(value, glob.getValue(field));
         }
 
@@ -464,7 +463,7 @@ public class GlobMatchers {
         }
     }
 
-    private static class CollectionFieldMatcher implements GlobMatcher {
+    private static class CollectionFieldMatcher implements Predicate<Glob> {
         private Field field;
         private Collection values;
 
@@ -473,7 +472,7 @@ public class GlobMatchers {
             this.values = values;
         }
 
-        public boolean matches(Glob glob, GlobRepository repository) {
+        public boolean test(Glob glob) {
             return values.contains(glob.getValue(field));
         }
 

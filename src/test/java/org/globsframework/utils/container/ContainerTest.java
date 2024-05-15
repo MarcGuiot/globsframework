@@ -95,7 +95,7 @@ public class ContainerTest extends TestCase {
         for (int i = 0 ; i < 1000; i++){
             if (i % 10 == 0){
                 container = container.put(null, 4);
-                assertEquals(new Integer(4), container.get(null));
+                assertEquals(Integer.valueOf(4), container.get(null));
             }
             else {
                 container = container.put(i, i);
@@ -104,10 +104,10 @@ public class ContainerTest extends TestCase {
 
         for (int i = 0 ; i < 1000; i++){
             if (i % 10 == 0){
-                assertEquals(new Integer(4), container.get(null));
+                assertEquals(Integer.valueOf(4), container.get(null));
             }
             else {
-                assertEquals(new Integer(i), container.get(i));
+                assertEquals(Integer.valueOf(i), container.get(i));
             }
         }
 

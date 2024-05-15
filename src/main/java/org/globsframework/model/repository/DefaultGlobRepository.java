@@ -15,7 +15,6 @@ import org.globsframework.model.indexing.IndexManager;
 import org.globsframework.model.indexing.IndexSource;
 import org.globsframework.model.indexing.IndexTables;
 import org.globsframework.model.utils.GlobFunctor;
-import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.model.utils.GlobMatchers;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.collections.MapOfMaps;
@@ -24,6 +23,7 @@ import org.globsframework.utils.exceptions.*;
 
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 public class DefaultGlobRepository implements GlobRepository, IndexSource {
     static boolean dump = false;
@@ -52,11 +52,11 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
         globs.values(globType).forEach(consume);
     }
 
-    public GlobList getAll(GlobType... types) {
+    public List<Glob> getAll(GlobType... types) {
         if (types.length == 0) {
-            return new GlobList(globs.values());
+            return new ArrayList<>(globs.values());
         }
-        GlobList result = new GlobList();
+        List<Glob> result = new ArrayList<>();
         for (GlobType type : types) {
             result.addAll(globs.values(type));
         }
@@ -74,11 +74,11 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
         return find(targetKey);
     }
 
-    public GlobList findLinkedTo(Key target, Link link) {
+    public List<Glob> findLinkedTo(Key target, Link link) {
         if (target == null) {
-            return GlobList.EMPTY;
+            return new ArrayList<>();
         }
-        GlobList result = new GlobList();
+        List<Glob> result = new ArrayList<>();
         for (Glob glob : getAll(link.getSourceType())) {
             if (target.equals(glob.getTargetKey(link))) {
                 result.add(glob);
@@ -88,9 +88,9 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
         return result;
     }
 
-    public GlobList findLinkedTo(Glob target, Link link) {
+    public List<Glob> findLinkedTo(Glob target, Link link) {
         if (target == null) {
-            return GlobList.EMPTY;
+            return new ArrayList<>();
         }
         return findLinkedTo(target.getKey(), link);
     }
@@ -136,37 +136,37 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
         return result;
     }
 
-    public GlobList getAll(GlobType type, GlobMatcher matcher) {
+    public List<Glob> getAll(GlobType type, Predicate<Glob> matcher) {
         if (GlobMatchers.NONE.equals(matcher)) {
-            return new GlobList();
+            return new ArrayList<>();
         }
         if (GlobMatchers.ALL.equals(matcher)) {
             return getAll(type);
         }
-        GlobList result = new GlobList();
+        List<Glob> result = new ArrayList<>();
         for (Glob glob : globs.values(type)) {
-            if (matcher.matches(glob, this)) {
+            if (matcher.test(glob)) {
                 result.add(glob);
             }
         }
         return result;
     }
 
-    public void apply(GlobType type, GlobMatcher matcher, GlobFunctor callback) throws Exception {
+    public void apply(GlobType type, Predicate<Glob> matcher, GlobFunctor callback) throws Exception {
         if (GlobMatchers.ALL.equals(matcher)) {
             for (Glob glob : globs.values(type)) {
                 callback.run(glob, this);
             }
         } else {
             for (Glob glob : globs.values(type)) {
-                if (matcher.matches(glob, this)) {
+                if (matcher.test(glob)) {
                     callback.run(glob, this);
                 }
             }
         }
     }
 
-    public void safeApply(GlobType type, GlobMatcher matcher, GlobFunctor callback) {
+    public void safeApply(GlobType type, Predicate<Glob> matcher, GlobFunctor callback) {
         try {
             apply(type, matcher, callback);
         } catch (Exception e) {
@@ -189,22 +189,22 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
         return !globs.values(type).isEmpty();
     }
 
-    public boolean contains(GlobType type, GlobMatcher matcher) {
+    public boolean contains(GlobType type, Predicate<Glob> matcher) {
         if (GlobMatchers.NONE.equals(matcher)) {
             return false;
         }
         for (Glob glob : globs.values(type)) {
-            if (matcher.matches(glob, this)) {
+            if (matcher.test(glob)) {
                 return true;
             }
         }
         return false;
     }
 
-    public Glob findUnique(GlobType type, GlobMatcher matcher) throws ItemAmbiguity {
+    public Glob findUnique(GlobType type, Predicate<Glob> matcher) throws ItemAmbiguity {
         Glob result = null;
         for (Glob glob : globs.values(type)) {
-            if (matcher.matches(glob, this)) {
+            if (matcher.test(glob)) {
                 if (result != null) {
                     throw new ItemAmbiguity("There are several objects of type " + type.getName() +
                             " matching: " + matcher);
@@ -215,10 +215,10 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
         return result;
     }
 
-    public Glob[] getSorted(GlobType type, Comparator<Glob> comparator, GlobMatcher matcher) {
+    public Glob[] getSorted(GlobType type, Comparator<Glob> comparator, Predicate<Glob> matcher) {
         int i = 0;
         for (Glob glob : globs.values(type)) {
-            if (matcher.matches(glob, this)) {
+            if (matcher.test(glob)) {
                 if (i >= tmp.length) {
                     Glob[] temporary = new Glob[tmp.length * 2];
                     System.arraycopy(tmp, 0, temporary, 0, tmp.length);
@@ -443,7 +443,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
         return true;
     }
 
-    public GlobList findByIndex(SingleFieldIndex index, Object value) {
+    public List<Glob> findByIndex(SingleFieldIndex index, Object value) {
         return indexManager.getAssociatedTable(index).findByIndex(value);
     }
 
@@ -512,7 +512,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
         notifyListeners(true);
     }
 
-    public void delete(GlobList list) throws OperationDenied {
+    public void deleteGlobs(Collection<Glob> list) throws OperationDenied {
         if (list.isEmpty()) {
             return;
         }
@@ -552,8 +552,8 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
         }
     }
 
-    public void delete(GlobType type, GlobMatcher matcher) throws OperationDenied {
-        delete(getAll(type, matcher));
+    public void delete(GlobType type, Predicate<Glob> matcher) throws OperationDenied {
+        deleteGlobs(getAll(type, matcher));
     }
 
     public void deleteAll(GlobType... types) throws OperationDenied {
@@ -661,7 +661,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
         }
     }
 
-    public void reset(GlobList newGlobs, GlobType... changedTypes) {
+    public void reset(Collection<Glob> newGlobs, GlobType... changedTypes) {
         startChangeSet();
         try {
             Set<GlobType> typesList = new HashSet<GlobType>(Arrays.asList(changedTypes));
@@ -705,7 +705,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
         actions.add(action);
     }
 
-    public void add(GlobList globs) {
+    public void add(Collection<Glob> globs) {
         for (Glob glob : globs) {
             add(glob);
         }

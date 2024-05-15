@@ -2,12 +2,10 @@ package org.globsframework.model.indexing.indices;
 
 import org.globsframework.metamodel.fields.Field;
 import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
 import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.indexing.IndexedTable;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class DefaultUniqueIndex implements IndexedTable {
     private Field field;
@@ -37,22 +35,22 @@ public class DefaultUniqueIndex implements IndexedTable {
         if (put != null) {
             index.put(glob.getValue(field), put);
             throw new RuntimeException("Should be an unique index\n" +
-                                       "- value: " + glob.getValue(field) + "\n" +
-                                       "- field: " + field.getName() + "\n" +
-                                       "- type: " + field.getGlobType() + "\n" +
-                                       "- new: \n " +
-                                       GlobPrinter.toString(glob) + "\n" +
-                                       "- old: \n " +
-                                       GlobPrinter.toString(put));
+                    "- value: " + glob.getValue(field) + "\n" +
+                    "- field: " + field.getName() + "\n" +
+                    "- type: " + field.getGlobType() + "\n" +
+                    "- new: \n " +
+                    GlobPrinter.toString(glob) + "\n" +
+                    "- old: \n " +
+                    GlobPrinter.toString(put));
         }
     }
 
-    public GlobList findByIndex(Object value) {
+    public List<Glob> findByIndex(Object value) {
         Glob glob = index.get(value);
         if (glob == null) {
-            return new GlobList();
+            return new ArrayList<>();
         }
-        return new GlobList(glob);
+        return new ArrayList<>(List.of(glob));
     }
 
     public boolean remove(Glob glob) {

@@ -23,7 +23,8 @@ public interface GlobFactoryService {
         public DispatchGlobFactoryService() {
             String className = System.getProperty("org.globsframework.builder", DefaultGlobFactoryService.class.getName());
             try {
-                specialized = (GlobFactoryService) Class.forName(className).newInstance();
+                specialized = (GlobFactoryService) Class.forName(className)
+                        .getDeclaredConstructor().newInstance();
             } catch (Exception e) {
                 throw new RuntimeException("fail to load" + className, e);
             }

@@ -3,8 +3,13 @@ package org.globsframework.model;
 import org.globsframework.model.repository.*;
 import org.globsframework.utils.exceptions.ExceptionHandler;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+
 public class GlobRepositoryBuilder {
-    private GlobList globList = new GlobList();
+    private List<Glob> globList = new ArrayList<>();
     private final GlobIdGenerator idGenerator;
     private ExceptionHandler exceptionHanlder;
 
@@ -30,11 +35,11 @@ public class GlobRepositoryBuilder {
     }
 
     public GlobRepositoryBuilder add(Glob... globs) {
-        globList.addAll(globs);
+        globList.addAll(Arrays.asList(globs));
         return this;
     }
 
-    public GlobRepositoryBuilder add(GlobList globs) {
+    public GlobRepositoryBuilder add(Collection<Glob> globs) {
         globList.addAll(globs);
         return this;
     }
@@ -42,9 +47,6 @@ public class GlobRepositoryBuilder {
     public GlobRepository get() {
         DefaultGlobRepository repository = new DefaultGlobRepository(idGenerator);
         repository.add(globList);
-        if (idGenerator instanceof DefaultCheckedGlobIdGenerator) {
-            ((DefaultCheckedGlobIdGenerator)idGenerator).setRepository(repository);
-        }
         if (exceptionHanlder != null) {
             return new StrictGlobRepository(repository, exceptionHanlder);
         }

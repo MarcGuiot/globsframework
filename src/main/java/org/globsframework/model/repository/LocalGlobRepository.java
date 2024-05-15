@@ -1,26 +1,22 @@
 package org.globsframework.model.repository;
 
 import org.globsframework.metamodel.GlobType;
-import org.globsframework.model.ChangeSet;
-import org.globsframework.model.ChangeSetListener;
-import org.globsframework.model.GlobList;
-import org.globsframework.model.GlobRepository;
+import org.globsframework.model.*;
 import org.globsframework.model.utils.ChangeSetAggregator;
 import org.globsframework.utils.exceptions.InvalidState;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class LocalGlobRepository extends GlobRepositoryDecorator {
 
     private GlobRepository reference;
     private List<GlobType> globTypes;
-    private GlobList globs;
+    private Collection<Glob> globs;
     private ChangeSetAggregator aggregator;
 
     LocalGlobRepository(GlobRepository reference, GlobRepository temporary,
-                        List<GlobType> globTypes, GlobList globs) {
+                        List<GlobType> globTypes, Collection<Glob> globs) {
         super(temporary);
         this.reference = reference;
         this.globTypes = globTypes;
@@ -50,12 +46,12 @@ public class LocalGlobRepository extends GlobRepositoryDecorator {
 
     public void rollback() {
         aggregator.dispose();
-        GlobList list = reference.getAll(globTypes.toArray(new GlobType[globTypes.size()]));
+        ArrayList<Glob> list = new ArrayList<>(reference.getAll(globTypes.toArray(new GlobType[globTypes.size()])));
         list.addAll(globs);
         Set<GlobType> globTypes = new HashSet<GlobType>(this.globTypes);
-        globTypes.addAll(list.getTypes());
+        globTypes.addAll(list.stream().map(Glob::getType).collect(Collectors.toSet()));
         globTypes.addAll(getRepository().getTypes());
-        getRepository().reset(list, globTypes.toArray(new GlobType[globTypes.size()]));
+        getRepository().reset(list, globTypes.toArray(new GlobType[0]));
         aggregator = new ChangeSetAggregator(getRepository());
     }
 

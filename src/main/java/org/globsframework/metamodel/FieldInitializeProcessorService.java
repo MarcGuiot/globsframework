@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface FieldInitializeProcessorService {
 
-    List<FieldInitializeProcessor> get(Field field);
+    List<FieldInitializeProcessor<?>> get(Field field);
 
     <T> void add(Class<T> type, FieldInitializeProcessor<T> processor) throws ServiceAlreadyUsedException;
 
