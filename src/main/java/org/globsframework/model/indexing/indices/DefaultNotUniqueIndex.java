@@ -2,14 +2,9 @@ package org.globsframework.model.indexing.indices;
 
 import org.globsframework.metamodel.fields.Field;
 import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
 import org.globsframework.model.indexing.IndexedTable;
-import org.globsframework.model.utils.EmptyGlobList;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class DefaultNotUniqueIndex implements IndexedTable {
     private Field field;
@@ -39,20 +34,16 @@ public class DefaultNotUniqueIndex implements IndexedTable {
 
     public void add(Glob glob) {
         Object value = glob.getValue(field);
-        Set<Glob> newSet = index.get(value);
-        if (newSet == null) {
-            newSet = new HashSet<Glob>();
-            index.put(value, newSet);
-        }
+        Set<Glob> newSet = index.computeIfAbsent(value, k -> new HashSet<Glob>());
         newSet.add(glob);
     }
 
-    public GlobList findByIndex(Object value) {
+    public List<Glob> findByIndex(Object value) {
         Set<Glob> globs = index.get(value);
         if (globs == null) {
-            return new EmptyGlobList();
+            return new ArrayList<>();
         }
-        return new GlobList(globs);
+        return new ArrayList<>(globs);
     }
 
     public boolean remove(Glob glob) {

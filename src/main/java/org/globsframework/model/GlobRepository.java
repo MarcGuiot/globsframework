@@ -4,10 +4,10 @@ import org.globsframework.metamodel.fields.Field;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.links.Link;
 import org.globsframework.model.repository.GlobIdGenerator;
-import org.globsframework.model.utils.GlobMatcher;
 import org.globsframework.utils.exceptions.*;
 
 import java.util.Collection;
+import java.util.function.Predicate;
 
 public interface GlobRepository extends ReadOnlyGlobRepository {
 
@@ -50,10 +50,10 @@ public interface GlobRepository extends ReadOnlyGlobRepository {
     void delete(Collection<Key> keys)
         throws ItemNotFound, OperationDenied;
 
-    void delete(GlobList list)
+    void deleteGlobs(Collection<Glob> list)
         throws OperationDenied;
 
-    void delete(GlobType type, GlobMatcher matcher)
+    void delete(GlobType type, Predicate<Glob> matcher)
         throws OperationDenied;
 
     void deleteAll(GlobType... types)
@@ -65,7 +65,7 @@ public interface GlobRepository extends ReadOnlyGlobRepository {
      * A {@link ChangeSetListener#globsReset(GlobRepository, java.util.Set)} notification
      * is sent after the reset is performed.
      */
-    void reset(GlobList newGlobs, GlobType... changedTypes);
+    void reset(Collection<Glob> newGlobs, GlobType... changedTypes);
 
     void apply(ChangeSet changeSet) throws InvalidParameter;
 

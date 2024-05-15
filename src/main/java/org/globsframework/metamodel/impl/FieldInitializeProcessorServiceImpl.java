@@ -8,10 +8,10 @@ import java.lang.reflect.Field;
 import java.util.List;
 
 public class FieldInitializeProcessorServiceImpl implements FieldInitializeProcessorService {
-    private MultiMap<Class, FieldInitializeProcessor> fieldProcessor = new MultiMap<>();
+    private final MultiMap<Class<?>, FieldInitializeProcessor<?>> fieldProcessor = new MultiMap<>();
     private boolean getCalled = false;
 
-    public List<FieldInitializeProcessor> get(Field field) {
+    public List<FieldInitializeProcessor<?>> get(Field field) {
         getCalled = true;
         return fieldProcessor.get(field.getType());
     }

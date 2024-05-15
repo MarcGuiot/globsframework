@@ -5,7 +5,6 @@ import org.globsframework.metamodel.GlobModel;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
 import org.globsframework.model.MutableGlob;
 import org.globsframework.saxstack.parser.DefaultXmlNode;
 import org.globsframework.saxstack.parser.ExceptionHolder;
@@ -47,7 +46,7 @@ public class XmlGlobStreamReader {
 
     private static class XmlDbStream implements DbStream {
         private Set<GlobType> globType = new HashSet<>();
-        private GlobList globs = new GlobList();
+        private List<Glob> globs = new ArrayList<>();
         private Iterator<Glob> iterator;
         private Glob current;
         private Map<Field, Accessor> accessors = new HashMap();

@@ -8,7 +8,6 @@ import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.impl.DefaultGlobTypeBuilder;
 import org.globsframework.metamodel.type.*;
 import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
 import org.globsframework.model.MutableGlob;
 
 import java.util.*;
@@ -29,7 +28,7 @@ public class GlobTypeToGlob {
         List<Glob> types = new ArrayList<>();
         types.add(t);
 
-        List<Glob> fields = new GlobList(type.getFieldCount());
+        List<Glob> fields = new ArrayList<>(type.getFieldCount());
         for (Field field : type.getFields()) {
             fields.add(
                     switch (field.getDataType()) {

@@ -2,12 +2,15 @@ package org.globsframework.model.utils;
 
 import org.globsframework.metamodel.DummyObject;
 import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
 import org.globsframework.model.Key;
 import org.globsframework.model.KeyBuilder;
 import org.globsframework.model.repository.DefaultGlobRepository;
 import org.globsframework.utils.TestUtils;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -26,16 +29,16 @@ public class GlobUtilsTest {
         Glob g2 = repository.create(k2);
         Glob g3 = repository.create(k3);
         Glob g4 = repository.create(k4);
-        checkTwoWay(new GlobList(g1, g2, g3), new GlobList(g1, g2, g3));
-        checkTwoWay(new GlobList(g1, g2), new GlobList(g1, g2, g3));
-        checkTwoWay(new GlobList(), new GlobList(g1, g2, g3));
-        checkTwoWay(new GlobList(), new GlobList());
-        checkTwoWay(new GlobList(g1), new GlobList(g1, g2, g3));
-        checkTwoWay(new GlobList(g1), new GlobList(g2, g1, g3));
-        checkTwoWay(new GlobList(g1, g2, g3), new GlobList(g1, g2));
-        checkTwoWay(new GlobList(g1, g3, g2), new GlobList(g1, g2, g3));
-        checkTwoWay(new GlobList(g1), new GlobList(g2));
-        checkTwoWay(new GlobList(g1, g2), new GlobList(g3, g4));
+        checkTwoWay(List.of(g1, g2, g3), List.of(g1, g2, g3));
+        checkTwoWay(List.of(g1, g2), List.of(g1, g2, g3));
+        checkTwoWay(List.of(), List.of(g1, g2, g3));
+        checkTwoWay(List.of(), List.of());
+        checkTwoWay(List.of(g1), List.of(g1, g2, g3));
+        checkTwoWay(List.of(g1), List.of(g2, g1, g3));
+        checkTwoWay(List.of(g1, g2, g3), List.of(g1, g2));
+        checkTwoWay(List.of(g1, g3, g2), List.of(g1, g2, g3));
+        checkTwoWay(List.of(g1), List.of(g2));
+        checkTwoWay(List.of(g1, g2), List.of(g3, g4));
     }
 
     @Test
@@ -48,17 +51,25 @@ public class GlobUtilsTest {
         Glob g1 = repository.create(k1);
         Glob g2 = repository.create(k2);
         Glob g3 = repository.create(k3);
-        checkTwoWay(new GlobList(g1, g2, g3), new GlobList(null, g2, g3));
-        checkTwoWay(new GlobList(g1, g2), new GlobList(g2, null, g3));
+        List<Glob> l1 = new ArrayList<>();
+        l1.add(null);
+        l1.add(g2);
+        l1.add(g3);
+        List<Glob> l2 = new ArrayList<>();
+        l2.add(g2);
+        l2.add(null);
+        l2.add(g2);
+        checkTwoWay(List.of(g1, g2, g3), l1);
+        checkTwoWay(List.of(g1, g2), l2);
     }
 
-    private void checkTwoWay(GlobList from, GlobList to) {
+    private void checkTwoWay(Collection<Glob> from, Collection<Glob> to) {
         check(from, to);
         check(to, from);
     }
 
-    private void check(GlobList from, GlobList to) {
-        final GlobList actual = new GlobList(from);
+    private void check(Collection<Glob> from, Collection<Glob> to) {
+        final List<Glob> actual = new ArrayList<>(from);
         GlobUtils.diff(from, to, new GlobUtils.DiffFunctor<Glob>() {
             public void add(Glob glob, int index) {
                 actual.add(index, glob);

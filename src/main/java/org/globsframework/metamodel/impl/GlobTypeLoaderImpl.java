@@ -29,12 +29,12 @@ import java.util.stream.IntStream;
 public class GlobTypeLoaderImpl implements GlobTypeLoader {
     private DefaultGlobType type;
     private DefaultFieldFactory fieldFactory;
-    private boolean toNiceName;
-    private String[] modelName;
-    private Class<?> targetClass;
-    private String name;
-    private FieldInitializeProcessorService fieldInitializeProcessorService;
-    private Map<Class, Object> registered = new ConcurrentHashMap<>();
+    private final boolean toNiceName;
+    private final String[] modelName;
+    private final Class<?> targetClass;
+    private final String name;
+    private final FieldInitializeProcessorService fieldInitializeProcessorService;
+    private final Map<Class<?>, Object> registered = new ConcurrentHashMap<>();
 
     public GlobTypeLoaderImpl(Class<?> targetClass, String[] modelName, String name, boolean toNiceName,
                               FieldInitializeProcessorService fieldInitializeProcessorService) {
@@ -51,8 +51,8 @@ public class GlobTypeLoaderImpl implements GlobTypeLoader {
         processFields(targetClass);
         processIndex(targetClass);
         type.completeInit();
-        for (Map.Entry<Class, Object> entry : registered.entrySet()) {
-            type.register(entry.getKey(), entry.getValue());
+        for (Map.Entry<Class<?>, Object> entry : registered.entrySet()) {
+            type.register(((Class) entry.getKey()), entry.getValue());
         }
         processOther(targetClass);
         return this;
@@ -64,7 +64,7 @@ public class GlobTypeLoaderImpl implements GlobTypeLoader {
 
     private void processOther(Class<?> targetClass) {
         for (java.lang.reflect.Field classField : targetClass.getFields()) {
-            List<FieldInitializeProcessor> processor = fieldInitializeProcessorService.get(classField);
+            List<FieldInitializeProcessor<?>> processor = fieldInitializeProcessorService.get(classField);
             if (processor != null && !processor.isEmpty()) {
                 DefaultAnnotations annotations = new DefaultAnnotations();
                 processFieldAnnotations(classField, annotations);
@@ -85,9 +85,10 @@ public class GlobTypeLoaderImpl implements GlobTypeLoader {
         }
     }
 
-    private void applyProcessor(Class<?> targetClass, java.lang.reflect.Field classField, List<FieldInitializeProcessor> processor,
+    private void applyProcessor(Class<?> targetClass, java.lang.reflect.Field classField,
+                                List<FieldInitializeProcessor<?>> processor,
                                 MutableAnnotations annotations) {
-        for (FieldInitializeProcessor fieldInitializeProcessor : processor) {
+        for (FieldInitializeProcessor<?> fieldInitializeProcessor : processor) {
             Object value = fieldInitializeProcessor.getValue(type, annotations, classField.getAnnotations());
             if (value instanceof MutableAnnotations) {
                 MutableAnnotations mutableAnnotations = (MutableAnnotations)value;

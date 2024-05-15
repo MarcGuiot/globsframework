@@ -16,6 +16,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.globsframework.utils.Utils.sort;
 
@@ -45,7 +46,7 @@ public class GlobPrinter {
         GlobPrinter.init(repository).showOnly(types).run();
     }
 
-    public static void print(GlobList list) {
+    public static void print(List<Glob> list) {
         GlobPrinter.init(list).run();
     }
 
@@ -53,12 +54,12 @@ public class GlobPrinter {
         return new GlobPrinter(repository);
     }
 
-    public static GlobPrinter init(GlobList list) {
+    public static GlobPrinter init(List<Glob> list) {
         return new GlobPrinter(list);
     }
 
     public static GlobPrinter init(Glob glob) {
-        GlobList list = new GlobList();
+        List<Glob> list = new ArrayList<>();
         list.add(glob);
         return new GlobPrinter(list);
     }
@@ -84,7 +85,7 @@ public class GlobPrinter {
 
     private GlobRepository repository;
     private Set<GlobType> types;
-    private GlobList globs;
+    private List<Glob> globs;
     private String[] filters;
     private List<Field> excludedFields = new ArrayList<Field>();
     private Map<GlobType, Field[]> fieldsForType = new HashMap<GlobType, Field[]>();
@@ -95,8 +96,8 @@ public class GlobPrinter {
         this.globs = repository.getAll();
     }
 
-    private GlobPrinter(GlobList list) {
-        this.types = list.getTypes();
+    private GlobPrinter(List<Glob> list) {
+        this.types = list.stream().map(Glob::getType).collect(Collectors.toSet());
         this.globs = list;
     }
 
@@ -125,7 +126,7 @@ public class GlobPrinter {
     public void run(Writer writer) {
         PrintWriter printer = new PrintWriter(writer);
         for (GlobType type : sort(types, GlobTypeComparator.INSTANCE)) {
-            printType(type, globs.getAll(type), printer);
+            printType(type, globs.stream().filter(glob -> glob.getType() == type).toList(), printer);
         }
     }
 
@@ -139,7 +140,7 @@ public class GlobPrinter {
         return writer.toString();
     }
 
-    private void printType(GlobType type, GlobList globs, PrintWriter printer) {
+    private void printType(GlobType type, Collection<Glob> globs, PrintWriter printer) {
         printer.println("===== " + type.getName() + " ======");
 
         List<Object[]> rows = new ArrayList<Object[]>();

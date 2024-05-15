@@ -755,7 +755,7 @@ public class IntHashMap<V> implements Cloneable, Serializable {
          * @see Iterator#next()
          */
         public Integer next() {
-            return new Integer(nextEntry().getKey());
+            return Integer.valueOf(nextEntry().getKey());
         }
     }
 

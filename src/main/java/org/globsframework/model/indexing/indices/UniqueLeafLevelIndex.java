@@ -2,14 +2,12 @@ package org.globsframework.model.indexing.indices;
 
 import org.globsframework.metamodel.fields.Field;
 import org.globsframework.model.Glob;
-import org.globsframework.model.GlobList;
 import org.globsframework.model.GlobRepository;
 import org.globsframework.model.format.GlobPrinter;
 import org.globsframework.model.utils.GlobFunctor;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Stream;
 
 public class UniqueLeafLevelIndex implements UpdatableMultiFieldIndex, GlobRepository.MultiFieldIndexed {
@@ -20,12 +18,8 @@ public class UniqueLeafLevelIndex implements UpdatableMultiFieldIndex, GlobRepos
         this.field = field;
     }
 
-    public GlobList getGlobs() {
-        GlobList globs = new GlobList();
-        for (Glob glob : indexedGlob.values()) {
-            globs.add(glob);
-        }
-        return globs;
+    public List<Glob> getGlobs() {
+        return new ArrayList<>(indexedGlob.values());
     }
 
     public Stream<Glob> streamByIndex(Object value) {
@@ -38,19 +32,17 @@ public class UniqueLeafLevelIndex implements UpdatableMultiFieldIndex, GlobRepos
             for (Glob glob : indexedGlob.values()) {
                 functor.run(glob, repository);
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new UnexpectedApplicationState(e);
         }
     }
 
-    public GlobList findByIndex(Object value) {
+    public List<Glob> findByIndex(Object value) {
         Glob glob = indexedGlob.get(value);
         if (glob == null) {
-            return new GlobList();
-        }
-        else {
-            return new GlobList(glob);
+            return new ArrayList<>();
+        } else {
+            return new ArrayList<>(List.of(glob));
         }
     }
 
@@ -69,12 +61,12 @@ public class UniqueLeafLevelIndex implements UpdatableMultiFieldIndex, GlobRepos
 
     public GlobRepository.MultiFieldIndexed findByIndex(Field field, final Object value) {
         return new GlobRepository.MultiFieldIndexed() {
-            public GlobList getGlobs() {
+            public List<Glob> getGlobs() {
                 return UniqueLeafLevelIndex.this.findByIndex(value);
             }
 
-            public GlobList findByIndex(Object value) {
-                return new GlobList();
+            public List<Glob> findByIndex(Object value) {
+                return new ArrayList<>();
             }
 
             public GlobRepository.MultiFieldIndexed findByIndex(Field field, Object value) {
@@ -87,8 +79,7 @@ public class UniqueLeafLevelIndex implements UpdatableMultiFieldIndex, GlobRepos
                     if (glob != null) {
                         functor.run(glob, repository);
                     }
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     throw new UnexpectedApplicationState(e);
                 }
             }
@@ -102,8 +93,7 @@ public class UniqueLeafLevelIndex implements UpdatableMultiFieldIndex, GlobRepos
                 indexedGlob.put(oldValue, oldGlob);
             }
             indexedGlob.put(newValue, glob);
-        }
-        else {
+        } else {
             indexedGlob.put(glob.getValue(this.field), glob);
         }
     }
@@ -115,8 +105,7 @@ public class UniqueLeafLevelIndex implements UpdatableMultiFieldIndex, GlobRepos
                 indexedGlob.put(value, oldGlob);
             }
             return indexedGlob.isEmpty();
-        }
-        else {
+        } else {
             return remove(glob);
         }
     }
@@ -126,12 +115,12 @@ public class UniqueLeafLevelIndex implements UpdatableMultiFieldIndex, GlobRepos
         Glob oldGlob = indexedGlob.put(value, glob);
         if (oldGlob != null) {
             throw new RuntimeException("Should be an unique index\n" +
-                                       "- field: " + field.getName() + "\n" +
-                                       "- type: " + field.getGlobType() + "\n" +
-                                       "- new: \n " +
-                                       GlobPrinter.toString(glob) + "\n" +
-                                       "- old: \n " +
-                                       GlobPrinter.toString(oldGlob));
+                    "- field: " + field.getName() + "\n" +
+                    "- type: " + field.getGlobType() + "\n" +
+                    "- new: \n " +
+                    GlobPrinter.toString(glob) + "\n" +
+                    "- old: \n " +
+                    GlobPrinter.toString(oldGlob));
         }
     }
 }
