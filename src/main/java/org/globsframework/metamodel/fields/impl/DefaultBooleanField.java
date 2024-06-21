@@ -10,12 +10,12 @@ public class DefaultBooleanField extends AbstractField implements BooleanField {
         super(name, globType, Boolean.class, index, keyIndex, isKeyField, defaultValue, DataType.Boolean);
     }
 
-    public <T extends FieldVisitor> T visit(T visitor) throws Exception {
+    public <T extends FieldVisitor> T accept(T visitor) throws Exception {
         visitor.visitBoolean(this);
         return visitor;
     }
 
-    public <T extends FieldVisitor> T safeVisit(T visitor) {
+    public <T extends FieldVisitor> T safeAccept(T visitor) {
         try {
             visitor.visitBoolean(this);
             return visitor;
@@ -26,7 +26,7 @@ public class DefaultBooleanField extends AbstractField implements BooleanField {
         }
     }
 
-    public <T extends FieldVisitorWithContext<C>, C> T safeVisit(T visitor, C context) {
+    public <T extends FieldVisitorWithContext<C>, C> T safeAccept(T visitor, C context) {
         try {
             visitor.visitBoolean(this, context);
             return visitor;
@@ -38,19 +38,19 @@ public class DefaultBooleanField extends AbstractField implements BooleanField {
     }
 
     @Override
-    public <T extends FieldVisitorWithContext<C>, C> T visit(T visitor, C context) throws Exception {
+    public <T extends FieldVisitorWithContext<C>, C> T accept(T visitor, C context) throws Exception {
         visitor.visitBoolean(this, context);
         return visitor;
     }
 
     @Override
-    public <T extends FieldVisitorWithTwoContext<C, D>, C, D> T visit(T visitor, C ctx1, D ctx2) throws Exception {
+    public <T extends FieldVisitorWithTwoContext<C, D>, C, D> T accept(T visitor, C ctx1, D ctx2) throws Exception {
         visitor.visitBoolean(this, ctx1, ctx2);
         return visitor;
     }
 
     @Override
-    public <T extends FieldVisitorWithTwoContext<C, D>, C, D> T safeVisit(T visitor, C ctx1, D ctx2) {
+    public <T extends FieldVisitorWithTwoContext<C, D>, C, D> T safeAccept(T visitor, C ctx1, D ctx2) {
         try {
             visitor.visitBoolean(this, ctx1, ctx2);
             return visitor;
@@ -61,11 +61,11 @@ public class DefaultBooleanField extends AbstractField implements BooleanField {
         }
     }
 
-    public void visit(FieldValueVisitor visitor, Object value) throws Exception {
+    public void accept(FieldValueVisitor visitor, Object value) throws Exception {
         visitor.visitBoolean(this, (Boolean) value);
     }
 
-    public void safeVisit(FieldValueVisitor visitor, Object value) {
+    public void safeAccept(FieldValueVisitor visitor, Object value) {
         try {
             visitor.visitBoolean(this, (Boolean) value);
         } catch (RuntimeException e) {
@@ -75,7 +75,7 @@ public class DefaultBooleanField extends AbstractField implements BooleanField {
         }
     }
 
-    public <T extends FieldValueVisitorWithContext<Context>, Context> T safeVisitValue(T visitor, Object value, Context context) {
+    public <T extends FieldValueVisitorWithContext<Context>, Context> T safeAcceptValue(T visitor, Object value, Context context) {
         try {
             visitor.visitBoolean(this, (Boolean) value, context);
             return visitor;

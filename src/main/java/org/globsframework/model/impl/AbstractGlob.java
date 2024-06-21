@@ -63,7 +63,7 @@ public abstract class AbstractGlob extends AbstractFieldValues implements Glob, 
 
     public <T extends FieldValueVisitor> T acceptOnKeyField(T functor) throws Exception {
         for (Field field : getType().getFields()) {
-            field.visit(functor, doGet(field));
+            field.accept(functor, doGet(field));
         }
         return functor;
     }
@@ -71,7 +71,7 @@ public abstract class AbstractGlob extends AbstractFieldValues implements Glob, 
     public <T extends FieldValueVisitor> T safeAcceptOnKeyField(T functor) {
         try {
             for (Field field : getType().getKeyFields()) {
-                field.visit(functor, doGet(field));
+                field.accept(functor, doGet(field));
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -126,7 +126,7 @@ public abstract class AbstractGlob extends AbstractFieldValues implements Glob, 
 
             public <T extends FieldValueVisitor> T accept(T functor) throws Exception {
                 for (Field field : type.getKeyFields()) {
-                    field.visit(functor, AbstractGlob.this.doGet(field));
+                    field.accept(functor, AbstractGlob.this.doGet(field));
                 }
                 return functor;
             }
@@ -211,7 +211,7 @@ public abstract class AbstractGlob extends AbstractFieldValues implements Glob, 
                     instantiate.setValue(field, null);
                 }
                 else {
-                    field.safeVisit(new FieldVisitor() {
+                    field.safeAccept(new FieldVisitor() {
                         public void visitInteger(IntegerField field) throws Exception {
                             instantiate.set(field, get(field));
                         }

@@ -26,26 +26,26 @@ public sealed interface Field extends MutableAnnotations
 
     boolean isRequired();
 
-    <T extends FieldVisitor> T visit(T visitor) throws Exception;
+    <T extends FieldVisitor> T accept(T visitor) throws Exception;
 
-    <T extends FieldVisitor> T safeVisit(T visitor);
+    <T extends FieldVisitor> T safeAccept(T visitor);
 
-    <T extends FieldVisitorWithContext<C>, C> T visit(T visitor, C context) throws Exception;
+    <T extends FieldVisitorWithContext<C>, C> T accept(T visitor, C context) throws Exception;
 
-    <T extends FieldVisitorWithContext<C>, C> T safeVisit(T visitor, C context);
+    <T extends FieldVisitorWithContext<C>, C> T safeAccept(T visitor, C context);
 
-    <T extends FieldVisitorWithTwoContext<C, D>, C, D> T visit(T visitor, C ctx1, D ctx2) throws Exception;
+    <T extends FieldVisitorWithTwoContext<C, D>, C, D> T accept(T visitor, C ctx1, D ctx2) throws Exception;
 
-    <T extends FieldVisitorWithTwoContext<C, D>, C, D> T safeVisit(T visitor, C ctx1, D ctx2);
+    <T extends FieldVisitorWithTwoContext<C, D>, C, D> T safeAccept(T visitor, C ctx1, D ctx2);
 
-    void visit(FieldValueVisitor visitor, Object value) throws Exception;
+    void accept(FieldValueVisitor visitor, Object value) throws Exception;
 
-    void safeVisit(FieldValueVisitor visitor, Object value);
+    void safeAccept(FieldValueVisitor visitor, Object value);
 
-    <T extends FieldValueVisitorWithContext<Context>, Context> T safeVisitValue(T visitor, Object value, Context context);
+    <T extends FieldValueVisitorWithContext<Context>, Context> T safeAcceptValue(T visitor, Object value, Context context);
 
-    default <T extends FieldValueVisitorWithContext<Context>, Context> T safeVisitValue(T visitor, FieldValuesAccessor value, Context context) {
-        return safeVisitValue(visitor, value.getValue(this), context);
+    default <T extends FieldValueVisitorWithContext<Context>, Context> T safeAcceptValue(T visitor, FieldValuesAccessor value, Context context) {
+        return safeAcceptValue(visitor, value.getValue(this), context);
     }
 
     DataType getDataType();

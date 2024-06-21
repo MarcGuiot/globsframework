@@ -28,10 +28,10 @@ public class DefaultGlobFactory implements GlobFactory {
         getAccessor = new GlobGetAccessor[type.getFieldCount()];
         setAccessor = new GlobSetAccessor[type.getFieldCount()];
         GetAccessorValueVisitor getAccessorValueVisitor = new GetAccessorValueVisitor();
-        type.streamFields().forEach(f -> getAccessor[f.getIndex()] = f.safeVisit(getAccessorValueVisitor).getAccessor);
+        type.streamFields().forEach(f -> getAccessor[f.getIndex()] = f.safeAccept(getAccessorValueVisitor).getAccessor);
 
         SetAccessorValueVisitor setAccessorValueVisitor = new SetAccessorValueVisitor();
-        type.streamFields().forEach(f -> setAccessor[f.getIndex()] = f.safeVisit(setAccessorValueVisitor).setAccessor);
+        type.streamFields().forEach(f -> setAccessor[f.getIndex()] = f.safeAccept(setAccessorValueVisitor).setAccessor);
     }
 
     public MutableGlob create() {
@@ -47,7 +47,7 @@ public class DefaultGlobFactory implements GlobFactory {
     public <T extends FieldVisitor> T accept(T visitor) throws Exception {
         Field[] fields = type.getFields();
         for (Field field : fields) {
-            field.visit(visitor);
+            field.accept(visitor);
         }
         return visitor;
     }
@@ -55,7 +55,7 @@ public class DefaultGlobFactory implements GlobFactory {
     public <T extends FieldVisitorWithContext<C>, C> T accept(T visitor, C context) throws Exception {
         Field[] fields = type.getFields();
         for (Field field : fields) {
-            field.visit(visitor, context);
+            field.accept(visitor, context);
         }
         return visitor;
     }
@@ -63,7 +63,7 @@ public class DefaultGlobFactory implements GlobFactory {
     public <T extends FieldVisitorWithTwoContext<C, D>, C, D> T accept(T visitor, C ctx1, D ctx2) throws Exception {
         Field[] fields = type.getFields();
         for (Field field : fields) {
-            field.visit(visitor, ctx1, ctx2);
+            field.accept(visitor, ctx1, ctx2);
         }
         return visitor;
     }

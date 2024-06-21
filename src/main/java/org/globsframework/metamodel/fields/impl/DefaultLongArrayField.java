@@ -12,12 +12,12 @@ public class DefaultLongArrayField extends AbstractField implements LongArrayFie
         super(name, globType, long[].class, index, keyIndex, isKeyField, defaultValue, DataType.LongArray);
     }
 
-    public <T extends FieldVisitor> T visit(T visitor) throws Exception {
+    public <T extends FieldVisitor> T accept(T visitor) throws Exception {
         visitor.visitLongArray(this);
         return visitor;
     }
 
-    public <T extends FieldVisitor> T safeVisit(T visitor) {
+    public <T extends FieldVisitor> T safeAccept(T visitor) {
         try {
             visitor.visitLongArray(this);
             return visitor;
@@ -28,7 +28,7 @@ public class DefaultLongArrayField extends AbstractField implements LongArrayFie
         }
     }
 
-    public <T extends FieldVisitorWithContext<C>, C> T safeVisit(T visitor, C context) {
+    public <T extends FieldVisitorWithContext<C>, C> T safeAccept(T visitor, C context) {
         try {
             visitor.visitLongArray(this, context);
             return visitor;
@@ -40,19 +40,19 @@ public class DefaultLongArrayField extends AbstractField implements LongArrayFie
     }
 
     @Override
-    public <T extends FieldVisitorWithContext<C>, C> T visit(T visitor, C context) throws Exception {
+    public <T extends FieldVisitorWithContext<C>, C> T accept(T visitor, C context) throws Exception {
         visitor.visitLongArray(this, context);
         return visitor;
     }
 
     @Override
-    public <T extends FieldVisitorWithTwoContext<C, D>, C, D> T visit(T visitor, C ctx1, D ctx2) throws Exception {
+    public <T extends FieldVisitorWithTwoContext<C, D>, C, D> T accept(T visitor, C ctx1, D ctx2) throws Exception {
         visitor.visitLongArray(this, ctx1, ctx2);
         return visitor;
     }
 
     @Override
-    public <T extends FieldVisitorWithTwoContext<C, D>, C, D> T safeVisit(T visitor, C ctx1, D ctx2) {
+    public <T extends FieldVisitorWithTwoContext<C, D>, C, D> T safeAccept(T visitor, C ctx1, D ctx2) {
         try {
             visitor.visitLongArray(this, ctx1, ctx2);
             return visitor;
@@ -63,11 +63,11 @@ public class DefaultLongArrayField extends AbstractField implements LongArrayFie
         }
     }
 
-    public void visit(FieldValueVisitor visitor, Object value) throws Exception {
+    public void accept(FieldValueVisitor visitor, Object value) throws Exception {
         visitor.visitLongArray(this, (long[]) value);
     }
 
-    public void safeVisit(FieldValueVisitor visitor, Object value) {
+    public void safeAccept(FieldValueVisitor visitor, Object value) {
         try {
             visitor.visitLongArray(this, (long[]) value);
         } catch (RuntimeException e) {
@@ -77,7 +77,7 @@ public class DefaultLongArrayField extends AbstractField implements LongArrayFie
         }
     }
 
-    public <T extends FieldValueVisitorWithContext<Context>, Context> T safeVisitValue(T visitor, Object value, Context context) {
+    public <T extends FieldValueVisitorWithContext<Context>, Context> T safeAcceptValue(T visitor, Object value, Context context) {
         try {
             visitor.visitLongArray(this, (long[]) value, context);
             return visitor;

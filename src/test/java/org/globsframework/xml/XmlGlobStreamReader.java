@@ -81,7 +81,7 @@ public class XmlGlobStreamReader {
                 globType.add(glob.getType());
                 for (Field field : glob.getType().getFields()) {
                     AccessorDataTypeVisitor dataTypeVisitor = new AccessorDataTypeVisitor(this);
-                    field.safeVisit(dataTypeVisitor);
+                    field.safeAccept(dataTypeVisitor);
                     accessors.put(field, dataTypeVisitor.getAccessor());
                 }
             }

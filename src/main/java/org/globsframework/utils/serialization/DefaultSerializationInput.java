@@ -33,7 +33,7 @@ public class DefaultSerializationInput implements SerializedInput {
         GlobType globType = model.getType(readUtf8String());
         MutableGlob mutableGlob = globType.instantiate();
         for (Field field : globType.getFields()) {
-            field.safeVisit(fieldVisitorInput, mutableGlob);
+            field.safeAccept(fieldVisitorInput, mutableGlob);
         }
         return mutableGlob;
     }
@@ -41,7 +41,7 @@ public class DefaultSerializationInput implements SerializedInput {
     public Glob readKnowGlob(GlobType type) {
         MutableGlob mutableGlob = type.instantiate();
         for (Field field : type.getFields()) {
-            field.safeVisit(fieldVisitorInput, mutableGlob);
+            field.safeAccept(fieldVisitorInput, mutableGlob);
         }
         return mutableGlob;
     }
@@ -83,7 +83,7 @@ public class DefaultSerializationInput implements SerializedInput {
         while (fieldCount != 0) {
             int fieldIndex = readNotNullInt();
             Field field = type.getField(fieldIndex);
-            field.safeVisit(fieldReader);
+            field.safeAccept(fieldReader);
             fieldCount--;
         }
         return builder.get();
@@ -96,7 +96,7 @@ public class DefaultSerializationInput implements SerializedInput {
         while (fieldCount != 0) {
             int fieldIndex = readNotNullInt();
             Field field = type.getField(fieldIndex);
-            field.safeVisit(fieldReader);
+            field.safeAccept(fieldReader);
             fieldCount--;
         }
         return builder.get();

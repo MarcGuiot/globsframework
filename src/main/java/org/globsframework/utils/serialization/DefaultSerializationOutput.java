@@ -30,14 +30,14 @@ public class DefaultSerializationOutput implements SerializedOutput, ChangeSetVi
         writeUtf8String(glob.getType().getName());
         OutputStreamFieldVisitor visitor = new OutputStreamFieldVisitor(glob);
         for (Field field : glob.getType().getFields()) {
-            field.safeVisit(visitor);
+            field.safeAccept(visitor);
         }
     }
 
     public void writeKnowGlob(Glob glob) {
         OutputStreamFieldVisitor visitor = new OutputStreamFieldVisitor(glob);
         for (Field field : glob.getType().getFields()) {
-            field.safeVisit(visitor);
+            field.safeAccept(visitor);
         }
     }
 
@@ -273,7 +273,7 @@ public class DefaultSerializationOutput implements SerializedOutput, ChangeSetVi
     private class FieldValuesFunctor implements FieldValues.Functor, FieldValueVisitor {
         public void process(Field field, Object value) {
             write(field.getIndex());
-            field.safeVisit(this, value);
+            field.safeAccept(this, value);
         }
 
         public void visitInteger(IntegerField field, Integer value) {
@@ -410,8 +410,8 @@ public class DefaultSerializationOutput implements SerializedOutput, ChangeSetVi
 
         public void process(Field field, Object value, Object previousValue) {
             write(field.getIndex());
-            field.safeVisit(this, value);
-            field.safeVisit(this, previousValue);
+            field.safeAccept(this, value);
+            field.safeAccept(this, previousValue);
         }
 
         public void visitInteger(IntegerField field, Integer value) {

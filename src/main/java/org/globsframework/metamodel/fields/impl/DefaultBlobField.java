@@ -13,12 +13,12 @@ public class DefaultBlobField extends AbstractField implements BlobField {
         super(name, globType, byte[].class, index, -1, false, null, DataType.Bytes);
     }
 
-    public <T extends FieldVisitor> T visit(T visitor) throws Exception {
+    public <T extends FieldVisitor> T accept(T visitor) throws Exception {
         visitor.visitBlob(this);
         return visitor;
     }
 
-    public <T extends FieldVisitor> T safeVisit(T visitor) {
+    public <T extends FieldVisitor> T safeAccept(T visitor) {
         try {
             visitor.visitBlob(this);
             return visitor;
@@ -31,7 +31,7 @@ public class DefaultBlobField extends AbstractField implements BlobField {
         }
     }
 
-    public <T extends FieldVisitorWithContext<C>, C> T safeVisit(T visitor, C context) {
+    public <T extends FieldVisitorWithContext<C>, C> T safeAccept(T visitor, C context) {
         try {
             visitor.visitBlob(this, context);
             return visitor;
@@ -45,19 +45,19 @@ public class DefaultBlobField extends AbstractField implements BlobField {
     }
 
     @Override
-    public <T extends FieldVisitorWithContext<C>, C> T visit(T visitor, C context) throws Exception {
+    public <T extends FieldVisitorWithContext<C>, C> T accept(T visitor, C context) throws Exception {
         visitor.visitBlob(this, context);
         return visitor;
     }
 
     @Override
-    public <T extends FieldVisitorWithTwoContext<C, D>, C, D> T visit(T visitor, C ctx1, D ctx2) throws Exception {
+    public <T extends FieldVisitorWithTwoContext<C, D>, C, D> T accept(T visitor, C ctx1, D ctx2) throws Exception {
         visitor.visitBlob(this, ctx1, ctx2);
         return visitor;
     }
 
     @Override
-    public <T extends FieldVisitorWithTwoContext<C, D>, C, D> T safeVisit(T visitor, C ctx1, D ctx2) {
+    public <T extends FieldVisitorWithTwoContext<C, D>, C, D> T safeAccept(T visitor, C ctx1, D ctx2) {
         try {
             visitor.visitBlob(this, ctx1, ctx2);
             return visitor;
@@ -70,11 +70,11 @@ public class DefaultBlobField extends AbstractField implements BlobField {
         }
     }
 
-    public void visit(FieldValueVisitor visitor, Object value) throws Exception {
+    public void accept(FieldValueVisitor visitor, Object value) throws Exception {
         visitor.visitBlob(this, (byte[])value);
     }
 
-    public void safeVisit(FieldValueVisitor visitor, Object value) {
+    public void safeAccept(FieldValueVisitor visitor, Object value) {
         try {
             visitor.visitBlob(this, (byte[])value);
         }
@@ -86,7 +86,7 @@ public class DefaultBlobField extends AbstractField implements BlobField {
         }
     }
 
-    public <T extends FieldValueVisitorWithContext<Context>, Context> T safeVisitValue(T visitor, Object value, Context context) {
+    public <T extends FieldValueVisitorWithContext<Context>, Context> T safeAcceptValue(T visitor, Object value, Context context) {
         try {
             visitor.visitBlob(this, (byte[])value, context);
             return visitor;

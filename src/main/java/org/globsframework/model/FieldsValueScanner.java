@@ -16,7 +16,7 @@ public interface FieldsValueScanner {
 
             public <T extends FieldValueVisitor> T accept(T functor) throws Exception {
                 for (FieldValue fieldValue : fieldValues) {
-                    fieldValue.getField().safeVisit(functor, fieldValue.getValue());
+                    fieldValue.getField().safeAccept(functor, fieldValue.getValue());
                 }
                 return functor;
             }

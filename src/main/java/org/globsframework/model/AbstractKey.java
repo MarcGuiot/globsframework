@@ -19,7 +19,7 @@ public abstract class AbstractKey extends AbstractFieldValues implements Mutable
     public <T extends FieldValueVisitor> T accept(T functor) throws Exception {
         Field[] fields = getGlobType().getKeyFields();
         for (Field field : fields) {
-            field.visit(functor, doGetValue(field));
+            field.accept(functor, doGetValue(field));
         }
         return functor;
     }
@@ -27,7 +27,7 @@ public abstract class AbstractKey extends AbstractFieldValues implements Mutable
     public <T extends FieldValueVisitor> T acceptOnKeyField(T functor) throws Exception {
         Field[] keyFields = getGlobType().getKeyFields();
         for (Field keyField : keyFields) {
-            keyField.visit(functor, doGetValue(keyField));
+            keyField.accept(functor, doGetValue(keyField));
         }
         return functor;
     }
@@ -36,7 +36,7 @@ public abstract class AbstractKey extends AbstractFieldValues implements Mutable
         try {
             Field[] keyFields = getGlobType().getKeyFields();
             for (Field keyField : keyFields) {
-                keyField.visit(functor, doGetValue(keyField));
+                keyField.accept(functor, doGetValue(keyField));
             }
             return functor;
         } catch (RuntimeException e) {

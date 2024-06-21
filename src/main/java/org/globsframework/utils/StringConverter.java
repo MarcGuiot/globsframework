@@ -9,7 +9,7 @@ import java.time.ZonedDateTime;
 
 public class StringConverter {
     public static FromStringConverter createConverter(Field field, String arraySeparator) {
-        return field.safeVisit(new FieldVisitor.AbstractWithErrorVisitor() {
+        return field.safeAccept(new FieldVisitor.AbstractWithErrorVisitor() {
             FromStringConverter fromStringConverter1;
 
             public void visitInteger(IntegerField field1) throws Exception {

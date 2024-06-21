@@ -57,8 +57,8 @@ public class TwoFieldsMutableKey extends AbstractFieldValue<MutableFunctionalKey
     }
 
     public <T extends FieldValueVisitor> T accept(T functor) throws Exception {
-        functionalKeyBuilder.field1.visit(functor, value1);
-        functionalKeyBuilder.field2.visit(functor, value2);
+        functionalKeyBuilder.field1.accept(functor, value1);
+        functionalKeyBuilder.field2.accept(functor, value2);
         return functor;
     }
 

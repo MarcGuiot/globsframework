@@ -48,7 +48,7 @@ public class ArrayFieldValues extends AbstractFieldValues {
 
     public <T extends FieldValueVisitor> T accept(T functor) throws Exception {
         for (FieldValue value : values) {
-            value.getField().visit(functor, value.getValue());
+            value.getField().accept(functor, value.getValue());
         }
         return functor;
     }

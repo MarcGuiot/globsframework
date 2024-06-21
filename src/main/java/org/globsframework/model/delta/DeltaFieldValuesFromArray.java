@@ -55,7 +55,7 @@ class DeltaFieldValuesFromArray extends AbstractFieldValues {
         for (Field field : type.getFields()) {
             Object value = values[field.getIndex()];
             if (value != Unset.VALUE && !field.isKeyField()) {
-                field.visit(functor, value);
+                field.accept(functor, value);
             }
         }
         return functor;

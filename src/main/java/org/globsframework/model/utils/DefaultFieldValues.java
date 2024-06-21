@@ -51,7 +51,7 @@ public class DefaultFieldValues extends AbstractMutableFieldValues {
 
     public <T extends FieldValueVisitor> T accept(T functor) throws Exception {
         for (Map.Entry<Field, Object> entry : values.entrySet()) {
-            entry.getKey().visit(functor, entry.getValue());
+            entry.getKey().accept(functor, entry.getValue());
         }
         return functor;
     }

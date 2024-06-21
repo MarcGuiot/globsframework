@@ -27,7 +27,7 @@ public abstract class AbstractDefaultGlob extends AbstractMutableGlob {
     public <T extends FieldValueVisitor> T accept(T functor) throws Exception {
         for (Field field : type.getFields()) {
             if (isSet(field)) { //  || field.isKeyField()
-                field.visit(functor, values[field.getIndex()]);
+                field.accept(functor, values[field.getIndex()]);
             }
         }
         return functor;

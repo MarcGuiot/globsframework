@@ -36,14 +36,14 @@ public class FieldConverter {
             return "(null)";
         }
         fieldStringifierVisitor.setValue(value);
-        field.safeVisit(fieldStringifierVisitor);
+        field.safeAccept(fieldStringifierVisitor);
         return fieldStringifierVisitor.getStringValue();
     }
 
     public Object toObject(Field field, String stringValue) {
         try {
             xmlStringifierVisitor.setStringValue(stringValue);
-            field.safeVisit(xmlStringifierVisitor);
+            field.safeAccept(xmlStringifierVisitor);
             return xmlStringifierVisitor.getValue();
         }
         catch (Exception e) {

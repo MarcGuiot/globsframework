@@ -65,7 +65,7 @@ public class ManyFieldsMutableKey extends AbstractFieldValue<MutableFunctionalKe
     public <T extends FieldValueVisitor> T accept(T functor) throws Exception {
         Field[] fields = functionalKeyBuilder.fields;
         for (int i = 0; i < values.length; i++) {
-            fields[i].visit(functor, values[i]);
+            fields[i].accept(functor, values[i]);
         }
         return functor;
     }

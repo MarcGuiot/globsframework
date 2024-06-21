@@ -53,7 +53,7 @@ public class OneFieldMutableKey extends AbstractFieldValue<MutableFunctionalKey>
     }
 
     public <T extends FieldValueVisitor> T accept(T functor) throws Exception {
-        functionalKeyBuilder.getFields()[0].visit(functor, value);
+        functionalKeyBuilder.getFields()[0].accept(functor, value);
         return functor;
     }
 

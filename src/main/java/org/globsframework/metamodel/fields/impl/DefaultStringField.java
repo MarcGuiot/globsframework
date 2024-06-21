@@ -11,12 +11,12 @@ public class DefaultStringField extends AbstractField implements StringField {
         super(name, globType, String.class, index, keyIndex, isKeyField, defaultValue, DataType.String);
     }
 
-    public <T extends FieldVisitor> T visit(T visitor) throws Exception {
+    public <T extends FieldVisitor> T accept(T visitor) throws Exception {
         visitor.visitString(this);
         return visitor;
     }
 
-    public <T extends FieldVisitor> T safeVisit(T visitor) {
+    public <T extends FieldVisitor> T safeAccept(T visitor) {
         try {
             visitor.visitString(this);
             return visitor;
@@ -29,12 +29,12 @@ public class DefaultStringField extends AbstractField implements StringField {
         }
     }
 
-    public <T extends FieldVisitorWithContext<C>, C> T visit(T visitor, C context) throws Exception {
+    public <T extends FieldVisitorWithContext<C>, C> T accept(T visitor, C context) throws Exception {
         visitor.visitString(this, context);
         return visitor;
     }
 
-    public <T extends FieldVisitorWithContext<C>, C> T safeVisit(T visitor, C context) {
+    public <T extends FieldVisitorWithContext<C>, C> T safeAccept(T visitor, C context) {
         try {
             visitor.visitString(this, context);
             return visitor;
@@ -47,12 +47,12 @@ public class DefaultStringField extends AbstractField implements StringField {
         }
     }
 
-    public <T extends FieldVisitorWithTwoContext<C, D>, C, D> T visit(T visitor, C ctx1, D ctx2) throws Exception {
+    public <T extends FieldVisitorWithTwoContext<C, D>, C, D> T accept(T visitor, C ctx1, D ctx2) throws Exception {
         visitor.visitString(this, ctx1, ctx2);
         return visitor;
     }
 
-    public <T extends FieldVisitorWithTwoContext<C, D>, C, D> T safeVisit(T visitor, C ctx1, D ctx2) {
+    public <T extends FieldVisitorWithTwoContext<C, D>, C, D> T safeAccept(T visitor, C ctx1, D ctx2) {
         try {
             visitor.visitString(this, ctx1, ctx2);
             return visitor;
@@ -65,11 +65,11 @@ public class DefaultStringField extends AbstractField implements StringField {
         }
     }
 
-    public void visit(FieldValueVisitor visitor, Object value) throws Exception {
+    public void accept(FieldValueVisitor visitor, Object value) throws Exception {
         visitor.visitString(this, (String)value);
     }
 
-    public void safeVisit(FieldValueVisitor visitor, Object value) {
+    public void safeAccept(FieldValueVisitor visitor, Object value) {
         try {
             visitor.visitString(this, (String)value);
         }
@@ -81,7 +81,7 @@ public class DefaultStringField extends AbstractField implements StringField {
         }
     }
 
-    public <T extends FieldValueVisitorWithContext<Context>, Context> T safeVisitValue(T visitor, Object value, Context context) {
+    public <T extends FieldValueVisitorWithContext<Context>, Context> T safeAcceptValue(T visitor, Object value, Context context) {
         try {
             visitor.visitString(this, (String)value, context);
             return visitor;

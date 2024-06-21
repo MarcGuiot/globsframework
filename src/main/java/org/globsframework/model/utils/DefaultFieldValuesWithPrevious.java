@@ -89,7 +89,7 @@ public class DefaultFieldValuesWithPrevious extends AbstractFieldValuesWithPrevi
         for (Field field : type.getFields()) {
             int index = field.getIndex();
             if (previousValues[index] != Unset.VALUE) {
-                field.visit(functor, previousValues[index]);
+                field.accept(functor, previousValues[index]);
             }
         }
         return functor;
@@ -119,7 +119,7 @@ public class DefaultFieldValuesWithPrevious extends AbstractFieldValuesWithPrevi
         for (Field field : type.getFields()) {
             int index = field.getIndex();
             if (values[index] != Unset.VALUE) {
-                field.visit(functor, values[index]);
+                field.accept(functor, values[index]);
             }
         }
         return functor;

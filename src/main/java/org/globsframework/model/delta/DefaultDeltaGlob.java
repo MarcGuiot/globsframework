@@ -231,7 +231,7 @@ class DefaultDeltaGlob extends AbstractFieldValuesWithPrevious implements DeltaG
         for (Field field : key.getGlobType().getFields()) {
             Object value = previousValues[field.getIndex()];
             if ((value != Unset.VALUE)) {
-                field.visit(functor, value);
+                field.accept(functor, value);
             }
         }
         return functor;
@@ -262,7 +262,7 @@ class DefaultDeltaGlob extends AbstractFieldValuesWithPrevious implements DeltaG
         for (Field field : key.getGlobType().getFields()) {
             Object value = values[field.getIndex()];
             if ((value != Unset.VALUE) ) {
-                field.visit(functor, value);
+                field.accept(functor, value);
             }
         }
         return functor;
