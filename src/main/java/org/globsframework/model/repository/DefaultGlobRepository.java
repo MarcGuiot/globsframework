@@ -598,7 +598,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
     }
 
     public void apply(ChangeSet changeSet) throws InvalidParameter {
-        changeSet.safeVisit(new ChangeSetVisitor() {
+        changeSet.safeAccept(new ChangeSetVisitor() {
             public void visitCreation(Key key, FieldsValueScanner values) {
                 if (contains(key)) {
                     throw new InvalidParameter("Object " + key + " already exists\n" +
@@ -623,7 +623,7 @@ public class DefaultGlobRepository implements GlobRepository, IndexSource {
 
         try {
             startChangeSet();
-            changeSet.safeVisit(new ChangeSetExecutor());
+            changeSet.safeAccept(new ChangeSetExecutor());
         } finally {
             completeChangeSet();
         }

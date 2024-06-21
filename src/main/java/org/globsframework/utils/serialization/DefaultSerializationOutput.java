@@ -43,7 +43,7 @@ public class DefaultSerializationOutput implements SerializedOutput, ChangeSetVi
 
     public void writeChangeSet(ChangeSet changeSet) {
         writeInteger(changeSet.getChangeCount());
-        changeSet.safeVisit(this);
+        changeSet.safeAccept(this);
     }
 
     public void write(int[] values) {

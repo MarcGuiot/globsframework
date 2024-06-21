@@ -81,16 +81,16 @@ public class DefaultChangeSet implements MutableChangeSet {
         return new DefaultDeltaGlob(key);
     }
 
-    public void visit(ChangeSetVisitor visitor) throws Exception {
+    public void accept(ChangeSetVisitor visitor) throws Exception {
         Collection<DefaultDeltaGlob> values = deltaGlobsByKey.values();
-        visit(visitor, values, DeltaState.DELETED);
-        visit(visitor, values, DeltaState.UPDATED);
-        visit(visitor, values, DeltaState.CREATED);
+        accept(visitor, values, DeltaState.DELETED);
+        accept(visitor, values, DeltaState.UPDATED);
+        accept(visitor, values, DeltaState.CREATED);
     }
 
-    public void safeVisit(ChangeSetVisitor visitor) {
+    public void safeAccept(ChangeSetVisitor visitor) {
         try {
-            visit(visitor);
+            accept(visitor);
         } catch (RuntimeException e) {
             throw e;
         } catch (Exception e) {
@@ -98,14 +98,14 @@ public class DefaultChangeSet implements MutableChangeSet {
         }
     }
 
-    public void visit(GlobType type, ChangeSetVisitor visitor) throws Exception {
+    public void accept(GlobType type, ChangeSetVisitor visitor) throws Exception {
         Collection<DefaultDeltaGlob> values = deltaGlobsByKey.get(type).values();
-        visit(visitor, values, DeltaState.DELETED);
-        visit(visitor, values, DeltaState.UPDATED);
-        visit(visitor, values, DeltaState.CREATED);
+        accept(visitor, values, DeltaState.DELETED);
+        accept(visitor, values, DeltaState.UPDATED);
+        accept(visitor, values, DeltaState.CREATED);
     }
 
-    private void visit(ChangeSetVisitor visitor, Collection<DefaultDeltaGlob> globs, DeltaState state) throws Exception {
+    private void accept(ChangeSetVisitor visitor, Collection<DefaultDeltaGlob> globs, DeltaState state) throws Exception {
         for (DefaultDeltaGlob deltaGlob : globs) {
             if (deltaGlob.getState() == state) {
                 deltaGlob.visit(visitor);
@@ -113,9 +113,9 @@ public class DefaultChangeSet implements MutableChangeSet {
         }
     }
 
-    public void safeVisit(GlobType type, ChangeSetVisitor visitor) {
+    public void safeAccept(GlobType type, ChangeSetVisitor visitor) {
         try {
-            visit(type, visitor);
+            accept(type, visitor);
         } catch (BreakException e) {
         } catch (RuntimeException e) {
             throw e;
@@ -124,16 +124,16 @@ public class DefaultChangeSet implements MutableChangeSet {
         }
     }
 
-    public void visit(Key key, ChangeSetVisitor visitor) throws Exception {
+    public void accept(Key key, ChangeSetVisitor visitor) throws Exception {
         DefaultDeltaGlob deltaGlob = deltaGlobsByKey.get(key.getGlobType(), key);
         if (deltaGlob != null) {
             deltaGlob.visit(visitor);
         }
     }
 
-    public void safeVisit(Key key, ChangeSetVisitor visitor) {
+    public void safeAccept(Key key, ChangeSetVisitor visitor) {
         try {
-            visit(key, visitor);
+            accept(key, visitor);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -348,7 +348,7 @@ public class DefaultChangeSet implements MutableChangeSet {
     }
 
     public void merge(ChangeSet other) throws InvalidState {
-        other.safeVisit(new ChangeSetVisitor() {
+        other.safeAccept(new ChangeSetVisitor() {
             public void visitCreation(Key key, FieldsValueScanner values) throws Exception {
                 processCreation(key, values);
             }
@@ -371,7 +371,7 @@ public class DefaultChangeSet implements MutableChangeSet {
     public String toString() {
         try {
             StringWriter writer = new StringWriter();
-            visit(new PrintChangeVisitor(writer));
+            accept(new PrintChangeVisitor(writer));
             return writer.toString();
         } catch (Exception e) {
             throw new RuntimeException(e);

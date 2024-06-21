@@ -293,7 +293,7 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
 
         repository.addChangeListener(new DefaultChangeSetListener() {
             public void globsChanged(ChangeSet changeSet, GlobRepository repository) {
-                changeSet.safeVisit(new DefaultChangeSetVisitor() {
+                changeSet.safeAccept(new DefaultChangeSetVisitor() {
                     public void visitCreation(Key key, FieldsValueScanner values) throws Exception {
                         values.apply(new NoKeyFieldChecker().withoutKeyField());
                     }
@@ -754,7 +754,7 @@ public class DefaultGlobRepositoryTest extends DefaultGlobRepositoryTestCase {
         initRepository();
         repository.addTrigger(new DefaultChangeSetListener() {
             public void globsChanged(ChangeSet changeSet, final GlobRepository repository) {
-                changeSet.safeVisit(DummyObject.TYPE, new ChangeSetVisitor() {
+                changeSet.safeAccept(DummyObject.TYPE, new ChangeSetVisitor() {
                     public void visitCreation(Key key, FieldsValueScanner values) throws Exception {
                         String newValue = (TestUtils.contains(values, DummyObject.NAME) ? TestUtils.get(values, DummyObject.NAME) : "null") + "-created";
                         repository.update(key, DummyObject.NAME, newValue);

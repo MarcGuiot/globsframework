@@ -117,7 +117,7 @@ public class DefaultChangeSetTest {
     @Test
     public void testUpdatedFieldsDoNoContainKeys() throws Exception {
         changeSet.processUpdate(key1, DummyObject.VALUE, 1.1, null);
-        changeSet.visit(DummyObject.TYPE, new DefaultChangeSetVisitor() {
+        changeSet.accept(DummyObject.TYPE, new DefaultChangeSetVisitor() {
             public void visitUpdate(Key key, FieldsValueWithPreviousScanner values) throws Exception {
                 assertFalse(TestUtils.contains(values, DummyObject.ID));
             }
@@ -273,7 +273,7 @@ public class DefaultChangeSetTest {
 
         final ChangeSet reverse = changeSet.reverse();
 
-        reverse.visit(new ChangeSetVisitor() {
+        reverse.accept(new ChangeSetVisitor() {
             public void visitCreation(Key key, FieldsValueScanner values) throws Exception {
                 changeSet.processCreation(key, values);
             }

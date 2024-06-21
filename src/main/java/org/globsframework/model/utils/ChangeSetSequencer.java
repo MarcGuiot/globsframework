@@ -44,7 +44,7 @@ public class ChangeSetSequencer {
                                         final MultiMap<GlobType, ChangeWithPrevious> updates,
                                         final MultiMap<GlobType, Change> deletions,
                                         final GlobTypeDependencies dependencies) {
-        changeSet.safeVisit(new ChangeSetVisitor() {
+        changeSet.safeAccept(new ChangeSetVisitor() {
             public void visitCreation(Key key, FieldsValueScanner values) throws Exception {
                 if (!dependencies.needsPostUpdate(key.getGlobType())) {
                     creations.put(key.getGlobType(), new Change(key, values));

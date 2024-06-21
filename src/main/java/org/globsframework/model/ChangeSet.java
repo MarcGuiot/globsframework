@@ -52,17 +52,17 @@ public interface ChangeSet {
 
     FieldValues getPreviousValues(Key key);
 
-    void visit(ChangeSetVisitor visitor) throws Exception;
+    void accept(ChangeSetVisitor visitor) throws Exception;
 
-    void safeVisit(ChangeSetVisitor visitor);
+    void safeAccept(ChangeSetVisitor visitor);
 
-    void visit(GlobType type, ChangeSetVisitor visitor) throws Exception;
+    void accept(GlobType type, ChangeSetVisitor visitor) throws Exception;
 
-    void safeVisit(GlobType type, ChangeSetVisitor visitor);
+    void safeAccept(GlobType type, ChangeSetVisitor visitor);
 
-    void visit(Key key, ChangeSetVisitor visitor) throws Exception;
+    void accept(Key key, ChangeSetVisitor visitor) throws Exception;
 
-    void safeVisit(Key key, ChangeSetVisitor visitor);
+    void safeAccept(Key key, ChangeSetVisitor visitor);
 
     ChangeSet reverse();
 }

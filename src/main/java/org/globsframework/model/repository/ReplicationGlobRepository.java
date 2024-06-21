@@ -282,7 +282,7 @@ public class ReplicationGlobRepository extends DefaultGlobRepository implements 
     public void apply(ChangeSet changeSet) throws InvalidParameter {
         final DefaultChangeSet localChangeSet = new DefaultChangeSet();
         final DefaultChangeSet remoteChangeSet = new DefaultChangeSet();
-        changeSet.safeVisit(new ChangeVisitor() {
+        changeSet.safeAccept(new ChangeVisitor() {
             public void complete() {
             }
 

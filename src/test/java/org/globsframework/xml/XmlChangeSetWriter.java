@@ -16,7 +16,7 @@ public class XmlChangeSetWriter {
     public static void write(ChangeSet changeSet, Writer writer) {
         doWrite(changeSet, writer, new ContentDumper() {
             public void process(ChangeSet changeSet, ChangeSetVisitor visitor) {
-                changeSet.safeVisit(visitor);
+                changeSet.safeAccept(visitor);
             }
         });
     }
@@ -25,7 +25,7 @@ public class XmlChangeSetWriter {
         doWrite(changeSet, writer, new ContentDumper() {
             public void process(ChangeSet changeSet, ChangeSetVisitor visitor) {
                 for (Key key : keys) {
-                    changeSet.safeVisit(key, visitor);
+                    changeSet.safeAccept(key, visitor);
                 }
             }
         });
@@ -34,14 +34,14 @@ public class XmlChangeSetWriter {
     public static void write(ChangeSet changeSet, final GlobType type, Writer writer) {
         doWrite(changeSet, writer, new ContentDumper() {
             public void process(ChangeSet changeSet, ChangeSetVisitor visitor) {
-                changeSet.safeVisit(type, visitor);
+                changeSet.safeAccept(type, visitor);
             }
         });
     }
 
     public static void prettyWrite(ChangeSet changeSet, Writer writer) {
         XmlChangeSetVisitor visitor = new XmlChangeSetVisitor(writer, 2);
-        changeSet.safeVisit(visitor);
+        changeSet.safeAccept(visitor);
         visitor.complete();
         try {
             writer.flush();
