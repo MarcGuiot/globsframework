@@ -17,7 +17,7 @@ The main drawback of GlobsFramework is its limited compatibility with beans. How
 
 ## history
 
-The inspiration for GlobsFramework stems from the telecom industry's reliance on GDMO (https://en.wikipedia.org/wiki/Guidelines_for_the_Definition_of_Managed_Objects) models, which were initially used to generate code for various purposes like databases, UI, and ASN1 encoding. Over time, this generic model evolved into direct use within codebases, with XML serving as the description format for Managed Objects (MO). The framework's genesis occurred during a rewrite for a private financial company in 2006 by Regis Medina and Marc Guiot, and it continues to be actively used today. Subsequently, an open-source version was developed for the BudgetView project (https://web.archive.org/web/20181229134134/http://www.mybudgetview.com/, https://github.com/MarcGuiot/budgetview).
+The inspiration for GlobsFramework stems from the telecom industry's reliance on GDMO (https://en.wikipedia.org/wiki/Guidelines_for_the_Definition_of_Managed_Objects) models, which were initially used to generate code for various purposes like databases, UI, and ASN1 encoding. Over time, this generic model evolved into direct use within codebases, with XML serving as the description format for Managed Objects (MO). A rewrite occurred for a private financial company in 2006 by Regis Medina and Marc Guiot, and it continues to be actively used today. Subsequently, an open-source version was developed for the BudgetView project (https://web.archive.org/web/20181229134134/http://www.mybudgetview.com/, https://github.com/MarcGuiot/budgetview).
 It is used in other company for aggregation of data and in an e-Commerce back-end.
 
 ## exemple of a db query in a lib that use Globs
