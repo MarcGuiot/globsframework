@@ -19,18 +19,15 @@ public abstract class AbstractGlob extends AbstractFieldValues implements Glob, 
     }
 
     private void toString(StringBuilder buffer) {
-        buffer.append("{ \"_kind\":\"").append(escapeQuote(getType().getName())).append("\",");
+        buffer.append("{ \"_kind\":\"").append(escapeQuote(getType().getName())).append("\"");
 
         GlobType type = getType();
         Field[] fields = type.getFields();
-        for (int i = 0; i < fields.length; i++) {
-            Field field = fields[i];
+        for (Field field : fields) {
             if (isSet(field)) {
+                buffer.append(", ");
                 buffer.append("\"").append(escapeQuote(field.getName())).append("\":");
                 field.toString(buffer, doGet(field));
-                if (i < fields.length - 1) {
-                    buffer.append(", ");
-                }
             }
         }
         buffer.append("}");

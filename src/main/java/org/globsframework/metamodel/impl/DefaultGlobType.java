@@ -227,6 +227,9 @@ public class DefaultGlobType extends DefaultAnnotations
                 stringBuilder.append(", ");
             }
         }
+        if (!fieldsByName.isEmpty()) {
+            stringBuilder.delete(stringBuilder.length() - 2, stringBuilder.length());
+        }
         return stringBuilder.toString();
     }
 
