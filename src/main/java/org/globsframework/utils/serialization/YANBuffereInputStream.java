@@ -4,10 +4,10 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class YANBuffereInputStream extends InputStream {
-    private byte[] buffer;
+    private final byte[] buffer;
     private int currentPos;
     private int count;
-    private InputStream inputStream;
+    private final InputStream inputStream;
 
     public YANBuffereInputStream(InputStream inputStream) {
         this(inputStream, 8 * 1024);
@@ -31,10 +31,10 @@ public class YANBuffereInputStream extends InputStream {
         return buffer[currentPos++] & 0xFF;
     }
 
-    public int read(byte b[], int off, int len) throws IOException {
-        int availlable = count - currentPos;
-        if (availlable > 0) {
-            int length = availlable > len ? len : availlable;
+    public int read(byte[] b, int off, int len) throws IOException {
+        int available = count - currentPos;
+        if (available > 0) {
+            int length = Math.min(available, len);
             System.arraycopy(buffer, currentPos, b, off, length);
             currentPos += length;
             return length;

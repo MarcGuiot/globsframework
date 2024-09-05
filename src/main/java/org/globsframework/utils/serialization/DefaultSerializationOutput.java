@@ -18,9 +18,9 @@ import static org.globsframework.utils.serialization.DefaultSerializationInput.M
 import static org.globsframework.utils.serialization.DefaultSerializationInput.ORG_GLOBSFRAMWORK_SERIALIZATION_MAX_LEN;
 
 public class DefaultSerializationOutput implements SerializedOutput, ChangeSetVisitor {
-    private OutputStream outputStream;
-    private FieldValues.Functor fieldValuesFunctor = new FieldValuesFunctor();
-    private FieldValuesWithPrevious.FunctorWithPrevious fieldValuesWithPreviousFunctor = new FieldValuesWithPreviousFunctor();
+    private final OutputStream outputStream;
+    private final FieldValues.Functor fieldValuesFunctor = new FieldValuesFunctor();
+    private final FieldValuesWithPrevious.FunctorWithPrevious fieldValuesWithPreviousFunctor = new FieldValuesWithPreviousFunctor();
 
     DefaultSerializationOutput(OutputStream outputStream) {
         this.outputStream = outputStream;

@@ -114,7 +114,7 @@ public class ByteBufferSerializationInput implements SerializedInput {
         if (length == -1) {
             return null;
         }
-        int array[] = new int[length];
+        int[] array = new int[length];
         for (int i = 0; i < array.length; i++) {
             array[i] = readNotNullInt();
         }
@@ -126,7 +126,7 @@ public class ByteBufferSerializationInput implements SerializedInput {
         if (length == -1) {
             return null;
         }
-        long array[] = new long[length];
+        long[] array = new long[length];
         for (int i = 0; i < array.length; i++) {
             array[i] = readNotNullLong();
         }
@@ -138,7 +138,7 @@ public class ByteBufferSerializationInput implements SerializedInput {
         if (length == -1) {
             return null;
         }
-        double array[] = new double[length];
+        double[] array = new double[length];
         for (int i = 0; i < array.length; i++) {
             array[i] = readNotNullDouble();
         }
@@ -151,7 +151,7 @@ public class ByteBufferSerializationInput implements SerializedInput {
         if (length == -1) {
             return null;
         }
-        boolean array[] = new boolean[length];
+        boolean[] array = new boolean[length];
         for (int i = 0; i < array.length; i++) {
             array[i] = readBoolean();
         }
@@ -176,7 +176,7 @@ public class ByteBufferSerializationInput implements SerializedInput {
         if (length == -1) {
             return null;
         }
-        String array[] = new String[length];
+        String[] array = new String[length];
         for (int i = 0; i < array.length; i++) {
             array[i] = readUtf8String();
         }
@@ -187,8 +187,8 @@ public class ByteBufferSerializationInput implements SerializedInput {
     }
 
     static class FieldReader implements FieldVisitor {
-        private ByteBufferSerializationInput input;
-        private FieldValuesBuilder builder;
+        private final ByteBufferSerializationInput input;
+        private final FieldValuesBuilder builder;
 
         public FieldReader(ByteBufferSerializationInput input, FieldValuesBuilder builder) {
             this.input = input;

@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CompressedSerializationOutput extends DefaultSerializationOutput {
-    private Map<String, Integer> strings = new HashMap<String, Integer>();
+    private final Map<String, Integer> strings = new HashMap<String, Integer>();
     private int count = 0;
 
     public CompressedSerializationOutput(OutputStream outputStream) {

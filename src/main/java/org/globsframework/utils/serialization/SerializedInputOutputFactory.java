@@ -8,7 +8,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class SerializedInputOutputFactory {
-    private static boolean checked = false;
+    private static final boolean checked = false;
 
     static public SerializedOutput init(OutputStream outputStream) {
         DefaultSerializationOutput serializationOutput = new DefaultSerializationOutput(outputStream);

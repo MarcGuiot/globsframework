@@ -20,8 +20,8 @@ import java.time.ZonedDateTime;
 
 public class DefaultGlobFactory implements GlobFactory {
     private final GlobType type;
-    private final GlobGetAccessor getAccessor[];
-    private final GlobSetAccessor setAccessor[];
+    private final GlobGetAccessor[] getAccessor;
+    private final GlobSetAccessor[] setAccessor;
 
     public DefaultGlobFactory(GlobType type) {
         this.type = type;

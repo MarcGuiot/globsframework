@@ -16,12 +16,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.time.*;
 
 public class DefaultSerializationInput implements SerializedInput {
     public static final String ORG_GLOBSFRAMWORK_SERIALIZATION_MAX_LEN = "org.globsframwork.serialization.max.len";
     public static final int MAX_SIZE_FOR_BYTES = Integer.getInteger(ORG_GLOBSFRAMWORK_SERIALIZATION_MAX_LEN, 512 * 1024);
-    private InputStream inputStream;
+    private final InputStream inputStream;
     private final InputStreamFieldVisitor fieldVisitorInput = new InputStreamFieldVisitor();
     public int count;
 
@@ -108,7 +109,7 @@ public class DefaultSerializationInput implements SerializedInput {
         if (length == -1) {
             return null;
         }
-        int array[] = new int[length];
+        int[] array = new int[length];
         for (int i = 0; i < array.length; i++) {
             array[i] = readNotNullInt();
         }
@@ -120,7 +121,7 @@ public class DefaultSerializationInput implements SerializedInput {
         if (length == -1) {
             return null;
         }
-        long array[] = new long[length];
+        long[] array = new long[length];
         for (int i = 0; i < array.length; i++) {
             array[i] = readNotNullLong();
         }
@@ -132,7 +133,7 @@ public class DefaultSerializationInput implements SerializedInput {
         if (length == -1) {
             return null;
         }
-        double array[] = new double[length];
+        double[] array = new double[length];
         for (int i = 0; i < array.length; i++) {
             array[i] = readNotNullDouble();
         }
@@ -145,7 +146,7 @@ public class DefaultSerializationInput implements SerializedInput {
         if (length == -1) {
             return null;
         }
-        boolean array[] = new boolean[length];
+        boolean[] array = new boolean[length];
         for (int i = 0; i < array.length; i++) {
             array[i] = readBoolean();
         }
@@ -157,7 +158,7 @@ public class DefaultSerializationInput implements SerializedInput {
         if (length == -1) {
             return null;
         }
-        BigDecimal array[] = new BigDecimal[length];
+        BigDecimal[] array = new BigDecimal[length];
         for (int i = 0; i < array.length; i++) {
             array[i] = readBigDecimal();
         }
@@ -170,7 +171,7 @@ public class DefaultSerializationInput implements SerializedInput {
         if (length == -1) {
             return null;
         }
-        String array[] = new String[length];
+        String[] array = new String[length];
         for (int i = 0; i < array.length; i++) {
             array[i] = readUtf8String();
         }
@@ -186,8 +187,8 @@ public class DefaultSerializationInput implements SerializedInput {
     }
 
     static class FieldReader implements FieldVisitor {
-        private DefaultSerializationInput input;
-        private FieldValuesBuilder builder;
+        private final DefaultSerializationInput input;
+        private final FieldValuesBuilder builder;
 
         public FieldReader(DefaultSerializationInput input, FieldValuesBuilder builder) {
             this.input = input;
@@ -302,8 +303,8 @@ public class DefaultSerializationInput implements SerializedInput {
     }
 
     static class FieldWithPreviousReader implements FieldVisitor {
-        private DefaultSerializationInput input;
-        private FieldValuesWithPreviousBuilder builder;
+        private final DefaultSerializationInput input;
+        private final FieldValuesWithPreviousBuilder builder;
 
         public FieldWithPreviousReader(DefaultSerializationInput input, FieldValuesWithPreviousBuilder builder) {
             this.input = input;
@@ -505,11 +506,7 @@ public class DefaultSerializationInput implements SerializedInput {
         if (bytes == null) {
             return null;
         }
-        try {
-            return new String(bytes, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            throw new InvalidFormat(e);
-        }
+        return new String(bytes, StandardCharsets.UTF_8);
     }
 
     public Boolean readBoolean() {

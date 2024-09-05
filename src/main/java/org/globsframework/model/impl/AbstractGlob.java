@@ -18,6 +18,7 @@ public abstract class AbstractGlob extends AbstractFieldValues implements Glob, 
         return buffer.toString();
     }
 
+    // we don't want to add a dependency on any json framework here : we output a json like string here => need help : may be a bad idea
     private void toString(StringBuilder buffer) {
         buffer.append("{ \"_kind\":\"").append(escapeQuote(getType().getName())).append("\"");
 

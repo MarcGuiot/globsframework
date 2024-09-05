@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class DefaultGlobUnionField extends AbstractField implements GlobUnionField {
-    private Map<String, GlobType> targetTypes;
+    private final Map<String, GlobType> targetTypes;
 
     public DefaultGlobUnionField(String name, GlobType globType, Collection<GlobType> targetTypes,
                                  int index, boolean isKeyField, final int keyIndex) {

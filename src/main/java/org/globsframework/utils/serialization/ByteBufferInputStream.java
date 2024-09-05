@@ -8,8 +8,8 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SeekableByteChannel;
 
 public class ByteBufferInputStream extends InputStream {
-    ByteBuffer byteBuffer;
-    SeekableByteChannel channel;
+    private final ByteBuffer byteBuffer;
+    private final SeekableByteChannel channel;
     boolean eofReach = false;
 
     public  ByteBufferInputStream(ByteBuffer byteBuffer, SeekableByteChannel channel) throws IOException {

@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 
 public class SerializationInputChecker implements SerializedInput {
-    private SerializedInput serializedInput;
+    private final SerializedInput serializedInput;
 
     public SerializationInputChecker(SerializedInput serializedInput) {
         this.serializedInput = serializedInput;

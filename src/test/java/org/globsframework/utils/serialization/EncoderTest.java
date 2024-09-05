@@ -33,7 +33,7 @@ public class EncoderTest {
         assertNull(input.readInteger());
         assertEquals(1L, input.readNotNullLong());
         assertNull(input.readLong());
-        assertTrue(Arrays.equals(new byte[]{2, 2, 3, 4}, input.readBytes()));
+        assertArrayEquals(new byte[]{2, 2, 3, 4}, input.readBytes());
         assertNull(input.readBytes());
         assertEquals(1.3, input.readDouble(), 0.001);
         assertNull(input.readDouble());
@@ -67,8 +67,8 @@ public class EncoderTest {
         assertEquals(1, decodedGlob.get(ID).intValue());
         assertEquals(linkId, decodedGlob.get(LINK_ID).intValue());
         assertEquals(name, decodedGlob.get(NAME));
-        assertTrue(Arrays.equals(blob, decodedGlob.get(PASSWORD)));
-        assertEquals(present, decodedGlob.get(PRESENT).booleanValue());
+        assertArrayEquals(blob, decodedGlob.get(PASSWORD));
+        assertEquals(present, decodedGlob.get(PRESENT));
         assertEquals(value, decodedGlob.get(VALUE), 0.001);
     }
 }

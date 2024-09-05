@@ -20,7 +20,7 @@ import java.math.BigDecimal;
 import java.util.Collection;
 
 public class DefaultFieldFactory {
-    private DefaultGlobType type;
+    private final DefaultGlobType type;
 
     public DefaultFieldFactory(DefaultGlobType type) {
         this.type = type;

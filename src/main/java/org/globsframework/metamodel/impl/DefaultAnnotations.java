@@ -29,8 +29,7 @@ public class DefaultAnnotations implements MutableAnnotations {
 
     public DefaultAnnotations(Annotations annotations) {
         annotations.streamAnnotations()
-                .forEach(annotation -> this.annotations.put(annotation.getKey(), annotation)
-                );
+                .forEach(annotation -> this.annotations.put(annotation.getKey(), annotation));
     }
 
     public MutableAnnotations addAnnotation(Glob glob) {
