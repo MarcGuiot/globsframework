@@ -113,11 +113,4 @@ abstract public class AbstractField extends DefaultAnnotations {
         AbstractField other = (AbstractField) o;
         return globType.equals(other.globType) && name.equals(other.name);
     }
-
-    public int hashCode() {
-        int result;
-        result = name.hashCode();
-        result = 31 * result + globType.hashCode();
-        return result;
-    }
 }
