@@ -3,13 +3,17 @@ package org.globsframework.metamodel.fields.impl;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.type.DataType;
+import org.globsframework.model.Glob;
+import org.globsframework.model.Key;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
 import java.math.BigDecimal;
+import java.util.LinkedHashMap;
 
 public class DefaultBigDecimalField extends AbstractField implements BigDecimalField {
-    public DefaultBigDecimalField(String name, GlobType globType, int index, boolean isKeyField, int keyIndex, BigDecimal defaultValue) {
-        super(name, globType, BigDecimal.class, index, keyIndex, isKeyField, defaultValue, DataType.BigDecimal);
+    public DefaultBigDecimalField(String name, GlobType globType, int index, boolean isKeyField, int keyIndex,
+                                  BigDecimal defaultValue, LinkedHashMap<Key, Glob> annotations) {
+        super(name, globType, BigDecimal.class, index, keyIndex, isKeyField, defaultValue, DataType.BigDecimal, annotations);
     }
 
     public <T extends FieldVisitor> T accept(T visitor) throws Exception {

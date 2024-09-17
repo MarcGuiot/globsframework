@@ -3,15 +3,18 @@ package org.globsframework.metamodel.fields.impl;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.type.DataType;
+import org.globsframework.model.Glob;
+import org.globsframework.model.Key;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 
 public class DefaultBooleanArrayField extends AbstractField implements BooleanArrayField {
 
     public DefaultBooleanArrayField(String name, GlobType globType,
-                                    int index, boolean isKeyField, final int keyIndex, Boolean defaultValue) {
-        super(name, globType, boolean[].class, index, keyIndex, isKeyField, defaultValue, DataType.BooleanArray);
+                                    int index, boolean isKeyField, final int keyIndex, Boolean defaultValue, LinkedHashMap<Key, Glob> annotations) {
+        super(name, globType, boolean[].class, index, keyIndex, isKeyField, defaultValue, DataType.BooleanArray, annotations);
     }
 
     public <T extends FieldVisitor> T accept(T visitor) throws Exception {

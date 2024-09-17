@@ -3,13 +3,16 @@ package org.globsframework.metamodel.fields.impl;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.type.DataType;
+import org.globsframework.model.Glob;
+import org.globsframework.model.Key;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 
 public class DefaultLongArrayField extends AbstractField implements LongArrayField {
-    public DefaultLongArrayField(String name, GlobType globType, int index, boolean isKeyField, int keyIndex, Long defaultValue) {
-        super(name, globType, long[].class, index, keyIndex, isKeyField, defaultValue, DataType.LongArray);
+    public DefaultLongArrayField(String name, GlobType globType, int index, boolean isKeyField, int keyIndex, Long defaultValue, LinkedHashMap<Key, Glob> annotations) {
+        super(name, globType, long[].class, index, keyIndex, isKeyField, defaultValue, DataType.LongArray, annotations);
     }
 
     public <T extends FieldVisitor> T accept(T visitor) throws Exception {

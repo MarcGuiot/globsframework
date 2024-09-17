@@ -8,6 +8,8 @@ import org.globsframework.model.Glob;
 import org.globsframework.model.Key;
 import org.globsframework.model.KeyBuilder;
 
+import java.util.LinkedHashMap;
+
 public class KeyAnnotationType {
     public static GlobType TYPE;
 
@@ -49,7 +51,7 @@ public class KeyAnnotationType {
         DefaultGlobType globType = new DefaultGlobType("KeyAnnotation");
         DefaultFieldFactory factory = new DefaultFieldFactory(globType);
         TYPE = globType;
-        INDEX = factory.addInteger("index", false, 0, 0, null);
+        INDEX = factory.addInteger("index", false, 0, 0, null, new LinkedHashMap<>());
         UNIQUE_KEY = KeyBuilder.newEmptyKey(TYPE);
         globType.completeInit();
         UNINITIALIZED = globType.instantiate().set(INDEX, -1);

@@ -10,26 +10,41 @@ import org.globsframework.utils.exceptions.ItemNotFound;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
 public class DefaultAnnotations implements MutableAnnotations {
     static private final Logger LOGGER = LoggerFactory.getLogger(DefaultAnnotations.class);
-    volatile private Map<Key, Glob> annotations = new LinkedHashMap<>();
+    volatile private Map<Key, Glob> annotations;
 
     public DefaultAnnotations() {
+        annotations = new LinkedHashMap<>();
+    }
+
+    public DefaultAnnotations(LinkedHashMap<Key, Glob> annotations) {
+        this.annotations = annotations;
     }
 
     public DefaultAnnotations(Glob[] annotations) {
+        this.annotations = new LinkedHashMap<>(annotations.length);
         for (Glob annotation : annotations) {
             this.annotations.put(annotation.getKey(), annotation);
         }
     }
 
     public DefaultAnnotations(Annotations annotations) {
+        this.annotations = new LinkedHashMap<>();
         annotations.streamAnnotations()
                 .forEach(annotation -> this.annotations.put(annotation.getKey(), annotation));
+    }
+
+    public DefaultAnnotations(Collection<Glob> annotations) {
+        this.annotations = new LinkedHashMap<>(annotations.size());
+        for (Glob annotation : annotations) {
+            this.annotations.put(annotation.getKey(), annotation);
+        }
     }
 
     public MutableAnnotations addAnnotation(Glob glob) {

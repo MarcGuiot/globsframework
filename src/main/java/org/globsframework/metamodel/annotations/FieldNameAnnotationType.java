@@ -10,6 +10,8 @@ import org.globsframework.model.Key;
 import org.globsframework.model.KeyBuilder;
 import org.globsframework.model.MutableGlob;
 
+import java.util.LinkedHashMap;
+
 public class FieldNameAnnotationType {
     public static GlobType TYPE;
 
@@ -30,7 +32,7 @@ public class FieldNameAnnotationType {
         DefaultGlobType globType = new DefaultGlobType("fieldNameAnnotation");
         DefaultFieldFactory factory = new DefaultFieldFactory(globType);
         TYPE = globType;
-        NAME = factory.addString("name", false, 0, 0, null);
+        NAME = factory.addString("name", false, 0, 0, null, new LinkedHashMap<>());
         globType.completeInit();
         UNIQUE_KEY = KeyBuilder.newEmptyKey(TYPE);
         NAME.addAnnotation(create("name"));

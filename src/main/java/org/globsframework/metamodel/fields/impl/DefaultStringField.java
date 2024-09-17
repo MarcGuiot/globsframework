@@ -3,12 +3,17 @@ package org.globsframework.metamodel.fields.impl;
 import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.type.DataType;
+import org.globsframework.model.Glob;
+import org.globsframework.model.Key;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
+
+import java.util.LinkedHashMap;
 
 public class DefaultStringField extends AbstractField implements StringField {
 
-    public DefaultStringField(String name, GlobType globType, int index, boolean isKeyField, int keyIndex, String defaultValue) {
-        super(name, globType, String.class, index, keyIndex, isKeyField, defaultValue, DataType.String);
+    public DefaultStringField(String name, GlobType globType, int index, boolean isKeyField,
+                              int keyIndex, String defaultValue, LinkedHashMap<Key, Glob> annotations) {
+        super(name, globType, String.class, index, keyIndex, isKeyField, defaultValue, DataType.String, annotations);
     }
 
     public <T extends FieldVisitor> T accept(T visitor) throws Exception {

@@ -4,8 +4,12 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.annotations.RequiredAnnotationType;
 import org.globsframework.metamodel.impl.DefaultAnnotations;
 import org.globsframework.metamodel.type.DataType;
+import org.globsframework.model.Glob;
+import org.globsframework.model.Key;
 import org.globsframework.utils.Utils;
 import org.globsframework.utils.exceptions.InvalidParameter;
+
+import java.util.LinkedHashMap;
 
 abstract public class AbstractField extends DefaultAnnotations {
     private final int index;
@@ -19,7 +23,8 @@ abstract public class AbstractField extends DefaultAnnotations {
 
     protected AbstractField(String name, GlobType globType,
                             Class valueClass, int index, int keyIndex, boolean isKeyField,
-                            Object defaultValue, DataType dataType) {
+                            Object defaultValue, DataType dataType, LinkedHashMap<Key, Glob> annotations) {
+        super(annotations);
         this.keyIndex = keyIndex;
         this.defaultValue = defaultValue;
         this.name = name;

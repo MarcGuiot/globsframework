@@ -5,18 +5,20 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.type.DataType;
 import org.globsframework.model.Glob;
+import org.globsframework.model.Key;
 import org.globsframework.utils.exceptions.InvalidParameter;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 
 public class DefaultGlobField extends AbstractField implements GlobField {
     private final GlobType targetType;
 
     public DefaultGlobField(String name, GlobType globType, GlobType targetType,
-                            int index, boolean isKeyField, final int keyIndex) {
-        super(name, globType, Glob.class, index, keyIndex, isKeyField, null, DataType.Glob);
+                            int index, boolean isKeyField, final int keyIndex, LinkedHashMap<Key, Glob> annotations) {
+        super(name, globType, Glob.class, index, keyIndex, isKeyField, null, DataType.Glob, annotations);
         this.targetType = targetType;
     }
 

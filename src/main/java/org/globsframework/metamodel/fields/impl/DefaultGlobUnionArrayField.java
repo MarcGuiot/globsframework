@@ -4,11 +4,12 @@ import org.globsframework.metamodel.GlobType;
 import org.globsframework.metamodel.fields.*;
 import org.globsframework.metamodel.type.DataType;
 import org.globsframework.model.Glob;
+import org.globsframework.model.Key;
 import org.globsframework.utils.exceptions.InvalidParameter;
 import org.globsframework.utils.exceptions.UnexpectedApplicationState;
 
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -16,8 +17,8 @@ public class DefaultGlobUnionArrayField extends AbstractField implements GlobArr
     private final Map<String, GlobType> targetTypes;
 
     public DefaultGlobUnionArrayField(String name, GlobType globType, Collection<GlobType> targetTypes,
-                                      int index, boolean isKeyField, final int keyIndex) {
-        super(name, globType, Glob[].class, index, keyIndex, isKeyField, null, DataType.GlobUnionArray);
+                                      int index, boolean isKeyField, final int keyIndex, LinkedHashMap<Key, Glob> annotations) {
+        super(name, globType, Glob[].class, index, keyIndex, isKeyField, null, DataType.GlobUnionArray, annotations);
         this.targetTypes = new ConcurrentHashMap<>();
         targetTypes.forEach(this::__add__);
     }
