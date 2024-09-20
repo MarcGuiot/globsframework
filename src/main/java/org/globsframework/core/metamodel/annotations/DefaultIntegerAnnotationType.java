@@ -1,0 +1,27 @@
+package org.globsframework.core.metamodel.annotations;
+
+import org.globsframework.core.metamodel.GlobType;
+import org.globsframework.core.metamodel.GlobTypeLoaderFactory;
+import org.globsframework.core.metamodel.fields.IntegerField;
+import org.globsframework.core.model.Glob;
+import org.globsframework.core.model.Key;
+
+public class DefaultIntegerAnnotationType {
+    public static GlobType DESC;
+
+    public static IntegerField DEFAULT_VALUE;
+
+    @InitUniqueKey
+    public static Key UNIQUE_KEY;
+
+    public static Glob create(DefaultInteger defaultDouble) {
+        return DESC.instantiate().set(DEFAULT_VALUE, defaultDouble.value());
+    }
+
+    static {
+        GlobTypeLoaderFactory.create(DefaultIntegerAnnotationType.class, "defaultIntegerValue")
+                .register(GlobCreateFromAnnotation.class, annotation -> create((DefaultInteger) annotation))
+                .load();
+    }
+
+}

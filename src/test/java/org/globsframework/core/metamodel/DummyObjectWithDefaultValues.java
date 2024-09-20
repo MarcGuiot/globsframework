@@ -1,0 +1,37 @@
+package org.globsframework.core.metamodel;
+
+import org.globsframework.core.metamodel.annotations.*;
+import org.globsframework.core.metamodel.fields.*;
+
+public class DummyObjectWithDefaultValues {
+    public static GlobType TYPE;
+
+    @KeyField
+    @AutoIncrement
+    public static IntegerField ID;
+
+    @DefaultInteger(7)
+    public static IntegerField INTEGER;
+
+    @DefaultBigDecimal("1.61803398875")
+    public static BigDecimalField BIG_DECIMAL;
+
+    @DefaultLong(5l)
+    public static LongField LONG;
+
+    @DefaultDouble(3.14159265)
+    public static DoubleField DOUBLE;
+
+    @DefaultBoolean(true)
+    public static BooleanField BOOLEAN;
+
+    @Target(DummyObject.class)
+    public static IntegerField LINK;
+
+    @DefaultString("Hello")
+    public static StringField STRING;
+
+    static {
+        GlobTypeLoaderFactory.create(DummyObjectWithDefaultValues.class, true).load();
+    }
+}
