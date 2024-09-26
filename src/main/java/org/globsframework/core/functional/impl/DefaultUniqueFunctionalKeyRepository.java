@@ -23,7 +23,7 @@ import java.util.stream.Stream;
 
 public class DefaultUniqueFunctionalKeyRepository implements MutableFunctionalKeyRepository {
     static private final Logger LOGGER = LoggerFactory.getLogger(DefaultUniqueFunctionalKeyRepository.class);
-    private static final Glob NULL = new DefaultGlob(DefaultGlobTypeBuilder.init("NULL GLOB").get());
+    private static final Glob NULL = DefaultGlobTypeBuilder.init("NULL GLOB").get().instantiate();
     private final DataAccess dataAccess;
     private final Map<FunctionalKey, Glob> index = new ConcurrentHashMap<>();
     private final MapOfMaps<GlobType, FunctionalKeyBuilder, Boolean> indexed = new ConcurrentMapOfMaps<>();

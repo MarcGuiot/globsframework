@@ -13,12 +13,11 @@ import org.globsframework.core.model.MutableGlob;
 import java.util.LinkedHashMap;
 
 public class FieldNameAnnotationType {
-    public static GlobType TYPE;
+    public static final GlobType TYPE;
 
-    public static StringField NAME;
+    public static final StringField NAME;
 
-    @InitUniqueKey
-    public static Key UNIQUE_KEY;
+    public static final Key UNIQUE_KEY;
 
     public static Glob create(FieldNameAnnotation nameAnnotation) {
         return create(nameAnnotation.value());

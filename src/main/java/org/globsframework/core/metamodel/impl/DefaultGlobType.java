@@ -155,7 +155,7 @@ public class DefaultGlobType extends DefaultAnnotations
             if (annotation != null) {
                 int index = annotation.get(KeyAnnotationType.INDEX, -1);
                 if (index == -1) {
-                    ((MutableAnnotations) field).addAnnotation(KeyAnnotationType.create(field.getKeyIndex()));
+                    field.addAnnotation(KeyAnnotationType.create(field.getKeyIndex()));
                     keySet.add(field.getKeyIndex());
                 } else {
                     keySet.add(index);

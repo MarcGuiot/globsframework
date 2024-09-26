@@ -6,14 +6,12 @@ import org.globsframework.core.metamodel.GlobType;
 import org.globsframework.core.metamodel.MutableGlobModel;
 import org.globsframework.core.metamodel.links.impl.DefaultMutableGlobLinkModel;
 import org.globsframework.core.metamodel.utils.GlobTypeDependencies;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.globsframework.core.utils.exceptions.DuplicateGlobType;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class DefaultGlobModel implements MutableGlobModel {
-    private static Logger LOGGER = LoggerFactory.getLogger(DefaultGlobModel.class);
     private Map<String, GlobType> typesByName = new ConcurrentHashMap<>();
     private GlobModel innerModel;
     private GlobTypeDependencies dependencies;
@@ -71,7 +69,8 @@ public class DefaultGlobModel implements MutableGlobModel {
     public void add(GlobType type) {
         GlobType put = typesByName.put(type.getName(), type);
         if (put != null && put != type) {
-            LOGGER.error(type.getName() + " already registered  : " + type.describe() + " AND " + put.describe(), new RuntimeException());
+            String message = type.getName() + " already registered  : " + type.describe() + " AND " + put.describe();
+            throw new DuplicateGlobType(message);
         }
     }
 

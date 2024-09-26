@@ -5,7 +5,7 @@ import org.globsframework.core.metamodel.impl.DefaultGlobModel;
 
 public class AllAnnotations {
     static final public GlobModel MODEL =
-            new DefaultGlobModel(DefaultStringAnnotationType.DESC, AutoIncrementAnnotationType.TYPE,
+            new DefaultGlobModel(AutoIncrementAnnotationType.TYPE,
                     ContainmentLinkAnnotationType.DESC, DefaultBooleanAnnotationType.TYPE,
                     DefaultDoubleAnnotationType.DESC, DefaultFieldValueType.TYPE,
                     DefaultIntegerAnnotationType.DESC, DefaultLongAnnotationType.DESC,
