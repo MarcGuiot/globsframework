@@ -1,6 +1,6 @@
 package org.globsframework.core.metamodel.impl;
 
-import org.globsframework.core.metamodel.annotations.KeyAnnotationType;
+import org.globsframework.core.metamodel.annotations.KeyField;
 import org.globsframework.core.metamodel.fields.Field;
 import org.globsframework.core.metamodel.index.Index;
 import org.globsframework.core.metamodel.index.MultiFieldIndex;
@@ -12,6 +12,7 @@ import org.globsframework.core.model.GlobFactory;
 import org.globsframework.core.model.GlobFactoryService;
 import org.globsframework.core.model.Key;
 import org.globsframework.core.model.format.GlobPrinter;
+import org.globsframework.core.model.utils.FieldCheck;
 import org.globsframework.core.utils.exceptions.InvalidState;
 import org.globsframework.core.utils.exceptions.ItemAlreadyExists;
 import org.globsframework.core.utils.exceptions.ItemNotFound;
@@ -30,18 +31,17 @@ public class DefaultGlobType extends DefaultAnnotations
     private Field[] keyFields = new Field[0];
     private GlobFactory globFactory;
     private Comparator<Key> keyComparator;
-    private String[] scope;
     private final String name;
     private final Map<String, Field> fieldsByName = new HashMap<>();
     private final Map<String, Index> indices = new HashMap<>(2, 1);
     private final Map<Class<?>, Object> registered = new ConcurrentHashMap<>();
 
     public DefaultGlobType(String name) {
-        this(null, name);
+        this(name, null);
     }
 
-    public DefaultGlobType(String[] scope, String name) {
-        this.scope = scope == null ? EMPTY_SCOPE : null;
+    public DefaultGlobType(String name, LinkedHashMap<Key, Glob> annotations) {
+        super(annotations);
         this.name = name;
     }
 
@@ -148,23 +148,24 @@ public class DefaultGlobType extends DefaultAnnotations
         for (Field field : fieldsByName.values()) {
             fields[field.getIndex()] = field;
         }
-        int keyFieldCount = 0;
-        Set<Integer> keySet = new HashSet<>();
-        for (Field field : fields) {
-            Glob annotation = field.findAnnotation(KeyAnnotationType.UNIQUE_KEY);
-            if (annotation != null) {
-                int index = annotation.get(KeyAnnotationType.INDEX, -1);
-                if (index == -1) {
-                    field.addAnnotation(KeyAnnotationType.create(field.getKeyIndex()));
-                    keySet.add(field.getKeyIndex());
-                } else {
-                    keySet.add(index);
+        if (FieldCheck.CheckGlob.shouldCheck) {
+            int keyFieldCount = 0;
+            Set<Integer> keySet = new HashSet<>();
+            for (Field field : fields) {
+                Glob annotation = field.findAnnotation(KeyField.UNIQUE_KEY);
+                if (annotation != null) {
+                    int index = annotation.get(KeyField.INDEX, -1);
+                    if (index == -1) {
+                        throw new RuntimeException("key annotation is not initialized");
+                    } else {
+                        keySet.add(index);
+                    }
+                    keyFieldCount++;
                 }
-                keyFieldCount++;
             }
-        }
-        if (!IntStream.range(0, keyFieldCount).allMatch(keySet::contains)) {
-            throw new RuntimeException("Bug unconstitency between key count " + keyFieldCount + " and key id " + keySet);
+            if (!IntStream.range(0, keyFieldCount).allMatch(keySet::contains)) {
+                throw new RuntimeException("Bug unconstitency between key count " + keyFieldCount + " and key id " + keySet);
+            }
         }
 
         globFactory = GlobFactoryService.Builder.getBuilderFactory().getFactory(this);

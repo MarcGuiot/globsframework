@@ -8,20 +8,20 @@ import org.globsframework.core.model.Glob;
 import org.globsframework.core.model.Key;
 import org.globsframework.core.model.MutableGlob;
 
-public class NameAnnotationType {
+public class NameType {
     public static GlobType TYPE;
 
-    @KeyField
+    @KeyField_
     public static StringField NAME;
 
     public static StringField VALUE;
 
     static {
-        GlobTypeLoaderFactory.create(NameAnnotationType.class, "NameAnnotation").load();
+        GlobTypeLoaderFactory.create(NameType.class, "Name").load();
     }
 
-    public static Glob create(NameAnnotation nameAnnotation) {
-        return create(nameAnnotation.name(), nameAnnotation.value());
+    public static Glob create(Name name) {
+        return create(name.name(), name.value());
     }
 
     public static MutableGlob create(String name, String value) {

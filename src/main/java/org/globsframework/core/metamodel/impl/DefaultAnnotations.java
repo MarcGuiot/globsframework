@@ -6,9 +6,8 @@ import org.globsframework.core.metamodel.utils.MutableAnnotations;
 import org.globsframework.core.model.Glob;
 import org.globsframework.core.model.Key;
 import org.globsframework.core.model.format.GlobPrinter;
+import org.globsframework.core.utils.exceptions.DuplicateGlobType;
 import org.globsframework.core.utils.exceptions.ItemNotFound;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -16,34 +15,47 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 public class DefaultAnnotations implements MutableAnnotations {
-    static private final Logger LOGGER = LoggerFactory.getLogger(DefaultAnnotations.class);
+    private static final LinkedHashMap<Key, Glob> EMPTY_MAP = new LinkedHashMap<>();
     volatile private Map<Key, Glob> annotations;
 
     public DefaultAnnotations() {
-        annotations = new LinkedHashMap<>();
+        annotations = EMPTY_MAP;
     }
 
     public DefaultAnnotations(LinkedHashMap<Key, Glob> annotations) {
-        this.annotations = annotations;
+        this.annotations = annotations == null ? EMPTY_MAP : annotations;
     }
 
     public DefaultAnnotations(Glob[] annotations) {
-        this.annotations = new LinkedHashMap<>(annotations.length);
-        for (Glob annotation : annotations) {
-            this.annotations.put(annotation.getKey(), annotation);
+        if (annotations == null || annotations.length == 0) {
+            this.annotations = EMPTY_MAP;
+        } else {
+            this.annotations = new LinkedHashMap<>(annotations.length);
+            for (Glob annotation : annotations) {
+                this.annotations.put(annotation.getKey(), annotation);
+            }
         }
     }
 
     public DefaultAnnotations(Annotations annotations) {
-        this.annotations = new LinkedHashMap<>();
-        annotations.streamAnnotations()
-                .forEach(annotation -> this.annotations.put(annotation.getKey(), annotation));
+        Collection<Glob> copy = annotations.getAnnotations();
+        if (copy.isEmpty()) {
+            this.annotations = EMPTY_MAP;
+        } else {
+            this.annotations = new LinkedHashMap<>((int) Math.ceil(((double) copy.size()) / 0.75));
+            annotations.streamAnnotations()
+                    .forEach(annotation -> this.annotations.put(annotation.getKey(), annotation));
+        }
     }
 
     public DefaultAnnotations(Collection<Glob> annotations) {
-        this.annotations = new LinkedHashMap<>(annotations.size());
-        for (Glob annotation : annotations) {
-            this.annotations.put(annotation.getKey(), annotation);
+        if (annotations == null || annotations.isEmpty()) {
+            this.annotations = EMPTY_MAP;
+        } else {
+            this.annotations = new LinkedHashMap<>((int) Math.ceil(((double) annotations.size()) / 0.75));
+            for (Glob annotation : annotations) {
+                this.annotations.put(annotation.getKey(), annotation);
+            }
         }
     }
 
@@ -53,7 +65,8 @@ public class DefaultAnnotations implements MutableAnnotations {
                 Map<Key, Glob> tmp = new LinkedHashMap<>(annotations);
                 Glob old = tmp.put(glob.getKey(), glob);
                 if (old != null && old != glob) {
-                    LOGGER.warn(GlobPrinter.toString(glob) + " has replaced " + GlobPrinter.toString(old));
+                    String msg = GlobPrinter.toString(glob) + " will have replaced " + GlobPrinter.toString(old);
+                    throw new DuplicateGlobType(msg);
                 }
                 annotations = tmp;
             }
@@ -61,13 +74,14 @@ public class DefaultAnnotations implements MutableAnnotations {
         return this;
     }
 
-    public MutableAnnotations addAnnotations(Stream<Glob> globs) {
+    public MutableAnnotations addAnnotations(Collection<Glob> globs) {
         synchronized (this) {
             Map<Key, Glob> tmp = new LinkedHashMap<>(annotations);
             globs.forEach(glob -> {
                 Glob old = tmp.put(glob.getKey(), glob);
                 if (old != null && old != glob) {
-                    LOGGER.warn(GlobPrinter.toString(glob) + " has replaced " + GlobPrinter.toString(old));
+                    String msg = GlobPrinter.toString(glob) + " will have replaced " + GlobPrinter.toString(old);
+                    throw new DuplicateGlobType(msg);
                 }
             });
 
@@ -86,6 +100,10 @@ public class DefaultAnnotations implements MutableAnnotations {
 
     public boolean hasAnnotation(Key key) {
         return annotations.containsKey(key);
+    }
+
+    public Collection<Glob> getAnnotations() {
+        return annotations.values();
     }
 
     public Glob getAnnotation(Key key) {

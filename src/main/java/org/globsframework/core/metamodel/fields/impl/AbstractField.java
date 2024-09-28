@@ -1,7 +1,7 @@
 package org.globsframework.core.metamodel.fields.impl;
 
 import org.globsframework.core.metamodel.GlobType;
-import org.globsframework.core.metamodel.annotations.RequiredAnnotationType;
+import org.globsframework.core.metamodel.annotations.Required;
 import org.globsframework.core.metamodel.impl.DefaultAnnotations;
 import org.globsframework.core.metamodel.type.DataType;
 import org.globsframework.core.model.Glob;
@@ -64,7 +64,7 @@ abstract public class AbstractField extends DefaultAnnotations {
     }
 
     public boolean isRequired() {
-        return hasAnnotation(RequiredAnnotationType.UNIQUE_KEY);
+        return hasAnnotation(Required.UNIQUE_KEY);
     }
 
     public DataType getDataType() {

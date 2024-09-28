@@ -5,16 +5,16 @@ import org.globsframework.core.metamodel.impl.DefaultGlobModel;
 
 public class AllAnnotations {
     static final public GlobModel MODEL =
-            new DefaultGlobModel(AutoIncrementAnnotationType.TYPE,
-                    ContainmentLinkAnnotationType.DESC, DefaultBooleanAnnotationType.TYPE,
-                    DefaultDoubleAnnotationType.DESC, DefaultFieldValueType.TYPE,
-                    DefaultIntegerAnnotationType.DESC, DefaultLongAnnotationType.DESC,
-                    DefaultStringAnnotationType.DESC, DoublePrecisionAnnotationType.DESC,
-                    FieldNameAnnotationType.TYPE, KeyAnnotationType.TYPE,
-                    EnumAnnotationType.TYPE,
-                    LinkModelNameAnnotationType.TYPE, MaxSizeType.TYPE, MultiLineTextType.TYPE,
-                    IgnoredAnnotationType.TYPE,
-                    CommentType.TYPE,
-                    NamingFieldAnnotationType.TYPE, RequiredAnnotationType.TYPE,
-                    NotUniqueIndexType.TYPE, FunctionalFieldOrderType.TYPE);
+            new DefaultGlobModel(AutoIncrement.TYPE,
+                    ContainmentLink.TYPE, DefaultBoolean.TYPE,
+                    DefaultDouble.TYPE,
+                    DefaultInteger.TYPE, DefaultLong.TYPE,
+                    DefaultString.TYPE, DoublePrecision.TYPE,
+                    FieldName.TYPE, KeyField.TYPE,
+                    EnumAnnotation.TYPE,
+                    LinkModelName.TYPE, MaxSize.TYPE, MultiLineText.TYPE,
+                    IgnoredAnnotation.TYPE,
+                    Comment.TYPE,
+                    NamingField.TYPE, Required.TYPE,
+                    NotUniqueIndex.TYPE, FunctionalFieldOrder.TYPE);
 }

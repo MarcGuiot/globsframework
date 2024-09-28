@@ -257,14 +257,14 @@ public class DefaultFieldFactory {
 //    }
 
 
-    private static Object computeDefaultValue(Field field,
-                                              Annotations annotations,
-                                              Key targetAnnotationClass) {
-        Glob glob = annotations.findAnnotation(targetAnnotationClass);
-        if (glob != null) {
-            Field fieldWithValue = glob.getType().getFieldWithAnnotation(DefaultFieldValueType.key);
-            return glob.getValue(fieldWithValue);
-        }
+//    private static Object computeDefaultValue(Field field,
+//                                              Annotations annotations,
+//                                              Key targetAnnotationClass) {
+//        Glob glob = annotations.findAnnotation(targetAnnotationClass);
+//        if (glob != null) {
+//            Field fieldWithValue = glob.getType().getFieldWithAnnotation(DefaultFieldValueType.key);
+//            return glob.getValue(fieldWithValue);
+//        }
 //        for (Class annotationClass : defaultValuesAnnotations) {
 //            Annotation annotation = annotations.get(annotationClass);
 //            if (annotation == null) {
@@ -287,6 +287,6 @@ public class DefaultFieldFactory {
 //                throw new InvalidParameter("Cannot determine default value for field: " + field, e);
 //            }
 //        }
-        return null;
-    }
+//        return null;
+//    }
 }

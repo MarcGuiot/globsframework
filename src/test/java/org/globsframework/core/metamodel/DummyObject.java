@@ -9,11 +9,11 @@ public class DummyObject {
 
     public static GlobType TYPE;
 
-    @KeyField
-    @AutoIncrement
+    @KeyField_
+    @AutoIncrement_
     public static IntegerField ID;
 
-    @NamingField
+    @NamingField_
     public static StringField NAME;
 
     public static DoubleField VALUE;
@@ -22,7 +22,7 @@ public class DummyObject {
     public static IntegerField DATE;
     public static BlobField PASSWORD;
 
-    @ContainmentLink
+    @ContainmentLink_
     public static IntegerField LINK_ID;
 
     public static DirectLink LINK;

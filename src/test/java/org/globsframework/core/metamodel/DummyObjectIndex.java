@@ -1,7 +1,7 @@
 package org.globsframework.core.metamodel;
 
-import org.globsframework.core.metamodel.annotations.KeyField;
-import org.globsframework.core.metamodel.annotations.NamingField;
+import org.globsframework.core.metamodel.annotations.KeyField_;
+import org.globsframework.core.metamodel.annotations.NamingField_;
 import org.globsframework.core.metamodel.fields.DoubleField;
 import org.globsframework.core.metamodel.fields.IntegerField;
 import org.globsframework.core.metamodel.fields.StringField;
@@ -14,7 +14,7 @@ public class DummyObjectIndex {
 
     public static GlobType TYPE;
 
-    @KeyField
+    @KeyField_
     public static IntegerField ID;
 
     public static DoubleField VALUE;
@@ -22,7 +22,7 @@ public class DummyObjectIndex {
     public static IntegerField VALUE_2;
     public static IntegerField DATE;
 
-    @NamingField
+    @NamingField_
     public static StringField NAME;
 
     public static StringField UNIQUE_NAME;

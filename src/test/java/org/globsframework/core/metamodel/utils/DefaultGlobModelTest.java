@@ -1,8 +1,8 @@
 package org.globsframework.core.metamodel.utils;
 
 import org.globsframework.core.metamodel.*;
-import org.globsframework.core.metamodel.annotations.KeyField;
-import org.globsframework.core.metamodel.annotations.Required;
+import org.globsframework.core.metamodel.annotations.KeyField_;
+import org.globsframework.core.metamodel.annotations.Required_;
 import org.globsframework.core.metamodel.annotations.Target;
 import org.globsframework.core.metamodel.fields.IntegerField;
 import org.globsframework.core.metamodel.impl.DefaultGlobModel;
@@ -31,7 +31,7 @@ public class DefaultGlobModelTest {
     public static class LargeLinkCycle1 {
         public static GlobType TYPE;
 
-        @KeyField
+        @KeyField_
         public static IntegerField ID;
 
         @Target(LargeLinkCycle2.class)
@@ -52,7 +52,7 @@ public class DefaultGlobModelTest {
     public static class LargeLinkCycle2 {
         public static GlobType TYPE;
 
-        @KeyField
+        @KeyField_
         public static IntegerField ID;
 
         @Target(LargeLinkCycle3.class)
@@ -73,7 +73,7 @@ public class DefaultGlobModelTest {
     public static class LargeLinkCycle3 {
         public static GlobType TYPE;
 
-        @KeyField
+        @KeyField_
         public static IntegerField ID;
 
         @Target(LargeLinkCycle1.class)
@@ -129,10 +129,10 @@ public class DefaultGlobModelTest {
     public static class LargeLinkCycleWithRequiredFieldError1 {
         public static GlobType TYPE;
 
-        @KeyField
+        @KeyField_
         public static IntegerField ID;
 
-        @Required
+        @Required_
         @Target(LargeLinkCycleWithRequiredFieldError2.class)
         public static IntegerField LINK_ID;
 
@@ -151,10 +151,10 @@ public class DefaultGlobModelTest {
     public static class LargeLinkCycleWithRequiredFieldError2 {
         public static GlobType TYPE;
 
-        @KeyField
+        @KeyField_
         public static IntegerField ID;
 
-        @Required
+        @Required_
         @Target(LargeLinkCycleWithRequiredFieldError3.class)
         public static IntegerField LINK_ID;
 
@@ -173,10 +173,10 @@ public class DefaultGlobModelTest {
     public static class LargeLinkCycleWithRequiredFieldError3 {
         public static GlobType TYPE;
 
-        @KeyField
+        @KeyField_
         public static IntegerField ID;
 
-        @Required
+        @Required_
         @Target(LargeLinkCycleWithRequiredFieldError1.class)
         public static IntegerField LINK_ID;
 

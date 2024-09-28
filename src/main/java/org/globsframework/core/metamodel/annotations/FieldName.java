@@ -12,14 +12,14 @@ import org.globsframework.core.model.MutableGlob;
 
 import java.util.LinkedHashMap;
 
-public class FieldNameAnnotationType {
+public class FieldName {
     public static final GlobType TYPE;
 
     public static final StringField NAME;
 
     public static final Key UNIQUE_KEY;
 
-    public static Glob create(FieldNameAnnotation nameAnnotation) {
+    public static Glob create(FieldName_ nameAnnotation) {
         return create(nameAnnotation.value());
     }
 
@@ -28,14 +28,14 @@ public class FieldNameAnnotationType {
     }
 
     static {
-        DefaultGlobType globType = new DefaultGlobType("fieldNameAnnotation");
+        DefaultGlobType globType = new DefaultGlobType("FieldName");
         DefaultFieldFactory factory = new DefaultFieldFactory(globType);
         TYPE = globType;
         NAME = factory.addString("name", false, 0, 0, null, new LinkedHashMap<>());
         globType.completeInit();
         UNIQUE_KEY = KeyBuilder.newEmptyKey(TYPE);
         NAME.addAnnotation(create("name"));
-        globType.register(GlobCreateFromAnnotation.class, annotation -> create((FieldNameAnnotation) annotation));
+        globType.register(GlobCreateFromAnnotation.class, annotation -> create((FieldName_) annotation));
     }
 
     public static String getName(Field field) {

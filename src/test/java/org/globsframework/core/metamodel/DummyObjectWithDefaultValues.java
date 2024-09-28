@@ -6,29 +6,29 @@ import org.globsframework.core.metamodel.fields.*;
 public class DummyObjectWithDefaultValues {
     public static GlobType TYPE;
 
-    @KeyField
-    @AutoIncrement
+    @KeyField_
+    @AutoIncrement_
     public static IntegerField ID;
 
-    @DefaultInteger(7)
+    @DefaultInteger_(7)
     public static IntegerField INTEGER;
 
-    @DefaultBigDecimal("1.61803398875")
+    @DefaultBigDecimal_("1.61803398875")
     public static BigDecimalField BIG_DECIMAL;
 
-    @DefaultLong(5l)
+    @DefaultLong_(5l)
     public static LongField LONG;
 
-    @DefaultDouble(3.14159265)
+    @DefaultDouble_(3.14159265)
     public static DoubleField DOUBLE;
 
-    @DefaultBoolean(true)
+    @DefaultBoolean_(true)
     public static BooleanField BOOLEAN;
 
     @Target(DummyObject.class)
     public static IntegerField LINK;
 
-    @DefaultString("Hello")
+    @DefaultString_("Hello")
     public static StringField STRING;
 
     static {

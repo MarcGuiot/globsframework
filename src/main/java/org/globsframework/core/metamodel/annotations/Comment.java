@@ -7,7 +7,7 @@ import org.globsframework.core.metamodel.fields.StringField;
 import org.globsframework.core.model.Glob;
 import org.globsframework.core.model.Key;
 
-public class CommentType {
+public class Comment {
     public static GlobType TYPE;
 
     public static StringField VALUE;
@@ -20,7 +20,7 @@ public class CommentType {
     }
 
     static {
-        GlobTypeLoader loader = GlobTypeLoaderFactory.create(CommentType.class, "Comment");
+        GlobTypeLoader loader = GlobTypeLoaderFactory.create(Comment.class, "Comment");
         loader.register(GlobCreateFromAnnotation.class, annotation -> create((Comment_) annotation));
         loader.load();
     }

@@ -2,7 +2,7 @@ package org.globsframework.core.metamodel.links.impl;
 
 import org.globsframework.core.metamodel.Annotations;
 import org.globsframework.core.metamodel.GlobType;
-import org.globsframework.core.metamodel.annotations.RequiredAnnotationType;
+import org.globsframework.core.metamodel.annotations.Required;
 import org.globsframework.core.metamodel.fields.Field;
 import org.globsframework.core.metamodel.links.DirectSingleLink;
 import org.globsframework.core.metamodel.links.FieldMappingFunction;
@@ -30,7 +30,7 @@ public class DefaultDirectSingleLink extends AbstractLink implements DirectSingl
     }
 
     public boolean isRequired() {
-        return hasAnnotation(RequiredAnnotationType.UNIQUE_KEY);
+        return hasAnnotation(Required.UNIQUE_KEY);
     }
 
     public <T extends FieldMappingFunction> T apply(T functor) {

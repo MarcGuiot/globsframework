@@ -1,16 +1,28 @@
 package org.globsframework.core.metamodel.annotations;
 
 import org.globsframework.core.metamodel.GlobType;
+import org.globsframework.core.metamodel.GlobTypeLoaderFactory;
+import org.globsframework.core.model.Glob;
+import org.globsframework.core.model.Key;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
+import java.lang.annotation.Annotation;
 
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+public class NamingField {
+    public static GlobType TYPE;
 
-@Retention(RUNTIME)
-@Target({ElementType.FIELD})
-public @interface NamingField {
+    @InitUniqueKey
+    public static Key UNIQUE_KEY;
 
-    GlobType TYPE = NamingFieldAnnotationType.TYPE;
+    @InitUniqueGlob
+    public static Glob UNIQUE_GLOB;
+
+    static {
+        GlobTypeLoaderFactory.create(NamingField.class, "NamingField")
+                .register(GlobCreateFromAnnotation.class, new GlobCreateFromAnnotation() {
+                    public Glob create(Annotation annotation) {
+                        return UNIQUE_GLOB;
+                    }
+                })
+                .load();
+    }
 }

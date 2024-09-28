@@ -1,6 +1,6 @@
 package org.globsframework.core.metamodel;
 
-import org.globsframework.core.metamodel.annotations.KeyAnnotationType;
+import org.globsframework.core.metamodel.annotations.KeyField;
 import org.globsframework.core.metamodel.fields.*;
 import org.globsframework.core.metamodel.type.DataType;
 import org.globsframework.core.model.Glob;
@@ -11,6 +11,8 @@ import java.util.List;
 
 public interface GlobTypeBuilder {
     GlobTypeBuilder addAnnotation(Glob annotation);
+
+    GlobTypeBuilder addAnnotations(Collection<Glob> annotation);
 
     GlobTypeBuilder addStringField(String fieldName, Collection<Glob> annotations);
 
@@ -229,7 +231,7 @@ public interface GlobTypeBuilder {
     GlobType unCompleteType();
 
     default GlobTypeBuilder addIntegerKey(String fieldName) {
-        addIntegerField(fieldName, KeyAnnotationType.UNINITIALIZED);
+        addIntegerField(fieldName, KeyField.UNINITIALIZED);
         return this;
     }
 

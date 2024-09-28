@@ -2,7 +2,7 @@ package org.globsframework.core.metamodel.links.impl;
 
 import org.globsframework.core.metamodel.Annotations;
 import org.globsframework.core.metamodel.GlobType;
-import org.globsframework.core.metamodel.annotations.FieldNameAnnotationType;
+import org.globsframework.core.metamodel.annotations.FieldName;
 import org.globsframework.core.metamodel.fields.Field;
 import org.globsframework.core.metamodel.links.DirectSingleLink;
 import org.globsframework.core.metamodel.links.FieldMappingFunction;
@@ -21,9 +21,9 @@ public class UnInitializedLink extends AbstractLink implements DirectSingleLink 
     }
 
     static String getName(Annotations annotations) {
-        Glob annotation = annotations.findAnnotation(FieldNameAnnotationType.UNIQUE_KEY);
+        Glob annotation = annotations.findAnnotation(FieldName.UNIQUE_KEY);
         if (annotation != null) {
-            return annotation.get(FieldNameAnnotationType.NAME);
+            return annotation.get(FieldName.NAME);
         }
         throw new GlobsException("Missing field name annotation");
     }

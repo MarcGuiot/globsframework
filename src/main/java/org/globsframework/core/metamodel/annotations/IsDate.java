@@ -17,7 +17,7 @@ public class IsDate {
     public static Glob UNIQUE;
 
     static {
-        GlobTypeLoaderFactory.create(IsDate.class)
+        GlobTypeLoaderFactory.create(IsDate.class, "IsDate")
                 .register(GlobCreateFromAnnotation.class, annotation -> UNIQUE)
                 .load();
     }

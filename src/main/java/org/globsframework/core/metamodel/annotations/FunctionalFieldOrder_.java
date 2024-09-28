@@ -8,8 +8,10 @@ import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.RUNTIME)
 @java.lang.annotation.Target({ElementType.FIELD})
-public @interface Comment_ {
-    String value();
+public @interface FunctionalFieldOrder_ {
+    int value();
 
-    GlobType TYPE = Comment.TYPE;
+    String name() default "";
+
+    GlobType TYPE = FunctionalFieldOrder.TYPE;
 }

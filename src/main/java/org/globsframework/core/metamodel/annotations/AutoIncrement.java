@@ -1,14 +1,22 @@
 package org.globsframework.core.metamodel.annotations;
 
 import org.globsframework.core.metamodel.GlobType;
+import org.globsframework.core.metamodel.GlobTypeLoaderFactory;
+import org.globsframework.core.model.Glob;
+import org.globsframework.core.model.Key;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+public class AutoIncrement {
+    public static GlobType TYPE;
 
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD})
-public @interface AutoIncrement {
-    GlobType TYPE = AutoIncrementAnnotationType.TYPE;
+    @InitUniqueKey
+    public static Key KEY;
+
+    @InitUniqueGlob
+    public static Glob INSTANCE;
+
+    static {
+        GlobTypeLoaderFactory.create(AutoIncrement.class, "AutoIncrement")
+                .register(GlobCreateFromAnnotation.class, annotation -> INSTANCE)
+                .load();
+    }
 }

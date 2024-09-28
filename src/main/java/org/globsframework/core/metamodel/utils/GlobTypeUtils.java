@@ -1,8 +1,8 @@
 package org.globsframework.core.metamodel.utils;
 
 import org.globsframework.core.metamodel.GlobType;
-import org.globsframework.core.metamodel.annotations.FieldNameAnnotationType;
-import org.globsframework.core.metamodel.annotations.NamingFieldAnnotationType;
+import org.globsframework.core.metamodel.annotations.FieldName;
+import org.globsframework.core.metamodel.annotations.NamingField;
 import org.globsframework.core.metamodel.fields.Field;
 import org.globsframework.core.metamodel.fields.StringField;
 import org.globsframework.core.model.Glob;
@@ -28,7 +28,7 @@ public class GlobTypeUtils {
     }
 
     public static StringField findNamingField(GlobType type) {
-        Field field = type.findFieldWithAnnotation(NamingFieldAnnotationType.UNIQUE_KEY);
+        Field field = type.findFieldWithAnnotation(NamingField.UNIQUE_KEY);
         if (field != null) {
             return stringField(field, type);
         }
@@ -36,7 +36,7 @@ public class GlobTypeUtils {
     }
 
     public static StringField getNamingField(GlobType type) throws ItemNotFound, ItemAmbiguity, InvalidParameter {
-        Field field = type.getFieldWithAnnotation(NamingFieldAnnotationType.UNIQUE_KEY);
+        Field field = type.getFieldWithAnnotation(NamingField.UNIQUE_KEY);
         return stringField(field, type);
     }
 
@@ -48,7 +48,7 @@ public class GlobTypeUtils {
     }
 
     public static Field findNamedField(GlobType type, String name) {
-        Field fieldWithAnnotation = findFieldWithAnnotation(type, FieldNameAnnotationType.create(name));
+        Field fieldWithAnnotation = findFieldWithAnnotation(type, FieldName.create(name));
         if (fieldWithAnnotation == null) {
             fieldWithAnnotation = type.findField(name);
         }

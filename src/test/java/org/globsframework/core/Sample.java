@@ -19,8 +19,8 @@ public class Sample {
     public void readmeDynamic() {
         GlobType type = GlobTypeBuilderFactory.create("aType")
                 .addIntegerKey("id")
-                .addStringField("string", NamingFieldAnnotationType.UNIQUE_GLOB)
-                .addIntegerField("anInt", FieldNameAnnotationType.create("int"))
+                .addStringField("string", NamingField.UNIQUE_GLOB)
+                .addIntegerField("anInt", FieldName.create("int"))
                 .addLongField("long")
                 .addDoubleField("double")
                 .addBlobField("blob")
@@ -34,21 +34,21 @@ public class Sample {
 
         assertEquals("Hello", data.get(stringField));
 
-        Field namingField = data.getType().findFieldWithAnnotation(NamingFieldAnnotationType.UNIQUE_KEY);
+        Field namingField = data.getType().findFieldWithAnnotation(NamingField.UNIQUE_KEY);
         assertEquals("Hello", data.getValue(namingField));
-        assertEquals("int", FieldNameAnnotationType.getName(type.getField("anInt")));
+        assertEquals("int", FieldName.getName(type.getField("anInt")));
     }
 
     public static class AType {
         public static GlobType TYPE;
 
-        @KeyField
+        @KeyField_
         public static IntegerField ID;
 
-        @NamingField()
+        @NamingField_()
         public static StringField string;
 
-        @FieldNameAnnotation("int")
+        @FieldName_("int")
         public static IntegerField anInt;
 
         static {

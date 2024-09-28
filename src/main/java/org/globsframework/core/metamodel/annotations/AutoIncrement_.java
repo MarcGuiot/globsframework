@@ -5,11 +5,10 @@ import org.globsframework.core.metamodel.GlobType;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-@java.lang.annotation.Target({ElementType.FIELD})
-public @interface Comment_ {
-    String value();
-
-    GlobType TYPE = Comment.TYPE;
+@Target({ElementType.FIELD})
+public @interface AutoIncrement_ {
+    GlobType TYPE = AutoIncrement.TYPE;
 }

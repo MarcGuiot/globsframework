@@ -21,15 +21,15 @@ public interface Key extends FieldValuesAccessor, Comparable<Key> {
     FieldValues asFieldValues();
 
     default int compareTo(Key o) {
-        int c = getGlobType().getName().compareTo(o.getGlobType().getName());
+        GlobType globType = getGlobType();
+        GlobType otherGlobType = o.getGlobType();
+        if (globType == otherGlobType) {
+            return globType.sameKeyComparator().compare(this, o);
+        }
+        int c = globType.getName().compareTo(otherGlobType.getName());
         if (c != 0) {
             return c;
         }
-        return compareSameKey(o);
+        throw new RuntimeException("Duplicate GlobType name " + globType.getName());
     }
-
-    default int compareSameKey(Key key) {
-        return key.getGlobType().sameKeyComparator().compare(this, key);
-    }
-
 }

@@ -8,8 +8,8 @@ import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.RUNTIME)
 @java.lang.annotation.Target({ElementType.FIELD})
-public @interface Comment_ {
+public @interface DefaultString_ {
     String value();
 
-    GlobType TYPE = Comment.TYPE;
+    GlobType TYPE = DefaultString.TYPE;
 }

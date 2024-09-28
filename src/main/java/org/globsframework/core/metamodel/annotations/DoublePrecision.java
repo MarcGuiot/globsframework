@@ -1,15 +1,27 @@
 package org.globsframework.core.metamodel.annotations;
 
 import org.globsframework.core.metamodel.GlobType;
+import org.globsframework.core.metamodel.GlobTypeLoader;
+import org.globsframework.core.metamodel.GlobTypeLoaderFactory;
+import org.globsframework.core.metamodel.fields.IntegerField;
+import org.globsframework.core.model.Glob;
+import org.globsframework.core.model.Key;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+public class DoublePrecision {
+    public static GlobType TYPE;
 
-@Retention(RetentionPolicy.RUNTIME)
-@java.lang.annotation.Target({ElementType.FIELD})
-public @interface DoublePrecision {
-    int value();
+    public static IntegerField PRECISION;
 
-    GlobType TYPE = DoublePrecisionAnnotationType.DESC;
+    @InitUniqueKey
+    public static Key UNIQUE_KEY;
+
+    public static Glob create(DoublePrecision_ precision) {
+        return TYPE.instantiate().set(PRECISION, precision.value());
+    }
+
+    static {
+        GlobTypeLoader loader = GlobTypeLoaderFactory.create(DoublePrecision.class, "DoublePrecision");
+        loader.register(GlobCreateFromAnnotation.class, annotation -> create((DoublePrecision_) annotation));
+        loader.load();
+    }
 }

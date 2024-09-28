@@ -39,7 +39,7 @@ public class GlobTypeLoaderTest {
 
         public static GlobType TYPE;
 
-        @KeyField
+        @KeyField_
         public static IntegerField ID;
 
         public static StringField STRING;
@@ -182,7 +182,7 @@ public class GlobTypeLoaderTest {
 
     public static class AnObjectForDoubleInit {
         public static GlobType TYPE;
-        @KeyField
+        @KeyField_
         public static IntegerField ID;
     }
 
@@ -214,9 +214,9 @@ public class GlobTypeLoaderTest {
 
     public static class AnObjectWithACompositeKey {
         public static GlobType TYPE;
-        @KeyField
+        @KeyField_
         public static IntegerField ID1;
-        @KeyField
+        @KeyField_
         public static IntegerField ID2;
 
         static {
@@ -233,7 +233,7 @@ public class GlobTypeLoaderTest {
     public static class AnObjectWithALinkField {
         public static GlobType TYPE;
 
-        @KeyField
+        @KeyField_
         public static IntegerField ID;
 
         public static IntegerField LINK_ID;
@@ -268,7 +268,7 @@ public class GlobTypeLoaderTest {
 
     public static class AnObjectWithALinkFieldWithoutTheTargetAnnotation {
         public static GlobType TYPE;
-        @KeyField
+        @KeyField_
         public static IntegerField ID;
 
         public static IntegerField LINK_ID;
@@ -291,7 +291,7 @@ public class GlobTypeLoaderTest {
 
     public static class AnObjectWithALinkFieldTargettingAMultiKeyObject {
         public static GlobType TYPE;
-        @KeyField
+        @KeyField_
         public static IntegerField ID;
 
         @Target(AnObjectWithACompositeKey.class)
@@ -317,7 +317,7 @@ public class GlobTypeLoaderTest {
 
     public static class AnObjectWithALinkFieldTargettingANonGlobsObject {
         public static GlobType TYPE;
-        @KeyField
+        @KeyField_
         public static IntegerField ID;
 
         public static IntegerField LINK;
@@ -340,7 +340,7 @@ public class GlobTypeLoaderTest {
 
     public static class AnObjectWithAStringId {
         public static GlobType TYPE;
-        @KeyField
+        @KeyField_
         public static StringField ID;
 
         static {
@@ -350,7 +350,7 @@ public class GlobTypeLoaderTest {
 
     public static class AnObjectWithALinkFieldTargettingAnObjectWithAStringId {
         public static GlobType TYPE;
-        @KeyField
+        @KeyField_
         public static IntegerField ID;
 
         public static StringField LINK_ID;
@@ -371,7 +371,7 @@ public class GlobTypeLoaderTest {
 
     public static class AnObjectWithASingleIntegerFieldUsedAsALink {
         public static GlobType TYPE;
-        @KeyField
+        @KeyField_
         public static IntegerField ID;
         public static IntegerField LINK_ID;
         public static Link LINK;
@@ -433,7 +433,7 @@ public class GlobTypeLoaderTest {
 
         @MyAnnotation("class annotations")
         public static GlobType TYPE;
-        @KeyField
+        @KeyField_
         @MyAnnotation("field annotations")
         public static IntegerField ID;
 
@@ -463,7 +463,7 @@ public class GlobTypeLoaderTest {
     public static class AnObjectWithCustomLinkAnnotations {
         public static GlobType TYPE;
 
-        @KeyField
+        @KeyField_
         public static IntegerField ID;
 
         @MyAnnotation("link annotation")
@@ -485,11 +485,11 @@ public class GlobTypeLoaderTest {
 
         public static GlobType TYPE;
 
-        @Required
-        @KeyField
+        @Required_
+        @KeyField_
         public static IntegerField ID;
 
-        @Required
+        @Required_
         public static StringField STRING;
 
         public static DoubleField DOUBLE;
@@ -509,8 +509,8 @@ public class GlobTypeLoaderTest {
     @Test
     public void testAnObjectWithDefaultValues() throws Exception {
         assertEquals(7, DummyObjectWithDefaultValues.INTEGER.getDefaultValue());
-        assertEquals(7, DummyObjectWithDefaultValues.INTEGER.getAnnotation(DefaultIntegerAnnotationType.UNIQUE_KEY)
-                .get(DefaultIntegerAnnotationType.DEFAULT_VALUE).intValue());
+        assertEquals(7, DummyObjectWithDefaultValues.INTEGER.getAnnotation(DefaultInteger.UNIQUE_KEY)
+                .get(DefaultInteger.VALUE).intValue());
         assertEquals(3.14159265, DummyObjectWithDefaultValues.DOUBLE.getDefaultValue());
         assertEquals(5l, DummyObjectWithDefaultValues.LONG.getDefaultValue());
         assertEquals(true, DummyObjectWithDefaultValues.BOOLEAN.getDefaultValue());
@@ -522,10 +522,10 @@ public class GlobTypeLoaderTest {
 
     public static class AnObjectWithADefaultValueTypeError {
         public static GlobType TYPE;
-        @KeyField
+        @KeyField_
         public static IntegerField ID;
 
-        @DefaultBoolean(true)
+        @DefaultBoolean_(true)
         public static IntegerField COUNT;
     }
 
@@ -546,12 +546,12 @@ public class GlobTypeLoaderTest {
 
         public static GlobType TYPE;
 
-        @KeyField
+        @KeyField_
         public static IntegerField ID;
 
         public static IntegerField LINK_ID;
 
-        @Required
+        @Required_
         public static Link LINK;
 
         static {
@@ -573,13 +573,13 @@ public class GlobTypeLoaderTest {
 
         public static GlobType TYPE;
 
-        @KeyField
+        @KeyField_
         public static IntegerField ID;
 
         @Target(DummyObject.class)
         public static IntegerField LINK_ID;
 
-        @Required
+        @Required_
         public static Link LINK;
 
 

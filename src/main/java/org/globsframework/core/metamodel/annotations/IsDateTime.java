@@ -17,7 +17,7 @@ public class IsDateTime {
     public static Glob UNIQUE;
 
     static {
-        GlobTypeLoaderFactory.create(IsDateTime.class)
+        GlobTypeLoaderFactory.create(IsDateTime.class, "IsDateTime")
                 .register(GlobCreateFromAnnotation.class, annotation -> UNIQUE)
                 .load();
     }

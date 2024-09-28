@@ -1,17 +1,28 @@
 package org.globsframework.core.metamodel.annotations;
 
 import org.globsframework.core.metamodel.GlobType;
+import org.globsframework.core.metamodel.GlobTypeLoaderFactory;
+import org.globsframework.core.metamodel.fields.StringField;
+import org.globsframework.core.model.Glob;
+import org.globsframework.core.model.Key;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
+import java.lang.annotation.Annotation;
 
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+public class LinkModelName {
+    public static GlobType TYPE;
 
-@Retention(RUNTIME)
-@java.lang.annotation.Target({ElementType.FIELD})
+    public static StringField NAME;
 
-public @interface LinkModelName {
-    String value();
+    @InitUniqueKey
+    public static Key UNIQUE_KEY;
 
-    GlobType TYPE = LinkModelNameAnnotationType.TYPE;
+    static {
+        GlobTypeLoaderFactory.create(LinkModelName.class, "LinkModelName")
+                .register(GlobCreateFromAnnotation.class, LinkModelName::create)
+                .load();
+    }
+
+    private static Glob create(Annotation annotation) {
+        return TYPE.instantiate().set(NAME, ((LinkModelName_) annotation).value());
+    }
 }

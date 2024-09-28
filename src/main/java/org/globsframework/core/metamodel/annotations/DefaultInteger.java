@@ -1,15 +1,27 @@
 package org.globsframework.core.metamodel.annotations;
 
 import org.globsframework.core.metamodel.GlobType;
+import org.globsframework.core.metamodel.GlobTypeLoaderFactory;
+import org.globsframework.core.metamodel.fields.IntegerField;
+import org.globsframework.core.model.Glob;
+import org.globsframework.core.model.Key;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+public class DefaultInteger {
+    public static GlobType TYPE;
 
-@Retention(RetentionPolicy.RUNTIME)
-@java.lang.annotation.Target({ElementType.FIELD})
-public @interface DefaultInteger {
-    int value();
+    public static IntegerField VALUE;
 
-    GlobType GLOB_TYPE = DefaultIntegerAnnotationType.DESC;
+    @InitUniqueKey
+    public static Key UNIQUE_KEY;
+
+    public static Glob create(DefaultInteger_ defaultDouble) {
+        return TYPE.instantiate().set(VALUE, defaultDouble.value());
+    }
+
+    static {
+        GlobTypeLoaderFactory.create(DefaultInteger.class, "DefaultInteger")
+                .register(GlobCreateFromAnnotation.class, annotation -> create((DefaultInteger_) annotation))
+                .load();
+    }
+
 }

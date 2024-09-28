@@ -1,19 +1,34 @@
 package org.globsframework.core.metamodel.annotations;
 
 import org.globsframework.core.metamodel.GlobType;
+import org.globsframework.core.metamodel.GlobTypeLoaderFactory;
+import org.globsframework.core.metamodel.fields.IntegerField;
+import org.globsframework.core.metamodel.fields.StringField;
+import org.globsframework.core.model.Glob;
+import org.globsframework.core.model.Key;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
+import java.lang.annotation.Annotation;
 
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+public class MultiLineText {
+    public static GlobType TYPE;
 
-@Retention(RUNTIME)
-@java.lang.annotation.Target({ElementType.FIELD})
-public @interface MultiLineText {
+    public static StringField mimeType;
 
-    String mimeType() default "text/plain";
+    public static IntegerField maxSize;
 
-    int maxSize() default -1;
+    @InitUniqueKey
+    public static Key UNIQUE_KEY;
 
-    GlobType TYPE = MultiLineTextType.TYPE;
+    static {
+        GlobTypeLoaderFactory.create(MultiLineText.class, "MultiLineText")
+                .register(GlobCreateFromAnnotation.class, MultiLineText::create)
+                .load();
+    }
+
+    private static Glob create(Annotation annotation) {
+        return TYPE.instantiate()
+                .set(mimeType, ((MultiLineText_) annotation).mimeType())
+                .set(maxSize, ((MultiLineText_) annotation).maxSize())
+                ;
+    }
 }

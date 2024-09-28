@@ -8,6 +8,7 @@ import org.globsframework.core.metamodel.annotations.*;
 import org.globsframework.core.metamodel.fields.*;
 import org.globsframework.core.metamodel.fields.impl.AbstractField;
 import org.globsframework.core.metamodel.index.*;
+import org.globsframework.core.metamodel.index.NotUniqueIndex;
 import org.globsframework.core.metamodel.index.impl.DefaultMultiFieldNotUniqueIndex;
 import org.globsframework.core.metamodel.index.impl.DefaultMultiFieldUniqueIndex;
 import org.globsframework.core.metamodel.index.impl.DefaultNotUniqueIndex;
@@ -72,7 +73,7 @@ public class GlobTypeLoaderImpl implements GlobTypeLoader {
             if (processor != null && !processor.isEmpty()) {
                 LinkedHashMap<Key, Glob> annotations = new LinkedHashMap<>();
                 processFieldAnnotations(classField, annotations);
-                MutableGlob fieldNameAnnotation = FieldNameAnnotationType.create(getFieldName(classField));
+                MutableGlob fieldNameAnnotation = FieldName.create(getFieldName(classField));
                 annotations.put(fieldNameAnnotation.getKey(), fieldNameAnnotation);
                 applyProcessor(targetClass, classField, processor, annotations);
             } else {
@@ -134,13 +135,17 @@ public class GlobTypeLoaderImpl implements GlobTypeLoader {
             throw new ItemAlreadyExists("Class " + targetClass.getName() +
                     " must have only one TYPE field of class " + GlobType.class.getName());
         }
-        this.type = new DefaultGlobType(modelName, getTypeName(targetClass));
+        LinkedHashMap<Key, Glob> annotations = null;
         for (Annotation annotation : classField.getAnnotations()) {
             Glob glob = processAnnotation(annotation);
             if (glob != null) {
-                type.addAnnotation(glob);
+                if (annotations == null){
+                    annotations = new LinkedHashMap<>();
+                }
+                annotations.put(glob.getKey(), glob);
             }
         }
+        this.type = new DefaultGlobType(getTypeName(targetClass), annotations);
         this.fieldFactory = new DefaultFieldFactory(type);
         GlobTypeLoaderImpl.setClassField(classField, type, targetClass);
     }
@@ -205,28 +210,28 @@ public class GlobTypeLoaderImpl implements GlobTypeLoader {
         for (java.lang.reflect.Field classField : targetClass.getFields()) {
             int keyIndex = -1;
             if (isGlobField(classField)) {
-                boolean isKeyField = classField.isAnnotationPresent(KeyField.class);
+                boolean isKeyField = classField.isAnnotationPresent(KeyField_.class);
                 if (isKeyField) {
-                    keyIndex = classField.getAnnotation(KeyField.class).value();
+                    keyIndex = classField.getAnnotation(KeyField_.class).value();
                     if (keyIndex == -1) {
                         keyIndex = keyCount;
                     }
                     allocatedKeys.add(keyIndex);
                 }
                 String fieldName;
-                boolean hasFieldNameAnnotation = classField.isAnnotationPresent(FieldNameAnnotation.class);
+                boolean hasFieldNameAnnotation = classField.isAnnotationPresent(FieldName_.class);
                 if (hasFieldNameAnnotation) {
-                    fieldName = classField.getAnnotation(FieldNameAnnotation.class).value();
+                    fieldName = classField.getAnnotation(FieldName_.class).value();
                 } else {
                     fieldName = getFieldName(classField);
                 }
-                LinkedHashMap<Key, Glob> annotations = new LinkedHashMap<>();
+                LinkedHashMap<Key, Glob> annotations = new LinkedHashMap<>(2);
                 if (!hasFieldNameAnnotation) {
-                    MutableGlob glob = FieldNameAnnotationType.create(fieldName);
+                    MutableGlob glob = FieldName.create(fieldName);
                     annotations.put(glob.getKey(), glob);
                 }
                 if (isKeyField) {
-                    Glob glob = KeyAnnotationType.create(keyCount);
+                    Glob glob = KeyField.create(keyCount);
                     annotations.put(glob.getKey(), glob);
                     keyCount++;
                 }
@@ -261,23 +266,23 @@ public class GlobTypeLoaderImpl implements GlobTypeLoader {
     private AbstractField create(String name, Class<?> fieldClass, boolean isKeyField, int keyIndex, int index,
                                  java.lang.reflect.Field field, LinkedHashMap<Key, Glob> annotations) {
         if (StringField.class.isAssignableFrom(fieldClass)) {
-            DefaultString defaultString = field.getAnnotation(DefaultString.class);
+            DefaultString_ defaultString = field.getAnnotation(DefaultString_.class);
             String defaultValue = defaultString != null ? defaultString.value() : null;
             return fieldFactory.addString(name, isKeyField, keyIndex, index, defaultValue, annotations);
         } else if (IntegerField.class.isAssignableFrom(fieldClass)) {
-            DefaultInteger defaultInteger = field.getAnnotation(DefaultInteger.class);
+            DefaultInteger_ defaultInteger = field.getAnnotation(DefaultInteger_.class);
             return fieldFactory.addInteger(name, isKeyField, keyIndex, index,
                     defaultInteger != null ? defaultInteger.value() : null, annotations);
         } else if (LongField.class.isAssignableFrom(fieldClass)) {
-            DefaultLong defaultLong = field.getAnnotation(DefaultLong.class);
+            DefaultLong_ defaultLong = field.getAnnotation(DefaultLong_.class);
             return fieldFactory.addLong(name, isKeyField, keyIndex, index,
                     defaultLong != null ? defaultLong.value() : null, annotations);
         } else if (BooleanField.class.isAssignableFrom(fieldClass)) {
-            DefaultBoolean defaultBoolean = field.getAnnotation(DefaultBoolean.class);
+            DefaultBoolean_ defaultBoolean = field.getAnnotation(DefaultBoolean_.class);
             return fieldFactory.addBoolean(name, isKeyField, keyIndex, index,
                     defaultBoolean != null ? defaultBoolean.value() : null, annotations);
         } else if (DoubleField.class.isAssignableFrom(fieldClass)) {
-            DefaultDouble defaultDouble = field.getAnnotation(DefaultDouble.class);
+            DefaultDouble_ defaultDouble = field.getAnnotation(DefaultDouble_.class);
             return fieldFactory.addDouble(name, isKeyField, keyIndex, index,
                     defaultDouble != null ? defaultDouble.value() : null, annotations);
         } else if (BlobField.class.isAssignableFrom(fieldClass)) {
@@ -297,7 +302,7 @@ public class GlobTypeLoaderImpl implements GlobTypeLoader {
         } else if (DateTimeField.class.isAssignableFrom(fieldClass)) {
             return fieldFactory.addDateTime(name, isKeyField, keyIndex, index, annotations);
         } else if (BigDecimalField.class.isAssignableFrom(fieldClass)) {
-            DefaultBigDecimal defaultBigDecimal = field.getAnnotation(DefaultBigDecimal.class);
+            DefaultBigDecimal_ defaultBigDecimal = field.getAnnotation(DefaultBigDecimal_.class);
             return fieldFactory.addBigDecimal(name, isKeyField, keyIndex, index,
                     defaultBigDecimal != null ? new BigDecimal(defaultBigDecimal.value()) : null,
                     annotations);

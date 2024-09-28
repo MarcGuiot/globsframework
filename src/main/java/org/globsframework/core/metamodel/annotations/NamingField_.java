@@ -10,6 +10,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Retention(RUNTIME)
 @Target({ElementType.FIELD})
-public @interface TypedIsDateTime {
-    GlobType TYPE = IsDateTime.TYPE;
+public @interface NamingField_ {
+
+    GlobType TYPE = NamingField.TYPE;
 }

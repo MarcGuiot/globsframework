@@ -1,6 +1,6 @@
 package org.globsframework.core.metamodel;
 
-import org.globsframework.core.metamodel.annotations.KeyField;
+import org.globsframework.core.metamodel.annotations.KeyField_;
 import org.globsframework.core.metamodel.annotations.Target;
 import org.globsframework.core.metamodel.annotations.Targets;
 import org.globsframework.core.metamodel.fields.*;
@@ -9,7 +9,7 @@ public class DummyObjectWithInner {
 
     public static GlobType TYPE;
 
-    @KeyField
+    @KeyField_
     public static IntegerField ID;
 
     public static BlobField byteArrayData;

@@ -1,16 +1,27 @@
 package org.globsframework.core.metamodel.annotations;
 
 import org.globsframework.core.metamodel.GlobType;
+import org.globsframework.core.metamodel.GlobTypeLoader;
+import org.globsframework.core.metamodel.GlobTypeLoaderFactory;
+import org.globsframework.core.metamodel.fields.DoubleField;
+import org.globsframework.core.model.Glob;
+import org.globsframework.core.model.Key;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+public class DefaultDouble {
+    public static GlobType TYPE;
 
-@Retention(RetentionPolicy.RUNTIME)
-@java.lang.annotation.Target({ElementType.FIELD})
+    public static DoubleField VALUE;
 
-public @interface DefaultDouble {
-    double value();
+    @InitUniqueKey
+    public static Key UNIQUE_KEY;
 
-    GlobType TYPE = DefaultDoubleAnnotationType.DESC;
+    public static Glob create(double defaultDouble) {
+        return TYPE.instantiate().set(VALUE, defaultDouble);
+    }
+
+    static {
+        GlobTypeLoader loader = GlobTypeLoaderFactory.create(DefaultDouble.class, "DefaultDouble");
+        loader.register(GlobCreateFromAnnotation.class, annotation -> create(((DefaultDouble_) annotation).value()))
+                .load();
+    }
 }

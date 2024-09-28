@@ -1,20 +1,20 @@
 package org.globsframework.core.metamodel;
 
-import org.globsframework.core.metamodel.annotations.KeyField;
-import org.globsframework.core.metamodel.annotations.Required;
+import org.globsframework.core.metamodel.annotations.KeyField_;
+import org.globsframework.core.metamodel.annotations.Required_;
 import org.globsframework.core.metamodel.fields.IntegerField;
 import org.globsframework.core.metamodel.fields.StringField;
 
 public class DummyObjectWithRequiredFields {
     public static GlobType TYPE;
 
-    @KeyField
+    @KeyField_
     public static IntegerField ID;
 
-    @Required
+    @Required_
     public static IntegerField VALUE;
 
-    @Required
+    @Required_
     public static StringField NAME;
 
     static {

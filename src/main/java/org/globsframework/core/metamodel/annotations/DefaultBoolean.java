@@ -1,15 +1,27 @@
 package org.globsframework.core.metamodel.annotations;
 
 import org.globsframework.core.metamodel.GlobType;
+import org.globsframework.core.metamodel.GlobTypeLoader;
+import org.globsframework.core.metamodel.GlobTypeLoaderFactory;
+import org.globsframework.core.metamodel.fields.BooleanField;
+import org.globsframework.core.model.Glob;
+import org.globsframework.core.model.Key;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+public class DefaultBoolean {
+    public static GlobType TYPE;
 
-@Retention(RetentionPolicy.RUNTIME)
-@java.lang.annotation.Target({ElementType.FIELD})
-public @interface DefaultBoolean {
-    boolean value();
+    public static BooleanField VALUE;
 
-    GlobType TYPE = DefaultBooleanAnnotationType.TYPE;
+    @InitUniqueKey
+    public static Key UNIQUE_KEY;
+
+    public static Glob create(DefaultBoolean_ defaultDouble) {
+        return TYPE.instantiate().set(VALUE, defaultDouble.value());
+    }
+
+    static {
+        GlobTypeLoader loader = GlobTypeLoaderFactory.create(DefaultBoolean.class, "DefaultBoolean");
+        loader.register(GlobCreateFromAnnotation.class, annotation -> create((DefaultBoolean_) annotation))
+                .load();
+    }
 }

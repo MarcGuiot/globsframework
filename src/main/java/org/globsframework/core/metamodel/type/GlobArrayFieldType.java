@@ -2,7 +2,7 @@ package org.globsframework.core.metamodel.type;
 
 import org.globsframework.core.metamodel.GlobType;
 import org.globsframework.core.metamodel.GlobTypeLoaderFactory;
-import org.globsframework.core.metamodel.annotations.IsTargetType_;
+import org.globsframework.core.metamodel.annotations.IsTarget_;
 import org.globsframework.core.metamodel.annotations.Targets;
 import org.globsframework.core.metamodel.fields.GlobArrayUnionField;
 import org.globsframework.core.metamodel.fields.StringField;
@@ -13,7 +13,7 @@ public class GlobArrayFieldType {
 
     public static StringField name;
 
-    @IsTargetType_()
+    @IsTarget_()
     public static StringField targetType;
 
     @Targets({})

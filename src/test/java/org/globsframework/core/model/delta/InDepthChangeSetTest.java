@@ -2,7 +2,7 @@ package org.globsframework.core.model.delta;
 
 import org.globsframework.core.metamodel.GlobType;
 import org.globsframework.core.metamodel.GlobTypeLoaderFactory;
-import org.globsframework.core.metamodel.annotations.KeyField;
+import org.globsframework.core.metamodel.annotations.KeyField_;
 import org.globsframework.core.metamodel.annotations.Target;
 import org.globsframework.core.metamodel.fields.GlobArrayField;
 import org.globsframework.core.metamodel.fields.GlobField;
@@ -82,7 +82,7 @@ public class InDepthChangeSetTest {
     public static class DummyType {
         public static GlobType TYPE;
 
-        @KeyField
+        @KeyField_
         public static StringField UUID;
 
         public static StringField NAME;
@@ -101,7 +101,7 @@ public class InDepthChangeSetTest {
     public static class SubType {
         public static GlobType TYPE;
 
-        @KeyField
+        @KeyField_
         public static StringField UUID;
 
         public static StringField SUB_NAME;
@@ -115,7 +115,7 @@ public class InDepthChangeSetTest {
     public static class SubTypeWWithoutKey {
         public static GlobType TYPE;
 
-        @KeyField
+        @KeyField_
         public static StringField UUID;
 
         public static IntegerField COUNT;

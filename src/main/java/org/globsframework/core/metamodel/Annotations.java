@@ -6,6 +6,7 @@ import org.globsframework.core.model.Glob;
 import org.globsframework.core.model.Key;
 import org.globsframework.core.utils.Ref;
 
+import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -17,6 +18,8 @@ public interface Annotations {
     Stream<Glob> streamAnnotations(GlobType type);
 
     boolean hasAnnotation(Key key);
+
+    Collection<Glob> getAnnotations();
 
     Glob getAnnotation(Key key);
 

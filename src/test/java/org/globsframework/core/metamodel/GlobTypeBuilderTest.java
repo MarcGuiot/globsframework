@@ -1,7 +1,7 @@
 package org.globsframework.core.metamodel;
 
-import org.globsframework.core.metamodel.annotations.DefaultDoubleAnnotationType;
-import org.globsframework.core.metamodel.annotations.NamingFieldAnnotationType;
+import org.globsframework.core.metamodel.annotations.DefaultDouble;
+import org.globsframework.core.metamodel.annotations.NamingField;
 import org.globsframework.core.metamodel.fields.*;
 import org.globsframework.core.metamodel.type.DataType;
 import org.globsframework.core.metamodel.utils.GlobTypeUtils;
@@ -92,7 +92,7 @@ public class GlobTypeBuilderTest {
     public void testNamingField() throws Exception {
         GlobType type = GlobTypeBuilderFactory.create("aType")
                 .addIntegerKey("id")
-                .addStringField("name", NamingFieldAnnotationType.UNIQUE_GLOB)
+                .addStringField("name", NamingField.UNIQUE_GLOB)
                 .get();
 
         StringField field = GlobTypeUtils.findNamingField(type);
@@ -103,7 +103,7 @@ public class GlobTypeBuilderTest {
     @Test
     public void testWithAnnotations() throws Exception {
         GlobTypeBuilderFactory.create("aType")
-                .addDoubleField("aDouble", DefaultDoubleAnnotationType.create(2.2));
+                .addDoubleField("aDouble", DefaultDouble.create(2.2));
 
     }
 }

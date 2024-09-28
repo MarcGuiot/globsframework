@@ -2,7 +2,7 @@ package org.globsframework.core.metamodel.utils;
 
 import org.globsframework.core.metamodel.DummyObject;
 import org.globsframework.core.metamodel.DummyObject2;
-import org.globsframework.core.metamodel.annotations.NamingFieldAnnotationType;
+import org.globsframework.core.metamodel.annotations.NamingField;
 import org.globsframework.core.utils.exceptions.ItemNotFound;
 import org.junit.Test;
 
@@ -29,7 +29,7 @@ public class GlobTypeUtilsTest {
             GlobTypeUtils.getNamingField(DummyObject2.TYPE);
             fail();
         } catch (ItemNotFound e) {
-            assertEquals("no field found with EmptyKey/" + NamingFieldAnnotationType.TYPE.getName() + " under dummyObject2", e.getMessage());
+            assertEquals("no field found with EmptyKey/" + NamingField.TYPE.getName() + " under dummyObject2", e.getMessage());
         }
     }
 

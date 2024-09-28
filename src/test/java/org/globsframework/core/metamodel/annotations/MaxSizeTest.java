@@ -10,7 +10,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.fail;
 
-public class MaxSizeTypeTest {
+public class MaxSizeTest {
 
     @Test
     public void deepSize() {
@@ -18,7 +18,7 @@ public class MaxSizeTypeTest {
             MutableGlob g1 = Dummy_Level1.TYPE.instantiate()
                     .set(Dummy_Level1.VALUE_1, "123")
                     .set(Dummy_Level1.VALUE_2, "12345");
-            MutableGlob mutableGlob = MaxSizeType.deepInPlaceTruncate(g1);
+            MutableGlob mutableGlob = MaxSize.deepInPlaceTruncate(g1);
             Assert.assertEquals(mutableGlob.get(Dummy_Level1.VALUE_2), "123");
             Assert.assertEquals(mutableGlob.get(Dummy_Level1.VALUE_1), "123");
 
@@ -27,9 +27,9 @@ public class MaxSizeTypeTest {
                     .set(Dummy_Level1.VALUE_2, "12345");
 
             try {
-                MaxSizeType.deepInPlaceTruncate(g2);
+                MaxSize.deepInPlaceTruncate(g2);
                 fail();
-            } catch (MaxSizeType.StringToLongException e) {
+            } catch (MaxSize.StringToLongException e) {
             }
         }
         {
@@ -40,7 +40,7 @@ public class MaxSizeTypeTest {
             MutableGlob g2 = Dummy_Level1.TYPE.instantiate()
                     .set(Dummy_Level1.UNDER, g1);
 
-            MaxSizeType.deepInPlaceTruncate(g2);
+            MaxSize.deepInPlaceTruncate(g2);
 
             Assert.assertEquals(g2.get(Dummy_Level1.UNDER).get(Dummy_Level1.VALUE_2), "123");
 
@@ -52,7 +52,7 @@ public class MaxSizeTypeTest {
             MutableGlob g2 = Dummy_Level1.TYPE.instantiate()
                     .set(Dummy_Level1.UNDER, g1);
 
-            MaxSizeType.deepInPlaceTruncate(g2);
+            MaxSize.deepInPlaceTruncate(g2);
 
             Assert.assertEquals(g2.get(Dummy_Level1.UNDER).get(Dummy_Level1.VALUE_2), "é");
 
@@ -62,13 +62,13 @@ public class MaxSizeTypeTest {
     public static class Dummy_Level1 {
         public static GlobType TYPE;
 
-        @MaxSize(3)
+        @MaxSize_(3)
         public static StringField VALUE_1;
 
-        @MaxSize(value = 3, allow_truncate = true)
+        @MaxSize_(value = 3, allow_truncate = true)
         public static StringField VALUE_2;
 
-        @MaxSize(value = 50, allow_truncate = true)
+        @MaxSize_(value = 50, allow_truncate = true)
         public static StringField VALUE_3;
 
         @Target(Dummy_Level1.class)

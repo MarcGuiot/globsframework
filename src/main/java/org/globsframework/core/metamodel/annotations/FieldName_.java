@@ -4,12 +4,12 @@ import org.globsframework.core.metamodel.GlobType;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
-@Retention(RUNTIME)
+@Retention(RetentionPolicy.RUNTIME)
 @java.lang.annotation.Target({ElementType.FIELD})
-public @interface IsTargetType_ {
+public @interface FieldName_ {
+    String value();
 
-    GlobType TYPE = IsTargetType.TYPE;
+    GlobType TYPE = FieldName.TYPE;
 }

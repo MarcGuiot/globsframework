@@ -4,9 +4,9 @@ import org.globsframework.core.metamodel.GlobModel;
 import org.globsframework.core.metamodel.GlobType;
 import org.globsframework.core.metamodel.GlobTypeLoader;
 import org.globsframework.core.metamodel.GlobTypeLoaderFactory;
-import org.globsframework.core.metamodel.annotations.FieldNameAnnotation;
-import org.globsframework.core.metamodel.annotations.FieldNameAnnotationType;
-import org.globsframework.core.metamodel.annotations.KeyField;
+import org.globsframework.core.metamodel.annotations.FieldName_;
+import org.globsframework.core.metamodel.annotations.FieldName;
+import org.globsframework.core.metamodel.annotations.KeyField_;
 import org.globsframework.core.metamodel.fields.Field;
 import org.globsframework.core.metamodel.fields.IntegerField;
 import org.globsframework.core.metamodel.impl.DefaultGlobModel;
@@ -34,17 +34,17 @@ public class DefaultGlobTypeTest {
 
     @Test
     public void testFindFieldByAnnotation() {
-        Field qty = GlobTypeUtils.findFieldWithAnnotation(TypeWithAnnotation.TYPE, FieldNameAnnotationType.create("qty"));
+        Field qty = GlobTypeUtils.findFieldWithAnnotation(TypeWithAnnotation.TYPE, FieldName.create("qty"));
         Assert.assertSame(qty, TypeWithAnnotation.F1);
 
-        Field sku = GlobTypeUtils.findFieldWithAnnotation(TypeWithAnnotation.TYPE, FieldNameAnnotationType.create("ean"));
+        Field sku = GlobTypeUtils.findFieldWithAnnotation(TypeWithAnnotation.TYPE, FieldName.create("ean"));
         Assert.assertSame(sku, TypeWithAnnotation.F2);
     }
 
     public static class Type {
         public static GlobType TYPE;
 
-        @KeyField
+        @KeyField_
         public static IntegerField FIELD1;
     }
 
@@ -60,10 +60,10 @@ public class DefaultGlobTypeTest {
     public static class TypeWithAnnotation {
         public static GlobType TYPE;
 
-        @FieldNameAnnotation("qty")
+        @FieldName_("qty")
         public static IntegerField F1;
 
-        @FieldNameAnnotation("ean")
+        @FieldName_("ean")
         public static IntegerField F2;
 
         static {

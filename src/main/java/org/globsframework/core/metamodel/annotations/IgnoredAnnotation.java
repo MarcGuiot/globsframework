@@ -5,7 +5,7 @@ import org.globsframework.core.metamodel.GlobTypeLoaderFactory;
 import org.globsframework.core.model.Glob;
 import org.globsframework.core.model.Key;
 
-public class IsTargetType {
+public class IgnoredAnnotation {
     public static GlobType TYPE;
 
     @InitUniqueKey
@@ -15,7 +15,7 @@ public class IsTargetType {
     public static Glob INSTANCE;
 
     static {
-        GlobTypeLoaderFactory.create(IsTargetType.class, "IsTargetType")
+        GlobTypeLoaderFactory.create(IgnoredAnnotation.class, "IgnoredAnnotation")
                 .register(GlobCreateFromAnnotation.class, annotation -> INSTANCE)
                 .load();
     }

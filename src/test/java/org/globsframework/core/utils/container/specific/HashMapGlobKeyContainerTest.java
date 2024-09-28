@@ -4,7 +4,9 @@ import junit.framework.TestCase;
 import org.globsframework.core.metamodel.GlobType;
 import org.globsframework.core.metamodel.GlobTypeLoaderFactory;
 import org.globsframework.core.metamodel.annotations.AutoIncrement;
+import org.globsframework.core.metamodel.annotations.AutoIncrement_;
 import org.globsframework.core.metamodel.annotations.KeyField;
+import org.globsframework.core.metamodel.annotations.KeyField_;
 import org.globsframework.core.metamodel.fields.IntegerField;
 import org.globsframework.core.model.Glob;
 import org.globsframework.core.model.Key;
@@ -21,16 +23,16 @@ public class HashMapGlobKeyContainerTest extends TestCase {
 
         public static GlobType TYPE;
 
-        @KeyField
-        @AutoIncrement
+        @KeyField_
+        @AutoIncrement_
         public static IntegerField ID1;
 
-        @KeyField
-        @AutoIncrement
+        @KeyField_
+        @AutoIncrement_
         public static IntegerField ID2;
 
-        @KeyField
-        @AutoIncrement
+        @KeyField_
+        @AutoIncrement_
         public static IntegerField ID3;
 
         static {
