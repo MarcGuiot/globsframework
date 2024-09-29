@@ -95,24 +95,18 @@ public class HashMapGlobKeyContainer implements HashContainer<Key, Glob> {
         return size;
     }
 
-    public <E extends Functor<Key, Glob>> E apply(E functor) {
+    public <E extends Functor<Key, Glob>> E forEach(E functor) {
         values.apply(functor);
         return functor;
+    }
+
+    public boolean containsKey(Key key) {
+        return values.containsKey(key);
     }
 
     public <E extends FunctorAndRemove<Key, Glob>> E applyAndRemoveIfTrue(E functor) {
         size -= values.applyAndRemoveIfTrue(functor);
         return functor;
-    }
-
-    static class Entry {
-        Entry next;
-        Glob glob;
-
-        public Entry(Glob value, Entry entry) {
-            glob = value;
-            this.next = entry;
-        }
     }
 
     static class Values {
@@ -276,6 +270,20 @@ public class HashMapGlobKeyContainer implements HashContainer<Key, Glob> {
                 removed += next.applyAndRemoveIfTrue(functor);
             }
             return removed;
+        }
+
+        public boolean containsKey(Key key) {
+            for (Glob value : values) {
+                if (value != null) {
+                    if (value.getKey().equals(key)) {
+                        return true;
+                    }
+                }
+            }
+            if (next != null) {
+                return next.containsKey(key);
+            }
+            return false;
         }
     }
 

@@ -64,11 +64,15 @@ public class HashMapContainer<T, D> implements HashContainer<T, D> {
         return elements.size();
     }
 
-    public <E extends Functor<T, D>> E apply(E functor) {
+    public <E extends Functor<T, D>> E forEach(E functor) {
         for (Map.Entry<T, D> tdEntry : elements.entrySet()) {
             functor.apply(tdEntry.getKey(), tdEntry.getValue());
         }
         return functor;
+    }
+
+    public boolean containsKey(T key) {
+        return elements.containsKey(key);
     }
 
     public <E extends FunctorAndRemove<T, D>> E applyAndRemoveIfTrue(E functor) {

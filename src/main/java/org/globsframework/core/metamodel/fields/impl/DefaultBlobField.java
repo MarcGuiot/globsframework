@@ -5,14 +5,14 @@ import org.globsframework.core.metamodel.fields.*;
 import org.globsframework.core.metamodel.type.DataType;
 import org.globsframework.core.model.Glob;
 import org.globsframework.core.model.Key;
+import org.globsframework.core.utils.container.hash.HashContainer;
 import org.globsframework.core.utils.exceptions.UnexpectedApplicationState;
 
 import java.util.Arrays;
-import java.util.LinkedHashMap;
 
 public class DefaultBlobField extends AbstractField implements BlobField {
 
-    public DefaultBlobField(String name, GlobType globType, int index, LinkedHashMap<Key, Glob> annotations) {
+    public DefaultBlobField(String name, GlobType globType, int index, HashContainer<Key, Glob> annotations) {
         super(name, globType, byte[].class, index, -1, false, null, DataType.Bytes, annotations);
     }
 

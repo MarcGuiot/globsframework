@@ -5,13 +5,13 @@ import org.globsframework.core.metamodel.fields.*;
 import org.globsframework.core.metamodel.type.DataType;
 import org.globsframework.core.model.Glob;
 import org.globsframework.core.model.Key;
+import org.globsframework.core.utils.container.hash.HashContainer;
 import org.globsframework.core.utils.exceptions.UnexpectedApplicationState;
 
 import java.time.LocalDate;
-import java.util.LinkedHashMap;
 
 public class DefaultDateField extends AbstractField implements DateField {
-    public DefaultDateField(String name, GlobType globType, int index, boolean isKeyField, int keyIndex, LocalDate defaultValue, LinkedHashMap<Key, Glob> annotations) {
+    public DefaultDateField(String name, GlobType globType, int index, boolean isKeyField, int keyIndex, LocalDate defaultValue, HashContainer<Key, Glob> annotations) {
         super(name, globType, LocalDate.class, index, keyIndex, isKeyField, defaultValue, DataType.Date, annotations);
     }
 

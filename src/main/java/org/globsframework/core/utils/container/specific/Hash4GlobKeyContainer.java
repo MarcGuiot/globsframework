@@ -210,7 +210,7 @@ public class Hash4GlobKeyContainer implements HashContainer<Key, Glob> {
         return value4 != null;
     }
 
-    public <E extends Functor<Key, Glob>> E apply(E functor) {
+    public <E extends Functor<Key, Glob>> E forEach(E functor) {
         if (isValue1Set()) {
             functor.apply(value1.getKey(), value1);
         }
@@ -224,6 +224,13 @@ public class Hash4GlobKeyContainer implements HashContainer<Key, Glob> {
             functor.apply(value4.getKey(), value4);
         }
         return functor;
+    }
+
+    public boolean containsKey(Key key) {
+        return value1 != null && Utils.equalWithHash(value1.getKey(), key)
+                || value2 != null && Utils.equalWithHash(value2.getKey(), key)
+                || value3 != null && Utils.equalWithHash(value3.getKey(), key)
+                || value4 != null && Utils.equalWithHash(value4.getKey(), key);
     }
 
     public <E extends FunctorAndRemove<Key, Glob>> E applyAndRemoveIfTrue(E functor) {

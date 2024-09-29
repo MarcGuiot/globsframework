@@ -9,6 +9,7 @@ import org.globsframework.core.model.Glob;
 import org.globsframework.core.model.Key;
 import org.globsframework.core.model.KeyBuilder;
 import org.globsframework.core.model.MutableGlob;
+import org.globsframework.core.utils.container.specific.HashEmptyGlobContainer;
 
 import java.util.LinkedHashMap;
 
@@ -31,7 +32,7 @@ public class FieldName {
         DefaultGlobType globType = new DefaultGlobType("FieldName");
         DefaultFieldFactory factory = new DefaultFieldFactory(globType);
         TYPE = globType;
-        NAME = factory.addString("name", false, 0, 0, null, new LinkedHashMap<>());
+        NAME = factory.addString("name", false, 0, 0, null, HashEmptyGlobContainer.Helper.allocate(1));
         globType.completeInit();
         UNIQUE_KEY = KeyBuilder.newEmptyKey(TYPE);
         NAME.addAnnotation(create("name"));

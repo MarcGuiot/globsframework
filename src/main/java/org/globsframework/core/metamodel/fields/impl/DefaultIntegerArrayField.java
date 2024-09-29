@@ -5,13 +5,13 @@ import org.globsframework.core.metamodel.fields.*;
 import org.globsframework.core.metamodel.type.DataType;
 import org.globsframework.core.model.Glob;
 import org.globsframework.core.model.Key;
+import org.globsframework.core.utils.container.hash.HashContainer;
 import org.globsframework.core.utils.exceptions.UnexpectedApplicationState;
 
 import java.util.Arrays;
-import java.util.LinkedHashMap;
 
 public class DefaultIntegerArrayField extends AbstractField implements IntegerArrayField {
-    public DefaultIntegerArrayField(String name, GlobType globType, int index, boolean isKeyField, int keyIndex, Integer defaultValue, LinkedHashMap<Key, Glob> annotations) {
+    public DefaultIntegerArrayField(String name, GlobType globType, int index, boolean isKeyField, int keyIndex, Integer defaultValue, HashContainer<Key, Glob> annotations) {
         super(name, globType, int[].class, index, keyIndex, isKeyField, defaultValue, DataType.IntegerArray, annotations);
     }
 

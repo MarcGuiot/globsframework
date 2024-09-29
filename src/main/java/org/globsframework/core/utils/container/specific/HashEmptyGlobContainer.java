@@ -60,8 +60,12 @@ public class HashEmptyGlobContainer implements HashContainer<Key, Glob> {
         return 0;
     }
 
-    public <E extends Functor<Key, Glob>> E apply(E functor) {
+    public <E extends Functor<Key, Glob>> E forEach(E functor) {
         return functor;
+    }
+
+    public boolean containsKey(Key key) {
+        return false;
     }
 
     public <E extends FunctorAndRemove<Key, Glob>> E applyAndRemoveIfTrue(E functor) {

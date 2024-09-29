@@ -84,11 +84,15 @@ public class HashOneGlobKeyContainer implements HashContainer<Key, Glob> {
         return value == null ? 0 : 1;
     }
 
-    public <E extends Functor<Key, Glob>> E apply(E functor) {
+    public <E extends Functor<Key, Glob>> E forEach(E functor) {
         if (value != null) {
             functor.apply(value.getKey(), value);
         }
         return functor;
+    }
+
+    public boolean containsKey(Key key) {
+        return value != null && Utils.equalWithHash(value.getKey(), key);
     }
 
     public <E extends FunctorAndRemove<Key, Glob>> E applyAndRemoveIfTrue(E functor) {

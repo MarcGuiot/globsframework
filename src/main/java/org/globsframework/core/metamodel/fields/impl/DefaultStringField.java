@@ -5,6 +5,7 @@ import org.globsframework.core.metamodel.fields.*;
 import org.globsframework.core.metamodel.type.DataType;
 import org.globsframework.core.model.Glob;
 import org.globsframework.core.model.Key;
+import org.globsframework.core.utils.container.hash.HashContainer;
 import org.globsframework.core.utils.exceptions.UnexpectedApplicationState;
 
 import java.util.LinkedHashMap;
@@ -12,7 +13,7 @@ import java.util.LinkedHashMap;
 public class DefaultStringField extends AbstractField implements StringField {
 
     public DefaultStringField(String name, GlobType globType, int index, boolean isKeyField,
-                              int keyIndex, String defaultValue, LinkedHashMap<Key, Glob> annotations) {
+                              int keyIndex, String defaultValue, HashContainer<Key, Glob> annotations) {
         super(name, globType, String.class, index, keyIndex, isKeyField, defaultValue, DataType.String, annotations);
     }
 

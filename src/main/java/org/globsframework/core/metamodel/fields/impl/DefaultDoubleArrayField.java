@@ -5,15 +5,15 @@ import org.globsframework.core.metamodel.fields.*;
 import org.globsframework.core.metamodel.type.DataType;
 import org.globsframework.core.model.Glob;
 import org.globsframework.core.model.Key;
+import org.globsframework.core.utils.container.hash.HashContainer;
 import org.globsframework.core.utils.exceptions.UnexpectedApplicationState;
 
 import java.util.Arrays;
-import java.util.LinkedHashMap;
 
 public class DefaultDoubleArrayField extends AbstractField implements DoubleArrayField {
 
     public DefaultDoubleArrayField(String name, GlobType globType,
-                                   int index, boolean isKeyField, final int keyIndex, Double defaultValue, LinkedHashMap<Key, Glob> annotations) {
+                                   int index, boolean isKeyField, final int keyIndex, Double defaultValue, HashContainer<Key, Glob> annotations) {
         super(name, globType, double[].class, index, keyIndex, isKeyField, defaultValue, DataType.DoubleArray, annotations);
     }
 

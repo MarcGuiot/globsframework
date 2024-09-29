@@ -18,6 +18,8 @@ import org.globsframework.core.model.Glob;
 import org.globsframework.core.model.Key;
 import org.globsframework.core.model.MutableGlob;
 import org.globsframework.core.utils.Strings;
+import org.globsframework.core.utils.container.hash.HashContainer;
+import org.globsframework.core.utils.container.specific.HashEmptyGlobContainer;
 import org.globsframework.core.utils.exceptions.InvalidParameter;
 import org.globsframework.core.utils.exceptions.ItemAlreadyExists;
 import org.globsframework.core.utils.exceptions.MissingInfo;
@@ -71,10 +73,10 @@ public class GlobTypeLoaderImpl implements GlobTypeLoader {
         for (java.lang.reflect.Field classField : targetClass.getFields()) {
             List<FieldInitializeProcessor<?>> processor = fieldInitializeProcessorService.get(classField);
             if (processor != null && !processor.isEmpty()) {
-                LinkedHashMap<Key, Glob> annotations = new LinkedHashMap<>();
-                processFieldAnnotations(classField, annotations);
+                HashContainer<Key, Glob> annotations = HashEmptyGlobContainer.Helper.allocate(0);
+                annotations = processFieldAnnotations(classField, annotations);
                 MutableGlob fieldNameAnnotation = FieldName.create(getFieldName(classField));
-                annotations.put(fieldNameAnnotation.getKey(), fieldNameAnnotation);
+                annotations = annotations.put(fieldNameAnnotation.getKey(), fieldNameAnnotation);
                 applyProcessor(targetClass, classField, processor, annotations);
             } else {
                 try {
@@ -91,7 +93,7 @@ public class GlobTypeLoaderImpl implements GlobTypeLoader {
 
     private void applyProcessor(Class<?> targetClass, java.lang.reflect.Field classField,
                                 List<FieldInitializeProcessor<?>> processor,
-                                LinkedHashMap<Key, Glob> annotations) {
+                                HashContainer<Key, Glob> annotations) {
         DefaultAnnotations defaultAnnotations = new DefaultAnnotations(annotations);
         for (FieldInitializeProcessor<?> fieldInitializeProcessor : processor) {
             Object value = fieldInitializeProcessor.getValue(type, defaultAnnotations, classField.getAnnotations());
@@ -135,14 +137,11 @@ public class GlobTypeLoaderImpl implements GlobTypeLoader {
             throw new ItemAlreadyExists("Class " + targetClass.getName() +
                     " must have only one TYPE field of class " + GlobType.class.getName());
         }
-        LinkedHashMap<Key, Glob> annotations = null;
+        HashContainer<Key, Glob> annotations = HashEmptyGlobContainer.EMPTY_INSTANCE;
         for (Annotation annotation : classField.getAnnotations()) {
             Glob glob = processAnnotation(annotation);
             if (glob != null) {
-                if (annotations == null){
-                    annotations = new LinkedHashMap<>();
-                }
-                annotations.put(glob.getKey(), glob);
+                annotations = annotations.put(glob.getKey(), glob);
             }
         }
         this.type = new DefaultGlobType(getTypeName(targetClass), annotations);
@@ -150,13 +149,14 @@ public class GlobTypeLoaderImpl implements GlobTypeLoader {
         GlobTypeLoaderImpl.setClassField(classField, type, targetClass);
     }
 
-    private void processFieldAnnotations(java.lang.reflect.Field field, LinkedHashMap<Key, Glob> annotations) {
+    private HashContainer<Key, Glob> processFieldAnnotations(java.lang.reflect.Field field, HashContainer<Key, Glob> annotations) {
         for (Annotation annotation : field.getAnnotations()) {
             Glob globAnnotation = processAnnotation(annotation);
             if (globAnnotation != null) {
-                annotations.put(globAnnotation.getKey(), globAnnotation);
+               annotations = annotations.put(globAnnotation.getKey(), globAnnotation);
             }
         }
+        return annotations;
     }
 
     private Glob processAnnotation(Annotation annotation) {
@@ -225,17 +225,17 @@ public class GlobTypeLoaderImpl implements GlobTypeLoader {
                 } else {
                     fieldName = getFieldName(classField);
                 }
-                LinkedHashMap<Key, Glob> annotations = new LinkedHashMap<>(2);
+                HashContainer<Key, Glob> annotations = HashEmptyGlobContainer.Helper.allocate(1);
                 if (!hasFieldNameAnnotation) {
                     MutableGlob glob = FieldName.create(fieldName);
-                    annotations.put(glob.getKey(), glob);
+                    annotations = annotations.put(glob.getKey(), glob);
                 }
                 if (isKeyField) {
                     Glob glob = KeyField.create(keyCount);
-                    annotations.put(glob.getKey(), glob);
+                    annotations = annotations.put(glob.getKey(), glob);
                     keyCount++;
                 }
-                processFieldAnnotations(classField, annotations);
+                annotations = processFieldAnnotations(classField, annotations);
                 AbstractField field = create(fieldName, classField.getType(), isKeyField, keyIndex, fieldIndex, classField, annotations);
                 setClassField(classField, field, targetClass);
                 fieldIndex++;
@@ -264,7 +264,7 @@ public class GlobTypeLoaderImpl implements GlobTypeLoader {
     }
 
     private AbstractField create(String name, Class<?> fieldClass, boolean isKeyField, int keyIndex, int index,
-                                 java.lang.reflect.Field field, LinkedHashMap<Key, Glob> annotations) {
+                                 java.lang.reflect.Field field, HashContainer<Key, Glob> annotations) {
         if (StringField.class.isAssignableFrom(fieldClass)) {
             DefaultString_ defaultString = field.getAnnotation(DefaultString_.class);
             String defaultValue = defaultString != null ? defaultString.value() : null;

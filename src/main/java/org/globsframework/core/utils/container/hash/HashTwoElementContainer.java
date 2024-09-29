@@ -129,7 +129,7 @@ public class HashTwoElementContainer<T, D> implements HashContainer<T, D> {
         return key2 != HashOneElementContainer.NULL;
     }
 
-    public <E extends Functor<T, D>> E apply(E functor) {
+    public <E extends Functor<T, D>> E forEach(E functor) {
         if (isValue1Set()) {
             functor.apply(key1, value1);
         }
@@ -137,6 +137,11 @@ public class HashTwoElementContainer<T, D> implements HashContainer<T, D> {
             functor.apply(key2, value2);
         }
         return functor;
+    }
+
+    public boolean containsKey(T key) {
+        return Utils.equalWithHash(key, this.key1) ||
+                Utils.equalWithHash(key, this.key2);
     }
 
     public <E extends FunctorAndRemove<T, D>> E applyAndRemoveIfTrue(E functor) {

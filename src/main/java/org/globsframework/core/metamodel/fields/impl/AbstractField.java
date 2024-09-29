@@ -7,6 +7,7 @@ import org.globsframework.core.metamodel.type.DataType;
 import org.globsframework.core.model.Glob;
 import org.globsframework.core.model.Key;
 import org.globsframework.core.utils.Utils;
+import org.globsframework.core.utils.container.hash.HashContainer;
 import org.globsframework.core.utils.exceptions.InvalidParameter;
 
 import java.util.LinkedHashMap;
@@ -23,7 +24,7 @@ abstract public class AbstractField extends DefaultAnnotations {
 
     protected AbstractField(String name, GlobType globType,
                             Class valueClass, int index, int keyIndex, boolean isKeyField,
-                            Object defaultValue, DataType dataType, LinkedHashMap<Key, Glob> annotations) {
+                            Object defaultValue, DataType dataType, HashContainer<Key, Glob> annotations) {
         super(annotations);
         this.keyIndex = keyIndex;
         this.defaultValue = defaultValue;

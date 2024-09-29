@@ -33,8 +33,12 @@ class HashEmptyContainer<T, D> implements HashContainer<T, D> {
         return 0;
     }
 
-    public <E extends Functor<T, D>> E apply(E functor) {
+    public <E extends Functor<T, D>> E forEach(E functor) {
         return functor;
+    }
+
+    public boolean containsKey(T key) {
+        return false;
     }
 
     public <E extends FunctorAndRemove<T, D>> E applyAndRemoveIfTrue(E functor) {

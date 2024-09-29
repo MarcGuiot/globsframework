@@ -123,7 +123,7 @@ public class HashTwoGlobKeyContainer implements HashContainer<Key, Glob> {
         return value2 != null;
     }
 
-    public <E extends Functor<Key, Glob>> E apply(E functor) {
+    public <E extends Functor<Key, Glob>> E forEach(E functor) {
         if (isValue1Set()) {
             functor.apply(value1.getKey(), value1);
         }
@@ -131,6 +131,11 @@ public class HashTwoGlobKeyContainer implements HashContainer<Key, Glob> {
             functor.apply(value2.getKey(), value2);
         }
         return functor;
+    }
+
+    public boolean containsKey(Key key) {
+        return value1 != null && Utils.equalWithHash(value1.getKey(), key)
+                || value2 != null && Utils.equalWithHash(value2.getKey(),key);
     }
 
     public <E extends FunctorAndRemove<Key, Glob>> E applyAndRemoveIfTrue(E functor) {

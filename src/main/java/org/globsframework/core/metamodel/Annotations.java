@@ -5,8 +5,8 @@ import org.globsframework.core.metamodel.impl.DefaultAnnotations;
 import org.globsframework.core.model.Glob;
 import org.globsframework.core.model.Key;
 import org.globsframework.core.utils.Ref;
+import org.globsframework.core.utils.exceptions.ItemNotFound;
 
-import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -15,15 +15,21 @@ public interface Annotations {
 
     Stream<Glob> streamAnnotations();
 
-    Stream<Glob> streamAnnotations(GlobType type);
+    default Stream<Glob> streamAnnotations(GlobType type) {
+        return streamAnnotations().filter(glob -> glob.getType().equals(type));
+    }
 
     boolean hasAnnotation(Key key);
 
-    Collection<Glob> getAnnotations();
-
-    Glob getAnnotation(Key key);
-
     Glob findAnnotation(Key key);
+
+    default Glob getAnnotation(Key key) {
+        Glob annotation = findAnnotation(key);
+        if (annotation == null) {
+            throw new ItemNotFound(key.toString());
+        }
+        return annotation;
+    }
 
     default <T> T getValueOrDefault(Key key, Field field, T defaultValue) {
         Glob annotation = findAnnotation(key);
@@ -42,8 +48,4 @@ public interface Annotations {
         return result.get() != null;
     }
 
-    default Glob findUniqueAnnotation(GlobType globType) {
-        Optional<Glob> first = streamAnnotations(globType).findFirst();
-        return first.isPresent() ? first.get() : null;
-    }
 }

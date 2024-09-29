@@ -5,18 +5,18 @@ import org.globsframework.core.metamodel.fields.*;
 import org.globsframework.core.metamodel.type.DataType;
 import org.globsframework.core.model.Glob;
 import org.globsframework.core.model.Key;
+import org.globsframework.core.utils.container.hash.HashContainer;
 import org.globsframework.core.utils.exceptions.InvalidParameter;
 import org.globsframework.core.utils.exceptions.UnexpectedApplicationState;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedHashMap;
 
 public class DefaultGlobArrayField extends AbstractField implements GlobArrayField {
     private final GlobType targetType;
 
     public DefaultGlobArrayField(String name, GlobType globType, GlobType targetType,
-                                 int index, boolean isKeyField, final int keyIndex, LinkedHashMap<Key, Glob> annotations) {
+                                 int index, boolean isKeyField, final int keyIndex, HashContainer<Key, Glob> annotations) {
         super(name, globType, Glob[].class, index, keyIndex, isKeyField, null, DataType.GlobArray, annotations);
         this.targetType = targetType;
     }

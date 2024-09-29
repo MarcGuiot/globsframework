@@ -5,13 +5,13 @@ import org.globsframework.core.metamodel.fields.*;
 import org.globsframework.core.metamodel.type.DataType;
 import org.globsframework.core.model.Glob;
 import org.globsframework.core.model.Key;
+import org.globsframework.core.utils.container.hash.HashContainer;
 import org.globsframework.core.utils.exceptions.UnexpectedApplicationState;
 
 import java.time.ZonedDateTime;
-import java.util.LinkedHashMap;
 
 public class DefaultDateTimeField extends AbstractField implements DateTimeField {
-    public DefaultDateTimeField(String name, GlobType globType, int index, boolean isKeyField, int keyIndex, ZonedDateTime defaultValue, LinkedHashMap<Key, Glob> annotations) {
+    public DefaultDateTimeField(String name, GlobType globType, int index, boolean isKeyField, int keyIndex, ZonedDateTime defaultValue, HashContainer<Key, Glob> annotations) {
         super(name, globType, ZonedDateTime.class, index, keyIndex, isKeyField, defaultValue, DataType.DateTime, annotations);
     }
 

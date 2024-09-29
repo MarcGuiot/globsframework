@@ -80,11 +80,15 @@ public class HashOneElementContainer<T, D> implements HashContainer<T, D> {
         return key == NULL ? 0 : 1;
     }
 
-    public <E extends Functor<T, D>> E apply(E functor) {
+    public <E extends Functor<T, D>> E forEach(E functor) {
         if (key != NULL) {
             functor.apply(key, value);
         }
         return functor;
+    }
+
+    public boolean containsKey(T key) {
+        return Utils.equalWithHash(key, this.key);
     }
 
     public <E extends FunctorAndRemove<T, D>> E applyAndRemoveIfTrue(E functor) {

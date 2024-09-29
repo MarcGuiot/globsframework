@@ -1,8 +1,6 @@
 package org.globsframework.core.metamodel.impl;
 
-import org.globsframework.core.metamodel.Annotations;
 import org.globsframework.core.metamodel.GlobType;
-import org.globsframework.core.metamodel.annotations.DefaultFieldValueType;
 import org.globsframework.core.metamodel.fields.Field;
 import org.globsframework.core.metamodel.fields.impl.*;
 import org.globsframework.core.metamodel.index.MultiFieldNotUniqueIndex;
@@ -15,10 +13,10 @@ import org.globsframework.core.metamodel.index.impl.DefaultNotUniqueIndex;
 import org.globsframework.core.metamodel.index.impl.DefaultUniqueIndex;
 import org.globsframework.core.model.Glob;
 import org.globsframework.core.model.Key;
+import org.globsframework.core.utils.container.hash.HashContainer;
 
 import java.math.BigDecimal;
 import java.util.Collection;
-import java.util.LinkedHashMap;
 
 public class DefaultFieldFactory {
     private final DefaultGlobType type;
@@ -30,112 +28,112 @@ public class DefaultFieldFactory {
     public DefaultIntegerField addInteger(String name,
                                           boolean isKeyField,
                                           int keyIndex, int index,
-                                          Integer defaultValue, LinkedHashMap<Key, Glob> annotations) {
+                                          Integer defaultValue, HashContainer<Key, Glob> annotations) {
         return add(new DefaultIntegerField(name, type, index, isKeyField, keyIndex, defaultValue, annotations), isKeyField);
     }
 
     public DefaultIntegerArrayField addIntegerArray(String name,
                                                     boolean isKeyField,
-                                                    int keyIndex, int index, LinkedHashMap<Key, Glob> annotations) {
+                                                    int keyIndex, int index, HashContainer<Key, Glob> annotations) {
         return add(new DefaultIntegerArrayField(name, type, index, isKeyField, keyIndex, null, annotations), false);
     }
 
     public DefaultBooleanArrayField addBooleanArray(String name,
                                                     boolean isKeyField,
-                                                    int keyIndex, int index, LinkedHashMap<Key, Glob> annotations) {
+                                                    int keyIndex, int index, HashContainer<Key, Glob> annotations) {
         return add(new DefaultBooleanArrayField(name, type, index, isKeyField, keyIndex, null, annotations), false);
     }
 
     public DefaultLongField addLong(String name,
                                     boolean isKeyField,
                                     int keyIndex, int index,
-                                    Long defaultValue, LinkedHashMap<Key, Glob> annotations) {
+                                    Long defaultValue, HashContainer<Key, Glob> annotations) {
         return add(new DefaultLongField(name, type, index, isKeyField, keyIndex, defaultValue, annotations), isKeyField);
     }
 
     public DefaultLongArrayField addLongArray(String name,
                                               boolean isKeyField,
-                                              int keyIndex, int index, LinkedHashMap<Key, Glob> annotations) {
+                                              int keyIndex, int index, HashContainer<Key, Glob> annotations) {
         return add(new DefaultLongArrayField(name, type, index, isKeyField, keyIndex, null, annotations), false);
     }
 
     public DefaultDoubleField addDouble(String name,
                                         boolean isKeyField,
                                         final int keyIndex, int index,
-                                        Double defaultValue, LinkedHashMap<Key, Glob> annotations) {
+                                        Double defaultValue, HashContainer<Key, Glob> annotations) {
         return add(new DefaultDoubleField(name, type, index, isKeyField, keyIndex, defaultValue, annotations), isKeyField);
     }
 
     public DefaultDoubleArrayField addDoubleArray(String name,
                                                   boolean isKeyField,
-                                                  int keyIndex, int index, LinkedHashMap<Key, Glob> annotations) {
+                                                  int keyIndex, int index, HashContainer<Key, Glob> annotations) {
         return add(new DefaultDoubleArrayField(name, type, index, isKeyField, keyIndex, null, annotations), false);
     }
 
     public DefaultStringField addString(String name,
                                         boolean isKeyField,
                                         int keyIndex, int index,
-                                        String defaultValue, LinkedHashMap<Key, Glob> annotations) {
+                                        String defaultValue, HashContainer<Key, Glob> annotations) {
         return add(new DefaultStringField(name, type, index, isKeyField, keyIndex, defaultValue, annotations), isKeyField);
     }
 
     public DefaultStringArrayField addStringArray(String name,
                                                   boolean isKeyField,
-                                                  int keyIndex, int index, LinkedHashMap<Key, Glob> annotations) {
+                                                  int keyIndex, int index, HashContainer<Key, Glob> annotations) {
         return add(new DefaultStringArrayField(name, type, index, isKeyField, keyIndex, null, annotations), false);
     }
 
     public DefaultBooleanField addBoolean(String name,
                                           boolean isKeyField,
                                           final int keyIndex, int index,
-                                          Boolean defaultValue, LinkedHashMap<Key, Glob> annotations) {
+                                          Boolean defaultValue, HashContainer<Key, Glob> annotations) {
         return add(new DefaultBooleanField(name, type, index, isKeyField, keyIndex, defaultValue, annotations), isKeyField);
     }
 
     public DefaultBigDecimalField addBigDecimal(String name,
                                                 boolean isKeyField,
                                                 int keyIndex, int index,
-                                                BigDecimal defaultValue, LinkedHashMap<Key, Glob> annotations) {
+                                                BigDecimal defaultValue, HashContainer<Key, Glob> annotations) {
         return add(new DefaultBigDecimalField(name, type, index, isKeyField, keyIndex, defaultValue, annotations), false);
     }
 
     public DefaultBigDecimalArrayField addBigDecimalArray(String name,
                                                           boolean isKeyField,
-                                                          int keyIndex, int index, LinkedHashMap<Key, Glob> annotations) {
+                                                          int keyIndex, int index, HashContainer<Key, Glob> annotations) {
         return add(new DefaultBigDecimalArrayField(name, type, index, isKeyField, keyIndex, null, annotations), false);
     }
 
     public DefaultDateTimeField addDateTime(String name,
                                             boolean isKeyField,
-                                            int keyIndex, int index, LinkedHashMap<Key, Glob> annotations) {
+                                            int keyIndex, int index, HashContainer<Key, Glob> annotations) {
         return add(new DefaultDateTimeField(name, type, index, isKeyField, keyIndex, null, annotations), isKeyField);
     }
 
     public DefaultDateField addDate(String name,
                                     boolean isKeyField,
-                                    int keyIndex, int index, LinkedHashMap<Key, Glob> annotations) {
+                                    int keyIndex, int index, HashContainer<Key, Glob> annotations) {
         return add(new DefaultDateField(name, type, index, isKeyField, keyIndex, null, annotations), isKeyField);
     }
 
-    public DefaultBlobField addBlob(String name, int index, LinkedHashMap<Key, Glob> annotations) {
+    public DefaultBlobField addBlob(String name, int index, HashContainer<Key, Glob> annotations) {
         return add(new DefaultBlobField(name, type, index, annotations), false);
     }
 
     public DefaultGlobField addGlob(String name, GlobType globType, boolean isKeyField,
-                                    int keyIndex, int index, LinkedHashMap<Key, Glob> annotations) {
+                                    int keyIndex, int index, HashContainer<Key, Glob> annotations) {
         return add(new DefaultGlobField(name, type, globType, index, isKeyField, keyIndex, annotations), isKeyField);
     }
 
     public DefaultGlobArrayField addGlobArray(String name, GlobType globType, boolean isKeyField,
-                                              int keyIndex, int index, LinkedHashMap<Key, Glob> annotations) {
+                                              int keyIndex, int index, HashContainer<Key, Glob> annotations) {
         return add(new DefaultGlobArrayField(name, type, globType, index, isKeyField, keyIndex, annotations), isKeyField);
     }
 
-    public DefaultGlobUnionField addGlobUnion(String fieldName, Collection<GlobType> types, int index, LinkedHashMap<Key, Glob> annotations) {
+    public DefaultGlobUnionField addGlobUnion(String fieldName, Collection<GlobType> types, int index, HashContainer<Key, Glob> annotations) {
         return add(new DefaultGlobUnionField(fieldName, type, types, index, false, 0, annotations), false);
     }
 
-    public DefaultGlobUnionArrayField addGlobArrayUnion(String fieldName, Collection<GlobType> types, int index, LinkedHashMap<Key, Glob> annotations) {
+    public DefaultGlobUnionArrayField addGlobArrayUnion(String fieldName, Collection<GlobType> types, int index, HashContainer<Key, Glob> annotations) {
         return add(new DefaultGlobUnionArrayField(fieldName, type, types, index, false, 0, annotations), false);
     }
 

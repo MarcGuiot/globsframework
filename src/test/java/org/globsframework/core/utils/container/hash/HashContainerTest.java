@@ -43,7 +43,7 @@ public class HashContainerTest extends TestCase {
             }
 
             final HashContainer<Integer, Integer> finalContainer = container;
-            container.apply(new HashContainer.Functor<Integer, Integer>() {
+            container.forEach(new HashContainer.Functor<Integer, Integer>() {
                 public void apply(Integer key, Integer integer) {
                     assertEquals(finalContainer.get(key), integer);
                 }

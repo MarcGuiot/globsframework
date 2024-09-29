@@ -13,6 +13,7 @@ import org.globsframework.core.model.GlobFactoryService;
 import org.globsframework.core.model.Key;
 import org.globsframework.core.model.format.GlobPrinter;
 import org.globsframework.core.model.utils.FieldCheck;
+import org.globsframework.core.utils.container.hash.HashContainer;
 import org.globsframework.core.utils.exceptions.InvalidState;
 import org.globsframework.core.utils.exceptions.ItemAlreadyExists;
 import org.globsframework.core.utils.exceptions.ItemNotFound;
@@ -40,7 +41,7 @@ public class DefaultGlobType extends DefaultAnnotations
         this(name, null);
     }
 
-    public DefaultGlobType(String name, LinkedHashMap<Key, Glob> annotations) {
+    public DefaultGlobType(String name, HashContainer<Key, Glob> annotations) {
         super(annotations);
         this.name = name;
     }

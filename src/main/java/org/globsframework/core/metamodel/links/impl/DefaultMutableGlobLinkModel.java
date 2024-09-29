@@ -64,7 +64,7 @@ public class DefaultMutableGlobLinkModel implements MutableGlobLinkModel {
         Glob annotation = annotations.findAnnotation(FieldName.UNIQUE_KEY);
         DirectLinkBuilder builder = getDirectLinkBuilder(linkModel != null ? linkModel.get(LinkModelName.NAME) : null,
                 annotation != null ? annotation.get(FieldName.NAME) : null);
-        builder.addAnnotations(annotations.getAnnotations());
+        annotations.streamAnnotations().forEach(builder::addAnnotation);
         return builder;
     }
 
@@ -161,16 +161,8 @@ public class DefaultMutableGlobLinkModel implements MutableGlobLinkModel {
             return link.streamAnnotations();
         }
 
-        public Stream<Glob> streamAnnotations(GlobType type) {
-            return link.streamAnnotations(type);
-        }
-
         public boolean hasAnnotation(Key key) {
             return link.hasAnnotation(key);
-        }
-
-        public Collection<Glob> getAnnotations() {
-            return link.getAnnotations();
         }
 
         public Glob getAnnotation(Key key) {

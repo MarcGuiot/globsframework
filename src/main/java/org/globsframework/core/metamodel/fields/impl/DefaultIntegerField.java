@@ -5,12 +5,11 @@ import org.globsframework.core.metamodel.fields.*;
 import org.globsframework.core.metamodel.type.DataType;
 import org.globsframework.core.model.Glob;
 import org.globsframework.core.model.Key;
+import org.globsframework.core.utils.container.hash.HashContainer;
 import org.globsframework.core.utils.exceptions.UnexpectedApplicationState;
 
-import java.util.LinkedHashMap;
-
 public class DefaultIntegerField extends AbstractField implements IntegerField {
-    public DefaultIntegerField(String name, GlobType globType, int index, boolean isKeyField, int keyIndex, Integer defaultValue, LinkedHashMap<Key, Glob> annotations) {
+    public DefaultIntegerField(String name, GlobType globType, int index, boolean isKeyField, int keyIndex, Integer defaultValue, HashContainer<Key, Glob> annotations) {
         super(name, globType, Integer.class, index, keyIndex, isKeyField, defaultValue, DataType.Integer, annotations);
     }
 

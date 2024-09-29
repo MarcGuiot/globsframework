@@ -67,7 +67,7 @@ public abstract class DefaultLinkBuilder<T extends MutableGlobLinkModel.LinkBuil
     }
 
     public DirectLink asDirectLink() {
-        if (mappings.size() == 0) {
+        if (mappings.isEmpty()) {
             throw new RuntimeException("No mapping defined for link " + modelName + " " + name);
         } else {
             return DefaultDirectLink.create(mappings, modelName, name, this);

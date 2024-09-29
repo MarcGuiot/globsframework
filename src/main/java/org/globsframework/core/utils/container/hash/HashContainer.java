@@ -1,6 +1,10 @@
 package org.globsframework.core.utils.container.hash;
 
 import java.util.Iterator;
+import java.util.Spliterator;
+import java.util.Spliterators;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 public interface HashContainer<T, D> {
     HashContainer EMPTY_INSTANCE = new HashEmptyContainer<>();
@@ -23,7 +27,13 @@ public interface HashContainer<T, D> {
 
     int size();
 
-    <E extends Functor<T, D>> E apply(E functor);
+    <E extends Functor<T, D>> E forEach(E functor);
+
+    boolean containsKey(T key);
+
+    default Stream<D> stream(){
+        return StreamSupport.stream(Spliterators.spliterator(values(), size(), Spliterator.NONNULL), false);
+    }
 
     interface Functor<T, D> {
         void apply(T key, D d);

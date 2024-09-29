@@ -8,9 +8,10 @@ import org.globsframework.core.metamodel.fields.impl.*;
 import org.globsframework.core.metamodel.type.DataType;
 import org.globsframework.core.model.Glob;
 import org.globsframework.core.model.Key;
+import org.globsframework.core.utils.container.hash.HashContainer;
+import org.globsframework.core.utils.container.specific.HashEmptyGlobContainer;
 
 import java.util.Collection;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
@@ -37,14 +38,14 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
         return new DefaultGlobTypeBuilder(name, annotations);
     }
 
-    private LinkedHashMap<Key, Glob> adaptAnnotation(Collection<Glob> annotations) {
-        LinkedHashMap<Key, Glob> map = new LinkedHashMap<>();
+    private HashContainer<Key, Glob> adaptAnnotation(Collection<Glob> annotations) {
+        HashContainer<Key, Glob> container = HashEmptyGlobContainer.Helper.allocate(annotations.size());
         for (Glob annotation : annotations) {
             if (annotation != null) {
-                map.put(annotation.getKey(), annotation);
+                container = container.put(annotation.getKey(), annotation);
             }
         }
-        return map;
+        return container;
     }
 
     public GlobTypeBuilder addAnnotation(Glob annotation) {
@@ -63,7 +64,7 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
     }
 
     private DefaultStringField createStringField(String fieldName, Collection<Glob> globAnnotations) {
-        LinkedHashMap<Key, Glob> annotations = adaptAnnotation(globAnnotations);
+        HashContainer<Key, Glob> annotations = adaptAnnotation(globAnnotations);
         Glob defaultValue = annotations.get(DefaultString.UNIQUE_KEY);
         int keyPos = getOrUpdateKeyPos(annotations);
         DefaultStringField field = factory.addString(fieldName, keyPos != -1, keyPos, index,
@@ -78,7 +79,7 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
     }
 
     private DefaultStringArrayField createStringArrayField(String fieldName, Collection<Glob> globAnnotations) {
-        LinkedHashMap<Key, Glob> annotations = adaptAnnotation(globAnnotations);
+        HashContainer<Key, Glob> annotations = adaptAnnotation(globAnnotations);
         int keyPos = getOrUpdateKeyPos(annotations);
         DefaultStringArrayField field = factory.addStringArray(fieldName, keyPos != -1, keyPos, index, annotations);
         index++;
@@ -91,7 +92,7 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
     }
 
     private DefaultIntegerField createIntegerField(String fieldName, Collection<Glob> globAnnotations) {
-        LinkedHashMap<Key, Glob> annotations = adaptAnnotation(globAnnotations);
+        HashContainer<Key, Glob> annotations = adaptAnnotation(globAnnotations);
         Glob defaultValue = annotations.get(DefaultInteger.UNIQUE_KEY);
         int keyPos = getOrUpdateKeyPos(annotations);
         DefaultIntegerField field = factory.addInteger(fieldName, keyPos != -1, keyPos, index,
@@ -100,21 +101,21 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
         return field;
     }
 
-    private int getOrUpdateKeyPos(LinkedHashMap<Key, Glob> annotations) {
+    private int getOrUpdateKeyPos(HashContainer<Key, Glob> annotations) {
         Glob key = annotations.get(KeyField.UNIQUE_KEY);
         int keyPos = -1;
         if (key != null) {
             if ((keyPos = key.get(KeyField.INDEX, -1)) == -1) {
                 keyPos = keyIndex++;
                 Glob glob = KeyField.create(keyPos);
-                annotations.put(glob.getKey(), glob);
+                annotations.put(glob.getKey(), glob); // replace, the HashContainer is the same.
             }
         }
         return keyPos;
     }
 
     private DefaultIntegerArrayField createIntegerArrayField(String fieldName, Collection<Glob> globAnnotations) {
-        LinkedHashMap<Key, Glob> annotations = adaptAnnotation(globAnnotations);
+        HashContainer<Key, Glob> annotations = adaptAnnotation(globAnnotations);
         int keyPos = getOrUpdateKeyPos(annotations);
         DefaultIntegerArrayField field = factory.addIntegerArray(fieldName, keyPos != -1, keyPos, index, annotations);
         index++;
@@ -162,7 +163,7 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
     }
 
     private DefaultDoubleField createDoubleField(String fieldName, Collection<Glob> globAnnotations) {
-        LinkedHashMap<Key, Glob> annotations = adaptAnnotation(globAnnotations);
+        HashContainer<Key, Glob> annotations = adaptAnnotation(globAnnotations);
         Glob defaultValue = annotations.get(DefaultDouble.UNIQUE_KEY);
         int keyPos = getOrUpdateKeyPos(annotations);
         DefaultDoubleField doubleField = factory.addDouble(fieldName, keyPos != -1, keyPos, index,
@@ -172,7 +173,7 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
     }
 
     private DefaultDoubleArrayField createDoubleArrayField(String fieldName, Collection<Glob> globAnnotations) {
-        LinkedHashMap<Key, Glob> annotations = adaptAnnotation(globAnnotations);
+        HashContainer<Key, Glob> annotations = adaptAnnotation(globAnnotations);
         int keyPos = getOrUpdateKeyPos(annotations);
         DefaultDoubleArrayField field = factory.addDoubleArray(fieldName, keyPos != -1, keyPos, index, annotations);
         index++;
@@ -180,7 +181,7 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
     }
 
     private DefaultBigDecimalField createBigDecimalField(String fieldName, Collection<Glob> globAnnotations) {
-        LinkedHashMap<Key, Glob> annotations = adaptAnnotation(globAnnotations);
+        HashContainer<Key, Glob> annotations = adaptAnnotation(globAnnotations);
         Glob defaultValue = annotations.get(DefaultBigDecimal.UNIQUE_KEY);
         int keyPos = getOrUpdateKeyPos(annotations);
         DefaultBigDecimalField bigDecimalField = factory.addBigDecimal(fieldName, keyPos != -1, keyPos, index,
@@ -190,7 +191,7 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
     }
 
     private DefaultBigDecimalArrayField createBigDecimalArrayField(String fieldName, Collection<Glob> globAnnotations) {
-        LinkedHashMap<Key, Glob> annotations = adaptAnnotation(globAnnotations);
+        HashContainer<Key, Glob> annotations = adaptAnnotation(globAnnotations);
         int keyPos = getOrUpdateKeyPos(annotations);
         DefaultBigDecimalArrayField bigDecimalArrayField =
                 factory.addBigDecimalArray(fieldName, keyPos != -1, keyPos, index, annotations);
@@ -199,7 +200,7 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
     }
 
     private DefaultDateTimeField createDateTimeField(String fieldName, Collection<Glob> globAnnotations) {
-        LinkedHashMap<Key, Glob> annotations = adaptAnnotation(globAnnotations);
+        HashContainer<Key, Glob> annotations = adaptAnnotation(globAnnotations);
         int keyPos = getOrUpdateKeyPos(annotations);
         DefaultDateTimeField dateTimeField = factory.addDateTime(fieldName, keyPos != -1, keyPos, index, annotations);
         index++;
@@ -207,7 +208,7 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
     }
 
     private DefaultDateField createDateField(String fieldName, Collection<Glob> globAnnotations) {
-        LinkedHashMap<Key, Glob> annotations = adaptAnnotation(globAnnotations);
+        HashContainer<Key, Glob> annotations = adaptAnnotation(globAnnotations);
         int keyPos = getOrUpdateKeyPos(annotations);
         DefaultDateField dateField = factory.addDate(fieldName, keyPos != -1, keyPos, index, annotations);
         index++;
@@ -221,7 +222,7 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
     }
 
     private DefaultLongField createLongField(String fieldName, Collection<Glob> globAnnotations) {
-        LinkedHashMap<Key, Glob> annotations = adaptAnnotation(globAnnotations);
+        HashContainer<Key, Glob> annotations = adaptAnnotation(globAnnotations);
         Glob defaultValue = annotations.get(DefaultLong.UNIQUE_KEY);
         int keyPos = getOrUpdateKeyPos(annotations);
         DefaultLongField longField = factory.addLong(fieldName, keyPos != -1, keyPos, index,
@@ -231,7 +232,7 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
     }
 
     private DefaultLongArrayField createLongArrayField(String fieldName, Collection<Glob> globAnnotations) {
-        LinkedHashMap<Key, Glob> annotations = adaptAnnotation(globAnnotations);
+        HashContainer<Key, Glob> annotations = adaptAnnotation(globAnnotations);
         int keyPos = getOrUpdateKeyPos(annotations);
         DefaultLongArrayField field = factory.addLongArray(fieldName, keyPos != -1, keyPos, index, annotations);
         index++;
@@ -244,7 +245,7 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
     }
 
     private DefaultBooleanArrayField createBooleanArrayField(String fieldName, Collection<Glob> globAnnotations) {
-        LinkedHashMap<Key, Glob> annotations = adaptAnnotation(globAnnotations);
+        HashContainer<Key, Glob> annotations = adaptAnnotation(globAnnotations);
         int keyPos = getOrUpdateKeyPos(annotations);
         DefaultBooleanArrayField field = factory.addBooleanArray(fieldName, keyPos != -1, keyPos, index, annotations);
         index++;
@@ -257,7 +258,7 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
     }
 
     private DefaultBooleanField createBooleanField(String fieldName, Collection<Glob> globAnnotations) {
-        LinkedHashMap<Key, Glob> annotations = adaptAnnotation(globAnnotations);
+        HashContainer<Key, Glob> annotations = adaptAnnotation(globAnnotations);
         Glob defaultValue = annotations.get(DefaultBoolean.UNIQUE_KEY);
         int keyPos = getOrUpdateKeyPos(annotations);
         DefaultBooleanField field = factory.addBoolean(fieldName, keyPos != -1, keyPos, index,
@@ -293,14 +294,14 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
     }
 
     private DefaultBlobField createBlobField(String fieldName, Collection<Glob> globAnnotations) {
-        LinkedHashMap<Key, Glob> annotations = adaptAnnotation(globAnnotations);
+        HashContainer<Key, Glob> annotations = adaptAnnotation(globAnnotations);
         DefaultBlobField field = factory.addBlob(fieldName, index, annotations);
         index++;
         return field;
     }
 
     private GlobField createGlobField(String fieldName, GlobType globType, Collection<Glob> globAnnotations) {
-        LinkedHashMap<Key, Glob> annotations = adaptAnnotation(globAnnotations);
+        HashContainer<Key, Glob> annotations = adaptAnnotation(globAnnotations);
         int keyPos = getOrUpdateKeyPos(annotations);
         DefaultGlobField field = factory.addGlob(fieldName, globType, keyPos != -1, keyPos, index, annotations);
         index++;
@@ -308,7 +309,7 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
     }
 
     private GlobArrayField createGlobArrayField(String fieldName, GlobType globType, Collection<Glob> globAnnotations) {
-        LinkedHashMap<Key, Glob> annotations = adaptAnnotation(globAnnotations);
+        HashContainer<Key, Glob> annotations = adaptAnnotation(globAnnotations);
         int keyPos = getOrUpdateKeyPos(annotations);
         DefaultGlobArrayField field = factory.addGlobArray(fieldName, globType, keyPos != -1,
                 keyPos, index, annotations);
@@ -317,7 +318,7 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
     }
 
     private GlobUnionField createGlobUnionField(String fieldName, Collection<GlobType> types, Collection<Glob> globAnnotations) {
-        LinkedHashMap<Key, Glob> annotations = adaptAnnotation(globAnnotations);
+        HashContainer<Key, Glob> annotations = adaptAnnotation(globAnnotations);
         Glob key = annotations.get(KeyField.UNIQUE_KEY);
         if (key != null) {
             throw new RuntimeException(fieldName + " of type unionField cannot be a key");
@@ -328,7 +329,7 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
     }
 
     private GlobArrayUnionField createGlobUnionArrayField(String fieldName, Collection<GlobType> types, Collection<Glob> globAnnotations) {
-        LinkedHashMap<Key, Glob> annotations = adaptAnnotation(globAnnotations);
+        HashContainer<Key, Glob> annotations = adaptAnnotation(globAnnotations);
         Glob key = annotations.get(KeyField.UNIQUE_KEY);
         if (key != null) {
             throw new RuntimeException(fieldName + " of type unionField cannot be a key");

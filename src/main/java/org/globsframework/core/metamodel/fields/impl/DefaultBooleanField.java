@@ -5,12 +5,11 @@ import org.globsframework.core.metamodel.fields.*;
 import org.globsframework.core.metamodel.type.DataType;
 import org.globsframework.core.model.Glob;
 import org.globsframework.core.model.Key;
+import org.globsframework.core.utils.container.hash.HashContainer;
 import org.globsframework.core.utils.exceptions.UnexpectedApplicationState;
 
-import java.util.LinkedHashMap;
-
 public class DefaultBooleanField extends AbstractField implements BooleanField {
-    public DefaultBooleanField(String name, GlobType globType, int index, boolean isKeyField, final int keyIndex, Boolean defaultValue, LinkedHashMap<Key, Glob> annotations) {
+    public DefaultBooleanField(String name, GlobType globType, int index, boolean isKeyField, final int keyIndex, Boolean defaultValue, HashContainer<Key, Glob> annotations) {
         super(name, globType, Boolean.class, index, keyIndex, isKeyField, defaultValue, DataType.Boolean, annotations);
     }
 
