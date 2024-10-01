@@ -92,6 +92,8 @@ public interface GlobTypeBuilder {
 
     Field declare(String fieldName, DataType dataType, Collection<Glob> annotations);
 
+    Field declareFrom(String fieldName, Field field);
+
     default GlobTypeBuilder addStringField(String fieldName, Glob... annotations) {
         return addStringField(fieldName, Arrays.asList(annotations));
     }

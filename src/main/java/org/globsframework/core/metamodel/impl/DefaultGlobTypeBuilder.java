@@ -11,6 +11,7 @@ import org.globsframework.core.model.Key;
 import org.globsframework.core.utils.container.hash.HashContainer;
 import org.globsframework.core.utils.container.specific.HashEmptyGlobContainer;
 
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
 
@@ -452,6 +453,61 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
                 return declareBlobField(fieldName, annotations);
         }
         throw new RuntimeException("creation of " + dataType + " not possible without additional parameter (globType)");
+    }
+
+    /*
+    TODO : remove annotations FieldName, Index, DefaultValue from annotations : it is a duplication.
+    Or replace them here with the
+     */
+
+    public Field declareFrom(String name, Field field) {
+        boolean isKeyField = field.isKeyField();
+        final HashContainer<Key, Glob> hashContainer = ((DefaultAnnotations) field).getInternal();
+//        HashContainer<Key, Glob> duplicate = hashContainer.duplicate();
+//        MutableGlob glob = FieldName.create(name);
+//        duplicate.put(glob.getKey(), glob);
+
+        Field newField = switch (field.getDataType()) {
+            case String -> factory.addString(name, field.isKeyField(), keyIndex, index,
+                    ((String) field.getDefaultValue()), hashContainer);
+            case StringArray -> factory.addStringArray(name, field.isKeyField(), keyIndex, index, hashContainer);
+            case Double ->
+                    factory.addDouble(name, field.isKeyField(), keyIndex, index, ((Double) field.getDefaultValue()),
+                            hashContainer);
+            case DoubleArray -> factory.addDoubleArray(name, field.isKeyField(), keyIndex, index, hashContainer);
+            case BigDecimal ->
+                    factory.addBigDecimal(name, field.isKeyField(), keyIndex, index, ((BigDecimal) field.getDefaultValue()),
+                            hashContainer);
+            case BigDecimalArray ->
+                    factory.addBigDecimalArray(name, field.isKeyField(), keyIndex, index, hashContainer);
+            case Long -> factory.addLong(name, field.isKeyField(), keyIndex, index, ((Long) field.getDefaultValue()),
+                    hashContainer);
+            case LongArray -> factory.addLongArray(name, field.isKeyField(), keyIndex, index, hashContainer);
+            case Integer ->
+                    factory.addInteger(name, field.isKeyField(), keyIndex, index, ((Integer) field.getDefaultValue()),
+                            hashContainer);
+            case IntegerArray -> factory.addIntegerArray(name, field.isKeyField(), keyIndex, index, hashContainer);
+            case Boolean ->
+                    factory.addBoolean(name, field.isKeyField(), keyIndex, index, ((Boolean) field.getDefaultValue()),
+                            hashContainer);
+            case BooleanArray -> factory.addBooleanArray(name, field.isKeyField(), keyIndex, index, hashContainer);
+            case Date -> factory.addDate(name, field.isKeyField(), keyIndex, index, hashContainer);
+            case DateTime -> factory.addDateTime(name, field.isKeyField(), keyIndex, index, hashContainer);
+            case Bytes -> factory.addBlob(name, index, hashContainer);
+            case Glob ->
+                    factory.addGlob(name, ((GlobField) field).getTargetType(), isKeyField, keyIndex, index, hashContainer);
+            case GlobArray ->
+                    factory.addGlobArray(name, ((GlobArrayField) field).getTargetType(), isKeyField, keyIndex, index, hashContainer);
+            case GlobUnion ->
+                    factory.addGlobUnion(name, ((GlobUnionField) field).getTargetTypes(), index, hashContainer);
+            case GlobUnionArray ->
+                    factory.addGlobArrayUnion(name, ((GlobUnionField) field).getTargetTypes(), index, hashContainer);
+        };
+        index++;
+        if (isKeyField) {
+            keyIndex++;
+        }
+        return newField;
     }
 
     public <T> void register(Class<T> klass, T t) {

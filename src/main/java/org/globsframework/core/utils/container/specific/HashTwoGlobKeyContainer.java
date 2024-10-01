@@ -19,7 +19,12 @@ public class HashTwoGlobKeyContainer implements HashContainer<Key, Glob> {
 
     public HashTwoGlobKeyContainer(HashOneGlobKeyContainer elementContainer, Glob value) {
         value1 = elementContainer.getValue();
-        this.value2 = value;
+        value2 = value;
+    }
+
+    public HashTwoGlobKeyContainer(HashTwoGlobKeyContainer hashTwoGlobKeyContainer) {
+        value1 = hashTwoGlobKeyContainer.getValue1();
+        value2 = hashTwoGlobKeyContainer.getValue2();
     }
 
     public Glob get(Key key) {
@@ -55,6 +60,10 @@ public class HashTwoGlobKeyContainer implements HashContainer<Key, Glob> {
             return new FirstIterator();
         }
         return new TwoStepIterator();
+    }
+
+    public HashContainer<Key, Glob> duplicate() {
+        return new HashTwoGlobKeyContainer(this);
     }
 
     public TwoElementIterator<Key, Glob> entryIterator() {
@@ -135,7 +144,7 @@ public class HashTwoGlobKeyContainer implements HashContainer<Key, Glob> {
 
     public boolean containsKey(Key key) {
         return value1 != null && Utils.equalWithHash(value1.getKey(), key)
-                || value2 != null && Utils.equalWithHash(value2.getKey(),key);
+                || value2 != null && Utils.equalWithHash(value2.getKey(), key);
     }
 
     public <E extends FunctorAndRemove<Key, Glob>> E applyAndRemoveIfTrue(E functor) {

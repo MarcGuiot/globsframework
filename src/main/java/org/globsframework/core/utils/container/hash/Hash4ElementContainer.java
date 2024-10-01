@@ -32,6 +32,17 @@ public class Hash4ElementContainer<T, D> implements HashContainer<T, D> {
         this.key4 = (T) HashOneElementContainer.NULL;
     }
 
+    public Hash4ElementContainer(Hash4ElementContainer<T, D> tdHash4ElementContainer) {
+        key1 = tdHash4ElementContainer.key1;
+        value1 = tdHash4ElementContainer.value1;
+        key2 = tdHash4ElementContainer.key2;
+        value2 = tdHash4ElementContainer.value2;
+        key3 = tdHash4ElementContainer.key3;
+        value3 = tdHash4ElementContainer.value3;
+        key4 = tdHash4ElementContainer.key4;
+        value4 = tdHash4ElementContainer.value4;
+    }
+
     public D get(T key) {
         return Utils.equalWithHash(key, this.key1) ? value1 : Utils.equalWithHash(key, this.key2) ? value2 : Utils.equalWithHash(key, this.key3) ? value3 : Utils.equalWithHash(key, this.key4) ? value4 : null;
     }
@@ -118,6 +129,10 @@ public class Hash4ElementContainer<T, D> implements HashContainer<T, D> {
                 throw new UnsupportedOperationException();
             }
         };
+    }
+
+    public HashContainer<T, D> duplicate() {
+        return new Hash4ElementContainer<>(this);
     }
 
     public TwoElementIterator<T, D> entryIterator() {

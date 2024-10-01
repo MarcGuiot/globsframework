@@ -17,6 +17,17 @@ public class Hash4GlobKeyContainer implements HashContainer<Key, Glob> {
     public Hash4GlobKeyContainer() {
     }
 
+    public Hash4GlobKeyContainer(Glob value1, Glob value2, Glob value3, Glob value4) {
+        this.value1 = value1;
+        this.value2 = value2;
+        this.value3 = value3;
+        this.value4 = value4;
+    }
+
+    public HashContainer<Key, Glob> duplicate() {
+        return new Hash4GlobKeyContainer(value1, value2, value3, value4);
+    }
+
     public Hash4GlobKeyContainer(HashTwoGlobKeyContainer elementContainer, Glob value) {
         value1 = elementContainer.getValue1();
         value2 = elementContainer.getValue2();

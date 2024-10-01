@@ -45,6 +45,10 @@ public class HashOneElementContainer<T, D> implements HashContainer<T, D> {
         return new OneStepIterator();
     }
 
+    public HashContainer<T, D> duplicate() {
+        return new HashOneElementContainer<>(this.key, this.value);
+    }
+
     public TwoElementIterator<T, D> entryIterator() {
 
         return new TwoElementIterator<T, D>() {

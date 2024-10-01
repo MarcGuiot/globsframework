@@ -16,6 +16,10 @@ public class HashMapContainer<T, D> implements HashContainer<T, D> {
         elements.put(key, value);
     }
 
+    public HashMapContainer(HashMapContainer<T, D> tdHashMapContainer) {
+        elements = new HashMap<>(tdHashMapContainer.elements);
+    }
+
     public D get(T key) {
         return elements.get(key);
     }
@@ -31,6 +35,10 @@ public class HashMapContainer<T, D> implements HashContainer<T, D> {
 
     public Iterator<D> values() {
         return elements.values().iterator();
+    }
+
+    public HashContainer<T, D> duplicate() {
+        return new HashMapContainer<>(this);
     }
 
     public TwoElementIterator<T, D> entryIterator() {

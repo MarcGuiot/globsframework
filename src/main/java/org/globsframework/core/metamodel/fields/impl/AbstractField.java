@@ -10,8 +10,6 @@ import org.globsframework.core.utils.Utils;
 import org.globsframework.core.utils.container.hash.HashContainer;
 import org.globsframework.core.utils.exceptions.InvalidParameter;
 
-import java.util.LinkedHashMap;
-
 abstract public class AbstractField extends DefaultAnnotations {
     private final int index;
     private final int keyIndex;

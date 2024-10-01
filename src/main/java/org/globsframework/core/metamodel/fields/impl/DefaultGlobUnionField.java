@@ -10,25 +10,27 @@ import org.globsframework.core.utils.exceptions.InvalidParameter;
 import org.globsframework.core.utils.exceptions.UnexpectedApplicationState;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class DefaultGlobUnionField extends AbstractField implements GlobUnionField {
-    private final Map<String, GlobType> targetTypes;
+    private volatile Map<String, GlobType> targetTypes;
 
     public DefaultGlobUnionField(String name, GlobType globType, Collection<GlobType> targetTypes,
                                  int index, boolean isKeyField, final int keyIndex, HashContainer<Key, Glob> annotations) {
         super(name, globType, Glob.class, index, keyIndex, isKeyField, null, DataType.GlobUnion, annotations);
-        this.targetTypes = new ConcurrentHashMap<>();
-        targetTypes.forEach(this::__add__);
+        this.targetTypes = new HashMap<>();
+        targetTypes.forEach(type -> this.targetTypes.put(type.getName(), type));
     }
 
     public Collection<GlobType> getTargetTypes() {
         return targetTypes.values();
     }
 
-    public void __add__(GlobType t) {
-        this.targetTypes.put(t.getName(), t);
+    synchronized public void __add__(GlobType t) {
+        Map<String, GlobType> tmp = new HashMap<>(targetTypes);
+        tmp.put(t.getName(), t);
+        targetTypes = tmp;
     }
 
     public GlobType getTargetType(String name) {

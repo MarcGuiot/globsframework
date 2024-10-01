@@ -48,6 +48,10 @@ public class HashEmptyGlobContainer implements HashContainer<Key, Glob> {
         return Collections.emptyIterator();
     }
 
+    public HashContainer<Key, Glob> duplicate() {
+        return this;
+    }
+
     public TwoElementIterator<Key, Glob> entryIterator() {
         return EmptyTwoElementIterator.INSTANCE;
     }

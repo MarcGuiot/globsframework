@@ -21,6 +21,8 @@ public interface HashContainer<T, D> {
 
     Iterator<D> values();
 
+    HashContainer<T, D> duplicate();
+
     TwoElementIterator<T, D> entryIterator();
 
     D remove(T value);
@@ -31,7 +33,7 @@ public interface HashContainer<T, D> {
 
     boolean containsKey(T key);
 
-    default Stream<D> stream(){
+    default Stream<D> stream() {
         return StreamSupport.stream(Spliterators.spliterator(values(), size(), Spliterator.NONNULL), false);
     }
 

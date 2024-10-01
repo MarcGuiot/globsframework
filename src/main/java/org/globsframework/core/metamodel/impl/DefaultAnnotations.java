@@ -56,6 +56,9 @@ public class DefaultAnnotations implements MutableAnnotations {
         }
     }
 
+    // annotations.size() + 1 can be false if the glob key is already present
+    // but annotations is expected to not be changed
+
     public MutableAnnotations addAnnotation(Glob glob) {
         if (glob != null) {
             synchronized (this) {
@@ -102,5 +105,9 @@ public class DefaultAnnotations implements MutableAnnotations {
 
     public Glob findAnnotation(Key key) {
         return annotations.get(key);
+    }
+
+    HashContainer<Key, Glob> getInternal() {
+        return annotations;
     }
 }

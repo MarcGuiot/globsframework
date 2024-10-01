@@ -15,6 +15,10 @@ public class HashOneGlobKeyContainer implements HashContainer<Key, Glob> {
     public HashOneGlobKeyContainer() {
     }
 
+    public HashOneGlobKeyContainer(Glob value) {
+        this.value = value;
+    }
+
     public HashOneGlobKeyContainer(Key key, Glob value) {
         checkEqual(key, value);
         this.value = value;
@@ -49,6 +53,10 @@ public class HashOneGlobKeyContainer implements HashContainer<Key, Glob> {
             return Collections.emptyIterator();
         }
         return new OneStepIterator();
+    }
+
+    public HashContainer<Key, Glob> duplicate() {
+        return new HashOneGlobKeyContainer(value);
     }
 
     public TwoElementIterator<Key, Glob> entryIterator() {

@@ -21,6 +21,10 @@ class HashEmptyContainer<T, D> implements HashContainer<T, D> {
         return Collections.emptyIterator();
     }
 
+    public HashContainer<T, D> duplicate() {
+        return this;
+    }
+
     public TwoElementIterator<T, D> entryIterator() {
         return EmptyTwoElementIterator.INSTANCE;
     }

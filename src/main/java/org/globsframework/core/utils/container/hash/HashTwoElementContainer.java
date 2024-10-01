@@ -23,6 +23,13 @@ public class HashTwoElementContainer<T, D> implements HashContainer<T, D> {
         this.value2 = value;
     }
 
+    public HashTwoElementContainer(HashTwoElementContainer<T, D> tdHashTwoElementContainer) {
+        this.key1 = tdHashTwoElementContainer.getKey1();
+        this.value1 = tdHashTwoElementContainer.getValue1();
+        this.key2 = tdHashTwoElementContainer.getKey2();
+        this.value2 = tdHashTwoElementContainer.getValue2();
+    }
+
     public D get(T key) {
         return Utils.equalWithHash(key, this.key1) ? value1 : Utils.equalWithHash(key, this.key2) ? value2 : null;
     }
@@ -56,6 +63,10 @@ public class HashTwoElementContainer<T, D> implements HashContainer<T, D> {
             return new FirstIterator();
         }
         return new TwoStepIterator();
+    }
+
+    public HashContainer<T, D> duplicate() {
+        return new HashTwoElementContainer<>(this);
     }
 
     public TwoElementIterator<T, D> entryIterator() {

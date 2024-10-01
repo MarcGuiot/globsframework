@@ -5,6 +5,7 @@ import org.globsframework.core.model.Key;
 import org.globsframework.core.utils.Utils;
 import org.globsframework.core.utils.container.hash.HashContainer;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -26,6 +27,11 @@ public class HashMapGlobKeyContainer implements HashContainer<Key, Glob> {
 
     public HashMapGlobKeyContainer(int size) {
         this.values = new Values(roundUpToPowerOf2(size));
+    }
+
+    public HashMapGlobKeyContainer(HashMapGlobKeyContainer hashMapGlobKeyContainer) {
+        this.values = hashMapGlobKeyContainer.values.duplicate();
+        size = hashMapGlobKeyContainer.size;
     }
 
     private static int roundUpToPowerOf2(int number) {
@@ -78,6 +84,10 @@ public class HashMapGlobKeyContainer implements HashContainer<Key, Glob> {
         return iterate(values);
     }
 
+    public HashContainer<Key, Glob> duplicate() {
+        return new HashMapGlobKeyContainer(this);
+    }
+
     public TwoElementIterator<Key, Glob> entryIterator() {
         final Iterator<Glob> values = values();
         return new KeyGlobTwoElementIterator(values);
@@ -118,6 +128,19 @@ public class HashMapGlobKeyContainer implements HashContainer<Key, Glob> {
         public Values(int size) {
             values = new Glob[size];
             threshold = (int) (size * LOAD_FACTOR);
+        }
+
+        public Values(Values org) {
+            this.values = Arrays.copyOf(org.values, org.values.length);
+            if (org.next != null) {
+                this.next = org.next.duplicate();
+            }
+            count = org.count;
+            threshold = org.threshold;
+        }
+
+        Values duplicate() {
+            return new Values(this);
         }
 
         public Glob getValue(int hash, Key key) {
