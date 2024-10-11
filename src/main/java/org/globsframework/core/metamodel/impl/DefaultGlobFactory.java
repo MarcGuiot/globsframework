@@ -37,9 +37,17 @@ public class DefaultGlobFactory implements GlobFactory {
         }
 
         synchronized (this) {  //I don't know if this enough
-            getAccessor = getAccessor1;
-            setAccessor = setAccessor1;
+            if (getAccessor == null) {
+                getAccessor = getAccessor1;
+            }
+            if (setAccessor == null) {
+                setAccessor = setAccessor1;
+            }
         }
+    }
+
+    public GlobType getGlobType() {
+        return type;
     }
 
     public MutableGlob create() {
@@ -50,30 +58,6 @@ public class DefaultGlobFactory implements GlobFactory {
             return new DefaultGlob128(type);
         }
         return new DefaultGlob(type);
-    }
-
-    public <T extends FieldVisitor> T accept(T visitor) throws Exception {
-        Field[] fields = type.getFields();
-        for (Field field : fields) {
-            field.accept(visitor);
-        }
-        return visitor;
-    }
-
-    public <T extends FieldVisitorWithContext<C>, C> T accept(T visitor, C context) throws Exception {
-        Field[] fields = type.getFields();
-        for (Field field : fields) {
-            field.accept(visitor, context);
-        }
-        return visitor;
-    }
-
-    public <T extends FieldVisitorWithTwoContext<C, D>, C, D> T accept(T visitor, C ctx1, D ctx2) throws Exception {
-        Field[] fields = type.getFields();
-        for (Field field : fields) {
-            field.accept(visitor, ctx1, ctx2);
-        }
-        return visitor;
     }
 
     public GlobSetAccessor getSetValueAccessor(Field field) {

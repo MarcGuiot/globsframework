@@ -36,8 +36,9 @@ public abstract class AbstractDefaultGlob extends AbstractMutableGlob {
     public <T extends FieldValues.Functor>
     T apply(T functor) throws Exception {
         for (Field field : type.getFields()) {
-            if (isSet(field)) {  //  || field.isKeyField()
-                functor.process(field, values[field.getIndex()]);
+            int index = field.getIndex();
+            if (isSetAt(index)) {  //  || field.isKeyField()
+                functor.process(field, values[index]);
             }
         }
         return functor;
