@@ -14,6 +14,10 @@ public interface GlobFactoryService {
         public static GlobFactoryService getBuilderFactory() {
             return builderFactory;
         }
+
+        public static void reset() {
+            builderFactory = new DispatchGlobFactoryService();
+        }
     }
 
     class DispatchGlobFactoryService implements GlobFactoryService {
