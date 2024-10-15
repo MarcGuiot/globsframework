@@ -5,7 +5,7 @@ import org.globsframework.core.metamodel.GlobType;
 import org.globsframework.core.metamodel.fields.*;
 import org.globsframework.core.model.Glob;
 import org.globsframework.core.model.MutableGlob;
-import org.globsframework.core.streams.DbStream;
+import org.globsframework.core.streams.GlobStream;
 import org.globsframework.core.streams.accessors.*;
 import org.globsframework.saxstack.parser.DefaultXmlNode;
 import org.globsframework.saxstack.parser.ExceptionHolder;
@@ -22,15 +22,15 @@ import java.util.*;
 public class XmlGlobStreamReader {
     private GlobModel globModel;
     private String xml;
-    private XmlDbStream xmlMoStream;
+    private XmlGlobStream xmlMoStream;
 
     private XmlGlobStreamReader(String xml, final GlobModel globModel) {
         this.xml = xml;
         this.globModel = globModel;
     }
 
-    private DbStream parse() {
-        xmlMoStream = new XmlDbStream();
+    private GlobStream parse() {
+        xmlMoStream = new XmlGlobStream();
         SaxStackParser.parse(XmlUtils.getXmlReader(), new RootProxyNode(), new StringReader(xml));
         return xmlMoStream;
     }
@@ -39,18 +39,18 @@ public class XmlGlobStreamReader {
         xmlMoStream.add(mo);
     }
 
-    public static DbStream parse(String xml, final GlobModel globModel) {
+    public static GlobStream parse(String xml, final GlobModel globModel) {
         return new XmlGlobStreamReader("<root>" + xml + "</root>", globModel).parse();
     }
 
-    private static class XmlDbStream implements DbStream {
+    private static class XmlGlobStream implements GlobStream {
         private Set<GlobType> globType = new HashSet<>();
         private List<Glob> globs = new ArrayList<>();
         private Iterator<Glob> iterator;
         private Glob current;
         private Map<Field, Accessor> accessors = new HashMap();
 
-        public XmlDbStream() {
+        public XmlGlobStream() {
         }
 
         public boolean next() {
@@ -88,10 +88,10 @@ public class XmlGlobStreamReader {
         }
 
         private static class AccessorDataTypeVisitor extends FieldVisitor.AbstractWithErrorVisitor {
-            private XmlDbStream stream;
+            private XmlGlobStream stream;
             private Accessor accessor;
 
-            public AccessorDataTypeVisitor(XmlDbStream stream) {
+            public AccessorDataTypeVisitor(XmlGlobStream stream) {
                 this.stream = stream;
             }
 
@@ -141,10 +141,10 @@ public class XmlGlobStreamReader {
 
 
             private static class XmlBlobAccessor implements BlobAccessor {
-                private XmlDbStream xmlMoStream;
+                private XmlGlobStream xmlMoStream;
                 private BlobField field;
 
-                public XmlBlobAccessor(XmlDbStream xmlMoStream, BlobField field) {
+                public XmlBlobAccessor(XmlGlobStream xmlMoStream, BlobField field) {
                     this.xmlMoStream = xmlMoStream;
                     this.field = field;
                 }
@@ -159,10 +159,10 @@ public class XmlGlobStreamReader {
             }
 
             private static class XmlStringAccessor implements StringAccessor {
-                private XmlDbStream xmlMoStream;
+                private XmlGlobStream xmlMoStream;
                 private StringField field;
 
-                public XmlStringAccessor(XmlDbStream xmlMoStream, StringField field) {
+                public XmlStringAccessor(XmlGlobStream xmlMoStream, StringField field) {
                     this.xmlMoStream = xmlMoStream;
                     this.field = field;
                 }
@@ -177,10 +177,10 @@ public class XmlGlobStreamReader {
             }
 
             private static class XmlBooleanAccessor implements BooleanAccessor {
-                private XmlDbStream xmlMoStream;
+                private XmlGlobStream xmlMoStream;
                 private BooleanField field;
 
-                public XmlBooleanAccessor(XmlDbStream xmlMoStream, BooleanField field) {
+                public XmlBooleanAccessor(XmlGlobStream xmlMoStream, BooleanField field) {
                     this.xmlMoStream = xmlMoStream;
                     this.field = field;
                 }
@@ -199,10 +199,10 @@ public class XmlGlobStreamReader {
             }
 
             private static class XmlDoubleAccessor implements DoubleAccessor {
-                private XmlDbStream xmlMoStream;
+                private XmlGlobStream xmlMoStream;
                 private DoubleField field;
 
-                public XmlDoubleAccessor(XmlDbStream xmlMoStream, DoubleField field) {
+                public XmlDoubleAccessor(XmlGlobStream xmlMoStream, DoubleField field) {
                     this.xmlMoStream = xmlMoStream;
                     this.field = field;
                 }
@@ -226,10 +226,10 @@ public class XmlGlobStreamReader {
             }
 
             private class XmlIntegerAccessor implements IntegerAccessor {
-                private XmlDbStream xmlMoStream;
+                private XmlGlobStream xmlMoStream;
                 private IntegerField field;
 
-                public XmlIntegerAccessor(XmlDbStream xmlMoStream, IntegerField field) {
+                public XmlIntegerAccessor(XmlGlobStream xmlMoStream, IntegerField field) {
                     this.xmlMoStream = xmlMoStream;
                     this.field = field;
                 }
@@ -253,10 +253,10 @@ public class XmlGlobStreamReader {
             }
 
             private class XmlLongAccessor implements LongAccessor {
-                private XmlDbStream xmlMoStream;
+                private XmlGlobStream xmlMoStream;
                 private LongField field;
 
-                public XmlLongAccessor(XmlDbStream xmlMoStream, LongField field) {
+                public XmlLongAccessor(XmlGlobStream xmlMoStream, LongField field) {
                     this.xmlMoStream = xmlMoStream;
                     this.field = field;
                 }
@@ -280,10 +280,10 @@ public class XmlGlobStreamReader {
             }
 
             private class XmlDateAccessor implements DateAccessor {
-                private XmlDbStream xmlMoStream;
+                private XmlGlobStream xmlMoStream;
                 private DateField field;
 
-                public XmlDateAccessor(XmlDbStream xmlMoStream, DateField field) {
+                public XmlDateAccessor(XmlGlobStream xmlMoStream, DateField field) {
                     this.xmlMoStream = xmlMoStream;
                     this.field = field;
                 }
@@ -302,10 +302,10 @@ public class XmlGlobStreamReader {
             }
 
             private class XmlDateTimeAccessor implements DateTimeAccessor {
-                private XmlDbStream xmlMoStream;
+                private XmlGlobStream xmlMoStream;
                 private DateTimeField field;
 
-                public XmlDateTimeAccessor(XmlDbStream xmlMoStream, DateTimeField field) {
+                public XmlDateTimeAccessor(XmlGlobStream xmlMoStream, DateTimeField field) {
                     this.xmlMoStream = xmlMoStream;
                     this.field = field;
                 }
@@ -324,10 +324,10 @@ public class XmlGlobStreamReader {
             }
 
             private class XmlStringArrayAccessor implements StringArrayAccessor {
-                private final XmlDbStream xmlMoStream;
+                private final XmlGlobStream xmlMoStream;
                 private final StringArrayField field;
 
-                public XmlStringArrayAccessor(XmlDbStream xmlMoStream, StringArrayField field) {
+                public XmlStringArrayAccessor(XmlGlobStream xmlMoStream, StringArrayField field) {
                     this.xmlMoStream = xmlMoStream;
                     this.field = field;
                 }
@@ -342,10 +342,10 @@ public class XmlGlobStreamReader {
             }
 
             private class XmlLongArrayAccessor implements LongArrayAccessor {
-                private final XmlDbStream xmlMoStream;
+                private final XmlGlobStream xmlMoStream;
                 private final LongArrayField field;
 
-                public XmlLongArrayAccessor(XmlDbStream xmlMoStream, LongArrayField field) {
+                public XmlLongArrayAccessor(XmlGlobStream xmlMoStream, LongArrayField field) {
                     this.xmlMoStream = xmlMoStream;
                     this.field = field;
                 }

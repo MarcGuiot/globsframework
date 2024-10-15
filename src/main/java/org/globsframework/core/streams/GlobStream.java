@@ -5,7 +5,7 @@ import org.globsframework.core.streams.accessors.Accessor;
 
 import java.util.Collection;
 
-public interface DbStream {
+public interface GlobStream {
 
     boolean next();
 
