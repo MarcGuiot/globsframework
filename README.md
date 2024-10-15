@@ -54,6 +54,8 @@ sqlConnection.getQueryBuilder(DummyObject.TYPE,
 
 ## components
 
+To view an example you can do a  ```git clone --recursive  https://github.com/MarcGuiot/globs-allInOne.git``` and run code simplest/src/main/java/org/globsframework/sample/graphql/Example2.java
+
 Today's Globs components :
 
 * To access a database : https://github.com/MarcGuiot/globs-db
@@ -69,6 +71,7 @@ Today's Globs components :
   child : https://github.com/MarcGuiot/globs-view
 * to implement a graphql api : https://github.com/MarcGuiot/globs-graphql (no dependency except antlr graphql.g4, do not
   response to query on schema : I use graphql-java for that.)
+* Glob can also be generated directly in bytecode via ASM https://github.com/MarcGuiot/globs-generate
 
 A GlobType interface:
 
