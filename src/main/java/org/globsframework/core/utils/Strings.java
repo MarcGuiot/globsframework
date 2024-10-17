@@ -43,7 +43,12 @@ public class Strings {
         if ((value == null) || "".equals(value)) {
             return value;
         }
-        return value.substring(0, 1).toLowerCase() + value.substring(1, value.length());
+        for (char c : value.toCharArray()) {
+            if (Character.isLowerCase(c)) {
+                return value.substring(0, 1).toLowerCase() + value.substring(1);
+            }
+        }
+        return value;
     }
 
     public static String toNiceLowerCase(String value) {

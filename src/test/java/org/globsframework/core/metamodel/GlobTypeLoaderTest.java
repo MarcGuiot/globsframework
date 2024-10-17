@@ -96,7 +96,7 @@ public class GlobTypeLoaderTest {
 
     @Test
     public void testDefaultCase() throws Exception {
-        assertEquals("anObject", AnObject.TYPE.getName());
+        assertEquals("AnObject", AnObject.TYPE.getName());
         assertEquals(1, AnObject.glob.get(AnObject.ID).intValue());
         assertEquals("string1", AnObject.glob.get(AnObject.STRING));
         assertEquals(1.1, AnObject.glob.get(AnObject.DOUBLE), 0.00001);
@@ -283,7 +283,7 @@ public class GlobTypeLoaderTest {
             AnObjectWithALinkFieldWithoutTheTargetAnnotation.link.getSourceType();
             fail();
         } catch (UnInitializedLink.LinkNotInitialized e) {
-            assertEquals("link anObjectWithALinkFieldWithoutTheTargetAnnotation:link not initialized. (missing code is something like : loader.register(MutableGlobLinkModel.LinkRegister.class,\n" +
+            assertEquals("link AnObjectWithALinkFieldWithoutTheTargetAnnotation:link not initialized. (missing code is something like : loader.register(MutableGlobLinkModel.LinkRegister.class,\n" +
                             "                      (linkModel) -> LINK = linkModel.getLinkBuilder(\"ModelName\", \"linkName\").add(sourceFieldId, targetFieldId).publish()); )",
                     e.getMessage());
         }

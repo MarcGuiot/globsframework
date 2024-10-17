@@ -421,7 +421,8 @@ public class GlobTypeLoaderImpl implements GlobTypeLoader {
         } else {
             String fullName = aClass.getName();
             int lastSeparatorIndex = Math.max(fullName.lastIndexOf("."), fullName.lastIndexOf("$"));
-            return Strings.uncapitalize(fullName.substring(lastSeparatorIndex + 1));
+            String extractedName = fullName.substring(lastSeparatorIndex + 1);
+            return toNiceName ? Strings.uncapitalize(extractedName) : extractedName;
         }
     }
 

@@ -98,7 +98,7 @@ public class DefaultAnnotations implements MutableAnnotations {
     public Glob getAnnotation(Key key) {
         Glob annotation = annotations.get(key);
         if (annotation == null) {
-            throw new ItemNotFound(key.toString());
+            throw new ItemNotFound(key.toString() + " on " + toString());
         }
         return annotation;
     }
