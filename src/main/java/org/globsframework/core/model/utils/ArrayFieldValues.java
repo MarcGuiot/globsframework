@@ -8,7 +8,7 @@ import org.globsframework.core.utils.exceptions.ItemNotFound;
 
 import java.util.Arrays;
 
-public class ArrayFieldValues extends AbstractFieldValues {
+public class ArrayFieldValues implements AbstractFieldValues {
     private FieldValue[] values;
 
     public ArrayFieldValues(FieldValue[] values) {
@@ -24,7 +24,7 @@ public class ArrayFieldValues extends AbstractFieldValues {
         return false;
     }
 
-    protected Object doCheckedGet(Field field) {
+    public Object doCheckedGet(Field field) {
         for (FieldValue value : values) {
             if (value.getField().equals(field)) {
                 return value.getValue();

@@ -34,7 +34,7 @@ public class DefaultFieldValues extends AbstractMutableFieldValues {
         return values.containsKey(field);
     }
 
-    protected Object doCheckedGet(Field field) {
+    public Object doCheckedGet(Field field) {
         return values.get(field);
     }
 

@@ -9,7 +9,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 
-public abstract class AbstractKey extends AbstractFieldValues implements MutableKey {
+public abstract class AbstractKey implements
+        AbstractFieldValues,  MutableKey {
 
     public boolean contains(Field field) {
         return field.getGlobType() == getGlobType() && field.isKeyField();
@@ -68,7 +69,7 @@ public abstract class AbstractKey extends AbstractFieldValues implements Mutable
         return this;
     }
 
-    protected Object doCheckedGet(Field field) {
+    public Object doCheckedGet(Field field) {
         FieldCheck.checkIsKeyOf(field, getGlobType());
         return doGetValue(field);
     }

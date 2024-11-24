@@ -9,13 +9,13 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 
-public abstract class AbstractFieldValues implements FieldValues {
+public interface AbstractFieldValues extends FieldValues {
 
-    public Double get(DoubleField field) {
+    default Double get(DoubleField field) {
         return (Double) doCheckedGet(field);
     }
 
-    public double get(DoubleField field, double valueIfNull) throws ItemNotFound {
+    default double get(DoubleField field, double valueIfNull) throws ItemNotFound {
         Object o = doCheckedGet(field);
         if (o == null) {
             return valueIfNull;
@@ -23,11 +23,11 @@ public abstract class AbstractFieldValues implements FieldValues {
         return (Double) o;
     }
 
-    public Integer get(IntegerField field) {
+    default Integer get(IntegerField field) {
         return (Integer) doCheckedGet(field);
     }
 
-    public int get(IntegerField field, int valueIfNull) throws ItemNotFound {
+    default int get(IntegerField field, int valueIfNull) throws ItemNotFound {
         Integer value = (Integer) doCheckedGet(field);
         if (value == null) {
             return valueIfNull;
@@ -35,96 +35,96 @@ public abstract class AbstractFieldValues implements FieldValues {
         return value;
     }
 
-    public String get(StringField field) {
+    default String get(StringField field) {
         return (String) doCheckedGet(field);
     }
 
-    public Boolean get(BooleanField field) {
+    default Boolean get(BooleanField field) {
         return (Boolean) doCheckedGet(field);
     }
 
-    public boolean isTrue(BooleanField field) {
+    default boolean isTrue(BooleanField field) {
         return Boolean.TRUE.equals(doCheckedGet(field));
     }
 
-    public boolean isNull(Field field) throws ItemNotFound {
+    default boolean isNull(Field field) throws ItemNotFound {
         return doCheckedGet(field) == null;
     }
 
-    public Object getValue(Field field) {
+    default Object getValue(Field field) {
         return doCheckedGet(field);
     }
 
-    public byte[] get(BlobField field) {
+    default byte[] get(BlobField field) {
         return (byte[]) doCheckedGet(field);
     }
 
-    public boolean get(BooleanField field, boolean defaultIfNull) {
+    default boolean get(BooleanField field, boolean defaultIfNull) {
         Object value = doCheckedGet(field);
         return value == null ? Boolean.valueOf(defaultIfNull) : (boolean) value;
     }
 
-    public Long get(LongField field) {
+    default Long get(LongField field) {
         return (Long) doCheckedGet(field);
     }
 
-    public long get(LongField field, long valueIfNull) throws ItemNotFound {
+    default long get(LongField field, long valueIfNull) throws ItemNotFound {
         Object value = doCheckedGet(field);
         return value == null ? valueIfNull : (long) value;
     }
 
-    public double[] get(DoubleArrayField field) throws ItemNotFound {
+    default double[] get(DoubleArrayField field) throws ItemNotFound {
         return (double[]) doCheckedGet(field);
     }
 
-    public int[] get(IntegerArrayField field) throws ItemNotFound {
+    default int[] get(IntegerArrayField field) throws ItemNotFound {
         return (int[]) doCheckedGet(field);
     }
 
-    public String[] get(StringArrayField field) throws ItemNotFound {
+    default String[] get(StringArrayField field) throws ItemNotFound {
         return (String[]) doCheckedGet(field);
     }
 
-    public boolean[] get(BooleanArrayField field) {
+    default boolean[] get(BooleanArrayField field) {
         return (boolean[]) doCheckedGet(field);
     }
 
-    public long[] get(LongArrayField field) throws ItemNotFound {
+    default long[] get(LongArrayField field) throws ItemNotFound {
         return (long[]) doCheckedGet(field);
     }
 
-    public LocalDate get(DateField field) throws ItemNotFound {
+    default LocalDate get(DateField field) throws ItemNotFound {
         return (LocalDate) doCheckedGet(field);
     }
 
-    public ZonedDateTime get(DateTimeField field) throws ItemNotFound {
+    default ZonedDateTime get(DateTimeField field) throws ItemNotFound {
         return (ZonedDateTime) doCheckedGet(field);
     }
 
-    public BigDecimal get(BigDecimalField field) throws ItemNotFound {
+    default BigDecimal get(BigDecimalField field) throws ItemNotFound {
         return (BigDecimal) doCheckedGet(field);
     }
 
-    public BigDecimal[] get(BigDecimalArrayField field) throws ItemNotFound {
+    default BigDecimal[] get(BigDecimalArrayField field) throws ItemNotFound {
         return (BigDecimal[]) doCheckedGet(field);
     }
 
-    public Glob get(GlobField field) throws ItemNotFound {
+    default Glob get(GlobField field) throws ItemNotFound {
         return (Glob) doCheckedGet(field);
     }
 
-    public Glob[] get(GlobArrayField field) throws ItemNotFound {
+    default Glob[] get(GlobArrayField field) throws ItemNotFound {
         return (Glob[]) doCheckedGet(field);
     }
 
-    public Glob get(GlobUnionField field) throws ItemNotFound {
+    default Glob get(GlobUnionField field) throws ItemNotFound {
         return (Glob) doCheckedGet(field);
     }
 
-    public Glob[] get(GlobArrayUnionField field) throws ItemNotFound {
+    default Glob[] get(GlobArrayUnionField field) throws ItemNotFound {
         return (Glob[]) doCheckedGet(field);
     }
 
-    protected abstract Object doCheckedGet(Field field);
+     Object doCheckedGet(Field field);
 
 }

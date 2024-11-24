@@ -9,7 +9,7 @@ import org.globsframework.core.model.impl.AbstractFieldValues;
 import org.globsframework.core.utils.Unset;
 import org.globsframework.core.utils.exceptions.ItemNotFound;
 
-class DeltaFieldValuesFromArray extends AbstractFieldValues {
+class DeltaFieldValuesFromArray implements AbstractFieldValues {
     private GlobType type;
     private Object[] values;
 
@@ -22,7 +22,7 @@ class DeltaFieldValuesFromArray extends AbstractFieldValues {
         return doCheckedGet(field);
     }
 
-    protected Object doCheckedGet(Field field) {
+    public Object doCheckedGet(Field field) {
         Object value = values[field.getIndex()];
         if (value == Unset.VALUE) {
             throw new ItemNotFound(field.getName() + " not set.");

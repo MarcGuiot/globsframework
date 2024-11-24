@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 
-public abstract class AbstractMutableFieldValues extends AbstractFieldValues implements MutableFieldValues {
+public abstract class AbstractMutableFieldValues implements AbstractFieldValues, MutableFieldValues {
 
     public abstract MutableFieldValues setValue(Field field, Object value) throws InvalidParameter;
 

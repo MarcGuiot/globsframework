@@ -5,20 +5,14 @@ import org.globsframework.core.metamodel.fields.*;
 import org.globsframework.core.model.*;
 import org.globsframework.core.utils.exceptions.ItemNotFound;
 
-public abstract class AbstractGlob extends AbstractFieldValues implements Glob, Key {
+public interface AbstractGlob extends AbstractFieldValues, Glob, Key {
 
-    public abstract GlobType getType();
+    GlobType getType();
 
-    abstract public Object doGet(Field field);
-
-    public String toString() {
-        StringBuilder buffer = new StringBuilder();
-        toString(buffer);
-        return buffer.toString();
-    }
+    Object doGet(Field field);
 
     // we don't want to add a dependency on any json framework here : we output a json like string here => need help : may be a bad idea
-    private void toString(StringBuilder buffer) {
+    default void toString(StringBuilder buffer) {
         buffer.append("{ \"_kind\":\"").append(escapeQuote(getType().getName())).append("\"");
 
         GlobType type = getType();
@@ -37,7 +31,7 @@ public abstract class AbstractGlob extends AbstractFieldValues implements Glob, 
         return name.contains("\"") ? name.replaceAll("\"", "'") : name;
     }
 
-    public final boolean matches(FieldValues values) {
+    default boolean matches(FieldValues values) {
         return values.safeApply(new Functor() {
             Boolean result = Boolean.TRUE;
 
@@ -49,7 +43,7 @@ public abstract class AbstractGlob extends AbstractFieldValues implements Glob, 
         }).result;
     }
 
-    public boolean matches(FieldValue... values) {
+    default boolean matches(FieldValue... values) {
         for (FieldValue value : values) {
             if (!value.getField().valueEqual(value.getValue(), getValue(value.getField()))) {
                 return false;
@@ -58,14 +52,14 @@ public abstract class AbstractGlob extends AbstractFieldValues implements Glob, 
         return true;
     }
 
-    public <T extends FieldValueVisitor> T acceptOnKeyField(T functor) throws Exception {
+    default <T extends FieldValueVisitor> T acceptOnKeyField(T functor) throws Exception {
         for (Field field : getType().getFields()) {
             field.accept(functor, doGet(field));
         }
         return functor;
     }
 
-    public <T extends FieldValueVisitor> T safeAcceptOnKeyField(T functor) {
+    default <T extends FieldValueVisitor> T safeAcceptOnKeyField(T functor) {
         try {
             for (Field field : getType().getKeyFields()) {
                 field.accept(functor, doGet(field));
@@ -76,7 +70,7 @@ public abstract class AbstractGlob extends AbstractFieldValues implements Glob, 
         return functor;
     }
 
-    public <T extends FieldValues.Functor>
+    default <T extends FieldValues.Functor>
     T applyOnKeyField(T functor) throws Exception {
         for (Field field : getType().getFields()) {
             functor.process(field, doGet(field));
@@ -84,7 +78,7 @@ public abstract class AbstractGlob extends AbstractFieldValues implements Glob, 
         return functor;
     }
 
-    public <T extends FieldValues.Functor>
+    default <T extends FieldValues.Functor>
     T safeApplyOnKeyField(T functor) {
         try {
             for (Field field : getType().getKeyFields()) {
@@ -97,7 +91,7 @@ public abstract class AbstractGlob extends AbstractFieldValues implements Glob, 
     }
 
     // implement asFieldValues for key
-    public FieldValues asFieldValues() {
+    default FieldValues asFieldValues() {
         return new AbstractFieldValues() {
             GlobType type = getType();
 
@@ -147,47 +141,16 @@ public abstract class AbstractGlob extends AbstractFieldValues implements Glob, 
         };
     }
 
-    public boolean contains(Field field) {
+    default boolean contains(Field field) {
         return field.getGlobType().equals(getType());
     }
 
-    public int size() {
+    default int size() {
         return getType().getFieldCount();
     }
 
-    public GlobType getGlobType() {
+    default GlobType getGlobType() {
         return getType();
-    }
-
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-
-        if (o == null) {
-            return false;
-        }
-
-        if (!Key.class.isAssignableFrom(o.getClass())) {
-            return false;
-        }
-
-        Key otherKey = (Key) o;
-        if (getType() != otherKey.getGlobType()) {
-            return false;
-        }
-
-        Field[] keyFields = getType().getKeyFields();
-        if (keyFields.length == 0) {
-            return true; //o instanceof Glob && reallyEquals((Glob) o);
-        }
-
-        for (Field field : keyFields) {
-            if (!field.valueEqual(getValue(field), otherKey.getValue(field))) {
-                return false;
-            }
-        }
-        return true;
     }
 
     private boolean reallyEquals(Glob glob) {
@@ -200,7 +163,7 @@ public abstract class AbstractGlob extends AbstractFieldValues implements Glob, 
         return true;
     }
 
-    public MutableGlob duplicate() {
+    default MutableGlob duplicate() {
         MutableGlob instantiate = getType().instantiate();
         for (Field field : getType().getFields()) {
             if (isSet(field)) {

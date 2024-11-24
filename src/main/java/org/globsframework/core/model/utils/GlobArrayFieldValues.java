@@ -30,7 +30,7 @@ public class GlobArrayFieldValues extends AbstractMutableFieldValues {
         return values[field.getIndex()] != Unset.VALUE;
     }
 
-    protected Object doCheckedGet(Field field) {
+    public Object doCheckedGet(Field field) {
         Object value = values[field.getIndex()];
         return value == Unset.VALUE ? null : value;
     }

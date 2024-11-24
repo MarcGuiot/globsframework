@@ -4,10 +4,11 @@ import org.globsframework.core.metamodel.GlobType;
 import org.globsframework.core.metamodel.fields.Field;
 import org.globsframework.core.metamodel.fields.FieldValueVisitor;
 import org.globsframework.core.model.FieldValues;
+import org.globsframework.core.model.Key;
 import org.globsframework.core.model.MutableGlob;
 import org.globsframework.core.utils.exceptions.ItemNotFound;
 
-public abstract class AbstractDefaultGlob extends AbstractMutableGlob {
+public abstract class AbstractDefaultGlob implements AbstractMutableGlob {
     protected final GlobType type;
     protected final Object[] values;
 
@@ -76,4 +77,42 @@ public abstract class AbstractDefaultGlob extends AbstractMutableGlob {
         clearSetAt(index);
         return this;
     }
+
+    public String toString() {
+        StringBuilder buffer = new StringBuilder();
+        toString(buffer);
+        return buffer.toString();
+    }
+
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null) {
+            return false;
+        }
+
+        if (!Key.class.isAssignableFrom(o.getClass())) {
+            return false;
+        }
+
+        Key otherKey = (Key) o;
+        if (getType() != otherKey.getGlobType()) {
+            return false;
+        }
+
+        Field[] keyFields = getType().getKeyFields();
+        if (keyFields.length == 0) {
+            return true; //o instanceof Glob && reallyEquals((Glob) o);
+        }
+
+        for (Field field : keyFields) {
+            if (!field.valueEqual(getValue(field), otherKey.getValue(field))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 }
