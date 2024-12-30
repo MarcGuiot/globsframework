@@ -232,6 +232,8 @@ public interface GlobTypeBuilder {
 
     GlobType unCompleteType();
 
+    void complete(); // call
+
     default GlobTypeBuilder addIntegerKey(String fieldName) {
         addIntegerField(fieldName, KeyField.UNINITIALIZED);
         return this;

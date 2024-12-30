@@ -519,6 +519,10 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
         return type;
     }
 
+    public void complete() {
+        type.completeInit();
+    }
+
     public GlobType unCompleteType() {
         return type;
     }

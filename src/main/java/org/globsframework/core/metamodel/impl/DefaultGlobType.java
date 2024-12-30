@@ -145,6 +145,12 @@ public class DefaultGlobType extends DefaultAnnotations
     }
 
     public void completeInit() {
+        if (fields != null) {
+            if (fields.length != fieldsByName.size()) {
+                throw new InvalidState("Update after complete : field count should be " + fieldsByName.size() + " but is " + fields.length + " for " + this);
+            }
+            return;
+        }
         fields = new Field[fieldsByName.size()];
         for (Field field : fieldsByName.values()) {
             fields[field.getIndex()] = field;
@@ -165,7 +171,7 @@ public class DefaultGlobType extends DefaultAnnotations
                 }
             }
             if (!IntStream.range(0, keyFieldCount).allMatch(keySet::contains)) {
-                throw new RuntimeException("Bug unconstitency between key count " + keyFieldCount + " and key id " + keySet);
+                throw new RuntimeException("Bug un-consistency between key count " + keyFieldCount + " and key id " + keySet + " (must start at 0)");
             }
         }
 
