@@ -1,10 +1,9 @@
 package org.globsframework.core.metamodel.annotations;
 
-import org.globsframework.core.metamodel.GlobType;
-import org.globsframework.core.metamodel.GlobTypeLoader;
-import org.globsframework.core.metamodel.GlobTypeLoaderFactory;
+import org.globsframework.core.metamodel.*;
 import org.globsframework.core.model.Glob;
 import org.globsframework.core.model.Key;
+import org.globsframework.core.model.KeyBuilder;
 
 public class ContainmentLink {
     public static GlobType TYPE;
@@ -16,8 +15,14 @@ public class ContainmentLink {
     public static Glob UNIQUE_GLOB;
 
     static {
-        GlobTypeLoader loader = GlobTypeLoaderFactory.create(ContainmentLink.class, "ContainmentLink");
-        loader.register(GlobCreateFromAnnotation.class, annotation -> UNIQUE_GLOB)
-                .load();
+        GlobTypeBuilder typeBuilder = GlobTypeBuilderFactory.create("ContainmentLink");
+        typeBuilder.register(GlobCreateFromAnnotation.class, annotation -> UNIQUE_GLOB);
+        TYPE = typeBuilder.unCompleteType();
+        typeBuilder.complete();
+        UNIQUE_GLOB = TYPE.instantiate();
+        UNIQUE_KEY = KeyBuilder.newEmptyKey(TYPE);
+
+//        GlobTypeLoader loader = GlobTypeLoaderFactory.create(ContainmentLink.class, "ContainmentLink");
+//                .load();
     }
 }

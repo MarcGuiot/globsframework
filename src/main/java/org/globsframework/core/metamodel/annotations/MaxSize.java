@@ -68,9 +68,25 @@ public class MaxSize {
     }
 
     public static Glob create(MaxSize_ size) {
-        return TYPE.instantiate().set(VALUE, size.value())
-                .set(ALLOW_TRUNCATE, size.allow_truncate())
-                .set(CHARSET, size.charSet());
+        return create(size.value(), size.allow_truncate(), size.charSet());
+    }
+
+    public static MutableGlob create(int maxSize, boolean truncate, String charset) {
+        return TYPE.instantiate().set(VALUE, maxSize)
+                .set(ALLOW_TRUNCATE, truncate)
+                .set(CHARSET, charset);
+    }
+
+    public static MutableGlob create(int maxSize, boolean truncate) {
+        return TYPE.instantiate().set(VALUE, maxSize)
+                .set(ALLOW_TRUNCATE, truncate)
+                .set(CHARSET, "UTF-8");
+    }
+
+    public static MutableGlob create(int maxSize) {
+        return TYPE.instantiate().set(VALUE, maxSize)
+                .set(ALLOW_TRUNCATE, false)
+                .set(CHARSET, "UTF-8");
     }
 
     public static MutableGlob deepInPlaceTruncate(MutableGlob glob) {

@@ -163,6 +163,10 @@ public interface AbstractGlob extends AbstractFieldValues, Glob, Key {
         return true;
     }
 
+    default MutableGlob asMutableGlob() {
+        return duplicate();
+    }
+
     default MutableGlob duplicate() {
         MutableGlob instantiate = getType().instantiate();
         for (Field field : getType().getFields()) {

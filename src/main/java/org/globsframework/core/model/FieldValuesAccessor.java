@@ -35,8 +35,6 @@ public interface FieldValuesAccessor {
 
     Double get(DoubleField field) throws ItemNotFound;
 
-    double get(DoubleField field, double valueIfNull) throws ItemNotFound;
-
     double[] get(DoubleArrayField field) throws ItemNotFound;
 
     Integer get(IntegerField field) throws ItemNotFound;
@@ -89,6 +87,11 @@ public interface FieldValuesAccessor {
     default String getOrDefault(StringField field, String valueIfEmpty) throws ItemNotFound {
         String value = get(field);
         return value != null && !value.isEmpty() ? value : valueIfEmpty;
+    }
+
+    default double get(DoubleField field, double valueIfNull) throws ItemNotFound{
+        Double value = get(field);
+        return value != null ? value : valueIfNull;
     }
 
     default ZonedDateTime get(DateTimeField field, ZonedDateTime valueIfNull) throws ItemNotFound {

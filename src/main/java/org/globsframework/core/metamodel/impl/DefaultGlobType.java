@@ -263,4 +263,17 @@ public class DefaultGlobType extends DefaultAnnotations
             stringBuilder.append("]");
         }
     }
+
+    Object[] prop = new Object[2];
+
+    public <T> T get(Property<T> property) {
+        int index = property.getIndex();
+        if (prop.length < index) {
+            prop = Arrays.copyOf(prop, index + 2);
+        }
+        if (prop[index] == null) {
+            return (T) (prop[index] = property.build( this ));
+        }
+        return (T) prop[index];
+    }
 }

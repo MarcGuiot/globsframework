@@ -120,11 +120,6 @@ public abstract class AbstractFieldValue<T extends FieldSetter> implements Field
         return (Double) getValue(doubleField);
     }
 
-    public double get(DoubleField doubleField, double v) throws ItemNotFound {
-        Double aDouble = get(doubleField);
-        return aDouble != null ? aDouble : v;
-    }
-
     public Integer get(IntegerField field) throws ItemNotFound {
         return (Integer) doGet(field);
     }

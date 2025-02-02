@@ -11,5 +11,5 @@ import java.lang.annotation.RetentionPolicy;
 public @interface DefaultBigDecimal_ {
     String value();
 
-    GlobType TYPE = DefaultBigDecimal.DESC;
+    GlobType TYPE = DefaultBigDecimal.TYPE;
 }

@@ -14,6 +14,7 @@ import org.globsframework.core.utils.exceptions.ItemNotFound;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
 public interface GlobType extends MutableAnnotations {
@@ -25,6 +26,10 @@ public interface GlobType extends MutableAnnotations {
     <T extends Field> T getTypedField(String name) throws ItemNotFound;
 
     Field findField(String name);
+
+    default Optional<Field> findOptField(String name) {
+        return Optional.ofNullable(findField(name));
+    }
 
     boolean hasField(String name);
 
@@ -83,10 +88,18 @@ public interface GlobType extends MutableAnnotations {
         return getKeyFields().length != 0;
     }
 
-    default Optional<Field> findOptField(String name) {
-        return Optional.ofNullable(findField(name));
-    }
-
     Comparator<Key> sameKeyComparator();
 
+    abstract class Property<T> {
+        static AtomicInteger at = new AtomicInteger(0);
+        private final int index = at.getAndIncrement();
+
+        public int getIndex() {
+            return index;
+        }
+
+        public abstract T build(GlobType globType);
+    }
+
+    <T> T get(Property<T> property);
 }

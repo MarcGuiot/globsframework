@@ -12,11 +12,11 @@ public class GlobTypeInstantiateWithDefaultsTest {
     public void test() {
         MutableGlob globWithDefaults = DummyObjectWithDefaultValues.TYPE.instantiateWithDefaults();
 
-        assertEquals(globWithDefaults.get(DummyObjectWithDefaultValues.STRING), "Hello");
+        assertEquals("Hello", globWithDefaults.get(DummyObjectWithDefaultValues.STRING));
         assertEquals(globWithDefaults.get(DummyObjectWithDefaultValues.DOUBLE), Double.valueOf(3.14159265));
         assertEquals(globWithDefaults.get(DummyObjectWithDefaultValues.INTEGER), Integer.valueOf(7));
-        assertEquals(globWithDefaults.get(DummyObjectWithDefaultValues.LONG), Long.valueOf(5));
-        assertEquals(globWithDefaults.get(DummyObjectWithDefaultValues.BIG_DECIMAL), new BigDecimal("1.61803398875"));
+        assertEquals(Long.valueOf(5), globWithDefaults.get(DummyObjectWithDefaultValues.LONG));
+        assertEquals(new BigDecimal("1.61803398875"), globWithDefaults.get(DummyObjectWithDefaultValues.BIG_DECIMAL));
         assertNull(globWithDefaults.get(DummyObjectWithDefaultValues.ID));
         assertNull(globWithDefaults.get(DummyObjectWithDefaultValues.LINK));
         assertTrue(globWithDefaults.get(DummyObjectWithDefaultValues.BOOLEAN));

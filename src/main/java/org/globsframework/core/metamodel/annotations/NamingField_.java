@@ -13,4 +13,5 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface NamingField_ {
 
     GlobType TYPE = NamingField.TYPE;
+
 }
