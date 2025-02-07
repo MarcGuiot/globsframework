@@ -163,37 +163,6 @@ public interface AbstractMutableGlob extends AbstractGlob, MutableGlob {
 
     boolean isHashComputed();
 
-    default MutableGlob asMutableGlob() {
-        for (Field field : getGlobType().getFields()) {
-            switch (field) {
-                case GlobField f -> propagateAsMutable(f);
-                case GlobArrayField f -> propagateAsMutable(get(f));
-                case GlobUnionField f -> propagateAsMutable(f);
-                case GlobArrayUnionField f -> propagateAsMutable(get(f));
-                default -> {}
-            }
-        }
-        return this;
-    }
-
-    private void propagateAsMutable(Field f) {
-        Glob glob = (Glob) doGet(f);
-        if (glob != null && !(glob instanceof MutableGlob)) {
-            doSet(f, glob.asMutableGlob());
-        }
-    }
-
-    private void propagateAsMutable(Glob[] globs) {
-        if (globs != null) {
-            for (int i = 0; i < globs.length; i++) {
-                Glob glob = globs[i];
-                if (glob != null && !(glob instanceof MutableGlob)) {
-                    globs[i] = glob.asMutableGlob();
-                }
-            }
-        }
-    }
-
     MutableGlob doSet(Field field, Object value);
 
     default Key getKey() {

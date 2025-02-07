@@ -109,6 +109,12 @@ public interface FieldValuesAccessor {
         return bigDecimal != null ? bigDecimal : valueIfNull;
     }
 
+    default byte[] get(BlobField field, byte[] valueIfNull) throws ItemNotFound {
+        byte[] value = get(field);
+        return value != null ? value : valueIfNull;
+    }
+
+
     default NullableOptional<String> getNullableOpt(StringField field) {
         return new NullableOptional<>(isSet(field), get(field));
     }
