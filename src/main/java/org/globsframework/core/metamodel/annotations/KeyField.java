@@ -2,33 +2,30 @@ package org.globsframework.core.metamodel.annotations;
 
 import org.globsframework.core.metamodel.GlobType;
 import org.globsframework.core.metamodel.fields.IntegerField;
-import org.globsframework.core.metamodel.impl.DefaultFieldFactory;
-import org.globsframework.core.metamodel.impl.DefaultGlobType;
+import org.globsframework.core.metamodel.impl.DefaultGlobTypeBuilder;
 import org.globsframework.core.model.Glob;
 import org.globsframework.core.model.Key;
 import org.globsframework.core.model.KeyBuilder;
 
-import java.util.LinkedHashMap;
-
 public class KeyField {
-    public static GlobType TYPE;
+    public static final GlobType TYPE;
 
-    public static IntegerField INDEX;
+    public static final IntegerField INDEX;
 
     @InitUniqueKey
-    public static Key UNIQUE_KEY;
+    public static final Key UNIQUE_KEY;
 
-    public static Glob UNINITIALIZED;
+    public static final Glob UNINITIALIZED;
 
-    public static Glob ZERO;
+    public static final Glob ZERO;
 
-    public static Glob ONE;
+    public static final Glob ONE;
 
-    public static Glob TWO;
+    public static final Glob TWO;
 
-    public static Glob THREE;
+    public static final Glob THREE;
 
-    public static Glob FOUR;
+    public static final Glob FOUR;
 
     public static Glob create(int indexOfKeyField) {
         switch (indexOfKeyField) {
@@ -48,17 +45,17 @@ public class KeyField {
     }
 
     static {
-        DefaultGlobType globType = new DefaultGlobType("KeyField");
-        DefaultFieldFactory factory = new DefaultFieldFactory(globType);
-        TYPE = globType;
-        INDEX = factory.addInteger("index", false, 0, 0, null, null);
+        DefaultGlobTypeBuilder typeBuilder = new DefaultGlobTypeBuilder("KeyField");
+        TYPE = typeBuilder.unCompleteType();
+        INDEX = typeBuilder.declareIntegerField("index");
+        typeBuilder.complete();
+        typeBuilder.register(GlobCreateFromAnnotation.class, annotation -> create(((KeyField_) annotation).value()));
         UNIQUE_KEY = KeyBuilder.newEmptyKey(TYPE);
-        globType.completeInit();
-        UNINITIALIZED = globType.instantiate().set(INDEX, -1);
-        ZERO = globType.instantiate().set(INDEX, 0);
-        ONE = globType.instantiate().set(INDEX, 1);
-        TWO = globType.instantiate().set(INDEX, 2);
-        THREE = globType.instantiate().set(INDEX, 3);
-        FOUR = globType.instantiate().set(INDEX, 4);
+        UNINITIALIZED = TYPE.instantiate().set(INDEX, -1);
+        ZERO = TYPE.instantiate().set(INDEX, 0);
+        ONE = TYPE.instantiate().set(INDEX, 1);
+        TWO = TYPE.instantiate().set(INDEX, 2);
+        THREE = TYPE.instantiate().set(INDEX, 3);
+        FOUR = TYPE.instantiate().set(INDEX, 4);
     }
 }

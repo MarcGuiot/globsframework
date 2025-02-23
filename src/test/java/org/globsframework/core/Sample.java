@@ -34,7 +34,7 @@ public class Sample {
 
         assertEquals("Hello", data.get(stringField));
 
-        Field namingField = data.getType().findFieldWithAnnotation(NamingField.UNIQUE_KEY);
+        Field namingField = data.getType().findFieldWithAnnotation(NamingField.KEY);
         assertEquals("Hello", data.getValue(namingField));
         assertEquals("int", FieldName.getName(type.getField("anInt")));
     }

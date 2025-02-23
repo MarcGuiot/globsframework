@@ -1,27 +1,38 @@
 package org.globsframework.core.metamodel.type;
 
 import org.globsframework.core.metamodel.GlobType;
-import org.globsframework.core.metamodel.GlobTypeLoaderFactory;
+import org.globsframework.core.metamodel.GlobTypeBuilder;
+import org.globsframework.core.metamodel.annotations.IsTarget;
 import org.globsframework.core.metamodel.annotations.IsTarget_;
 import org.globsframework.core.metamodel.annotations.Targets;
 import org.globsframework.core.metamodel.fields.GlobArrayUnionField;
 import org.globsframework.core.metamodel.fields.StringArrayField;
 import org.globsframework.core.metamodel.fields.StringField;
+import org.globsframework.core.metamodel.impl.DefaultGlobTypeBuilder;
 import org.globsframework.core.model.MutableGlob;
 
-public class GlobUnionArrayFieldType {
-    public static GlobType TYPE;
+import java.util.List;
 
-    public static StringField name;
+public class GlobUnionArrayFieldType {
+    public static final GlobType TYPE;
+
+    public static final StringField name;
 
     @IsTarget_()
-    public static StringArrayField targetTypes;
+    public static final StringArrayField targetTypes;
 
     @Targets({})
-    public static GlobArrayUnionField annotations;
+    public static final GlobArrayUnionField annotations;
 
     static {
-        GlobTypeLoaderFactory.create(GlobUnionArrayFieldType.class).load();
+        GlobTypeBuilder typeBuilder = new DefaultGlobTypeBuilder("GlobUnionArray");
+        TYPE = typeBuilder.unCompleteType();
+        name = typeBuilder.declareStringField(ConstantsName.NAME);
+        targetTypes = typeBuilder.declareStringArrayField(ConstantsName.TARGET_TYPE, IsTarget.INSTANCE);
+        annotations = typeBuilder.declareGlobUnionArrayField(ConstantsName.ANNOTATIONS, List.of());
+        typeBuilder.complete();
+
+//        GlobTypeLoaderFactory.create(GlobUnionArrayFieldType.class).load();
     }
 
     public static MutableGlob create(String name) {

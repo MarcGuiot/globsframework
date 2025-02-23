@@ -9,7 +9,7 @@ public class GlobTypeTest {
     @Test
     public void testRetrieveFieldFromAnnotation() {
         TestUtils.assertContains(DummyObjectWithMaxSizeString.TYPE
-                .getFieldsWithAnnotation(NamingField.UNIQUE_KEY), DummyObjectWithMaxSizeString.TEXT);
+                .getFieldsWithAnnotation(NamingField.KEY), DummyObjectWithMaxSizeString.TEXT);
 
     }
 

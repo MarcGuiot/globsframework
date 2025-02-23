@@ -1,28 +1,36 @@
 package org.globsframework.core.metamodel.annotations;
 
 import org.globsframework.core.metamodel.GlobType;
-import org.globsframework.core.metamodel.GlobTypeLoaderFactory;
+import org.globsframework.core.metamodel.GlobTypeBuilder;
 import org.globsframework.core.metamodel.fields.Field;
 import org.globsframework.core.metamodel.fields.StringArrayField;
+import org.globsframework.core.metamodel.impl.DefaultGlobTypeBuilder;
 import org.globsframework.core.model.Glob;
 import org.globsframework.core.model.Key;
+import org.globsframework.core.model.KeyBuilder;
 import org.globsframework.core.model.MutableGlob;
 
 import java.util.Optional;
 
 public class EnumAnnotation {
-    public static GlobType TYPE;
+    public static final GlobType TYPE;
 
-    public static StringArrayField NAME;
+    public static final StringArrayField NAME;
 
     @InitUniqueKey
-    public static Key UNIQUE_KEY;
+    public static final Key UNIQUE_KEY;
 
     static {
-        GlobTypeLoaderFactory.create(EnumAnnotation.class, "EnumAnnotation")
-                .register(GlobCreateFromAnnotation.class, annotation -> TYPE.instantiate()
-                        .set(NAME, ((EnumAnnotation_) annotation).value()))
-                .load();
+        GlobTypeBuilder typeBuilder = new DefaultGlobTypeBuilder("EnumAnnotation");
+        TYPE = typeBuilder.unCompleteType();
+        NAME = typeBuilder.declareStringArrayField("values");
+        typeBuilder.complete();
+        UNIQUE_KEY = KeyBuilder.newEmptyKey(TYPE);
+
+//        GlobTypeLoaderFactory.create(EnumAnnotation.class, "EnumAnnotation")
+//                .register(GlobCreateFromAnnotation.class, annotation -> TYPE.instantiate()
+//                        .set(NAME, ((EnumAnnotation_) annotation).value()))
+//                .load();
     }
 
     public static Glob create(EnumAnnotation_ nameAnnotation) {

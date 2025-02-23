@@ -226,7 +226,7 @@ public interface GlobTypeBuilder {
         return declareGlobUnionArrayField(fieldName, types, Arrays.asList(annotations));
     }
 
-    <T> void register(Class<T> klass, T t);
+    <T> GlobTypeBuilder register(Class<T> klass, T t);
 
     GlobType get();
 

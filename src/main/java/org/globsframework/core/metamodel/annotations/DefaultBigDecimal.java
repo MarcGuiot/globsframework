@@ -1,6 +1,8 @@
 package org.globsframework.core.metamodel.annotations;
 
-import org.globsframework.core.metamodel.*;
+import org.globsframework.core.metamodel.GlobType;
+import org.globsframework.core.metamodel.GlobTypeBuilder;
+import org.globsframework.core.metamodel.GlobTypeBuilderFactory;
 import org.globsframework.core.metamodel.fields.BigDecimalField;
 import org.globsframework.core.model.Glob;
 import org.globsframework.core.model.Key;
@@ -15,7 +17,7 @@ public class DefaultBigDecimal {
     public static final BigDecimalField VALUE;
 
     @InitUniqueKey
-    public static final Key UNIQUE_KEY;
+    public static final Key KEY;
 
     public static Glob create(String defaultBigDecimal) {
         return TYPE.instantiate().set(VALUE, new BigDecimal(defaultBigDecimal));
@@ -27,7 +29,7 @@ public class DefaultBigDecimal {
         VALUE = typeBuilder.declareBigDecimalField("VALUE");
         typeBuilder.register(GlobCreateFromAnnotation.class, annotation -> create(((DefaultBigDecimal_) annotation).value()));
         typeBuilder.complete();
-        UNIQUE_KEY = KeyBuilder.newEmptyKey(TYPE);
+        KEY = KeyBuilder.newEmptyKey(TYPE);
 
 //        GlobTypeLoader loader = GlobTypeLoaderFactory.create(DefaultBigDecimal.class, "DefaultBigDecimal");
 //        loader.register(GlobCreateFromAnnotation.class, annotation -> create(((DefaultBigDecimal_) annotation).value()))

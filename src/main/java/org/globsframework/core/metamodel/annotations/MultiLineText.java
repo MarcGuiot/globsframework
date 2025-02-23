@@ -1,28 +1,37 @@
 package org.globsframework.core.metamodel.annotations;
 
 import org.globsframework.core.metamodel.GlobType;
-import org.globsframework.core.metamodel.GlobTypeLoaderFactory;
+import org.globsframework.core.metamodel.GlobTypeBuilder;
+import org.globsframework.core.metamodel.GlobTypeBuilderFactory;
 import org.globsframework.core.metamodel.fields.IntegerField;
 import org.globsframework.core.metamodel.fields.StringField;
 import org.globsframework.core.model.Glob;
 import org.globsframework.core.model.Key;
+import org.globsframework.core.model.KeyBuilder;
 
 import java.lang.annotation.Annotation;
 
 public class MultiLineText {
-    public static GlobType TYPE;
+    public static final GlobType TYPE;
 
-    public static StringField mimeType;
+    public static final StringField mimeType;
 
-    public static IntegerField maxSize;
+    public static final IntegerField maxSize;
 
     @InitUniqueKey
-    public static Key UNIQUE_KEY;
+    public static final Key UNIQUE_KEY;
 
     static {
-        GlobTypeLoaderFactory.create(MultiLineText.class, "MultiLineText")
-                .register(GlobCreateFromAnnotation.class, MultiLineText::create)
-                .load();
+        GlobTypeBuilder typeBuilder = GlobTypeBuilderFactory.create("MultiLineText");
+        TYPE = typeBuilder.unCompleteType();
+        mimeType = typeBuilder.declareStringField("MIME_TYPE");
+        maxSize = typeBuilder.declareIntegerField("MAX_SIZE");
+        typeBuilder.register(GlobCreateFromAnnotation.class, MultiLineText::create);
+        typeBuilder.complete();
+        UNIQUE_KEY = KeyBuilder.newEmptyKey(TYPE);
+//        GlobTypeLoaderFactory.create(MultiLineText.class, "MultiLineText")
+//                .register(GlobCreateFromAnnotation.class, MultiLineText::create)
+//                .load();
     }
 
     private static Glob create(Annotation annotation) {

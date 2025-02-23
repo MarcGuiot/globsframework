@@ -1,27 +1,38 @@
 package org.globsframework.core.metamodel.annotations;
 
 import org.globsframework.core.metamodel.GlobType;
-import org.globsframework.core.metamodel.GlobTypeLoader;
-import org.globsframework.core.metamodel.GlobTypeLoaderFactory;
+import org.globsframework.core.metamodel.GlobTypeBuilder;
+import org.globsframework.core.metamodel.GlobTypeBuilderFactory;
 import org.globsframework.core.metamodel.fields.StringField;
 import org.globsframework.core.model.Glob;
 import org.globsframework.core.model.Key;
+import org.globsframework.core.model.KeyBuilder;
 
 public class DefaultString {
-    public static GlobType TYPE;
+    public static final GlobType TYPE;
 
-    public static StringField VALUE;
+    public static final StringField VALUE;
 
     @InitUniqueKey
-    public static Key UNIQUE_KEY;
+    public static final Key KEY;
 
     public static Glob create(DefaultString_ defaultString) {
         return TYPE.instantiate().set(VALUE, defaultString.value());
     }
 
+    public static Glob create(String defaultString) {
+        return TYPE.instantiate().set(VALUE, defaultString);
+    }
+
     static {
-        GlobTypeLoader loader = GlobTypeLoaderFactory.create(DefaultString.class, "DefaultString");
-        loader.register(GlobCreateFromAnnotation.class, annotation -> create((DefaultString_) annotation));
-        loader.load();
+        GlobTypeBuilder typeBuilder = GlobTypeBuilderFactory.create("DefaultString");
+        TYPE = typeBuilder.unCompleteType();
+        VALUE = typeBuilder.declareStringField("value");
+        typeBuilder.register(GlobCreateFromAnnotation.class, annotation -> create((DefaultString_) annotation));
+        typeBuilder.complete();
+        KEY = KeyBuilder.newEmptyKey(TYPE);
+//        GlobTypeLoader loader = GlobTypeLoaderFactory.create(DefaultString.class, "DefaultString");
+//        loader.register(GlobCreateFromAnnotation.class, annotation -> create((DefaultString_) annotation));
+//        loader.load();
     }
 }

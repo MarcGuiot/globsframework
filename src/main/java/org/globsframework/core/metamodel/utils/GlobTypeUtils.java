@@ -28,7 +28,7 @@ public class GlobTypeUtils {
     }
 
     public static StringField findNamingField(GlobType type) {
-        Field field = type.findFieldWithAnnotation(NamingField.UNIQUE_KEY);
+        Field field = type.findFieldWithAnnotation(NamingField.KEY);
         if (field != null) {
             return stringField(field, type);
         }
@@ -36,7 +36,7 @@ public class GlobTypeUtils {
     }
 
     public static StringField getNamingField(GlobType type) throws ItemNotFound, ItemAmbiguity, InvalidParameter {
-        Field field = type.getFieldWithAnnotation(NamingField.UNIQUE_KEY);
+        Field field = type.getFieldWithAnnotation(NamingField.KEY);
         return stringField(field, type);
     }
 

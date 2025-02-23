@@ -1,22 +1,31 @@
 package org.globsframework.core.metamodel.type;
 
 import org.globsframework.core.metamodel.GlobType;
-import org.globsframework.core.metamodel.GlobTypeLoaderFactory;
+import org.globsframework.core.metamodel.GlobTypeBuilder;
 import org.globsframework.core.metamodel.annotations.Targets;
 import org.globsframework.core.metamodel.fields.GlobArrayUnionField;
 import org.globsframework.core.metamodel.fields.StringField;
+import org.globsframework.core.metamodel.impl.DefaultGlobTypeBuilder;
 import org.globsframework.core.model.MutableGlob;
 
-public class LongArrayFieldType {
-    public static GlobType TYPE;
+import java.util.List;
 
-    public static StringField name;
+public class LongArrayFieldType {
+    public static final GlobType TYPE;
+
+    public static final StringField name;
 
     @Targets({})
-    public static GlobArrayUnionField annotations;
+    public static final GlobArrayUnionField annotations;
 
     static {
-        GlobTypeLoaderFactory.create(LongArrayFieldType.class).load();
+        GlobTypeBuilder typeBuilder = new DefaultGlobTypeBuilder("LongArray");
+        TYPE = typeBuilder.unCompleteType();
+        name = typeBuilder.declareStringField(ConstantsName.NAME);
+        annotations = typeBuilder.declareGlobUnionArrayField(ConstantsName.ANNOTATIONS, List.of());
+        typeBuilder.complete();
+
+//        GlobTypeLoaderFactory.create(LongArrayFieldType.class).load();
     }
 
     public static MutableGlob create(String name) {

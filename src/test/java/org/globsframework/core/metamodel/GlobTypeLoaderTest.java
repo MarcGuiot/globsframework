@@ -509,7 +509,7 @@ public class GlobTypeLoaderTest {
     @Test
     public void testAnObjectWithDefaultValues() throws Exception {
         assertEquals(7, DummyObjectWithDefaultValues.INTEGER.getDefaultValue());
-        assertEquals(7, DummyObjectWithDefaultValues.INTEGER.getAnnotation(DefaultInteger.UNIQUE_KEY)
+        assertEquals(7, DummyObjectWithDefaultValues.INTEGER.getAnnotation(DefaultInteger.KEY)
                 .get(DefaultInteger.VALUE).intValue());
         assertEquals(3.14159265, DummyObjectWithDefaultValues.DOUBLE.getDefaultValue());
         assertEquals(5l, DummyObjectWithDefaultValues.LONG.getDefaultValue());

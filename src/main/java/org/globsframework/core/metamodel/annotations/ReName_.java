@@ -10,13 +10,13 @@ import java.util.function.Function;
 
 @Retention(RetentionPolicy.RUNTIME)
 @java.lang.annotation.Target({ElementType.FIELD})
-public @interface Name {
+public @interface ReName_ {
     String name();
 
     String value();
 
     Function<String, Glob> create = (String str) ->
-            NameType.create(str, "");
+            ReName.create(str, "");
 
-    GlobType TYPE = NameType.TYPE;
+    GlobType TYPE = ReName.TYPE;
 }

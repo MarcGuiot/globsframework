@@ -1,33 +1,39 @@
 package org.globsframework.core.metamodel.annotations;
 
 import org.globsframework.core.metamodel.GlobType;
-import org.globsframework.core.metamodel.GlobTypeLoader;
-import org.globsframework.core.metamodel.GlobTypeLoaderFactory;
+import org.globsframework.core.metamodel.GlobTypeBuilder;
 import org.globsframework.core.metamodel.fields.*;
-import org.globsframework.core.model.FieldValuesAccessor;
-import org.globsframework.core.model.Glob;
-import org.globsframework.core.model.Key;
-import org.globsframework.core.model.MutableGlob;
+import org.globsframework.core.metamodel.impl.DefaultGlobTypeBuilder;
+import org.globsframework.core.model.*;
 import org.globsframework.core.utils.Strings;
 
 import java.nio.charset.Charset;
 
 public class MaxSize {
-    static public GlobType TYPE;
+    static public final GlobType TYPE;
 
-    static public IntegerField VALUE;
+    static public final IntegerField VALUE;
 
-    static public BooleanField ALLOW_TRUNCATE;
+    static public final BooleanField ALLOW_TRUNCATE;
 
-    static public StringField CHARSET;
+    static public final StringField CHARSET;
 
     @InitUniqueKey
-    static public Key KEY;
+    static public final Key KEY;
 
     static {
-        GlobTypeLoader loader = GlobTypeLoaderFactory.create(MaxSize.class, "MaxSize");
-        loader.register(GlobCreateFromAnnotation.class, annotation -> create((MaxSize_) annotation))
-                .load();
+        GlobTypeBuilder typeBuilder = new DefaultGlobTypeBuilder("MaxSize");
+        TYPE = typeBuilder.unCompleteType();
+        VALUE = typeBuilder.declareIntegerField("value");
+        ALLOW_TRUNCATE = typeBuilder.declareBooleanField("allow_truncate");
+        CHARSET = typeBuilder.declareStringField("charSet");
+        typeBuilder.register(GlobCreateFromAnnotation.class, annotation -> create((MaxSize_) annotation));
+        typeBuilder.complete();
+        KEY = KeyBuilder.newEmptyKey(TYPE);
+
+//        GlobTypeLoader loader = GlobTypeLoaderFactory.create(MaxSize.class, "MaxSize");
+//        loader.register(GlobCreateFromAnnotation.class, annotation -> create((MaxSize_) annotation))
+//                .load();
     }
 
     static public String cut(Field field, FieldValuesAccessor value) {

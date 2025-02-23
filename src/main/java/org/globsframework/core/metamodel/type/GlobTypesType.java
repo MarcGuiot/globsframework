@@ -1,17 +1,22 @@
 package org.globsframework.core.metamodel.type;
 
 import org.globsframework.core.metamodel.GlobType;
-import org.globsframework.core.metamodel.GlobTypeLoaderFactory;
+import org.globsframework.core.metamodel.GlobTypeBuilder;
 import org.globsframework.core.metamodel.annotations.Target;
 import org.globsframework.core.metamodel.fields.GlobArrayField;
+import org.globsframework.core.metamodel.impl.DefaultGlobTypeBuilder;
 
 public class GlobTypesType {
-    public static GlobType TYPE;
+    public static final GlobType TYPE;
 
     @Target(GlobTypeType.class)
-    public static GlobArrayField types;
+    public static final GlobArrayField types;
 
     static {
-        GlobTypeLoaderFactory.create(GlobTypesType.class).load();
+        GlobTypeBuilder typeBuilder = new DefaultGlobTypeBuilder("GlobTypes");
+        TYPE = typeBuilder.unCompleteType();
+        types = typeBuilder.declareGlobArrayField("types", GlobTypeType.TYPE);
+        typeBuilder.complete();
+//        GlobTypeLoaderFactory.create(GlobTypesType.class).load();
     }
 }

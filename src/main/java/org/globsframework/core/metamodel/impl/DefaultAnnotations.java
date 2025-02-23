@@ -35,14 +35,13 @@ public class DefaultAnnotations implements MutableAnnotations {
     }
 
     public DefaultAnnotations(Annotations annotations) {
-       if (annotations instanceof DefaultAnnotations) {
-           this.annotations = ((DefaultAnnotations) annotations).annotations;
-       }
-       else {
-           this.annotations = HashEmptyGlobContainer.Helper.allocate(0);
-           annotations.streamAnnotations()
-                   .forEach(annotation -> this.annotations = this.annotations.put(annotation.getKey(), annotation));
-       }
+        if (annotations instanceof DefaultAnnotations) {
+            this.annotations = ((DefaultAnnotations) annotations).annotations;
+        } else {
+            this.annotations = HashEmptyGlobContainer.Helper.allocate(0);
+            annotations.streamAnnotations()
+                    .forEach(annotation -> this.annotations = this.annotations.put(annotation.getKey(), annotation));
+        }
     }
 
     public DefaultAnnotations(Collection<Glob> annotations) {
@@ -75,9 +74,9 @@ public class DefaultAnnotations implements MutableAnnotations {
         synchronized (this) {
             HashContainer<Key, Glob> tmp = HashEmptyGlobContainer.Helper.allocate(annotations.size() + globs.size());
             annotations.forEach(tmp::put);
-            globs.forEach(glob -> {
+            for (Glob glob : globs) {
                 tmp.put(glob.getKey(), glob);
-            });
+            }
             annotations = tmp;
         }
         return this;

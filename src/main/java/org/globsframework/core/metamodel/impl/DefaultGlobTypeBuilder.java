@@ -66,7 +66,7 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
 
     private DefaultStringField createStringField(String fieldName, Collection<Glob> globAnnotations) {
         HashContainer<Key, Glob> annotations = adaptAnnotation(globAnnotations);
-        Glob defaultValue = annotations.get(DefaultString.UNIQUE_KEY);
+        Glob defaultValue = annotations.get(DefaultString.KEY);
         int keyPos = getOrUpdateKeyPos(annotations);
         DefaultStringField field = factory.addString(fieldName, keyPos != -1, keyPos, index,
                 defaultValue != null ? defaultValue.get(DefaultString.VALUE) : null, annotations);
@@ -94,7 +94,7 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
 
     private DefaultIntegerField createIntegerField(String fieldName, Collection<Glob> globAnnotations) {
         HashContainer<Key, Glob> annotations = adaptAnnotation(globAnnotations);
-        Glob defaultValue = annotations.get(DefaultInteger.UNIQUE_KEY);
+        Glob defaultValue = annotations.get(DefaultInteger.KEY);
         int keyPos = getOrUpdateKeyPos(annotations);
         DefaultIntegerField field = factory.addInteger(fieldName, keyPos != -1, keyPos, index,
                 defaultValue != null ? defaultValue.get(DefaultInteger.VALUE) : null, annotations);
@@ -165,7 +165,7 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
 
     private DefaultDoubleField createDoubleField(String fieldName, Collection<Glob> globAnnotations) {
         HashContainer<Key, Glob> annotations = adaptAnnotation(globAnnotations);
-        Glob defaultValue = annotations.get(DefaultDouble.UNIQUE_KEY);
+        Glob defaultValue = annotations.get(DefaultDouble.KEY);
         int keyPos = getOrUpdateKeyPos(annotations);
         DefaultDoubleField doubleField = factory.addDouble(fieldName, keyPos != -1, keyPos, index,
                 defaultValue != null ? defaultValue.get(DefaultDouble.VALUE) : null, annotations);
@@ -183,7 +183,7 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
 
     private DefaultBigDecimalField createBigDecimalField(String fieldName, Collection<Glob> globAnnotations) {
         HashContainer<Key, Glob> annotations = adaptAnnotation(globAnnotations);
-        Glob defaultValue = annotations.get(DefaultBigDecimal.UNIQUE_KEY);
+        Glob defaultValue = annotations.get(DefaultBigDecimal.KEY);
         int keyPos = getOrUpdateKeyPos(annotations);
         DefaultBigDecimalField bigDecimalField = factory.addBigDecimal(fieldName, keyPos != -1, keyPos, index,
                 defaultValue != null ? defaultValue.get(DefaultBigDecimal.VALUE) : null, annotations);
@@ -224,7 +224,7 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
 
     private DefaultLongField createLongField(String fieldName, Collection<Glob> globAnnotations) {
         HashContainer<Key, Glob> annotations = adaptAnnotation(globAnnotations);
-        Glob defaultValue = annotations.get(DefaultLong.UNIQUE_KEY);
+        Glob defaultValue = annotations.get(DefaultLong.KEY);
         int keyPos = getOrUpdateKeyPos(annotations);
         DefaultLongField longField = factory.addLong(fieldName, keyPos != -1, keyPos, index,
                 defaultValue != null ? defaultValue.get(DefaultLong.VALUE) : null, annotations);
@@ -260,7 +260,7 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
 
     private DefaultBooleanField createBooleanField(String fieldName, Collection<Glob> globAnnotations) {
         HashContainer<Key, Glob> annotations = adaptAnnotation(globAnnotations);
-        Glob defaultValue = annotations.get(DefaultBoolean.UNIQUE_KEY);
+        Glob defaultValue = annotations.get(DefaultBoolean.KEY);
         int keyPos = getOrUpdateKeyPos(annotations);
         DefaultBooleanField field = factory.addBoolean(fieldName, keyPos != -1, keyPos, index,
                 defaultValue != null ? defaultValue.get(DefaultBoolean.VALUE) : null, annotations);
@@ -510,8 +510,9 @@ public class DefaultGlobTypeBuilder implements GlobTypeBuilder {
         return newField;
     }
 
-    public <T> void register(Class<T> klass, T t) {
+    public <T> GlobTypeBuilder register(Class<T> klass, T t) {
         type.register(klass, t);
+        return this;
     }
 
     public GlobType get() {
