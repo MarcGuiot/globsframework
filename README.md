@@ -54,24 +54,24 @@ sqlConnection.getQueryBuilder(DummyObject.TYPE,
 
 ## components
 
-To view an example you can do a  ```git clone --recursive  https://github.com/MarcGuiot/globs-allInOne.git``` and run code simplest/src/main/java/org/globsframework/sample/graphql/Example2.java
+To view an example you can do a  ```git clone --recursive  https://github.com/globsframework/globs-allInOne.git``` and run code simplest/src/main/java/org/globsframework/sample/graphql/Example2.java
 
 Today's Globs components :
 
-* To access a database : https://github.com/MarcGuiot/globs-db
-* To read/write json : https://github.com/MarcGuiot/globs-gson (depend on google gson)
-* to read/write xml : https://github.com/MarcGuiot/globs-xml (depends on https://github.com/MarcGuiot/saxstack)
-* to parse command line arguments : https://github.com/MarcGuiot/globs-commandline
-* to read/write csv or similar format : https://github.com/MarcGuiot/csvExport (depend on apache csv)
+* To access a database : https://github.com/globsframework/globs-db
+* To read/write json : https://github.com/globsframework/globs-gson (depend on google gson)
+* to read/write xml : https://github.com/globsframework/globs-xml (depends on https://github.com/globsframework/saxstack)
+* to parse command line arguments : https://github.com/globsframework/globs-commandline
+* to read/write csv or similar format : https://github.com/globsframework/csvExport (depend on apache csv)
 * a binary serializer (a kind of TLV (Type Length Value) like protocol
-  buffer) : https://github.com/MarcGuiot/globs-bin-serialisation
+  buffer) : https://github.com/globsframework/globs-bin-serialisation
 * for http request using glob for params url, body, header (generate an openApi json) and a service using etcd but with
-  globs : https://github.com/MarcGuiot/globs-http (depends on apache http components and jetcd)
+  globs : https://github.com/globsframework/globs-http (depends on apache http components and jetcd)
 * to produce a view based on breakdown and output using data inside a glob or any where in it's
-  child : https://github.com/MarcGuiot/globs-view
-* to implement a graphql api : https://github.com/MarcGuiot/globs-graphql (no dependency except antlr graphql.g4, do not
+  child : https://github.com/globsframework/globs-view
+* to implement a graphql api : https://github.com/globsframework/globs-graphql (no dependency except antlr graphql.g4, do not
   response to query on schema : I use graphql-java for that.)
-* Glob can also be generated directly in bytecode via ASM https://github.com/MarcGuiot/globs-generate
+* Glob can also be generated directly in bytecode via ASM https://github.com/globsframework/globs-generate
 
 A GlobType interface:
 
