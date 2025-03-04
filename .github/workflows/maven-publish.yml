@@ -1,9 +1,11 @@
 # This workflow will build a package using Maven and then publish it to GitHub packages when a release is created
 # For more information see: https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#apache-maven-with-a-settings-path
 
-name: Maven Package build
+name: Maven Package deploy
 
-on: [ push, pull_request, workflow_dispatch ]
+on:
+  release:
+    types: [ created ]
 
 jobs:
   build:
@@ -25,4 +27,10 @@ jobs:
         env:
           GH_MAVEN_REGISTRY_USER: ${{ secrets.GH_MAVEN_REGISTRY_USER }}
           GH_MAVEN_REGISTRY_ACCESS_TOKEN: ${{ secrets.GH_MAVEN_REGISTRY_ACCESS_TOKEN }}
-        run: mvn -s settings.xml -B package
+        run: mvn -B package -s settings.xml
+
+      - name: Publish to GitHub Packages Apache Maven
+        env:
+          GH_MAVEN_REGISTRY_USER: ${{ secrets.GH_MAVEN_REGISTRY_USER }}
+          GH_MAVEN_REGISTRY_ACCESS_TOKEN: ${{ secrets.GH_MAVEN_REGISTRY_ACCESS_TOKEN }}
+        run: mvn deploy -s settings.xml

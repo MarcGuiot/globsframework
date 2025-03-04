@@ -5,7 +5,7 @@
     <packaging>jar</packaging>
     <artifactId>globs</artifactId>
     <name>Generic Lightweight ObjectS</name>
-    <version>4.1-SNAPSHOT</version>
+    <version>4.1.0</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -13,26 +13,17 @@
 
     <repositories>
         <repository>
-            <id>github-marc</id>
-            <url>https://maven.pkg.github.com/MarcGuiot/*</url>
-        </repository>
-        <repository>
-            <id>central</id>
-            <url>https://repo1.maven.org/maven2</url>
+            <id>github-globsframework</id>
+            <url>https://maven.pkg.github.com/globsframework/*</url>
         </repository>
     </repositories>
 
     <distributionManagement>
         <repository>
-            <id>github</id>
+            <id>github-globsframework</id>
             <name>GitHub Packages</name>
             <url>https://maven.pkg.github.com/${env.GITHUB_REPOSITORY}</url>
         </repository>
-        <snapshotRepository>
-            <id>github</id>
-            <name>GitHub Packages</name>
-            <url>https://maven.pkg.github.com/${env.GITHUB_REPOSITORY}</url>
-        </snapshotRepository>
     </distributionManagement>
 
     <build>
@@ -114,6 +105,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>2.0.5</version>
+        </dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.13.2</version>
@@ -122,7 +118,7 @@
         <dependency>
             <groupId>org.globsframework</groupId>
             <artifactId>saxstack</artifactId>
-            <version>4.1-SNAPSHOT</version>
+            <version>4.1.0</version>
             <scope>test</scope>
         </dependency>
         <!--                <dependency>-->
@@ -142,11 +138,6 @@
             <artifactId>xercesImpl</artifactId>
             <version>2.12.2</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>2.0.5</version>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
